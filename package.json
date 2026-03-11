@@ -1,0 +1,11 @@
+{
+  "name": "3minsto9-arg",
+  "version": "1.0.0",
+  "description": "3minsto9 ARG web assets",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
