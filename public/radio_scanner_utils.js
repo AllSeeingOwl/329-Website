@@ -2,11 +2,7 @@ const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!<>{}[]";
 
 function generateStatic(length) {
     if (length < 0) return '';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+    return Array.from({length}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
 
 if (typeof module !== 'undefined' && module.exports) {
