@@ -23,4 +23,38 @@ describe('generateStatic', () => {
         const result2 = generateStatic(50);
         expect(result1).not.toBe(result2);
     });
+
+    describe('boundary conditions with mocked Math.random', () => {
+        let originalRandom;
+
+        beforeEach(() => {
+            originalRandom = Math.random;
+        });
+
+        afterEach(() => {
+            Math.random = originalRandom;
+        });
+
+        test('uses the first character when Math.random returns 0', () => {
+            Math.random = jest.fn(() => 0);
+            const expectedChar = chars.charAt(0);
+            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+            expect(Math.random).toHaveBeenCalledTimes(5);
+        });
+
+        test('uses the last character when Math.random returns close to 1', () => {
+            Math.random = jest.fn(() => 0.999999);
+            const expectedChar = chars.charAt(chars.length - 1);
+            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+            expect(Math.random).toHaveBeenCalledTimes(5);
+        });
+
+        test('uses a character in the middle when Math.random returns 0.5', () => {
+            Math.random = jest.fn(() => 0.5);
+            const middleIndex = Math.floor(0.5 * chars.length);
+            const expectedChar = chars.charAt(middleIndex);
+            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+            expect(Math.random).toHaveBeenCalledTimes(5);
+        });
+    });
 });
