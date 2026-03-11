@@ -1,4 +1,4 @@
-const { generateStatic, chars } = require('./radio_scanner_utils');
+const { generateStatic, chars } = require('./public/radio_scanner_utils');
 
 describe('generateStatic', () => {
     test('generates a string of the requested length', () => {
