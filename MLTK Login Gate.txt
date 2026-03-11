@@ -189,14 +189,7 @@
         inputField.addEventListener('input', function (e) {
             let target = e.target;
             let val = target.value.replace(/-/g, '').toUpperCase();
-            let newVal = '';
-            for (let i = 0; i < val.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    newVal += '-';
-                }
-                newVal += val[i];
-            }
-            target.value = newVal;
+            target.value = val.match(/.{1,4}/g)?.join('-') || '';
         });
 
         document.addEventListener('click', () => {
