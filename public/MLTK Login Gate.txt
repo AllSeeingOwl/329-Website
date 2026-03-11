@@ -198,26 +198,40 @@
             }
         });
 
-        function verifyCode(e) {
+        async function verifyCode(e) {
             e.preventDefault();
             const code = inputField.value.trim().toUpperCase();
             const errorMsg = document.getElementById('error-msg');
             const inputGroup = document.getElementById('input-group');
 
-            if (code === "0408-1998-XXXX") {
-                document.body.style.backgroundColor = "#050505";
-                document.getElementById('lockdown-screen').style.display = "none";
-                const successScreen = document.getElementById('success-screen');
-                successScreen.style.display = "flex";
-            } else {
-                errorMsg.style.display = "block";
-                inputGroup.classList.remove('shake');
-                void inputGroup.offsetWidth; 
-                inputGroup.classList.add('shake');
-                inputField.value = ""; 
-                setTimeout(() => {
-                    errorMsg.style.display = "none";
-                }, 3000);
+            try {
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code: code }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.body.style.backgroundColor = "#050505";
+                    document.getElementById('lockdown-screen').style.display = "none";
+                    const successScreen = document.getElementById('success-screen');
+                    successScreen.style.display = "flex";
+                } else {
+                    errorMsg.style.display = "block";
+                    inputGroup.classList.remove('shake');
+                    void inputGroup.offsetWidth;
+                    inputGroup.classList.add('shake');
+                    inputField.value = "";
+                    setTimeout(() => {
+                        errorMsg.style.display = "none";
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error verifying code:', error);
             }
         }
     </script>
