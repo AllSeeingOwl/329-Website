@@ -1,0 +1,104 @@
+/* ------------------------------------------------------------------
+   3MINSTO9 // TEAM RABBIT STOREFRONT OVERRIDE
+   Paste this into the 'Custom CSS' block in your Big Cartel settings
+--------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=VT323&display=swap');
+
+body, html, .wrapper, .main, .site-header, .site-footer {
+    background-color: #050505 !important;
+    color: #00ff00 !important;
+    font-family: 'VT323', monospace !important;
+    font-size: 18px !important;
+}
+
+body {
+    background-image: 
+        radial-gradient(circle, rgba(255,0,60,0.1) 10%, transparent 10%), 
+        radial-gradient(circle, rgba(255,0,60,0.1) 10%, transparent 10%) !important;
+    background-size: 10px 10px !important;
+    background-position: 0 0, 5px 5px !important;
+}
+
+h1, h2, h3, h4, h5, .site-name, .product-name, .page-title {
+    font-family: 'Anton', sans-serif !important;
+    color: #ff003c !important; 
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    text-shadow: 2px 2px 0px #000, -1px -1px 0px #00ffff !important;
+    border-bottom: none !important;
+}
+
+a {
+    color: #00ff00 !important;
+    text-decoration: none !important;
+    border-bottom: 1px dashed #005500 !important;
+    transition: all 0.2s ease !important;
+}
+
+a:hover, .active a {
+    color: #ff003c !important;
+    border-bottom: 1px solid #ff003c !important;
+    text-shadow: 0 0 8px #ff003c !important;
+}
+
+button, .button, input[type="submit"], .add-to-cart {
+    background-color: #ff003c !important;
+    color: #000 !important;
+    font-family: 'Anton', sans-serif !important;
+    font-size: 1.5rem !important;
+    border: 2px solid #ff003c !important;
+    padding: 12px 24px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    border-radius: 0 !important; 
+    box-shadow: 4px 4px 0px #00ff00 !important; 
+    transition: all 0.1s !important;
+    width: 100% !important; 
+}
+
+button:hover, .button:hover, input[type="submit"]:hover, .add-to-cart:hover {
+    background-color: #000 !important;
+    color: #ff003c !important;
+    box-shadow: 0px 0px 15px #ff003c !important;
+    transform: translate(2px, 2px) !important;
+}
+
+.product-list-item, .product-list-thumb {
+    border: 1px solid #333 !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    padding: 10px !important;
+    margin-bottom: 20px !important;
+    transition: border 0.2s !important;
+}
+
+.product-list-item:hover {
+    border: 1px solid #ff003c !important;
+}
+
+.product-price {
+    color: #fff !important;
+    font-family: 'VT323', monospace !important;
+    font-size: 1.5rem !important;
+    background: #000 !important;
+    padding: 5px 10px !important;
+    display: inline-block !important;
+    border: 1px dashed #00ff00 !important;
+}
+
+input[type="text"], input[type="email"], textarea, select {
+    background-color: #000 !important;
+    color: #00ff00 !important;
+    font-family: 'VT323', monospace !important;
+    border: 1px solid #ff003c !important;
+    border-radius: 0 !important;
+    padding: 10px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    box-shadow: 0 0 10px rgba(255,0,60,0.5) !important;
+}
+
+.badge { display: none !important; }

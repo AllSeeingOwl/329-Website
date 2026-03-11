@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE DATA DROP // TEAM RABBIT</title>
+    <!-- Importing exact fonts from the Unknown Master Font Sheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #050505;
+            color: #00ff00;
+            font-family: 'VT323', monospace;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Subtle CRT Scanline Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .header-glitch {
+            font-family: 'Anton', sans-serif;
+            color: #ff003c;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #ff003c;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 0px #000, -2px -2px 0px #00ffff;
+            line-height: 1.1;
+        }
+
+        .body-text p {
+            font-size: 1.4rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .highlight-white { color: #ffffff; }
+
+        /* Download Section */
+        .download-box {
+            border: 2px dashed #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .download-title {
+            font-family: 'Anton', sans-serif;
+            color: #00ff00;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background: #000;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            padding: 12px 24px;
+            margin: 10px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        /* Upsell / Storefront Link */
+        .upsell-box {
+            border: 2px solid #ff003c;
+            background: rgba(255, 0, 60, 0.05);
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .btn-store {
+            display: block;
+            width: 100%;
+            background: #ff003c;
+            color: #000;
+            font-family: 'Anton', sans-serif;
+            font-size: 1.8rem;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .btn-store:hover {
+            background: #fff;
+            color: #ff003c;
+            box-shadow: 0 0 20px #ff003c;
+        }
+
+        .terminal-footer {
+            margin-top: 60px;
+            font-size: 1.1rem;
+            color: #555;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .header-glitch { font-size: 2rem; }
+            .btn-download { display: block; margin: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-glitch">COMMUNICATION SECURED.<br>YOU ARE NOW IN THE NETWORK.</div>
+        
+        <div class="body-text">
+            <p>Comms link verified. Your frequency has been added to the encrypted roster. When we make our next move against the MLTK network, you'll be the first to know.</p>
+            
+            <p>As promised, here is the classified intel we smuggled out. Keep it quiet. The City of Everywhere has eyes everywhere.</p>
+        </div>
+
+        <!-- Digital Rewards Section -->
+        <div class="download-box">
+            <div class="download-title">DECRYPTED FILES READY FOR EXTRACTION</div>
+            
+            <!-- Replace the '#' with actual links to your PDF/ZIP files hosted on Google Drive, Dropbox, etc. -->
+            <a href="#" class="btn-download" target="_blank">⬇ SEEDLESS GRAPES MOTEL [BLUEPRINTS.ZIP]</a>
+            <a href="#" class="btn-download" target="_blank">⬇ CLASSIFIED [UNCUT_PUZZLE.PDF]</a>
+        </div>
+
+        <!-- The Upsell to Big Cartel -->
+        <div class="upsell-box">
+            <div class="header-glitch" style="font-size: 2rem; border-bottom: none; margin-bottom: 10px;">WE NEED OPERATIONAL CAPITAL.</div>
+            <div class="body-text">
+                <p>Digital files are cute, but if you want to actually see the hidden layers clearly, you need the physical hardware. We smuggled a limited run of the <span class="highlight-white">Unknown: Volume 1</span> field guides out of the quarantine zone.</p>
+                <p>Grab a copy. Fund the war. Uncover the truth.</p>
+            </div>
+            
+            <!-- Replace '#' with your actual Big Cartel URL -->
+            <a href="#" class="btn-store">PROCURE PHYSICAL ARTEFACT</a>
+        </div>
+
+        <div class="terminal-footer">
+            <p>End of Transmission. // 3M29 Operations.</p>
+        </div>
+    </div>
+
+</body>
+</html>

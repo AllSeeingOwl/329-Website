@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM ERROR // MLTK MAINFRAME</title>
+    <!-- Importing Gretchen's corporate font from the Master Font Sheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0000aa; /* Classic Win95 BSOD Blue */
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.02; }
+            50% { opacity: 0.05; }
+            100% { opacity: 0.02; }
+        }
+
+        .bsod-container {
+            max-width: 800px;
+            padding: 40px;
+            z-index: 3;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .bsod-header {
+            background-color: #ffffff;
+            color: #0000aa;
+            display: inline-block;
+            padding: 2px 8px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bsod-text p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .terminal-input-group {
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .prompt { margin-right: 10px; }
+
+        input[type="text"] {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            outline: none;
+            width: 250px;
+            text-transform: uppercase;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: #ffffff;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #success-screen {
+            display: none;
+            background-color: #050505;
+            color: #00ff00;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .success-title {
+            font-size: 2rem;
+            border-bottom: 2px solid #00ff00;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .success-body {
+            max-width: 800px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 600px) {
+            .bsod-text p, .terminal-input-group, input[type="text"] { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bsod-container" id="lockdown-screen">
+        <div class="bsod-header">MLTK // FATAL EXCEPTION 0E</div>
+        
+        <div class="bsod-text">
+            <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36. The current application will be terminated.</p>
+            <p>* The MLTK Quantum Supercomputer has detected an unauthorized access anomaly originating from Sector 4.</p>
+            <p>* Quarantine protocols enacted by Director G. Meredith.</p>
+            <p>* All non-essential data streams have been suspended pending identity verification.</p>
+            <p>Press any key to terminate the current application, or input a valid Level-4 Override Serial to bypass lockdown.</p>
+        </div>
+
+        <div class="terminal-input-group" id="input-group">
+            <span class="prompt">C:\MLTK\AUTH></span>
+            <form id="auth-form" onsubmit="verifyCode(event)" autocomplete="off" style="display:inline; margin:0; padding:0;">
+                <input type="text" id="serial-input" maxlength="14" autofocus>
+            </form>
+            <span class="cursor"></span>
+        </div>
+        
+        <p id="error-msg" style="color: #ffaaaa; margin-top: 20px; display: none; font-weight: bold;">INVALID SERIAL. ACCESS DENIED.</p>
+    </div>
+
+    <div id="success-screen">
+        <div style="max-width: 800px; margin: 0 auto; width: 100%;">
+            <div class="success-title">IDENTITY VERIFIED: B. CANDELA</div>
+            <div class="success-body">
+                <p>Welcome, Beatrix.</p>
+                <p>Override accepted via "The Space" Elite Account Privileges.</p>
+                <p>Quarantine protocols bypassed. You now have temporary read-only access to the NOVA classified archives.</p>
+                <br>
+                <p style="color: #fff;">[!] INCOMING TRANSMISSION INTERCEPT [!]</p>
+                <p style="color: #ff003c;">MERRICK: Hah! I told you that bougie bank card was good for something, Asp Boy. You left a back door wide open.</p>
+                <p style="color: #ff003c;">JAKE: Download the architectural schematics for the Virtue Villages before Gretchen's ICE software boots us out. We've got 40 seconds.</p>
+                <br>
+                <p><a href="#" style="color: #00ff00; text-decoration: underline;">> DOWNLOAD VIRTUE_VILLAGE_LAYOUTS.PDF</a></p>
+                <p><a href="#" style="color: #00ff00; text-decoration: underline;">> DOWNLOAD GRETCHEN_DOSSIER.TXT</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('serial-input');
+        inputField.addEventListener('input', function (e) {
+            let target = e.target;
+            let val = target.value.replace(/-/g, '').toUpperCase();
+            let newVal = '';
+            for (let i = 0; i < val.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    newVal += '-';
+                }
+                newVal += val[i];
+            }
+            target.value = newVal;
+        });
+
+        document.addEventListener('click', () => {
+            if (document.getElementById('lockdown-screen').style.display !== 'none') {
+                inputField.focus();
+            }
+        });
+
+        function verifyCode(e) {
+            e.preventDefault();
+            const code = inputField.value.trim().toUpperCase();
+            const errorMsg = document.getElementById('error-msg');
+            const inputGroup = document.getElementById('input-group');
+
+            if (code === "0408-1998-XXXX") {
+                document.body.style.backgroundColor = "#050505";
+                document.getElementById('lockdown-screen').style.display = "none";
+                const successScreen = document.getElementById('success-screen');
+                successScreen.style.display = "flex";
+            } else {
+                errorMsg.style.display = "block";
+                inputGroup.classList.remove('shake');
+                void inputGroup.offsetWidth; 
+                inputGroup.classList.add('shake');
+                inputField.value = ""; 
+                setTimeout(() => {
+                    errorMsg.style.display = "none";
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
