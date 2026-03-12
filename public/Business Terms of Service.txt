@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - 3minsto9 Operations</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #222;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Terms of Service</h1>
+        <p>Last updated: [Current Date]</p>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing or using our website, you agree to comply with and be bound by these Terms of Service. If you disagree with any part of these terms, please do not use our website.</p>
+
+        <h2>2. Intellectual Property</h2>
+        <p>All content on this website, including but not limited to text, graphics, logos, images, audio clips, digital downloads, and data compilations, is the property of 3minsto9 Operations or its content suppliers and protected by international copyright laws. You may not reproduce, distribute, modify, create derivative works of, publicly display, or in any way exploit any of the content without prior written consent.</p>
+
+        <h2>3. User Conduct</h2>
+        <p>You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit the use and enjoyment of this website by any third party.</p>
+
+        <h2>4. Limitation of Liability</h2>
+        <p>In no event shall 3minsto9 Operations be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with your use of the website or inability to use the website, even if advised of the possibility of such damages.</p>
+
+        <h2>5. Disclaimer of Warranties</h2>
+        <p>This website is provided "as is" and "as available" without any representations or warranties, express or implied. 3minsto9 Operations makes no representations or warranties in relation to this website or the information and materials provided on this website.</p>
+
+        <h2>6. Links to Other Websites</h2>
+        <p>Our website may contain links to third-party web sites or services that are not owned or controlled by 3minsto9 Operations. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third party web sites or services.</p>
+
+        <h2>7. Governing Law</h2>
+        <p>These Terms shall be governed and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law provisions.</p>
+
+        <h2>8. Changes to Terms</h2>
+        <p>We reserve the right to modify or replace these Terms at any time. By continuing to access or use our website after those revisions become effective, you agree to be bound by the revised terms.</p>
+
+        <h2>9. Contact Us</h2>
+        <p>If you have any questions about these Terms, please contact us at [Contact Email].</p>
+    </div>
+</body>
+</html>
