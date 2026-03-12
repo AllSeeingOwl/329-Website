@@ -37,6 +37,11 @@ function openDoc(docId) {
         return;
     }
 
+    if (!viewer || !header || !body) {
+        console.error("Required DOM elements for document viewer are missing.");
+        return;
+    }
+
     header.innerText = documents[docId].title;
     body.innerHTML = documents[docId].content;
 
@@ -48,6 +53,12 @@ function closeDoc() {
     if (viewer) {
         viewer.classList.remove('visible');
     }
+}
+
+// Attach to window for browser compatibility when used as a module/refactored inline script
+if (typeof window !== 'undefined') {
+    window.openDoc = openDoc;
+    window.closeDoc = closeDoc;
 }
 
 if (typeof module !== 'undefined' && module.exports) {

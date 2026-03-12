@@ -49,6 +49,19 @@ describe('NOVA Classified Archive Modal', () => {
 
             consoleSpy.mockRestore();
         });
+
+        test('handles missing DOM elements gracefully', () => {
+            document.body.innerHTML = ''; // Remove all elements
+
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            // Should not throw
+            expect(() => openDoc('vv')).not.toThrow();
+
+            expect(consoleSpy).toHaveBeenCalledWith("Required DOM elements for document viewer are missing.");
+
+            consoleSpy.mockRestore();
+        });
     });
 
     describe('closeDoc', () => {
