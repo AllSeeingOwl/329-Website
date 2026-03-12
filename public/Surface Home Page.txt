@@ -271,7 +271,7 @@
             </a>
             <nav class="nav-links">
                 <a href="#">Releases</a>
-                <a href="about.html">The Studio</a>
+                <a href="Studio%20Manifesto%20Page.txt">The Studio</a>
                 <a href="#" style="color: var(--accent-red);">Store</a>
             </nav>
         </div>
