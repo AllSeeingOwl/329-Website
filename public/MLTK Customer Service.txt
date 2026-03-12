@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service - MLTK Corporation</title>
+    <!-- Corporate aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #e0e0e0;
+            color: #111;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-bar {
+            background-color: #0000aa;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #ff003c;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+        }
+
+        .terminal-container {
+            width: 90%;
+            max-width: 700px;
+            background-color: #fff;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            border: 2px solid #333;
+            padding: 30px;
+            margin-top: 80px;
+        }
+
+        .terminal-header {
+            color: #0000aa;
+            font-size: 1.5rem;
+            border-bottom: 2px dashed #0000aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .automated-response {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #444;
+            min-height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #0000aa;
+        }
+
+        input[type="text"], select, textarea {
+            padding: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid #999;
+            background-color: #fff;
+            color: #000;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #0000aa;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #ff003c;
+        }
+
+        .processing-indicator {
+            display: none;
+            color: #ff003c;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .ticket-number {
+            font-weight: bold;
+            color: #0000aa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h2>MLTK Citizen Interaction Portal</h2>
+        <p>Your compliance is our priority</p>
+    </div>
+
+    <div class="terminal-container">
+        <div class="terminal-header">
+            Automated Support Interface v9.4
+        </div>
+
+        <div class="automated-response" id="chat-window">
+            > CONNECTION ESTABLISHED.
+            > IDENTIFYING CITIZEN BIOMETRICS... OK.
+            > WELCOME TO MLTK CUSTOMER SERVICE.
+            > PLEASE STATE THE NATURE OF YOUR INQUIRY OR DISPLEASURE.
+            > NOTE: ALL COMMUNICATIONS ARE RECORDED FOR COMPLIANCE PURPOSES.
+        </div>
+
+        <form id="support-form" onsubmit="submitTicket(event)">
+            <div class="input-group">
+                <label for="category">INQUIRY CATEGORY:</label>
+                <select id="category" required>
+                    <option value="" disabled selected>SELECT REASON...</option>
+                    <option value="housing">Virtue Village Housing Assignment Query</option>
+                    <option value="ration">Nutritional Ration Discrepancy</option>
+                    <option value="report">Report Suspicious Activity (TEAM RABBIT)</option>
+                    <option value="existential">Existential Dread (Requires Form 8B)</option>
+                    <option value="other">General Submission (Low Priority)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="message">COMPLAINT DETAILS:</label>
+                <textarea id="message" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn">SUBMIT INQUIRY TO MAINFRAME</button>
+            <div class="processing-indicator" id="processing-msg">PROCESSING REQUEST... PLEASE STAND BY...</div>
+        </form>
+    </div>
+
+    <script>
+        function submitTicket(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submit-btn');
+            const processingMsg = document.getElementById('processing-msg');
+            const chatWindow = document.getElementById('chat-window');
+            const form = document.getElementById('support-form');
+            const category = document.getElementById('category').value;
+            const msgInput = document.getElementById('message').value;
+
+            btn.style.display = 'none';
+            processingMsg.style.display = 'block';
+
+            // Simulate "Processing"
+            setTimeout(() => {
+                const ticketId = Math.floor(Math.random() * 9000000) + 1000000;
+
+                // Escape input to prevent XSS
+                const escapeHTML = (str) => str.replace(/[&<>'"]/g,
+                    tag => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        "'": '&#39;',
+                        '"': '&quot;'
+                    }[tag])
+                );
+
+                let responseText = `\n\n> RECEIVING TRANSMISSION...`;
+                responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput).substring(0, 30)}..."`;
+
+                if (category === 'report') {
+                    responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
+                } else if (category === 'existential') {
+                    responseText += `\n> ERROR: EXISTENTIAL DREAD IS NOT COVERED UNDER YOUR CURRENT HEALTH PLAN. PLEASE REPORT TO RE-EDUCATION CENTER B FOR ADJUSTMENT.`;
+                } else {
+                    responseText += `\n> INQUIRY LOGGED AS LOW PRIORITY.`;
+                    responseText += `\n> CURRENT WAIT TIME IN QUEUE: 14,923 HOURS.`;
+                    responseText += `\n> PLEASE DO NOT DISCONNECT OR LEAVE YOUR ASSIGNED SECTOR.`;
+                }
+
+                responseText += `\n> TICKET <span class="ticket-number">#${ticketId}</span> ASSIGNED. HAVE A PRODUCTIVE CYCLE.`;
+
+                chatWindow.innerHTML += responseText;
+
+                // Scroll to bottom
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                // Reset form
+                form.reset();
+                btn.style.display = 'block';
+                processingMsg.style.display = 'none';
+
+            }, 2500); // 2.5 second delay for corporate realism
+        }
+    </script>
+</body>
+</html>
