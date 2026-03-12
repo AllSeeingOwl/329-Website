@@ -119,4 +119,68 @@ describe('MLTK Login Gate Tests', () => {
         jest.advanceTimersByTime(3000);
         expect(errorMsg.style.display).toBe('none');
     });
+
+    test('verifyCode fetch error - catches error and logs to console', async () => {
+        const originalConsoleError = console.error;
+        console.error = jest.fn();
+
+        const mockError = new Error('Network failure');
+        global.fetch.mockRejectedValueOnce(mockError);
+
+        const inputField = document.getElementById('serial-input');
+        inputField.value = 'ANY-CODE';
+
+        const event = { preventDefault: jest.fn() };
+        await verifyCode(event);
+
+        expect(console.error).toHaveBeenCalledWith('Error verifying code:', mockError);
+
+        console.error = originalConsoleError;
+    });
+
+    test('setupEventListeners and verifyCode handle missing DOM elements gracefully', async () => {
+        // Clear DOM
+        document.body.innerHTML = '';
+
+        // Should not throw
+        setupEventListeners();
+
+        // Dispatch a click, should not throw
+        document.dispatchEvent(new Event('click'));
+
+        // verifyCode success path with missing elements
+        global.fetch.mockResolvedValueOnce({
+            json: async () => ({ success: true }),
+        });
+
+        const event = { preventDefault: jest.fn() };
+        await verifyCode(event);
+        // Expect fetch to be called with empty code since inputField is missing
+        expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: '' }),
+        });
+
+        // verifyCode error path with missing elements
+        global.fetch.mockResolvedValueOnce({
+            json: async () => ({ success: false }),
+        });
+        await verifyCode(event);
+        jest.advanceTimersByTime(3000);
+
+        // verifyCode when fetch rejects
+        const originalConsoleError = console.error;
+        console.error = jest.fn();
+        global.fetch.mockRejectedValueOnce(new Error('Network failure'));
+        await verifyCode(event);
+        expect(console.error).toHaveBeenCalled();
+
+        // Also call with no event
+        global.fetch.mockRejectedValueOnce(new Error('Network failure'));
+        await verifyCode();
+        expect(console.error).toHaveBeenCalledTimes(2);
+
+        console.error = originalConsoleError;
+    });
 });
