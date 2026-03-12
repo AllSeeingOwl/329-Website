@@ -220,7 +220,7 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">Releases</a>
-                <a href="about.html" style="color: var(--accent-red);">The Studio</a>
+                <a href="Studio%20Manifesto%20Page.txt" style="color: var(--accent-red);">The Studio</a>
                 <a href="#">Store</a>
             </nav>
         </div>
