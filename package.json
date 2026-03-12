@@ -3,11 +3,47 @@
   "version": "1.0.0",
   "description": "3minsto9 ARG web assets",
   "scripts": {
-    "test": "jest"
+    "dev:server": "nodemon server.js",
+    "test": "jest",
+    "test:e2e:playwright": "playwright test",
+    "test:e2e:cypress": "cypress open",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "build:vite": "vite build",
+    "build:webpack": "webpack",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,css,md,txt}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "cypress": "^15.11.0",
+    "eslint": "^10.0.3",
+    "eslint-plugin-jest": "^29.15.0",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^30.3.0"
+    "jest-environment-jsdom": "^30.3.0",
+    "lint-staged": "^16.3.3",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^6.0.1"
   },
   "dependencies": {
     "express": "^5.2.1"
