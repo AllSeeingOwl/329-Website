@@ -39,6 +39,7 @@
     "lint-staged": "^16.3.3",
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
+    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.0",
