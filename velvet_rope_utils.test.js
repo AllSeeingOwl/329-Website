@@ -18,14 +18,11 @@ describe('Velvet Rope Utilities Tests', () => {
             </div>
         `;
 
-        // Mock window.location properly
-        originalLocation = window.location;
+        // Setup JSDOM mock
         delete window.location;
-        window.location = {
-            href: '',
-            assign: jest.fn(),
-            replace: jest.fn()
-        };
+        window.location = new URL('http://localhost/');
+        window.location.assign = jest.fn();
+        window.location.replace = jest.fn();
 
         jest.useFakeTimers();
     });
