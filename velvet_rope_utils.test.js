@@ -5,11 +5,11 @@
 const { initVelvetRope, breachMainframe, CONFIG } = require('./public/velvet_rope_utils');
 
 describe('Velvet Rope Utilities Tests', () => {
-    let originalLocation;
+  let originalLocation;
 
-    beforeEach(() => {
-        // Setup DOM
-        document.body.innerHTML = `
+  beforeEach(() => {
+    // Setup DOM
+    document.body.innerHTML = `
             <div id="facade" style="display: block;"></div>
             <div id="underground" style="display: none;">
                 <div id="beatrix-intrusion" style="display: none;"></div>

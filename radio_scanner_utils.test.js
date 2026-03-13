@@ -5,72 +5,72 @@
 const { generateStatic, chars, setupRadioScanner } = require('./public/radio_scanner_utils');
 
 describe('generateStatic', () => {
-    test('generates a string of the requested length', () => {
-        expect(generateStatic(10)).toHaveLength(10);
-        expect(generateStatic(0)).toHaveLength(0);
-        expect(generateStatic(100)).toHaveLength(100);
+  test('generates a string of the requested length', () => {
+    expect(generateStatic(10)).toHaveLength(10);
+    expect(generateStatic(0)).toHaveLength(0);
+    expect(generateStatic(100)).toHaveLength(100);
+  });
+
+  test('only contains characters from the chars set', () => {
+    const result = generateStatic(1000);
+    for (let char of result) {
+      expect(chars).toContain(char);
+    }
+  });
+
+  test('returns empty string for negative length', () => {
+    expect(generateStatic(-5)).toBe('');
+  });
+
+  test('is somewhat random (consecutive calls with same length produce different results)', () => {
+    const result1 = generateStatic(50);
+    const result2 = generateStatic(50);
+    expect(result1).not.toBe(result2);
+  });
+
+  describe('boundary conditions with mocked Math.random', () => {
+    let originalRandom;
+
+    beforeEach(() => {
+      originalRandom = Math.random;
     });
 
-    test('only contains characters from the chars set', () => {
-        const result = generateStatic(1000);
-        for (let char of result) {
-            expect(chars).toContain(char);
-        }
+    afterEach(() => {
+      Math.random = originalRandom;
     });
 
-    test('returns empty string for negative length', () => {
-        expect(generateStatic(-5)).toBe('');
+    test('uses the first character when Math.random returns 0', () => {
+      Math.random = jest.fn(() => 0);
+      const expectedChar = chars.charAt(0);
+      expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+      expect(Math.random).toHaveBeenCalledTimes(5);
     });
 
-    test('is somewhat random (consecutive calls with same length produce different results)', () => {
-        const result1 = generateStatic(50);
-        const result2 = generateStatic(50);
-        expect(result1).not.toBe(result2);
+    test('uses the last character when Math.random returns close to 1', () => {
+      Math.random = jest.fn(() => 0.999999);
+      const expectedChar = chars.charAt(chars.length - 1);
+      expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+      expect(Math.random).toHaveBeenCalledTimes(5);
     });
 
-    describe('boundary conditions with mocked Math.random', () => {
-        let originalRandom;
-
-        beforeEach(() => {
-            originalRandom = Math.random;
-        });
-
-        afterEach(() => {
-            Math.random = originalRandom;
-        });
-
-        test('uses the first character when Math.random returns 0', () => {
-            Math.random = jest.fn(() => 0);
-            const expectedChar = chars.charAt(0);
-            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
-            expect(Math.random).toHaveBeenCalledTimes(5);
-        });
-
-        test('uses the last character when Math.random returns close to 1', () => {
-            Math.random = jest.fn(() => 0.999999);
-            const expectedChar = chars.charAt(chars.length - 1);
-            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
-            expect(Math.random).toHaveBeenCalledTimes(5);
-        });
-
-        test('uses a character in the middle when Math.random returns 0.5', () => {
-            Math.random = jest.fn(() => 0.5);
-            const middleIndex = Math.floor(0.5 * chars.length);
-            const expectedChar = chars.charAt(middleIndex);
-            expect(generateStatic(5)).toBe(expectedChar.repeat(5));
-            expect(Math.random).toHaveBeenCalledTimes(5);
-        });
+    test('uses a character in the middle when Math.random returns 0.5', () => {
+      Math.random = jest.fn(() => 0.5);
+      const middleIndex = Math.floor(0.5 * chars.length);
+      const expectedChar = chars.charAt(middleIndex);
+      expect(generateStatic(5)).toBe(expectedChar.repeat(5));
+      expect(Math.random).toHaveBeenCalledTimes(5);
     });
+  });
 });
 
 describe('setupRadioScanner', () => {
-    let slider;
-    let display;
-    let output;
-    let radioBody;
+  let slider;
+  let display;
+  let output;
+  let radioBody;
 
-    beforeEach(() => {
-        document.body.innerHTML = `
+  beforeEach(() => {
+    document.body.innerHTML = `
             <div id="radio-body">
                 <p id="freq-display"></p>
                 <input type="range" id="freq-slider" min="880" max="1080" value="880">
@@ -78,69 +78,70 @@ describe('setupRadioScanner', () => {
             </div>
         `;
 
-        slider = document.getElementById('freq-slider');
-        display = document.getElementById('freq-display');
-        output = document.getElementById('transmission-output');
-        radioBody = document.getElementById('radio-body');
+    slider = document.getElementById('freq-slider');
+    display = document.getElementById('freq-display');
+    output = document.getElementById('transmission-output');
+    radioBody = document.getElementById('radio-body');
 
-        jest.useFakeTimers();
-    });
+    jest.useFakeTimers();
+  });
 
-    afterEach(() => {
-        jest.useRealTimers();
-        jest.clearAllMocks();
-    });
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.clearAllMocks();
+  });
 
-    test('does nothing if elements are missing', () => {
-        document.body.innerHTML = ''; // clear DOM
-        setupRadioScanner();
-        // Nothing should throw
-    });
+  test('does nothing if elements are missing', () => {
+    document.body.innerHTML = ''; // clear DOM
+    setupRadioScanner();
+    // Nothing should throw
+  });
 
-    test('displays static when far from frequency', () => {
-        setupRadioScanner();
+  test('displays static when far from frequency', () => {
+    setupRadioScanner();
 
-        slider.value = "880";
-        slider.dispatchEvent(new Event('input'));
+    slider.value = '880';
+    slider.dispatchEvent(new Event('input'));
 
-        expect(display.innerText).toBe("88.0");
-        expect(radioBody.classList.contains('locked-in')).toBe(false);
-        expect(output.classList.contains('anim-shake')).toBe(true);
-        expect(output.innerText.length).toBeGreaterThan(0);
-        expect(output.innerText).not.toContain('...TRANSMISSION S');
-    });
+    expect(display.innerText).toBe('88.0');
+    expect(radioBody.classList.contains('locked-in')).toBe(false);
+    expect(output.classList.contains('anim-shake')).toBe(true);
+    expect(output.innerText.length).toBeGreaterThan(0);
+    expect(output.innerText).not.toContain('...TRANSMISSION S');
+  });
 
-    test('displays partial static when close to frequency', () => {
-        setupRadioScanner();
+  test('displays partial static when close to frequency', () => {
+    setupRadioScanner();
 
-        slider.value = "1046"; // distance is 3 (1049 - 1046)
-        slider.dispatchEvent(new Event('input'));
+    slider.value = '1046'; // distance is 3 (1049 - 1046)
+    slider.dispatchEvent(new Event('input'));
 
-        expect(display.innerText).toBe("104.6");
-        expect(radioBody.classList.contains('locked-in')).toBe(false);
-        expect(output.classList.contains('anim-shake')).toBe(true);
-        expect(output.innerText).toContain('...TRANSMISSION S');
-        expect(output.innerText).toContain('groovy c');
-        expect(output.innerText).toContain('bolt cutters...');
-    });
+    expect(display.innerText).toBe('104.6');
+    expect(radioBody.classList.contains('locked-in')).toBe(false);
+    expect(output.classList.contains('anim-shake')).toBe(true);
+    expect(output.innerText).toContain('...TRANSMISSION S');
+    expect(output.innerText).toContain('groovy c');
+    expect(output.innerText).toContain('bolt cutters...');
+  });
 
-    test('locks in and types message when exactly on frequency', () => {
-        setupRadioScanner();
+  test('locks in and types message when exactly on frequency', () => {
+    setupRadioScanner();
 
-        slider.value = "1049";
-        slider.dispatchEvent(new Event('input'));
+    slider.value = '1049';
+    slider.dispatchEvent(new Event('input'));
 
-        expect(display.innerText).toBe("104.9");
-        expect(radioBody.classList.contains('locked-in')).toBe(true);
-        expect(output.classList.contains('anim-shake')).toBe(false);
+    expect(display.innerText).toBe('104.9');
+    expect(radioBody.classList.contains('locked-in')).toBe(true);
+    expect(output.classList.contains('anim-shake')).toBe(false);
 
-        // Initially empty before typing animation
-        expect(output.innerText).toBe("");
+    // Initially empty before typing animation
+    expect(output.innerText).toBe('');
 
-        // Advance timers to complete typing animation
-        jest.advanceTimersByTime(30 * 300); // 30ms per char, approx 300 chars
+    // Advance timers to complete typing animation
+    jest.advanceTimersByTime(30 * 300); // 30ms per char, approx 300 chars
 
-        const decryptedMessage = "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
-        expect(output.innerText).toBe(decryptedMessage);
-    });
+    const decryptedMessage =
+      "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
+    expect(output.innerText).toBe(decryptedMessage);
+  });
 });

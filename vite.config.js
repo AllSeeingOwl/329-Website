@@ -11,7 +11,7 @@ export default defineConfig({
     port: 3001,
     proxy: {
       // Proxy API requests to your express backend during development
-      '/api': 'http://localhost:3000'
-    }
-  }
+      '/api': 'http://localhost:3000',
+    },
+  },
 });

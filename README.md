@@ -11,6 +11,7 @@ The files in this repository make up the various interactive websites, puzzles, 
 The current assets are stored as raw `.txt` files containing HTML, CSS, and JavaScript. They are meant to be deployed or integrated into a larger web application to form a cohesive ARG experience.
 
 Some of the key files include:
+
 - **Surface Home Page / Velvet Rope Landing Page:** The "front-facing" corporate websites of the City of Everywhere.
 - **MLTK Login Gate / NOVA Classified Archive:** Internal corporate pages requiring passwords or puzzles to access.
 - **Ollies Radio Scanner / Secure Data Drop Page:** Hidden rebel communication nodes for Team Rabbit.
