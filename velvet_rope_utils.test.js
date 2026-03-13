@@ -5,8 +5,6 @@
 const { initVelvetRope, breachMainframe, CONFIG } = require('./public/velvet_rope_utils');
 
 describe('Velvet Rope Utilities Tests', () => {
-  let originalLocation;
-
   beforeEach(() => {
     // Setup DOM
     document.body.innerHTML = `
@@ -18,19 +16,22 @@ describe('Velvet Rope Utilities Tests', () => {
             </div>
         `;
 
-        // Setup JSDOM mock
-        delete window.location;
-        window.location = new URL('http://localhost/');
-        window.location.assign = jest.fn();
-        window.location.replace = jest.fn();
+        // Suppress navigation errors in tests temporarily
+        jest.spyOn(console, 'error').mockImplementation((msg) => {
+            if (msg && msg.toString().includes('Not implemented: navigation')) return;
+            console.warn(msg);
+        });
+
+        // Initialize SHOULD_REDIRECT to false for isolation
+        CONFIG.SHOULD_REDIRECT = false;
 
         jest.useFakeTimers();
     });
 
     afterEach(() => {
-        window.location = originalLocation;
         jest.useRealTimers();
         jest.clearAllMocks();
+        jest.restoreAllMocks();
         document.body.innerHTML = '';
     });
 
@@ -63,17 +64,19 @@ describe('Velvet Rope Utilities Tests', () => {
             }
         };
 
-        breachMainframe(event);
+        const mockWin = { location: { assign: jest.fn(), href: '' } };
+        breachMainframe(event, mockWin);
 
         expect(event.preventDefault).toHaveBeenCalled();
 
         jest.advanceTimersByTime(800);
 
-        const modal = document.querySelector('div[style*="position:fixed"]');
+        // Find the newly appended modal (it should contain 'COMMUNICATION SECURED.')
+        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
+        const modal = modals.length > 0 ? modals[0] : null;
         expect(modal).toBeTruthy();
-        expect(modal.innerHTML).toContain('COMMUNICATION SECURED.');
         // Ensure developer note is NOT present
-        expect(modal.innerHTML).not.toContain('Developer Note');
+        expect(modal.textContent).not.toContain('Developer Note');
     });
 
     test('breachMainframe redirects when SHOULD_REDIRECT is true', () => {
@@ -87,14 +90,17 @@ describe('Velvet Rope Utilities Tests', () => {
             }
         };
 
-        breachMainframe(event);
+        const assignMock = jest.fn();
+        const mockWin = { location: { assign: assignMock, href: '' } };
+
+        breachMainframe(event, mockWin);
 
         jest.advanceTimersByTime(800);
 
-        expect(window.location.href).toBe('test-redirect.html');
+        expect(assignMock).toHaveBeenCalledWith('test-redirect.html');
         // Modal should not be created
-        const modal = document.querySelector('div[style*="position:fixed"]');
-        expect(modal).toBeNull();
+        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
+        expect(modals.length).toBe(0);
     });
 
     test('gracefully handles missing elements in initVelvetRope', () => {
@@ -108,11 +114,13 @@ describe('Velvet Rope Utilities Tests', () => {
         CONFIG.SHOULD_REDIRECT = false;
         document.body.innerHTML = '<div id="test"></div>';
 
+        const mockWin = { location: { assign: jest.fn(), href: '' } };
         // Should not throw
-        breachMainframe(null);
+        breachMainframe(null, mockWin);
         jest.advanceTimersByTime(800);
 
-        const modal = document.querySelector('div[style*="position:fixed"]');
+        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
+        const modal = modals.length > 0 ? modals[0] : null;
         expect(modal).toBeTruthy();
     });
 });
