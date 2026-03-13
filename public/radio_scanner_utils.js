@@ -1,8 +1,10 @@
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!<>{}[]';
 
 function generateStatic(length) {
-  if (length < 0) return '';
-  return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  if (length <= 0) return '';
+  const randomValues = new Uint32Array(length);
+  globalThis.crypto.getRandomValues(randomValues);
+  return Array.from(randomValues, (val) => chars[val % chars.length]).join('');
 }
 
 function setupRadioScanner() {
