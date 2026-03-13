@@ -15,11 +15,7 @@ if (!AUTH_PASSWORD) {
 
 app.post('/api/verify', (req, res) => {
   const { code } = req.body;
-  if (code === AUTH_PASSWORD) {
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
-  }
+  res.json({ success: code === AUTH_PASSWORD });
 });
 
 if (require.main === module) {
