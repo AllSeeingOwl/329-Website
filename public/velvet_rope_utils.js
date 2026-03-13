@@ -24,23 +24,30 @@ function initVelvetRope() {
 
       if (!beaBox || !triggerPoint) return;
 
+      let ticking = false;
       const scrollHandler = () => {
-        const triggerPosition = triggerPoint.getBoundingClientRect().top;
-        const screenHalfway = window.innerHeight * 0.5;
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const triggerPosition = triggerPoint.getBoundingClientRect().top;
+            const screenHalfway = window.innerHeight * 0.5;
 
-        if (triggerPosition < screenHalfway && !hasTriggered) {
-          hasTriggered = true;
-          window.removeEventListener('scroll', scrollHandler);
+            if (triggerPosition < screenHalfway && !hasTriggered) {
+              hasTriggered = true;
+              window.removeEventListener('scroll', scrollHandler);
 
-          beaBox.style.display = 'block';
+              beaBox.style.display = 'block';
 
-          setTimeout(() => beaBox.classList.add('visible'), 50);
+              setTimeout(() => beaBox.classList.add('visible'), 50);
 
-          setTimeout(() => {
-            beaBox.classList.add('crushed');
-            const merrickStamp = document.getElementById('merrick-stamp');
-            if (merrickStamp) merrickStamp.style.display = 'block';
-          }, 8000);
+              setTimeout(() => {
+                beaBox.classList.add('crushed');
+                const merrickStamp = document.getElementById('merrick-stamp');
+                if (merrickStamp) merrickStamp.style.display = 'block';
+              }, 8000);
+            }
+            ticking = false;
+          });
+          ticking = true;
         }
       };
 
