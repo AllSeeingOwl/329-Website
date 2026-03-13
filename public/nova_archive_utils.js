@@ -27,6 +27,17 @@ const documents = {
 // -----------------------------------------
 // Modal Logic
 // -----------------------------------------
+const allowedTags = ['p', 'strong', 'em'];
+const buildSafe = (node, target) =>
+  node.childNodes.forEach((child) => {
+    if (child.nodeType === 3) target.appendChild(document.createTextNode(child.textContent));
+    else if (child.nodeType === 1 && allowedTags.includes(child.tagName.toLowerCase())) {
+      const el = document.createElement(child.tagName);
+      buildSafe(child, el);
+      target.appendChild(el);
+    }
+  });
+
 function openDoc(docId) {
   const viewer = document.getElementById('doc-viewer');
   const header = document.getElementById('modal-header');
@@ -46,17 +57,7 @@ function openDoc(docId) {
 
   // Secure DOM construction to prevent XSS
   body.textContent = '';
-  const allowedTags = ['p', 'strong', 'em'];
   const docHtml = new DOMParser().parseFromString(documents[docId].content, 'text/html');
-  const buildSafe = (node, target) =>
-    node.childNodes.forEach((child) => {
-      if (child.nodeType === 3) target.appendChild(document.createTextNode(child.textContent));
-      else if (child.nodeType === 1 && allowedTags.includes(child.tagName.toLowerCase())) {
-        const el = document.createElement(child.tagName);
-        buildSafe(child, el);
-        target.appendChild(el);
-      }
-    });
   buildSafe(docHtml.body, body);
 
   viewer.classList.add('visible');
