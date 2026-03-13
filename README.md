@@ -10,10 +10,9 @@ The experience is centered around the conflict between an underground group know
 
 The project relies on a Node.js Express backend (`server.js`) that serves static assets from a `public/` directory.
 
-- **`public/`**: Contains the web assets.
-  - For narrative and stylistic reasons, HTML, CSS, and some inline JavaScript files are stored as raw `.txt` files.
+- **`public/`**: Contains the web assets, including `.html` pages, CSS, and some inline JavaScript files.
   - **JavaScript Utilities**: Extracted business logic and DOM interactions are stored as standard `.js` files within `public/`. They use a UMD-like pattern (`if (typeof module !== 'undefined' && module.exports)`) to allow execution in both the browser and Node.js environments.
-- **`server.js`**: An Express server configured to serve the `.txt` files as `text/html`.
+- **`server.js`**: An Express server configured to serve static files from the `public/` directory.
 - **Root Directory**: Contains configuration files (Vite, Webpack, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
 
 ## Development
@@ -40,12 +39,12 @@ npm install
 ## Testing
 
 - **Jest**: Unit tests are located in the repository root alongside the scripts they test. Tests requiring DOM interaction use `jest-environment-jsdom` and include the `/** @jest-environment jsdom */` pragma.
-- **End-to-End**: Playwright and Cypress are used for robust E2E verification. Due to the `.txt` extensions, testing tools often intercept requests to manually fulfill routes with `text/html` content types.
+- **End-to-End**: Playwright and Cypress are used for robust E2E verification.
 
 ## Deployment
 
 The project is automatically deployed to **GitHub Pages** via a GitHub Actions workflow (`.github/workflows/static.yml`).
 
 - The workflow uploads the `./public` directory as the deployment artifact.
-- A custom 404 page is handled by copying/renaming the in-universe 404 error file to `404.html` within the `public/` directory.
-- Internal navigation links within the `.txt` files utilize URL-encoded relative paths (e.g., `Surface%20Home%20Page.html`) to avoid 404 errors on subpaths.
+- A custom 404 page is handled by natively serving `404.html` from the deployment root.
+- Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `Surface%20Home%20Page.html`) to avoid 404 errors on subpaths.
