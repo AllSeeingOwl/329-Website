@@ -4,8 +4,8 @@ import * as path from 'path';
 test.describe('Radio Scanner E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Intercept requests to serve local files as the server is not reliable in this environment
-    await page.route('**/Ollies%20Radio%20Scanner.txt', async (route) => {
-      const filePath = path.join(__dirname, '..', 'public', 'Ollies Radio Scanner.txt');
+    await page.route('**/Ollies%20Radio%20Scanner.html', async (route) => {
+      const filePath = path.join(__dirname, '..', 'public', 'Ollies Radio Scanner.html');
       await route.fulfill({
         contentType: 'text/html',
         path: filePath,
@@ -20,7 +20,7 @@ test.describe('Radio Scanner E2E', () => {
       });
     });
 
-    await page.goto('/Ollies%20Radio%20Scanner.txt');
+    await page.goto('/Ollies%20Radio%20Scanner.html');
   });
 
   test('should display initial state', async ({ page }) => {

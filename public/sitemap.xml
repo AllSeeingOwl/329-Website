@@ -7,31 +7,31 @@
       <priority>1.0</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/Surface%20Home%20Page.txt</loc>
+      <loc>https://www.yourdomain.com/Surface%20Home%20Page.html</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.8</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/Studio%20Manifesto%20Page.txt</loc>
+      <loc>https://www.yourdomain.com/Studio%20Manifesto%20Page.html</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.6</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/Business%20Privacy%20Policy.txt</loc>
+      <loc>https://www.yourdomain.com/Business%20Privacy%20Policy.html</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/Business%20Terms%20of%20Service.txt</loc>
+      <loc>https://www.yourdomain.com/Business%20Terms%20of%20Service.html</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/Studio%20Contact%20Us.txt</loc>
+      <loc>https://www.yourdomain.com/Studio%20Contact%20Us.html</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.7</priority>

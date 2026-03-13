@@ -48,4 +48,4 @@ The project is automatically deployed to **GitHub Pages** via a GitHub Actions w
 
 - The workflow uploads the `./public` directory as the deployment artifact.
 - A custom 404 page is handled by copying/renaming the in-universe 404 error file to `404.html` within the `public/` directory.
-- Internal navigation links within the `.txt` files utilize URL-encoded relative paths (e.g., `Surface%20Home%20Page.txt`) to avoid 404 errors on subpaths.
+- Internal navigation links within the `.txt` files utilize URL-encoded relative paths (e.g., `Surface%20Home%20Page.html`) to avoid 404 errors on subpaths.

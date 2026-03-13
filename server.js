@@ -5,18 +5,7 @@ const port = 3000;
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'public'), {
-    setHeaders: (res, path, stat) => {
-        if (path.endsWith('.txt')) {
-            // Keep specific files as text/plain
-            if (path.endsWith('robots.txt') || path.endsWith('Big Cartel CSS.txt')) {
-                res.set('Content-Type', 'text/plain');
-            } else {
-                res.set('Content-Type', 'text/html');
-            }
-        }
-    }
-}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
