@@ -5,11 +5,11 @@
 const { setupEventListeners, verifyCode } = require('./public/mltk_login_utils');
 
 describe('MLTK Login Gate Tests', () => {
-    let originalFetch;
+  let originalFetch;
 
-    beforeEach(() => {
-        // Setup DOM
-        document.body.innerHTML = `
+  beforeEach(() => {
+    // Setup DOM
+    document.body.innerHTML = `
             <div id="lockdown-screen" style="display: block;">
                 <div id="input-group" class="">
                     <input type="text" id="serial-input" value="">
@@ -19,168 +19,168 @@ describe('MLTK Login Gate Tests', () => {
             <div id="success-screen" style="display: none;"></div>
         `;
 
-        // Mock fetch
-        originalFetch = global.fetch;
-        global.fetch = jest.fn();
+    // Mock fetch
+    originalFetch = global.fetch;
+    global.fetch = jest.fn();
 
-        jest.useFakeTimers();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    jest.useRealTimers();
+    jest.clearAllMocks();
+  });
+
+  test('setupEventListeners formats input with hyphens and uppercase', () => {
+    setupEventListeners();
+    const inputField = document.getElementById('serial-input');
+
+    // Simulate typing lowercase characters
+    inputField.value = 'abcd123';
+    const event = new Event('input', { bubbles: true });
+    inputField.dispatchEvent(event);
+
+    expect(inputField.value).toBe('ABCD-123');
+
+    // Simulate continuing typing
+    inputField.value = 'ABCD-123456';
+    inputField.dispatchEvent(event);
+
+    expect(inputField.value).toBe('ABCD-1234-56');
+  });
+
+  test('setupEventListeners adds click listener that focuses input when lockdown screen is active', () => {
+    setupEventListeners();
+    const inputField = document.getElementById('serial-input');
+
+    // Mock focus
+    inputField.focus = jest.fn();
+
+    document.dispatchEvent(new Event('click'));
+    expect(inputField.focus).toHaveBeenCalledTimes(1);
+
+    // Hide lockdown screen
+    document.getElementById('lockdown-screen').style.display = 'none';
+    document.dispatchEvent(new Event('click'));
+
+    // Should not be called again
+    expect(inputField.focus).toHaveBeenCalledTimes(1);
+  });
+
+  test('verifyCode success path - displays success screen and hides lockdown', async () => {
+    global.fetch.mockResolvedValueOnce({
+      json: async () => ({ success: true }),
     });
 
-    afterEach(() => {
-        global.fetch = originalFetch;
-        jest.useRealTimers();
-        jest.clearAllMocks();
+    const inputField = document.getElementById('serial-input');
+    inputField.value = '0408-1998-XXXX';
+
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: '0408-1998-XXXX' }),
     });
 
-    test('setupEventListeners formats input with hyphens and uppercase', () => {
-        setupEventListeners();
-        const inputField = document.getElementById('serial-input');
+    expect(document.body.style.backgroundColor).toBe('rgb(5, 5, 5)'); // #050505
+    expect(document.getElementById('lockdown-screen').style.display).toBe('none');
+    expect(document.getElementById('success-screen').style.display).toBe('flex');
+  });
 
-        // Simulate typing lowercase characters
-        inputField.value = 'abcd123';
-        const event = new Event('input', { bubbles: true });
-        inputField.dispatchEvent(event);
-
-        expect(inputField.value).toBe('ABCD-123');
-
-        // Simulate continuing typing
-        inputField.value = 'ABCD-123456';
-        inputField.dispatchEvent(event);
-
-        expect(inputField.value).toBe('ABCD-1234-56');
+  test('verifyCode error path - displays error, clears input, shakes, and hides error after timeout', async () => {
+    global.fetch.mockResolvedValueOnce({
+      json: async () => ({ success: false }),
     });
 
-    test('setupEventListeners adds click listener that focuses input when lockdown screen is active', () => {
-        setupEventListeners();
-        const inputField = document.getElementById('serial-input');
+    const inputField = document.getElementById('serial-input');
+    const errorMsg = document.getElementById('error-msg');
+    const inputGroup = document.getElementById('input-group');
 
-        // Mock focus
-        inputField.focus = jest.fn();
+    inputField.value = 'INVALID-CODE';
 
-        document.dispatchEvent(new Event('click'));
-        expect(inputField.focus).toHaveBeenCalledTimes(1);
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
 
-        // Hide lockdown screen
-        document.getElementById('lockdown-screen').style.display = 'none';
-        document.dispatchEvent(new Event('click'));
-
-        // Should not be called again
-        expect(inputField.focus).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: 'INVALID-CODE' }),
     });
 
-    test('verifyCode success path - displays success screen and hides lockdown', async () => {
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({ success: true }),
-        });
+    expect(errorMsg.style.display).toBe('block');
+    expect(inputGroup.classList.contains('shake')).toBe(true);
+    expect(inputField.value).toBe('');
 
-        const inputField = document.getElementById('serial-input');
-        inputField.value = '0408-1998-XXXX';
+    // Error message should disappear after 3 seconds
+    jest.advanceTimersByTime(3000);
+    expect(errorMsg.style.display).toBe('none');
+  });
 
-        const event = { preventDefault: jest.fn() };
-        await verifyCode(event);
+  test('verifyCode fetch error - catches error and logs to console', async () => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
 
-        expect(event.preventDefault).toHaveBeenCalled();
-        expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: '0408-1998-XXXX' }),
-        });
+    const mockError = new Error('Network failure');
+    global.fetch.mockRejectedValueOnce(mockError);
 
-        expect(document.body.style.backgroundColor).toBe('rgb(5, 5, 5)'); // #050505
-        expect(document.getElementById('lockdown-screen').style.display).toBe('none');
-        expect(document.getElementById('success-screen').style.display).toBe('flex');
+    const inputField = document.getElementById('serial-input');
+    inputField.value = 'ANY-CODE';
+
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
+
+    expect(console.error).toHaveBeenCalledWith('Error verifying code:', mockError);
+
+    console.error = originalConsoleError;
+  });
+
+  test('setupEventListeners and verifyCode handle missing DOM elements gracefully', async () => {
+    // Clear DOM
+    document.body.innerHTML = '';
+
+    // Should not throw
+    setupEventListeners();
+
+    // Dispatch a click, should not throw
+    document.dispatchEvent(new Event('click'));
+
+    // verifyCode success path with missing elements
+    global.fetch.mockResolvedValueOnce({
+      json: async () => ({ success: true }),
     });
 
-    test('verifyCode error path - displays error, clears input, shakes, and hides error after timeout', async () => {
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({ success: false }),
-        });
-
-        const inputField = document.getElementById('serial-input');
-        const errorMsg = document.getElementById('error-msg');
-        const inputGroup = document.getElementById('input-group');
-
-        inputField.value = 'INVALID-CODE';
-
-        const event = { preventDefault: jest.fn() };
-        await verifyCode(event);
-
-        expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: 'INVALID-CODE' }),
-        });
-
-        expect(errorMsg.style.display).toBe('block');
-        expect(inputGroup.classList.contains('shake')).toBe(true);
-        expect(inputField.value).toBe('');
-
-        // Error message should disappear after 3 seconds
-        jest.advanceTimersByTime(3000);
-        expect(errorMsg.style.display).toBe('none');
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
+    // Expect fetch to be called with empty code since inputField is missing
+    expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: '' }),
     });
 
-    test('verifyCode fetch error - catches error and logs to console', async () => {
-        const originalConsoleError = console.error;
-        console.error = jest.fn();
-
-        const mockError = new Error('Network failure');
-        global.fetch.mockRejectedValueOnce(mockError);
-
-        const inputField = document.getElementById('serial-input');
-        inputField.value = 'ANY-CODE';
-
-        const event = { preventDefault: jest.fn() };
-        await verifyCode(event);
-
-        expect(console.error).toHaveBeenCalledWith('Error verifying code:', mockError);
-
-        console.error = originalConsoleError;
+    // verifyCode error path with missing elements
+    global.fetch.mockResolvedValueOnce({
+      json: async () => ({ success: false }),
     });
+    await verifyCode(event);
+    jest.advanceTimersByTime(3000);
 
-    test('setupEventListeners and verifyCode handle missing DOM elements gracefully', async () => {
-        // Clear DOM
-        document.body.innerHTML = '';
+    // verifyCode when fetch rejects
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
+    global.fetch.mockRejectedValueOnce(new Error('Network failure'));
+    await verifyCode(event);
+    expect(console.error).toHaveBeenCalled();
 
-        // Should not throw
-        setupEventListeners();
+    // Also call with no event
+    global.fetch.mockRejectedValueOnce(new Error('Network failure'));
+    await verifyCode();
+    expect(console.error).toHaveBeenCalledTimes(2);
 
-        // Dispatch a click, should not throw
-        document.dispatchEvent(new Event('click'));
-
-        // verifyCode success path with missing elements
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({ success: true }),
-        });
-
-        const event = { preventDefault: jest.fn() };
-        await verifyCode(event);
-        // Expect fetch to be called with empty code since inputField is missing
-        expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: '' }),
-        });
-
-        // verifyCode error path with missing elements
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({ success: false }),
-        });
-        await verifyCode(event);
-        jest.advanceTimersByTime(3000);
-
-        // verifyCode when fetch rejects
-        const originalConsoleError = console.error;
-        console.error = jest.fn();
-        global.fetch.mockRejectedValueOnce(new Error('Network failure'));
-        await verifyCode(event);
-        expect(console.error).toHaveBeenCalled();
-
-        // Also call with no event
-        global.fetch.mockRejectedValueOnce(new Error('Network failure'));
-        await verifyCode();
-        expect(console.error).toHaveBeenCalledTimes(2);
-
-        console.error = originalConsoleError;
-    });
+    console.error = originalConsoleError;
+  });
 });
