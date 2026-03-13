@@ -4,7 +4,20 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, path, stat) => {
+        if (path.endsWith('.txt')) {
+            // Keep specific files as text/plain
+            if (path.endsWith('robots.txt') || path.endsWith('Big Cartel CSS.txt')) {
+                res.set('Content-Type', 'text/plain');
+            } else {
+                res.set('Content-Type', 'text/html');
+            }
+        }
+    }
+}));
+
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
 
@@ -13,10 +26,17 @@ if (!AUTH_PASSWORD) {
   process.exit(1);
 }
 
+
 app.post('/api/verify', (req, res) => {
   const { code } = req.body;
   res.json({ success: code === AUTH_PASSWORD });
 });
+
+// Catch-all route to serve the custom 404 page
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
+
 
 if (require.main === module) {
     app.listen(port, () => {
