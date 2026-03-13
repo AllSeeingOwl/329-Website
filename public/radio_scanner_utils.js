@@ -27,11 +27,11 @@ function setupRadioScanner() {
       radioBody.classList.add('locked-in');
       output.classList.remove('anim-shake');
 
-      output.innerText = '';
+      output.textContent = '';
       let i = 0;
       let typingInterval = setInterval(() => {
         if (i < decryptedMessage.length) {
-          output.innerText += decryptedMessage.charAt(i);
+          output.textContent += decryptedMessage.charAt(i);
           i++;
         } else {
           clearInterval(typingInterval);
