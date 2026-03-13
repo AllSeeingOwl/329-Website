@@ -1,204 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3minsto9 Operations - Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Anton&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Anton&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #050505;
-            color: #e0e0e0;
-            font-family: 'Share Tech Mono', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #050505;
+        color: #e0e0e0;
+        font-family: 'Share Tech Mono', monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
 
-        /* Glitch effect overlay */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15) 0px,
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            pointer-events: none;
-            z-index: 10;
-        }
+      /* Glitch effect overlay */
+      body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.15) 0px,
+          rgba(0, 0, 0, 0.15) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+        pointer-events: none;
+        z-index: 10;
+      }
 
-        .container {
-            text-align: center;
-            z-index: 5;
-            max-width: 800px;
-            padding: 20px;
-        }
+      .container {
+        text-align: center;
+        z-index: 5;
+        max-width: 800px;
+        padding: 20px;
+      }
 
-        .main-title {
-            font-family: 'Anton', sans-serif;
-            font-size: 4rem;
-            color: #ffffff;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 0px rgba(255, 0, 60, 0.5), -2px -2px 0px rgba(0, 255, 255, 0.5);
-            animation: text-glitch 3s infinite;
-        }
+      .main-title {
+        font-family: 'Anton', sans-serif;
+        font-size: 4rem;
+        color: #ffffff;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        text-shadow:
+          2px 2px 0px rgba(255, 0, 60, 0.5),
+          -2px -2px 0px rgba(0, 255, 255, 0.5);
+        animation: text-glitch 3s infinite;
+      }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 50px;
-            letter-spacing: 2px;
-        }
+      .subtitle {
+        font-size: 1.2rem;
+        color: #888;
+        margin-bottom: 50px;
+        letter-spacing: 2px;
+      }
 
+      .portal-grid {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .portal-card {
+        background-color: #111;
+        border: 1px solid #333;
+        width: 300px;
+        padding: 40px 20px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .portal-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        transition: 0.5s;
+      }
+
+      .portal-card:hover::before {
+        left: 100%;
+      }
+
+      .portal-card.studio:hover {
+        border-color: #fff;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px);
+      }
+
+      .portal-card.mltk:hover {
+        border-color: #ff003c;
+        box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+        transform: translateY(-5px);
+      }
+
+      .portal-card.mltk:hover .card-title {
+        color: #ff003c;
+        text-shadow: 0 0 8px #ff003c;
+      }
+
+      .card-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        opacity: 0.8;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s;
+      }
+
+      .card-desc {
+        font-size: 0.9rem;
+        color: #777;
+        line-height: 1.5;
+      }
+
+      /* Subtle text glitch animation */
+      @keyframes text-glitch {
+        0% {
+          text-shadow:
+            2px 2px 0px rgba(255, 0, 60, 0.5),
+            -2px -2px 0px rgba(0, 255, 255, 0.5);
+        }
+        5% {
+          text-shadow:
+            -2px 1px 0px rgba(255, 0, 60, 0.5),
+            2px -1px 0px rgba(0, 255, 255, 0.5);
+        }
+        10% {
+          text-shadow:
+            2px 2px 0px rgba(255, 0, 60, 0.5),
+            -2px -2px 0px rgba(0, 255, 255, 0.5);
+        }
+        100% {
+          text-shadow:
+            2px 2px 0px rgba(255, 0, 60, 0.5),
+            -2px -2px 0px rgba(0, 255, 255, 0.5);
+        }
+      }
+
+      .footer-links {
+        margin-top: 60px;
+        font-size: 0.8rem;
+        color: #555;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .footer-links a {
+        color: #555;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: #fff;
+      }
+
+      @media (max-width: 700px) {
         .portal-grid {
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            flex-wrap: wrap;
+          flex-direction: column;
+          align-items: center;
         }
-
         .portal-card {
-            background-color: #111;
-            border: 1px solid #333;
-            width: 300px;
-            padding: 40px 20px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            overflow: hidden;
+          width: 80%;
         }
-
-        .portal-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .portal-card:hover::before {
-            left: 100%;
-        }
-
-        .portal-card.studio:hover {
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
-            transform: translateY(-5px);
-        }
-
-        .portal-card.mltk:hover {
-            border-color: #ff003c;
-            box-shadow: 0 0 20px rgba(255,0,60,0.4);
-            transform: translateY(-5px);
-        }
-
-        .portal-card.mltk:hover .card-title {
-            color: #ff003c;
-            text-shadow: 0 0 8px #ff003c;
-        }
-
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-        }
-
-        .card-desc {
-            font-size: 0.9rem;
-            color: #777;
-            line-height: 1.5;
-        }
-
-        /* Subtle text glitch animation */
-        @keyframes text-glitch {
-            0% { text-shadow: 2px 2px 0px rgba(255,0,60,0.5), -2px -2px 0px rgba(0,255,255,0.5); }
-            5% { text-shadow: -2px 1px 0px rgba(255,0,60,0.5), 2px -1px 0px rgba(0,255,255,0.5); }
-            10% { text-shadow: 2px 2px 0px rgba(255,0,60,0.5), -2px -2px 0px rgba(0,255,255,0.5); }
-            100% { text-shadow: 2px 2px 0px rgba(255,0,60,0.5), -2px -2px 0px rgba(0,255,255,0.5); }
-        }
-
-        .footer-links {
-            margin-top: 60px;
-            font-size: 0.8rem;
-            color: #555;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            color: #555;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        @media (max-width: 700px) {
-            .portal-grid { flex-direction: column; align-items: center; }
-            .portal-card { width: 80%; }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="container">
-        <div class="main-title">3minsto9</div>
-        <div class="subtitle">SELECT YOUR INTERFACE</div>
+      <div class="main-title">3minsto9</div>
+      <div class="subtitle">SELECT YOUR INTERFACE</div>
 
-        <div class="portal-grid">
+      <div class="portal-grid">
+        <!-- Real World / Studio Side -->
+        <a href="Surface%20Home%20Page.txt" class="portal-card studio">
+          <div class="card-icon">🔲</div>
+          <div class="card-title">STUDIO OPERATIONS</div>
+          <div class="card-desc">
+            Enter the public-facing hub for 3minsto9. Access the manifesto, secure physical field
+            guides, and contact the real-world creation team.
+          </div>
+        </a>
 
-            <!-- Real World / Studio Side -->
-            <a href="Surface%20Home%20Page.txt" class="portal-card studio">
-                <div class="card-icon">🔲</div>
-                <div class="card-title">STUDIO OPERATIONS</div>
-                <div class="card-desc">Enter the public-facing hub for 3minsto9. Access the manifesto, secure physical field guides, and contact the real-world creation team.</div>
-            </a>
+        <!-- ARG / In-Universe Side -->
+        <a href="MLTK%20Login%20Gate.txt" class="portal-card mltk">
+          <div class="card-icon">👁‍🗨</div>
+          <div class="card-title">CORPORATE INTRANET</div>
+          <div class="card-desc">
+            WARNING: Restricted access. Initialize connection to the MLTK Network Mainframe.
+            Unauthorized telemetry will be logged.
+          </div>
+        </a>
+      </div>
 
-            <!-- ARG / In-Universe Side -->
-            <a href="MLTK%20Login%20Gate.txt" class="portal-card mltk">
-                <div class="card-icon">👁‍🗨</div>
-                <div class="card-title">CORPORATE INTRANET</div>
-                <div class="card-desc">WARNING: Restricted access. Initialize connection to the MLTK Network Mainframe. Unauthorized telemetry will be logged.</div>
-            </a>
-
-        </div>
-
-        <div class="footer-links">
-            <a href="Business%20Privacy%20Policy.txt">Privacy Policy</a>
-            <a href="Business%20Terms%20of%20Service.txt">Terms of Service</a>
-            <a href="Studio%20Contact%20Us.txt">Contact</a>
-        </div>
+      <div class="footer-links">
+        <a href="Business%20Privacy%20Policy.txt">Privacy Policy</a>
+        <a href="Business%20Terms%20of%20Service.txt">Terms of Service</a>
+        <a href="Studio%20Contact%20Us.txt">Contact</a>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>
