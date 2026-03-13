@@ -264,7 +264,7 @@
 
             <div class="terminal-form">
                 <form onsubmit="breachMainframe(event)">
-                    <input type="email" id="comms-link" placeholder="Enter Comms Link..." required>
+                    <input type="email" id="comms-link" aria-label="Secure comms link email address" placeholder="Enter Comms Link..." required>
                     <br>
                     <button type="submit">BREACH THE MAINFRAME</button>
                 </form>

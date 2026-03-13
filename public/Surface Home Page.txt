@@ -299,7 +299,7 @@
         <h3>Join the Dispatch</h3>
         <p>Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.</p>
         <form class="newsletter-form" onsubmit="alert('Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)'); return false;">
-            <input type="email" placeholder="Enter your email address..." required>
+            <input type="email" aria-label="Email address" placeholder="Enter your email address..." required>
             <button type="submit">Subscribe</button>
         </form>
     </section>
