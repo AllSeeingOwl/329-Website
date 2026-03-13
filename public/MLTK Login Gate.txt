@@ -158,7 +158,7 @@
         <div class="terminal-input-group" id="input-group">
             <span class="prompt">C:\MLTK\AUTH></span>
             <form id="auth-form" onsubmit="verifyCode(event)" autocomplete="off" style="display:inline; margin:0; padding:0;">
-                <input type="text" id="serial-input" maxlength="14" autofocus>
+                <input type="text" id="serial-input" aria-label="Level-4 Override Serial" maxlength="14" autofocus>
             </form>
             <span class="cursor"></span>
         </div>
