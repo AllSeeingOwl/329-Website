@@ -18,10 +18,14 @@ describe('Velvet Rope Utilities Tests', () => {
             </div>
         `;
 
-        // Mock window.location.href
+        // Mock window.location properly
         originalLocation = window.location;
         delete window.location;
-        window.location = { href: '' };
+        window.location = {
+            href: '',
+            assign: jest.fn(),
+            replace: jest.fn()
+        };
 
         jest.useFakeTimers();
     });
@@ -30,6 +34,7 @@ describe('Velvet Rope Utilities Tests', () => {
         window.location = originalLocation;
         jest.useRealTimers();
         jest.clearAllMocks();
+        document.body.innerHTML = '';
     });
 
     test('initVelvetRope handles transition to underground', () => {
@@ -52,6 +57,7 @@ describe('Velvet Rope Utilities Tests', () => {
 
     test('breachMainframe creates modal when SHOULD_REDIRECT is false', () => {
         CONFIG.SHOULD_REDIRECT = false;
+        document.body.innerHTML = '<div id="test"></div>';
 
         const event = {
             preventDefault: jest.fn(),
@@ -103,8 +109,10 @@ describe('Velvet Rope Utilities Tests', () => {
 
     test('gracefully handles missing elements in breachMainframe', () => {
         CONFIG.SHOULD_REDIRECT = false;
+        document.body.innerHTML = '<div id="test"></div>';
+
         // Should not throw
-        breachMainframe();
+        breachMainframe(null);
         jest.advanceTimersByTime(800);
 
         const modal = document.querySelector('div[style*="position:fixed"]');
