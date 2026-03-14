@@ -6,6 +6,16 @@ const port = 3000;
 
 app.use(express.json());
 
+// Check if maintenance mode is enabled
+const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
+
+if (MAINTENANCE_MODE) {
+  app.use((req, res, next) => {
+    // Exclude certain assets like CSS/JS if needed, but for a simple maintenance page we just serve the maintenance HTML
+    res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+  });
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
