@@ -1,285 +1,321 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INDEX OF: /archive-01</title>
     <!-- Importing Gretchen's corporate font and Avery's terminal font -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --nova-blue: #00e5ff;
-            --nova-dark: #00111a;
-            --alert-red: #ff003c;
-            --rabbit-green: #00ff00;
+      :root {
+        --nova-blue: #00e5ff;
+        --nova-dark: #00111a;
+        --alert-red: #ff003c;
+        --rabbit-green: #00ff00;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--nova-dark);
+        color: var(--nova-blue);
+        font-family: 'Share Tech Mono', monospace;
+        overflow: hidden;
+      }
+
+      /* CRT Scanline Overlay */
+      body::after {
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(90deg, rgba(0, 229, 255, 0.03), rgba(0, 0, 0, 0.01));
+        z-index: 10;
+        background-size:
+          100% 3px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid var(--nova-blue);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.2) inset;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Top Header & Security Warning */
+      .archive-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--nova-blue);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      .archive-title {
+        font-size: 1.5rem;
+        text-transform: uppercase;
+      }
+
+      .clearance-badge {
+        background-color: var(--nova-blue);
+        color: var(--nova-dark);
+        padding: 5px 10px;
+        font-weight: bold;
+      }
+
+      /* The Ticking Countdown Timer */
+      .timer-box {
+        position: absolute;
+        top: -20px;
+        right: 20px;
+        background: var(--nova-dark);
+        border: 2px solid var(--alert-red);
+        color: var(--alert-red);
+        padding: 5px 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        animation: pulse 1s infinite alternate;
+        z-index: 15;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 5px var(--alert-red);
         }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--nova-dark);
-            color: var(--nova-blue);
-            font-family: 'Share Tech Mono', monospace;
-            overflow: hidden;
+        100% {
+          box-shadow: 0 0 15px var(--alert-red);
         }
+      }
 
-        /* CRT Scanline Overlay */
-        body::after {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(0, 229, 255, 0.03), rgba(0, 0, 0, 0.01));
-            z-index: 10;
-            background-size: 100% 3px, 3px 100%;
-            pointer-events: none;
-        }
+      /* File Directory Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1.2rem;
+      }
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid var(--nova-blue);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2) inset;
-            position: relative;
-            z-index: 2;
-        }
+      th {
+        text-align: left;
+        border-bottom: 1px dashed var(--nova-blue);
+        padding: 10px 5px;
+        color: #888;
+      }
 
-        /* Top Header & Security Warning */
-        .archive-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--nova-blue);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
+      td {
+        padding: 12px 5px;
+        border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+      }
 
-        .archive-title {
-            font-size: 1.5rem;
-            text-transform: uppercase;
-        }
+      tr.file-row {
+        cursor: pointer;
+        transition: background 0.2s;
+      }
 
-        .clearance-badge {
-            background-color: var(--nova-blue);
-            color: var(--nova-dark);
-            padding: 5px 10px;
-            font-weight: bold;
-        }
+      tr.file-row:hover {
+        background-color: rgba(0, 229, 255, 0.1);
+      }
 
-        /* The Ticking Countdown Timer */
-        .timer-box {
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            background: var(--nova-dark);
-            border: 2px solid var(--alert-red);
-            color: var(--alert-red);
-            padding: 5px 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            animation: pulse 1s infinite alternate;
-            z-index: 15;
-        }
+      .icon {
+        font-weight: bold;
+        color: #fff;
+      }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 5px var(--alert-red); }
-            100% { box-shadow: 0 0 15px var(--alert-red); }
-        }
+      /* The Intercepted Chat Box (Team Rabbit) */
+      .chat-overlay {
+        margin-top: 40px;
+        border: 1px dashed var(--rabbit-green);
+        padding: 15px;
+        background: rgba(0, 255, 0, 0.05);
+        font-family: 'VT323', monospace;
+        color: var(--rabbit-green);
+      }
 
-        /* File Directory Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 1.2rem;
-        }
+      .chat-name {
+        color: #fff;
+        font-weight: bold;
+      }
+      .chat-merrick {
+        color: var(--alert-red);
+        font-family: 'Anton', sans-serif;
+        letter-spacing: 1px;
+      }
 
-        th {
-            text-align: left;
-            border-bottom: 1px dashed var(--nova-blue);
-            padding: 10px 5px;
-            color: #888;
-        }
+      /* Document Viewer Modal */
+      #doc-viewer {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 800px;
+        height: 70vh;
+        background: #fff;
+        color: #000;
+        z-index: 20;
+        border: 4px solid #333;
+        box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        overflow-y: auto;
+        font-family: 'Times New Roman', Times, serif; /* Corporate sterile document */
+      }
 
-        td {
-            padding: 12px 5px;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
-        }
+      #doc-viewer.visible {
+        display: block;
+      }
 
-        tr.file-row {
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        background: var(--alert-red);
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        font-family: 'Share Tech Mono', monospace;
+        cursor: pointer;
+        font-weight: bold;
+      }
 
-        tr.file-row:hover {
-            background-color: rgba(0, 229, 255, 0.1);
-        }
+      .doc-header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
 
-        .icon {
-            font-weight: bold;
-            color: #fff;
-        }
-
-        /* The Intercepted Chat Box (Team Rabbit) */
-        .chat-overlay {
-            margin-top: 40px;
-            border: 1px dashed var(--rabbit-green);
-            padding: 15px;
-            background: rgba(0, 255, 0, 0.05);
-            font-family: 'VT323', monospace;
-            color: var(--rabbit-green);
-        }
-
-        .chat-name { color: #fff; font-weight: bold; }
-        .chat-merrick { color: var(--alert-red); font-family: 'Anton', sans-serif; letter-spacing: 1px; }
-
-        /* Document Viewer Modal */
-        #doc-viewer {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 800px;
-            height: 70vh;
-            background: #fff;
-            color: #000;
-            z-index: 20;
-            border: 4px solid #333;
-            box-shadow: 20px 20px 0px rgba(0,0,0,0.5);
-            padding: 30px;
-            overflow-y: auto;
-            font-family: 'Times New Roman', Times, serif; /* Corporate sterile document */
-        }
-
-        #doc-viewer.visible {
-            display: block;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            background: var(--alert-red);
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            font-family: 'Share Tech Mono', monospace;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .doc-header {
-            text-align: center;
-            border-bottom: 2px solid #000;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .doc-body { font-size: 1.1rem; line-height: 1.6; }
-
+      .doc-body {
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="container">
-        <!-- Security Timer -->
-        <div class="timer-box" id="ice-timer">ICE PROTOCOL IN: 60s</div>
+      <!-- Security Timer -->
+      <div class="timer-box" id="ice-timer">ICE PROTOCOL IN: 60s</div>
 
-        <div class="archive-header">
-            <div class="archive-title">INDEX OF: /NOVA/CLASSIFIED/ARCHIVE-01</div>
-            <div class="clearance-badge">LEVEL 4 CLEARANCE ACCEPTED</div>
+      <div class="archive-header">
+        <div class="archive-title">INDEX OF: /NOVA/CLASSIFIED/ARCHIVE-01</div>
+        <div class="clearance-badge">LEVEL 4 CLEARANCE ACCEPTED</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Last Modified</th>
+            <th>Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="icon">[DIR]</td>
+            <td>
+              <a
+                href="NOVA%20Parent%20Directory.html"
+                style="color: var(--nova-blue); text-decoration: none"
+                >../</a
+              >
+            </td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr class="file-row" onclick="openDoc('vv')">
+            <td class="icon">[PDF]</td>
+            <td>VIRTUE_VILLAGES_SCHEMATICS.pdf</td>
+            <td>1998-04-08</td>
+            <td>14.2 MB</td>
+          </tr>
+          <tr class="file-row" onclick="openDoc('gretchen')">
+            <td class="icon">[TXT]</td>
+            <td>DIR_GRETCHEN_DOSSIER.txt</td>
+            <td>SYSTEM_CURRENT</td>
+            <td>8 KB</td>
+          </tr>
+          <tr class="file-row" onclick="openDoc('tetromino')">
+            <td class="icon">[LOG]</td>
+            <td>TETROMINO_RESTRICTION_PROTOCOL.log</td>
+            <td>1995-11-22</td>
+            <td>2 KB</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Team Rabbit Comms -->
+      <div class="chat-overlay">
+        <div><span class="chat-name">System:</span> Unauthorized packet sniffing detected.</div>
+        <br />
+        <div>
+          <span class="chat-name">JAKE_A:</span> I'm holding the backdoor open, but Meredith's ICE
+          software is tracing the ping. We don't have long.
         </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Last Modified</th>
-                    <th>Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="icon">[DIR]</td>
-                    <td><a href="#" style="color:var(--nova-blue); text-decoration:none;">../</a></td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr class="file-row" onclick="openDoc('vv')">
-                    <td class="icon">[PDF]</td>
-                    <td>VIRTUE_VILLAGES_SCHEMATICS.pdf</td>
-                    <td>1998-04-08</td>
-                    <td>14.2 MB</td>
-                </tr>
-                <tr class="file-row" onclick="openDoc('gretchen')">
-                    <td class="icon">[TXT]</td>
-                    <td>DIR_GRETCHEN_DOSSIER.txt</td>
-                    <td>SYSTEM_CURRENT</td>
-                    <td>8 KB</td>
-                </tr>
-                <tr class="file-row" onclick="openDoc('tetromino')">
-                    <td class="icon">[LOG]</td>
-                    <td>TETROMINO_RESTRICTION_PROTOCOL.log</td>
-                    <td>1995-11-22</td>
-                    <td>2 KB</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Team Rabbit Comms -->
-        <div class="chat-overlay">
-            <div><span class="chat-name">System:</span> Unauthorized packet sniffing detected.</div>
-            <br>
-            <div><span class="chat-name">JAKE_A:</span> I'm holding the backdoor open, but Meredith's ICE software is tracing the ping. We don't have long.</div>
-            <div><span class="chat-merrick">MERRICK:</span> READ FAST, ASP BOY. GRAB THE TETROMINO LAYOUTS SO WE KNOW HOW TO NAVIGATE THE VILLAGES WITHOUT TRIPPING THE ALARMS.</div>
-            <div><span class="chat-name">B_CANDELA:</span> I am processing the data. Kindly refrain from yelling; it disrupts my cognitive retention.</div>
+        <div>
+          <span class="chat-merrick">MERRICK:</span> READ FAST, ASP BOY. GRAB THE TETROMINO LAYOUTS
+          SO WE KNOW HOW TO NAVIGATE THE VILLAGES WITHOUT TRIPPING THE ALARMS.
         </div>
+        <div>
+          <span class="chat-name">B_CANDELA:</span> I am processing the data. Kindly refrain from
+          yelling; it disrupts my cognitive retention.
+        </div>
+      </div>
     </div>
 
     <!-- Hidden Document Viewer Modal -->
     <div id="doc-viewer">
-        <button class="close-btn" onclick="closeDoc()">[X] CLOSE</button>
-        <div class="doc-header" id="modal-header">CONFIDENTIAL DOCUMENT</div>
-        <div class="doc-body" id="modal-body">
-            <!-- Content injected via JS -->
-        </div>
+      <button class="close-btn" onclick="closeDoc()">[X] CLOSE</button>
+      <div class="doc-header" id="modal-header">CONFIDENTIAL DOCUMENT</div>
+      <div class="doc-body" id="modal-body">
+        <!-- Content injected via JS -->
+      </div>
     </div>
 
     <script>
-        // -----------------------------------------
-        // 1. The ICE Timer Logic
-        // -----------------------------------------
-        let timeLeft = 60; // 60 seconds
-        const timerDisplay = document.getElementById('ice-timer');
+      // -----------------------------------------
+      // 1. The ICE Timer Logic
+      // -----------------------------------------
+      let timeLeft = 60; // 60 seconds
+      const timerDisplay = document.getElementById('ice-timer');
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerDisplay.innerText = `ICE PROTOCOL IN: ${timeLeft}s`;
+      const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerText = `ICE PROTOCOL IN: ${timeLeft}s`;
 
-            if (timeLeft <= 10) {
-                // Panic mode
-                timerDisplay.style.backgroundColor = "#ff003c";
-                timerDisplay.style.color = "#fff";
-                document.body.style.boxShadow = "inset 0 0 50px rgba(255, 0, 60, 0.5)";
-            }
+        if (timeLeft <= 10) {
+          // Panic mode
+          timerDisplay.style.backgroundColor = '#ff003c';
+          timerDisplay.style.color = '#fff';
+          document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
+        }
 
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                // When timer hits zero, kick them to the 404 dead end!
-                // (In production, ensure 404.html is in the same directory)
-                window.location.href = "404.html"; 
-            }
-        }, 1000);
-
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          // When timer hits zero, kick them to the 404 dead end!
+          // (In production, ensure 404.html is in the same directory)
+          window.location.href = '404.html';
+        }
+      }, 1000);
     </script>
     <script src="nova_archive_utils.js"></script>
-</body>
+  </body>
 </html>
