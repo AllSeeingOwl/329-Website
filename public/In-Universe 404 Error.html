@@ -1,242 +1,276 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 // DEAD END</title>
     <!-- Importing the Unknown Universe Master Font Sheet -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f4f1ea; /* The polite, beige City of Everywhere base */
-            overflow: hidden;
-            position: relative;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f4f1ea; /* The polite, beige City of Everywhere base */
+        overflow: hidden;
+        position: relative;
+      }
 
-        /* ---------------------------------------------------
+      /* ---------------------------------------------------
            LAYER 1: THE CORPORATE BASE (MLTK ERROR)
            --------------------------------------------------- */
-        .corporate-layer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 700px;
-            font-family: 'Share Tech Mono', monospace;
-            color: #2b3a42;
-            text-align: left;
-            padding: 40px;
-            border: 2px solid #ccc;
-            background: #fff;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
-            z-index: 1;
-        }
+      .corporate-layer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 700px;
+        font-family: 'Share Tech Mono', monospace;
+        color: #2b3a42;
+        text-align: left;
+        padding: 40px;
+        border: 2px solid #ccc;
+        background: #fff;
+        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05);
+        z-index: 1;
+      }
 
-        .corp-header {
-            font-size: 2rem;
-            border-bottom: 2px solid #2b3a42;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
+      .corp-header {
+        font-size: 2rem;
+        border-bottom: 2px solid #2b3a42;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
 
-        .corp-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+      .corp-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
 
-        .corp-warning {
-            color: #cc0000;
-            font-weight: bold;
-            margin-top: 30px;
-            border: 1px dashed #cc0000;
-            padding: 10px;
-            text-align: center;
-        }
+      .corp-warning {
+        color: #cc0000;
+        font-weight: bold;
+        margin-top: 30px;
+        border: 1px dashed #cc0000;
+        padding: 10px;
+        text-align: center;
+      }
 
-        /* ---------------------------------------------------
+      /* ---------------------------------------------------
            LAYER 2: TEAM RABBIT VANDALISM
            --------------------------------------------------- */
-        .vandalism-layer {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 5;
-            pointer-events: none; /* Lets you click buttons underneath */
-            display: none; /* Hidden by default */
-        }
+      .vandalism-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 5;
+        pointer-events: none; /* Lets you click buttons underneath */
+        display: none; /* Hidden by default */
+      }
 
-        .vandalism-layer.revealed {
-            display: block;
-            animation: hack-in 0.3s steps(2, start) forwards;
-        }
+      .vandalism-layer.revealed {
+        display: block;
+        animation: hack-in 0.3s steps(2, start) forwards;
+      }
 
-        @keyframes hack-in {
-            0% { opacity: 0; transform: scale(1.05); }
-            50% { opacity: 1; transform: scale(0.95); filter: invert(1); }
-            100% { opacity: 1; transform: scale(1); filter: invert(0); }
+      @keyframes hack-in {
+        0% {
+          opacity: 0;
+          transform: scale(1.05);
         }
-
-        /* CRT Static Overlay to make it feel "hacked" */
-        .vandalism-layer::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 10;
+        50% {
+          opacity: 1;
+          transform: scale(0.95);
+          filter: invert(1);
         }
-
-        .graffiti-main {
-            position: absolute;
-            top: 35%;
-            left: 45%;
-            transform: translate(-50%, -50%) rotate(-5deg);
-            font-family: 'Anton', sans-serif;
-            color: #ff003c;
-            font-size: 8rem;
-            line-height: 0.9;
-            text-transform: uppercase;
-            text-shadow: 4px 4px 0px #000;
-            white-space: nowrap;
-            opacity: 0.9;
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: invert(0);
         }
+      }
 
-        .graffiti-sub {
-            position: absolute;
-            top: 65%;
-            left: 55%;
-            transform: translate(-50%, -50%) rotate(3deg);
-            font-family: 'VT323', monospace;
-            color: #000;
-            background-color: #00ff00;
-            font-size: 2rem;
-            padding: 5px 15px;
-            text-transform: uppercase;
-            box-shadow: 5px 5px 0px #000;
-        }
+      /* CRT Static Overlay to make it feel "hacked" */
+      .vandalism-layer::before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+        background-size: 100% 4px;
+        pointer-events: none;
+        z-index: 10;
+      }
 
-        .graffiti-tag {
-            position: absolute;
-            bottom: 15%;
-            right: 20%;
-            font-family: 'Anton', sans-serif;
-            color: #000;
-            font-size: 3rem;
-            transform: rotate(-10deg);
-            border: 4px solid #000;
-            padding: 5px 10px;
-        }
+      .graffiti-main {
+        position: absolute;
+        top: 35%;
+        left: 45%;
+        transform: translate(-50%, -50%) rotate(-5deg);
+        font-family: 'Anton', sans-serif;
+        color: #ff003c;
+        font-size: 8rem;
+        line-height: 0.9;
+        text-transform: uppercase;
+        text-shadow: 4px 4px 0px #000;
+        white-space: nowrap;
+        opacity: 0.9;
+      }
 
-        /* ---------------------------------------------------
+      .graffiti-sub {
+        position: absolute;
+        top: 65%;
+        left: 55%;
+        transform: translate(-50%, -50%) rotate(3deg);
+        font-family: 'VT323', monospace;
+        color: #000;
+        background-color: #00ff00;
+        font-size: 2rem;
+        padding: 5px 15px;
+        text-transform: uppercase;
+        box-shadow: 5px 5px 0px #000;
+      }
+
+      .graffiti-tag {
+        position: absolute;
+        bottom: 15%;
+        right: 20%;
+        font-family: 'Anton', sans-serif;
+        color: #000;
+        font-size: 3rem;
+        transform: rotate(-10deg);
+        border: 4px solid #000;
+        padding: 5px 10px;
+      }
+
+      /* ---------------------------------------------------
            INTERACTIVE ESCAPE BUTTON
            --------------------------------------------------- */
-        .escape-btn-container {
-            position: absolute;
-            bottom: -60px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 20;
-            pointer-events: auto;
-        }
+      .escape-btn-container {
+        position: absolute;
+        bottom: -60px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        z-index: 20;
+        pointer-events: auto;
+      }
 
-        .btn-escape {
-            display: inline-block;
-            background: #000;
-            color: #00ff00;
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            padding: 10px 20px;
-            text-decoration: none;
-            border: 2px solid #00ff00;
-            text-transform: uppercase;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
+      .btn-escape {
+        display: inline-block;
+        background: #000;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        font-size: 1.5rem;
+        padding: 10px 20px;
+        text-decoration: none;
+        border: 2px solid #00ff00;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
 
-        .btn-escape:hover {
-            background: #00ff00;
-            color: #000;
-            box-shadow: 0 0 15px #00ff00;
-        }
+      .btn-escape:hover {
+        background: #00ff00;
+        color: #000;
+        box-shadow: 0 0 15px #00ff00;
+      }
 
-        /* Glitch Animation for the Red Text */
-        .glitch-anim {
-            animation: glitch-skew 3s infinite linear alternate-reverse;
-        }
+      /* Glitch Animation for the Red Text */
+      .glitch-anim {
+        animation: glitch-skew 3s infinite linear alternate-reverse;
+      }
 
-        @keyframes glitch-skew {
-            0% { transform: translate(-50%, -50%) rotate(-5deg) skew(0deg); }
-            90% { transform: translate(-50%, -50%) rotate(-5deg) skew(0deg); }
-            95% { transform: translate(-52%, -50%) rotate(-5deg) skew(-10deg); }
-            100% { transform: translate(-50%, -50%) rotate(-5deg) skew(0deg); }
+      @keyframes glitch-skew {
+        0% {
+          transform: translate(-50%, -50%) rotate(-5deg) skew(0deg);
         }
+        90% {
+          transform: translate(-50%, -50%) rotate(-5deg) skew(0deg);
+        }
+        95% {
+          transform: translate(-52%, -50%) rotate(-5deg) skew(-10deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(-5deg) skew(0deg);
+        }
+      }
 
-        @media (max-width: 800px) {
-            .graffiti-main { font-size: 5rem; left: 50%; }
-            .graffiti-sub { font-size: 1.5rem; left: 50%; width: 80%; text-align: center; }
-            .corporate-layer { width: 90%; padding: 20px; }
+      @media (max-width: 800px) {
+        .graffiti-main {
+          font-size: 5rem;
+          left: 50%;
         }
+        .graffiti-sub {
+          font-size: 1.5rem;
+          left: 50%;
+          width: 80%;
+          text-align: center;
+        }
+        .corporate-layer {
+          width: 90%;
+          padding: 20px;
+        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- LAYER 1: The Pristine MLTK Corporate Error -->
     <div class="corporate-layer">
-        <div class="corp-header">ERROR 404: RESOURCE ALLOCATION FAILURE</div>
-        
-        <div class="corp-text">
-            The MLTK Quantum Supercomputer cannot locate the requested directory. 
-        </div>
-        
-        <div class="corp-text">
-            Diagnostic Analysis: The specified data packet does not exist within the City of Everywhere grid, or it has been deliberately purged from the archives.
-        </div>
+      <div class="corp-header">ERROR 404: RESOURCE ALLOCATION FAILURE</div>
 
-        <div class="corp-warning">
-            [!] QUARANTINE PROTOCOL INITIATED [!] <br>
-            UNAUTHORIZED WANDERING IS STRICTLY PROHIBITED BY ORDER OF DIRECTOR G. MEREDITH. YOUR IP HAS BEEN LOGGED.
-        </div>
+      <div class="corp-text">
+        The MLTK Quantum Supercomputer cannot locate the requested directory.
+      </div>
 
-        <!-- The Escape Button -->
-        <div class="escape-btn-container">
-            <a href="index.html" class="btn-escape">RETURN TO THE GRID</a>
-        </div>
+      <div class="corp-text">
+        Diagnostic Analysis: The specified data packet does not exist within the City of Everywhere
+        grid, or it has been deliberately purged from the archives.
+      </div>
+
+      <div class="corp-warning">
+        [!] QUARANTINE PROTOCOL INITIATED [!] <br />
+        UNAUTHORIZED WANDERING IS STRICTLY PROHIBITED BY ORDER OF DIRECTOR G. MEREDITH. YOUR IP HAS
+        BEEN LOGGED.
+      </div>
+
+      <!-- The Escape Button -->
+      <div class="escape-btn-container">
+        <a href="index.html" class="btn-escape">RETURN TO THE GRID</a>
+      </div>
     </div>
 
     <!-- LAYER 2: Team Rabbit Vandalism -->
     <div class="vandalism-layer" id="vandalism">
-        <!-- Merrick's massive spray paint -->
-        <div class="graffiti-main glitch-anim">
-            WRONG<br>TURN,<br>POSER.
-        </div>
+      <!-- Merrick's massive spray paint -->
+      <div class="graffiti-main glitch-anim">WRONG<br />TURN,<br />POSER.</div>
 
-        <!-- Avery's label maker / digital tag -->
-        <div class="graffiti-sub">
-            YOU ARE OFF THE MAP. NOTHING BUT GHOSTS OUT HERE.
-        </div>
+      <!-- Avery's label maker / digital tag -->
+      <div class="graffiti-sub">YOU ARE OFF THE MAP. NOTHING BUT GHOSTS OUT HERE.</div>
 
-        <!-- The Gang Tag -->
-        <div class="graffiti-tag">
-            TEAM<br>RABBIT
-        </div>
+      <!-- The Gang Tag -->
+      <div class="graffiti-tag">TEAM<br />RABBIT</div>
     </div>
 
     <script>
-        // Wait 3.5 seconds before Team Rabbit hacks the 404 page
-        setTimeout(() => {
-            const vandalismLayer = document.getElementById('vandalism');
-            vandalismLayer.classList.add('revealed');
-        }, 3500);
+      // Wait 3.5 seconds before Team Rabbit hacks the 404 page
+      setTimeout(() => {
+        const vandalismLayer = document.getElementById('vandalism');
+        vandalismLayer.classList.add('revealed');
+      }, 3500);
     </script>
-
-</body>
+  </body>
 </html>

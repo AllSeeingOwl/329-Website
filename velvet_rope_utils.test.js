@@ -16,111 +16,117 @@ describe('Velvet Rope Utilities Tests', () => {
             </div>
         `;
 
-        // Suppress navigation errors in tests temporarily
-        jest.spyOn(console, 'error').mockImplementation((msg) => {
-            if (msg && msg.toString().includes('Not implemented: navigation')) return;
-            console.warn(msg);
-        });
-
-        // Initialize SHOULD_REDIRECT to false for isolation
-        CONFIG.SHOULD_REDIRECT = false;
-
-        jest.useFakeTimers();
+    // Suppress navigation errors in tests temporarily
+    jest.spyOn(console, 'error').mockImplementation((msg) => {
+      if (msg && msg.toString().includes('Not implemented: navigation')) return;
+      console.warn(msg);
     });
 
-    afterEach(() => {
-        jest.useRealTimers();
-        jest.clearAllMocks();
-        jest.restoreAllMocks();
-        document.body.innerHTML = '';
-    });
+    // Initialize SHOULD_REDIRECT to false for isolation
+    CONFIG.SHOULD_REDIRECT = false;
 
-    test('initVelvetRope handles transition to underground', () => {
-        initVelvetRope();
+    jest.useFakeTimers();
+  });
 
-        // Initial delay
-        jest.advanceTimersByTime(2000);
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+    document.body.innerHTML = '';
+  });
 
-        const facade = document.getElementById('facade');
-        expect(facade.classList.contains('screen-tear')).toBe(true);
+  test('initVelvetRope handles transition to underground', () => {
+    initVelvetRope();
 
-        // Transition delay
-        jest.advanceTimersByTime(400);
+    // Initial delay
+    jest.advanceTimersByTime(2000);
 
-        expect(facade.style.display).toBe('none');
-        expect(document.getElementById('underground').style.display).toBe('block');
-        expect(document.body.style.backgroundColor).toBe('rgb(5, 5, 5)');
-        expect(document.title).toBe("SYSTEM OVERRIDE // TEAM RABBIT");
-    });
+    const facade = document.getElementById('facade');
+    expect(facade.classList.contains('screen-tear')).toBe(true);
 
-    test('breachMainframe creates modal when SHOULD_REDIRECT is false', () => {
-        CONFIG.SHOULD_REDIRECT = false;
-        document.body.innerHTML = '<div id="test"></div>';
+    // Transition delay
+    jest.advanceTimersByTime(400);
 
-        const event = {
-            preventDefault: jest.fn(),
-            target: {
-                querySelector: jest.fn().mockReturnValue(document.createElement('button'))
-            }
-        };
+    expect(facade.style.display).toBe('none');
+    expect(document.getElementById('underground').style.display).toBe('block');
+    expect(document.body.style.backgroundColor).toBe('rgb(5, 5, 5)');
+    expect(document.title).toBe('SYSTEM OVERRIDE // TEAM RABBIT');
+  });
 
-        const mockWin = { location: { assign: jest.fn(), href: '' } };
-        breachMainframe(event, mockWin);
+  test('breachMainframe creates modal when SHOULD_REDIRECT is false', () => {
+    CONFIG.SHOULD_REDIRECT = false;
+    document.body.innerHTML = '<div id="test"></div>';
 
-        expect(event.preventDefault).toHaveBeenCalled();
+    const event = {
+      preventDefault: jest.fn(),
+      target: {
+        querySelector: jest.fn().mockReturnValue(document.createElement('button')),
+      },
+    };
 
-        jest.advanceTimersByTime(800);
+    const mockWin = { location: { assign: jest.fn(), href: '' } };
+    breachMainframe(event, mockWin);
 
-        // Find the newly appended modal (it should contain 'COMMUNICATION SECURED.')
-        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
-        const modal = modals.length > 0 ? modals[0] : null;
-        expect(modal).toBeTruthy();
-        // Ensure developer note is NOT present
-        expect(modal.textContent).not.toContain('Developer Note');
-    });
+    expect(event.preventDefault).toHaveBeenCalled();
 
-    test('breachMainframe redirects when SHOULD_REDIRECT is true', () => {
-        CONFIG.SHOULD_REDIRECT = true;
-        CONFIG.REDIRECT_TARGET = 'test-redirect.html';
+    jest.advanceTimersByTime(800);
 
-        const event = {
-            preventDefault: jest.fn(),
-            target: {
-                querySelector: jest.fn().mockReturnValue(document.createElement('button'))
-            }
-        };
+    // Find the newly appended modal (it should contain 'COMMUNICATION SECURED.')
+    const modals = Array.from(document.querySelectorAll('div')).filter((el) =>
+      el.textContent.includes('COMMUNICATION SECURED.')
+    );
+    const modal = modals.length > 0 ? modals[0] : null;
+    expect(modal).toBeTruthy();
+    // Ensure developer note is NOT present
+    expect(modal.textContent).not.toContain('Developer Note');
+  });
 
-        const assignMock = jest.fn();
-        const mockWin = { location: { assign: assignMock, href: '' } };
+  test('breachMainframe redirects when SHOULD_REDIRECT is true', () => {
+    CONFIG.SHOULD_REDIRECT = true;
+    CONFIG.REDIRECT_TARGET = 'test-redirect.html';
 
-        breachMainframe(event, mockWin);
+    const event = {
+      preventDefault: jest.fn(),
+      target: {
+        querySelector: jest.fn().mockReturnValue(document.createElement('button')),
+      },
+    };
 
-        jest.advanceTimersByTime(800);
+    const assignMock = jest.fn();
+    const mockWin = { location: { assign: assignMock, href: '' } };
 
-        expect(assignMock).toHaveBeenCalledWith('test-redirect.html');
-        // Modal should not be created
-        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
-        expect(modals.length).toBe(0);
-    });
+    breachMainframe(event, mockWin);
 
-    test('gracefully handles missing elements in initVelvetRope', () => {
-        document.body.innerHTML = '';
-        // Should not throw
-        initVelvetRope();
-        jest.advanceTimersByTime(2400);
-    });
+    jest.advanceTimersByTime(800);
 
-    test('gracefully handles missing elements in breachMainframe', () => {
-        CONFIG.SHOULD_REDIRECT = false;
-        document.body.innerHTML = '<div id="test"></div>';
+    expect(assignMock).toHaveBeenCalledWith('test-redirect.html');
+    // Modal should not be created
+    const modals = Array.from(document.querySelectorAll('div')).filter((el) =>
+      el.textContent.includes('COMMUNICATION SECURED.')
+    );
+    expect(modals.length).toBe(0);
+  });
 
-        const mockWin = { location: { assign: jest.fn(), href: '' } };
-        // Should not throw
-        breachMainframe(null, mockWin);
-        jest.advanceTimersByTime(800);
+  test('gracefully handles missing elements in initVelvetRope', () => {
+    document.body.innerHTML = '';
+    // Should not throw
+    initVelvetRope();
+    jest.advanceTimersByTime(2400);
+  });
 
-        const modals = Array.from(document.querySelectorAll('div')).filter(el => el.textContent.includes('COMMUNICATION SECURED.'));
-        const modal = modals.length > 0 ? modals[0] : null;
-        expect(modal).toBeTruthy();
-    });
+  test('gracefully handles missing elements in breachMainframe', () => {
+    CONFIG.SHOULD_REDIRECT = false;
+    document.body.innerHTML = '<div id="test"></div>';
+
+    const mockWin = { location: { assign: jest.fn(), href: '' } };
+    // Should not throw
+    breachMainframe(null, mockWin);
+    jest.advanceTimersByTime(800);
+
+    const modals = Array.from(document.querySelectorAll('div')).filter((el) =>
+      el.textContent.includes('COMMUNICATION SECURED.')
+    );
+    const modal = modals.length > 0 ? modals[0] : null;
+    expect(modal).toBeTruthy();
+  });
 });
