@@ -31,7 +31,7 @@ function setupRadioScanner() {
       let i = 0;
       let typingInterval = setInterval(() => {
         if (i < decryptedMessage.length) {
-          output.textContent += decryptedMessage.charAt(i);
+          output.textContent = decryptedMessage.substring(0, i + 1);
           i++;
         } else {
           clearInterval(typingInterval);

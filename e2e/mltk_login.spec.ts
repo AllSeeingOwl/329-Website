@@ -35,7 +35,7 @@ test.describe('MLTK Login Gate E2E', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true })
+        body: JSON.stringify({ success: true }),
       });
     });
 
@@ -57,7 +57,7 @@ test.describe('MLTK Login Gate E2E', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: false })
+        body: JSON.stringify({ success: false }),
       });
     });
 

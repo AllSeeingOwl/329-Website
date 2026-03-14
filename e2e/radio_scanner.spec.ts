@@ -51,7 +51,8 @@ test.describe('Radio Scanner E2E', () => {
     await expect(radioBody).toHaveClass(/locked-in/);
 
     // The message is typed out, so we wait for it to be fully present
-    const expectedMessage = "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
+    const expectedMessage =
+      "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
 
     await expect(output).toHaveText(expectedMessage, { timeout: 15000 });
   });

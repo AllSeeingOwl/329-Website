@@ -22,7 +22,8 @@ Make sure you have Node.js (v22+) and npm (v11+) installed. Install dependencies
 ```bash
 npm install
 ```
-*(Note: If you experience timeouts during installation, use `--prefer-offline` and `--no-audit` flags.)*
+
+_(Note: If you experience timeouts during installation, use `--prefer-offline` and `--no-audit` flags.)_
 
 ### Available Scripts
 

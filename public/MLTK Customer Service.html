@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Customer Service - MLTK Corporation</title>
     <!-- Corporate aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
     <style>
         body, html {
             margin: 0;
@@ -153,106 +156,105 @@
         100% { opacity: 0.95; }
       }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="header-bar">
-        <h2>MLTK Citizen Interaction Portal</h2>
-        <p>Your compliance is our priority</p>
+      <h2>MLTK Citizen Interaction Portal</h2>
+      <p>Your compliance is our priority</p>
     </div>
 
     <div class="terminal-container">
-        <div class="terminal-header">
-            Automated Support Interface v9.4
+      <div class="terminal-header">Automated Support Interface v9.4</div>
+
+      <div class="automated-response" id="chat-window">
+        > CONNECTION ESTABLISHED. > IDENTIFYING CITIZEN BIOMETRICS... OK. > WELCOME TO MLTK CUSTOMER
+        SERVICE. > PLEASE STATE THE NATURE OF YOUR INQUIRY OR DISPLEASURE. > NOTE: ALL
+        COMMUNICATIONS ARE RECORDED FOR COMPLIANCE PURPOSES.
+      </div>
+
+      <form id="support-form" onsubmit="submitTicket(event)">
+        <div class="input-group">
+          <label for="category">INQUIRY CATEGORY:</label>
+          <select id="category" required>
+            <option value="" disabled selected>SELECT REASON...</option>
+            <option value="housing">Virtue Village Housing Assignment Query</option>
+            <option value="ration">Nutritional Ration Discrepancy</option>
+            <option value="report">Report Suspicious Activity (TEAM RABBIT)</option>
+            <option value="existential">Existential Dread (Requires Form 8B)</option>
+            <option value="other">General Submission (Low Priority)</option>
+          </select>
         </div>
 
-        <div class="automated-response" id="chat-window">
-            > CONNECTION ESTABLISHED.
-            > IDENTIFYING CITIZEN BIOMETRICS... OK.
-            > WELCOME TO MLTK CUSTOMER SERVICE.
-            > PLEASE STATE THE NATURE OF YOUR INQUIRY OR DISPLEASURE.
-            > NOTE: ALL COMMUNICATIONS ARE RECORDED FOR COMPLIANCE PURPOSES.
+        <div class="input-group">
+          <label for="message">COMPLAINT DETAILS:</label>
+          <textarea id="message" rows="3" required></textarea>
         </div>
 
-        <form id="support-form" onsubmit="submitTicket(event)">
-            <div class="input-group">
-                <label for="category">INQUIRY CATEGORY:</label>
-                <select id="category" required>
-                    <option value="" disabled selected>SELECT REASON...</option>
-                    <option value="housing">Virtue Village Housing Assignment Query</option>
-                    <option value="ration">Nutritional Ration Discrepancy</option>
-                    <option value="report">Report Suspicious Activity (TEAM RABBIT)</option>
-                    <option value="existential">Existential Dread (Requires Form 8B)</option>
-                    <option value="other">General Submission (Low Priority)</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="message">COMPLAINT DETAILS:</label>
-                <textarea id="message" rows="3" required></textarea>
-            </div>
-
-            <button type="submit" id="submit-btn">SUBMIT INQUIRY TO MAINFRAME</button>
-            <div class="processing-indicator" id="processing-msg">PROCESSING REQUEST... PLEASE STAND BY...</div>
-        </form>
+        <button type="submit" id="submit-btn">SUBMIT INQUIRY TO MAINFRAME</button>
+        <div class="processing-indicator" id="processing-msg">
+          PROCESSING REQUEST... PLEASE STAND BY...
+        </div>
+      </form>
     </div>
 
     <script>
-        function submitTicket(e) {
-            e.preventDefault();
+      function submitTicket(e) {
+        e.preventDefault();
 
-            const btn = document.getElementById('submit-btn');
-            const processingMsg = document.getElementById('processing-msg');
-            const chatWindow = document.getElementById('chat-window');
-            const form = document.getElementById('support-form');
-            const category = document.getElementById('category').value;
-            const msgInput = document.getElementById('message').value;
+        const btn = document.getElementById('submit-btn');
+        const processingMsg = document.getElementById('processing-msg');
+        const chatWindow = document.getElementById('chat-window');
+        const form = document.getElementById('support-form');
+        const category = document.getElementById('category').value;
+        const msgInput = document.getElementById('message').value;
 
-            btn.style.display = 'none';
-            processingMsg.style.display = 'block';
+        btn.style.display = 'none';
+        processingMsg.style.display = 'block';
 
-            // Simulate "Processing"
-            setTimeout(() => {
-                const ticketId = Math.floor(Math.random() * 9000000) + 1000000;
+        // Simulate "Processing"
+        setTimeout(() => {
+          const ticketId = Math.floor(Math.random() * 9000000) + 1000000;
 
-                // Escape input to prevent XSS
-                const escapeHTML = (str) => str.replace(/[&<>'"]/g,
-                    tag => ({
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        "'": '&#39;',
-                        '"': '&quot;'
-                    }[tag])
-                );
+          // Escape input to prevent XSS
+          const escapeHTML = (str) =>
+            str.replace(
+              /[&<>'"]/g,
+              (tag) =>
+                ({
+                  '&': '&amp;',
+                  '<': '&lt;',
+                  '>': '&gt;',
+                  "'": '&#39;',
+                  '"': '&quot;',
+                })[tag]
+            );
 
-                let responseText = `\n\n> RECEIVING TRANSMISSION...`;
-                responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput).substring(0, 30)}..."`;
+          let responseText = `\n\n> RECEIVING TRANSMISSION...`;
+          responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput).substring(0, 30)}..."`;
 
-                if (category === 'report') {
-                    responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
-                } else if (category === 'existential') {
-                    responseText += `\n> ERROR: EXISTENTIAL DREAD IS NOT COVERED UNDER YOUR CURRENT HEALTH PLAN. PLEASE REPORT TO RE-EDUCATION CENTER B FOR ADJUSTMENT.`;
-                } else {
-                    responseText += `\n> INQUIRY LOGGED AS LOW PRIORITY.`;
-                    responseText += `\n> CURRENT WAIT TIME IN QUEUE: 14,923 HOURS.`;
-                    responseText += `\n> PLEASE DO NOT DISCONNECT OR LEAVE YOUR ASSIGNED SECTOR.`;
-                }
+          if (category === 'report') {
+            responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
+          } else if (category === 'existential') {
+            responseText += `\n> ERROR: EXISTENTIAL DREAD IS NOT COVERED UNDER YOUR CURRENT HEALTH PLAN. PLEASE REPORT TO RE-EDUCATION CENTER B FOR ADJUSTMENT.`;
+          } else {
+            responseText += `\n> INQUIRY LOGGED AS LOW PRIORITY.`;
+            responseText += `\n> CURRENT WAIT TIME IN QUEUE: 14,923 HOURS.`;
+            responseText += `\n> PLEASE DO NOT DISCONNECT OR LEAVE YOUR ASSIGNED SECTOR.`;
+          }
 
-                responseText += `\n> TICKET <span class="ticket-number">#${ticketId}</span> ASSIGNED. HAVE A PRODUCTIVE CYCLE.`;
+          responseText += `\n> TICKET <span class="ticket-number">#${ticketId}</span> ASSIGNED. HAVE A PRODUCTIVE CYCLE.`;
 
-                chatWindow.innerHTML += responseText;
+          chatWindow.innerHTML += responseText;
 
-                // Scroll to bottom
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+          // Scroll to bottom
+          chatWindow.scrollTop = chatWindow.scrollHeight;
 
-                // Reset form
-                form.reset();
-                btn.style.display = 'block';
-                processingMsg.style.display = 'none';
-
-            }, 2500); // 2.5 second delay for corporate realism
-        }
+          // Reset form
+          form.reset();
+          btn.style.display = 'block';
+          processingMsg.style.display = 'none';
+        }, 2500); // 2.5 second delay for corporate realism
+      }
     </script>
-</body>
+  </body>
 </html>
