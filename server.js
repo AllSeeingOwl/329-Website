@@ -15,7 +15,37 @@ if (!AUTH_PASSWORD) {
   process.exit(1);
 }
 
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_ATTEMPTS = 5;
+
 app.post('/api/verify', (req, res) => {
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, firstAttempt: now };
+
+  // Clean up expired entries to prevent memory leak
+  if (rateLimitMap.size > 1000) {
+    for (const [key, value] of rateLimitMap.entries()) {
+      if (now - value.firstAttempt > RATE_LIMIT_WINDOW_MS) {
+        rateLimitMap.delete(key);
+      }
+    }
+  }
+
+  if (now - record.firstAttempt > RATE_LIMIT_WINDOW_MS) {
+    record.count = 1;
+    record.firstAttempt = now;
+  } else {
+    record.count++;
+    if (record.count > MAX_ATTEMPTS) {
+      return res
+        .status(429)
+        .json({ success: false, error: 'Too many attempts, please try again later.' });
+    }
+  }
+  rateLimitMap.set(ip, record);
+
   const { code } = req.body;
   let success = false;
 
