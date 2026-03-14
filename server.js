@@ -15,13 +15,17 @@ if (!AUTH_PASSWORD) {
   process.exit(1);
 }
 
+// ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
+// This reduces allocation overhead and improves response times for the verification endpoint.
+// We provide a fallback empty string if AUTH_PASSWORD is undefined during mocked test environments that mock process.exit.
+const authBuffer = Buffer.from(AUTH_PASSWORD || '');
+
 app.post('/api/verify', (req, res) => {
   const { code } = req.body;
   let success = false;
 
   if (typeof code === 'string') {
     const codeBuffer = Buffer.from(code);
-    const authBuffer = Buffer.from(AUTH_PASSWORD);
 
     if (codeBuffer.length === authBuffer.length) {
       success = crypto.timingSafeEqual(codeBuffer, authBuffer);
