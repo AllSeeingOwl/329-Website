@@ -18,6 +18,10 @@ if (!AUTH_PASSWORD) {
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
+// ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
+// This reduces allocation overhead and improves response times for the verification endpoint.
+// We provide a fallback empty string if AUTH_PASSWORD is undefined during mocked test environments that mock process.exit.
+const authBuffer = Buffer.from(AUTH_PASSWORD || '');
 
 app.post('/api/verify', (req, res) => {
   const ip = req.ip || req.connection?.remoteAddress || 'unknown';
@@ -51,7 +55,6 @@ app.post('/api/verify', (req, res) => {
 
   if (typeof code === 'string') {
     const codeBuffer = Buffer.from(code);
-    const authBuffer = Buffer.from(AUTH_PASSWORD);
 
     if (codeBuffer.length === authBuffer.length) {
       success = crypto.timingSafeEqual(codeBuffer, authBuffer);
