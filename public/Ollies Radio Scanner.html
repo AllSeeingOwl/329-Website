@@ -1,209 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PIRATE FREQUENCY // O. RADIAN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            background-color: #111;
-            color: #fff;
-            font-family: 'VT323', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #111;
+        color: #fff;
+        font-family: 'VT323', monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
 
-        .radio-container {
-            background-color: #222;
-            border: 4px solid #444;
-            border-radius: 10px;
-            padding: 40px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 10px 10px 0px #000;
-            position: relative;
-        }
+      .radio-container {
+        background-color: #222;
+        border: 4px solid #444;
+        border-radius: 10px;
+        padding: 40px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 10px 10px 0px #000;
+        position: relative;
+      }
 
-        .tape {
-            position: absolute;
-            background-color: #e3dcb0;
-            opacity: 0.8;
-            height: 25px;
-            width: 120px;
-            top: -10px;
-            left: 20px;
-            transform: rotate(-3deg);
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            color: #000;
-            font-family: 'Anton', sans-serif;
-            text-align: center;
-            line-height: 25px;
-            font-size: 1rem;
-            text-transform: uppercase;
-        }
+      .tape {
+        position: absolute;
+        background-color: #e3dcb0;
+        opacity: 0.8;
+        height: 25px;
+        width: 120px;
+        top: -10px;
+        left: 20px;
+        transform: rotate(-3deg);
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        color: #000;
+        font-family: 'Anton', sans-serif;
+        text-align: center;
+        line-height: 25px;
+        font-size: 1rem;
+        text-transform: uppercase;
+      }
 
-        .radio-header {
-            font-family: 'Anton', sans-serif;
-            font-size: 2.5rem;
-            color: #ff9900; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+      .radio-header {
+        font-family: 'Anton', sans-serif;
+        font-size: 2.5rem;
+        color: #ff9900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
 
-        .led-screen {
-            background-color: #050505;
-            border: 3px inset #111;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
+      .led-screen {
+        background-color: #050505;
+        border: 3px inset #111;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .static-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: repeating-radial-gradient(circle at 17% 32%, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 1px, transparent 2px, transparent 4px);
-            opacity: 0.5;
-            pointer-events: none;
-            z-index: 2;
-        }
+      .static-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: repeating-radial-gradient(
+          circle at 17% 32%,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 2px,
+          transparent 4px
+        );
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 2;
+      }
 
-        .freq-readout {
-            font-family: 'VT323', monospace;
-            font-size: 5rem;
-            color: #ff003c;
-            text-shadow: 0 0 10px #ff003c;
-            margin: 0;
-            line-height: 1;
-            z-index: 3;
-            position: relative;
-        }
+      .freq-readout {
+        font-family: 'VT323', monospace;
+        font-size: 5rem;
+        color: #ff003c;
+        text-shadow: 0 0 10px #ff003c;
+        margin: 0;
+        line-height: 1;
+        z-index: 3;
+        position: relative;
+      }
 
-        .slider-container {
-            margin: 30px 0;
-            text-align: center;
-        }
+      .slider-container {
+        margin: 30px 0;
+        text-align: center;
+      }
 
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
+      input[type='range'] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+      }
 
-        input[type=range]:focus { outline: none; }
+      input[type='range']:focus {
+        outline: 2px solid #ff9900;
+        outline-offset: 2px;
+      }
 
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 12px;
-            cursor: pointer;
-            background: #444;
-            border-radius: 5px;
-            border: 1px solid #000;
-        }
+      input[type='range']::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 12px;
+        cursor: pointer;
+        background: #444;
+        border-radius: 5px;
+        border: 1px solid #000;
+      }
 
-        input[type=range]::-webkit-slider-thumb {
-            height: 30px;
-            width: 15px;
-            border-radius: 3px;
-            background: #ff9900;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -10px;
-            border: 2px solid #000;
-        }
+      input[type='range']::-webkit-slider-thumb {
+        height: 30px;
+        width: 15px;
+        border-radius: 3px;
+        background: #ff9900;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -10px;
+        border: 2px solid #000;
+      }
 
-        .dial-marks {
-            display: flex;
-            justify-content: space-between;
-            color: #888;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            margin-top: 10px;
-        }
+      .dial-marks {
+        display: flex;
+        justify-content: space-between;
+        color: #888;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        margin-top: 10px;
+      }
 
-        .transmission-box {
-            background-color: #000;
-            border: 1px dashed #ff9900;
-            padding: 15px;
-            min-height: 100px;
-            font-size: 1.3rem;
-            color: #888;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
+      .transmission-box {
+        background-color: #000;
+        border: 1px dashed #ff9900;
+        padding: 15px;
+        min-height: 100px;
+        font-size: 1.3rem;
+        color: #888;
+        line-height: 1.4;
+        word-wrap: break-word;
+      }
 
-        .locked-in .freq-readout {
-            color: #00ff00;
-            text-shadow: 0 0 15px #00ff00;
-        }
+      .locked-in .freq-readout {
+        color: #00ff00;
+        text-shadow: 0 0 15px #00ff00;
+      }
 
-        .locked-in .transmission-box {
-            border-color: #00ff00;
-            color: #00ff00;
-            font-weight: bold;
-        }
+      .locked-in .transmission-box {
+        border-color: #00ff00;
+        color: #00ff00;
+        font-weight: bold;
+      }
 
-        .locked-in .static-overlay { display: none; }
-        
-        .anim-shake { animation: shake 0.5s infinite; }
-        
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+      .locked-in .static-overlay {
+        display: none;
+      }
+
+      .anim-shake {
+        animation: shake 0.5s infinite;
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
         }
+        10% {
+          transform: translate(-1px, -2px) rotate(-1deg);
+        }
+        20% {
+          transform: translate(-3px, 0px) rotate(1deg);
+        }
+        30% {
+          transform: translate(3px, 2px) rotate(0deg);
+        }
+        40% {
+          transform: translate(1px, -1px) rotate(1deg);
+        }
+        50% {
+          transform: translate(-1px, 2px) rotate(-1deg);
+        }
+        60% {
+          transform: translate(-3px, 1px) rotate(0deg);
+        }
+        70% {
+          transform: translate(3px, 1px) rotate(-1deg);
+        }
+        80% {
+          transform: translate(-1px, -1px) rotate(1deg);
+        }
+        90% {
+          transform: translate(1px, 2px) rotate(0deg);
+        }
+        100% {
+          transform: translate(1px, -2px) rotate(-1deg);
+        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="radio-container" id="radio-body">
-        <div class="tape">OLLIE'S RIG</div>
-        
-        <div class="radio-header">UnKnNet // FREQ SCANNER</div>
+      <div class="tape">OLLIE'S RIG</div>
 
-        <div class="led-screen">
-            <div class="static-overlay"></div>
-            <p class="freq-readout" id="freq-display">88.0</p>
-        </div>
+      <div class="radio-header">UnKnNet // FREQ SCANNER</div>
 
-        <div class="slider-container">
-            <input type="range" id="freq-slider" min="880" max="1080" value="880">
-            <div class="dial-marks">
-                <span>88</span>
-                <span>92</span>
-                <span>96</span>
-                <span>100</span>
-                <span>104</span>
-                <span>108</span>
-            </div>
-        </div>
+      <div class="led-screen">
+        <div class="static-overlay"></div>
+        <p class="freq-readout" id="freq-display">88.0</p>
+      </div>
 
-        <div class="transmission-box" id="transmission-output">
-            [SCANNING FREQUENCIES...]
+      <div class="slider-container">
+        <input
+          type="range"
+          id="freq-slider"
+          min="880"
+          max="1080"
+          value="880"
+          aria-label="Frequency scanner slider"
+        />
+        <div class="dial-marks">
+          <span>88</span>
+          <span>92</span>
+          <span>96</span>
+          <span>100</span>
+          <span>104</span>
+          <span>108</span>
         </div>
+      </div>
+
+      <div class="transmission-box" id="transmission-output">[SCANNING FREQUENCIES...]</div>
     </div>
 
     <script src="radio_scanner_utils.js"></script>
     <script>
-        setupRadioScanner();
+      setupRadioScanner();
     </script>
-</body>
+  </body>
 </html>
