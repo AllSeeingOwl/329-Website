@@ -1,314 +1,354 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3minsto9 | Independent Micro-Press & Immersive Media</title>
     <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg-color: #faf9f6; 
-            --text-color: #111111;
-            --accent-red: #ff003c;
-            --border-color: #e0e0e0;
-        }
+      :root {
+        --bg-color: #faf9f6;
+        --text-color: #111111;
+        --accent-red: #ff003c;
+        --border-color: #e0e0e0;
+      }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
 
-        a { text-decoration: none; color: inherit; }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
 
-        header {
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px 0;
-        }
+      header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+      }
 
-        .nav-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .nav-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-        }
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+      }
 
-        .quarter-clock {
-            width: 30px;
-            height: 30px;
-            border-top: 3px solid var(--text-color);
-            border-left: 3px solid var(--text-color);
-            border-radius: 100% 0 0 0;
-            position: relative;
-        }
+      .quarter-clock {
+        width: 30px;
+        height: 30px;
+        border-top: 3px solid var(--text-color);
+        border-left: 3px solid var(--text-color);
+        border-radius: 100% 0 0 0;
+        position: relative;
+      }
 
-        .quarter-clock::before {
-            content: "12";
-            position: absolute;
-            top: -15px;
-            left: 25px;
-            font-size: 0.6rem;
-            font-weight: bold;
-        }
+      .quarter-clock::before {
+        content: '12';
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
 
-        .quarter-clock::after {
-            content: "9";
-            position: absolute;
-            top: 25px;
-            left: -15px;
-            font-size: 0.6rem;
-            font-weight: bold;
-        }
+      .quarter-clock::after {
+        content: '9';
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
 
-        .clock-hands {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 15px;
-            height: 15px;
-            border-top: 2px solid var(--accent-red);
-            border-left: 2px solid var(--accent-red);
-        }
+      .clock-hands {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--accent-red);
+        border-left: 2px solid var(--accent-red);
+      }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+      .nav-links {
+        display: flex;
+        gap: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
 
-        .nav-links a:hover { color: var(--accent-red); }
+      .nav-links a:hover {
+        color: var(--accent-red);
+      }
 
+      .hero {
+        padding: 100px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .hero-content h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 4.5rem;
+        line-height: 1.1;
+        margin: 0 0 20px 0;
+        font-weight: 700;
+      }
+
+      .hero-content p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 40px;
+        max-width: 90%;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        padding: 18px 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-red);
+        color: #fff;
+      }
+
+      .hero-image {
+        background-color: #eae8e1;
+        width: 100%;
+        aspect-ratio: 3/4;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+      }
+
+      .hero-image::after {
+        content: 'IMAGE PLACEHOLDER: UNKNOWN VOL. 1 (A5 ZINE)';
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .manifesto {
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        padding: 100px 0;
+        text-align: center;
+      }
+
+      .manifesto-inner {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .manifesto h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        margin: 0 0 30px 0;
+      }
+
+      .manifesto p {
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #aaa;
+      }
+
+      .manifesto .highlight {
+        color: var(--accent-red);
+        font-weight: bold;
+      }
+
+      .newsletter {
+        padding: 100px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .newsletter h3 {
+        font-size: 2rem;
+        margin: 0 0 10px 0;
+      }
+
+      .newsletter p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .newsletter-form {
+        display: flex;
+        justify-content: center;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .newsletter-form input[type='email'] {
+        flex-grow: 1;
+        padding: 15px 20px;
+        font-size: 1rem;
+        border: 1px solid var(--border-color);
+        border-right: none;
+        outline: none;
+        font-family: 'Inter', sans-serif;
+        background: transparent;
+      }
+
+      .newsletter-form button {
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        border: none;
+        padding: 0 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .newsletter-form button:hover {
+        background-color: var(--accent-red);
+      }
+
+      footer {
+        padding: 40px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+      }
+
+      @media (max-width: 768px) {
         .hero {
-            padding: 100px 0;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+          grid-template-columns: 1fr;
+          text-align: center;
         }
-
-        .hero-content h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            line-height: 1.1;
-            margin: 0 0 20px 0;
-            font-weight: 700;
-        }
-
         .hero-content p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 40px;
-            max-width: 90%;
+          margin: 0 auto 40px auto;
         }
-
-        .btn-primary {
-            display: inline-block;
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            padding: 18px 36px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
+        .nav-links {
+          display: none;
         }
-
-        .btn-primary:hover {
-            background-color: var(--accent-red);
-            color: #fff;
+        .hero-content h1 {
+          font-size: 3.5rem;
         }
-
-        .hero-image {
-            background-color: #eae8e1;
-            width: 100%;
-            aspect-ratio: 3/4;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            box-shadow: 20px 20px 0px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .hero-image::after {
-            content: "IMAGE PLACEHOLDER: UNKNOWN VOL. 1 (A5 ZINE)";
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            color: #888;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .manifesto {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .manifesto-inner {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
         .manifesto h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            margin: 0 0 30px 0;
+          font-size: 2.5rem;
         }
-
-        .manifesto p {
-            font-size: 1.3rem;
-            line-height: 1.8;
-            color: #aaa;
-        }
-
-        .manifesto .highlight {
-            color: var(--accent-red);
-            font-weight: bold;
-        }
-
-        .newsletter {
-            padding: 100px 0;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .newsletter h3 {
-            font-size: 2rem;
-            margin: 0 0 10px 0;
-        }
-
-        .newsletter p {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .newsletter-form {
-            display: flex;
-            justify-content: center;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .newsletter-form input[type="email"] {
-            flex-grow: 1;
-            padding: 15px 20px;
-            font-size: 1rem;
-            border: 1px solid var(--border-color);
-            border-right: none;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-            background: transparent;
-        }
-
-        .newsletter-form button {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 0 30px;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .newsletter-form button:hover {
-            background-color: var(--accent-red);
-        }
-
-        footer {
-            padding: 40px 0;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #888;
-        }
-
-        @media (max-width: 768px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
-            .hero-content p { margin: 0 auto 40px auto; }
-            .nav-links { display: none; }
-            .hero-content h1 { font-size: 3.5rem; }
-            .manifesto h2 { font-size: 2.5rem; }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <header>
-        <div class="container nav-inner">
-            <a href="index.html" class="brand-logo">
-                <div class="quarter-clock">
-                    <div class="clock-hands"></div>
-                </div>
-                3minsto9
-            </a>
-            <nav class="nav-links">
-                <a href="#">Releases</a>
-                <a href="Studio%20Manifesto%20Page.html">The Studio</a>
-                <a href="#" style="color: var(--accent-red);">Store</a>
-            </nav>
-        </div>
+      <div class="container nav-inner">
+        <a href="index.html" class="brand-logo">
+          <div class="quarter-clock">
+            <div class="clock-hands"></div>
+          </div>
+          3minsto9
+        </a>
+        <nav class="nav-links">
+          <a href="Releases.html">Releases</a>
+          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
+          <a href="Store.html" style="color: var(--accent-red)">Store</a>
+        </nav>
+      </div>
     </header>
 
     <section class="hero container">
-        <div class="hero-content">
-            <h1>Welcome to the Unknown.</h1>
-            <p><strong>The Unknown Field (MINE) Guide (Vol. 0)</strong> is a 32-page interactive puzzle zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been stolen, vandalised, and "corrected" by the punk gang Team Rabbit.</p>
-            <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
-            <a href="#" class="btn-primary">Procure Volume 1</a>
-        </div>
-        <div class="hero-image">
-        </div>
+      <div class="hero-content">
+        <h1>Welcome to the Unknown.</h1>
+        <p>
+          <strong>The Unknown Field (MINE) Guide (Vol. 0)</strong> is a 32-page interactive puzzle
+          zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been
+          stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
+        </p>
+        <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
+        <a href="Procure%20Volume%201.html" class="btn-primary">Procure Volume 1</a>
+      </div>
+      <div class="hero-image"></div>
     </section>
 
     <section class="manifesto">
-        <div class="container manifesto-inner">
-            <h2>High Value. Low Volume. Direct to Reader.</h2>
-            <p>3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK. We operate as <span class="highlight">Comicsmiths</span> and <span class="highlight">Puzzlesmiths</span>. Our mission is to bridge the gap between graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You aren't just reading a story; you are stepping into a labyrinth.</p>
-        </div>
+      <div class="container manifesto-inner">
+        <h2>High Value. Low Volume. Direct to Reader.</h2>
+        <p>
+          3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
+          We operate as <span class="highlight">Comicsmiths</span> and
+          <span class="highlight">Puzzlesmiths</span>. Our mission is to bridge the gap between
+          graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You
+          aren't just reading a story; you are stepping into a labyrinth.
+        </p>
+      </div>
     </section>
 
     <section class="newsletter container">
-        <h3>Join the Dispatch</h3>
-        <p>Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.</p>
-        <form class="newsletter-form" onsubmit="alert('Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)'); return false;">
-            <input type="email" aria-label="Email address" placeholder="Enter your email address..." required>
-            <button type="submit">Subscribe</button>
-        </form>
+      <h3>Join the Dispatch</h3>
+      <p>
+        Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
+      </p>
+      <form
+        class="newsletter-form"
+        onsubmit="
+          alert('Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)');
+          return false;
+        "
+      >
+        <input
+          type="email"
+          aria-label="Email address"
+          placeholder="Enter your email address..."
+          required
+        />
+        <button type="submit">Subscribe</button>
+      </form>
     </section>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
+      </div>
     </footer>
-
-</body>
+  </body>
 </html>
