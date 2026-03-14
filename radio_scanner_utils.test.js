@@ -115,8 +115,8 @@ describe('setupRadioScanner', () => {
     expect(display.innerText).toBe('88.0');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
-    expect(output.innerText.length).toBeGreaterThan(0);
-    expect(output.innerText).not.toContain('...TRANSMISSION S');
+    expect(output.textContent.length).toBeGreaterThan(0);
+    expect(output.textContent).not.toContain('...TRANSMISSION S');
   });
 
   test('displays partial static when close to frequency', () => {
@@ -128,9 +128,9 @@ describe('setupRadioScanner', () => {
     expect(display.innerText).toBe('104.6');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
-    expect(output.innerText).toContain('...TRANSMISSION S');
-    expect(output.innerText).toContain('groovy c');
-    expect(output.innerText).toContain('bolt cutters...');
+    expect(output.textContent).toContain('...TRANSMISSION S');
+    expect(output.textContent).toContain('groovy c');
+    expect(output.textContent).toContain('bolt cutters...');
   });
 
   test('locks in and types message when exactly on frequency', () => {

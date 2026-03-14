@@ -45,14 +45,14 @@ function setupRadioScanner() {
       let staticLength = Math.max(20, distance);
 
       if (distance < 5) {
-        output.innerText =
+        output.textContent =
           '...TRANSMISSION S' +
           generateStatic(10) +
           'groovy c' +
           generateStatic(15) +
           'bolt cutters...';
       } else {
-        output.innerText = generateStatic(staticLength);
+        output.textContent = generateStatic(staticLength);
       }
     }
   });
