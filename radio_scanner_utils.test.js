@@ -144,13 +144,13 @@ describe('setupRadioScanner', () => {
     expect(output.classList.contains('anim-shake')).toBe(false);
 
     // Initially empty before typing animation
-    expect(output.innerText).toBe('');
+    expect(output.textContent).toBe('');
 
     // Advance timers to complete typing animation
     jest.advanceTimersByTime(30 * 300); // 30ms per char, approx 300 chars
 
     const decryptedMessage =
       "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
-    expect(output.innerText).toBe(decryptedMessage);
+    expect(output.textContent).toBe(decryptedMessage);
   });
 });

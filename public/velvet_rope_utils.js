@@ -86,8 +86,9 @@ function breachMainframe(e, win = typeof window !== 'undefined' ? window : null)
 
     const closeBtn = document.createElement('button');
     closeBtn.textContent = 'CLOSE';
-    closeBtn.style.cssText = 'background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
-    closeBtn.onclick = function() {
+    closeBtn.style.cssText =
+      'background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
+    closeBtn.onclick = function () {
       if (this.parentElement) {
         this.parentElement.remove();
       }

@@ -1,341 +1,445 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>City of Everywhere Tourism Board</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Playfair+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-color: #f4f1ea;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-color: #f4f1ea;
+      }
 
-        #facade {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Playfair Display', serif;
-            background-color: #f4f1ea;
-            color: #2b3a42;
-            text-align: center;
-            padding: 20px;
-            transition: all 0.1s;
-        }
-        
-        #facade h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            font-weight: normal;
-        }
-        
-        #facade p {
-            font-size: 1.2rem;
-            font-style: italic;
-            color: #555;
-        }
+      #facade {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Playfair Display', serif;
+        background-color: #f4f1ea;
+        color: #2b3a42;
+        text-align: center;
+        padding: 20px;
+        transition: all 0.1s;
+      }
 
-        .screen-tear {
-            animation: glitch-anim 0.25s cubic-bezier(.25, .46, .45, .94) both infinite;
-            background-color: #000 !important;
-            color: #fff !important;
-        }
+      #facade h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        font-weight: normal;
+      }
 
-        @keyframes glitch-anim {
-            0% { transform: translate(0) skew(0deg); }
-            20% { transform: translate(-15px, 5px) skew(-20deg); }
-            40% { transform: translate(15px, -5px) skew(20deg); }
-            60% { transform: translate(-5px, 15px) skew(-10deg); }
-            80% { transform: translate(10px, -15px) skew(10deg); }
-            100% { transform: translate(0) skew(0deg); }
-        }
+      #facade p {
+        font-size: 1.2rem;
+        font-style: italic;
+        color: #555;
+      }
 
-        #underground {
-            display: none;
-            min-height: 100vh;
-            background-color: #050505;
-            color: #00ff00;
-            font-family: 'VT323', monospace;
-            padding: 50px 20px;
-            position: relative;
-            box-sizing: border-box;
-        }
+      .screen-tear {
+        animation: glitch-anim 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+        background-color: #000 !important;
+        color: #fff !important;
+      }
 
-        #underground::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 3px, 3px 100%;
-            pointer-events: none;
+      @keyframes glitch-anim {
+        0% {
+          transform: translate(0) skew(0deg);
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 3;
+        20% {
+          transform: translate(-15px, 5px) skew(-20deg);
         }
+        40% {
+          transform: translate(15px, -5px) skew(20deg);
+        }
+        60% {
+          transform: translate(-5px, 15px) skew(-10deg);
+        }
+        80% {
+          transform: translate(10px, -15px) skew(10deg);
+        }
+        100% {
+          transform: translate(0) skew(0deg);
+        }
+      }
 
+      #underground {
+        display: none;
+        min-height: 100vh;
+        background-color: #050505;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        padding: 50px 20px;
+        position: relative;
+        box-sizing: border-box;
+      }
+
+      #underground::before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 2;
+        background-size:
+          100% 3px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 3;
+      }
+
+      .header-glitch {
+        font-family: 'Anton', sans-serif;
+        color: #ff003c;
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #ff003c;
+        padding-bottom: 10px;
+        text-shadow:
+          2px 2px 0px #000,
+          -2px -2px 0px #00ffff;
+        line-height: 1.1;
+      }
+
+      .body-text p {
+        font-size: 1.4rem;
+        line-height: 1.4;
+        margin-bottom: 20px;
+      }
+
+      .highlight-red {
+        color: #ff003c;
+        font-weight: bold;
+      }
+      .highlight-white {
+        color: #ffffff;
+      }
+
+      #beatrix-intrusion {
+        display: none;
+        background-color: #e6ecf0;
+        color: #2b3a42;
+        font-family: 'Playfair Display', serif;
+        border: 2px solid #5a7d9a;
+        border-left: 8px solid #5a7d9a;
+        padding: 20px;
+        margin: 30px 0;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
+        box-shadow: 5px 5px 0px rgba(90, 125, 154, 0.3);
+      }
+
+      #beatrix-intrusion.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .bea-header {
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #5a7d9a;
+        margin-bottom: 10px;
+        font-family: 'VT323', monospace;
+      }
+
+      .bea-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      #beatrix-intrusion.crushed {
+        animation: crush-box 0.4s forwards;
+        pointer-events: none;
+      }
+
+      .merrick-stamp {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-8deg);
+        font-family: 'Anton', sans-serif;
+        color: #ff003c;
+        font-size: 3.5rem;
+        line-height: 1;
+        white-space: nowrap;
+        text-shadow: 3px 3px 0 #000;
+        z-index: 10;
+      }
+
+      @keyframes crush-box {
+        0% {
+          transform: scale(1) rotate(0);
+          filter: grayscale(0);
+          opacity: 1;
+        }
+        40% {
+          transform: scale(0.98) rotate(1deg);
+          filter: grayscale(0.3);
+        }
+        80% {
+          transform: scale(0.95) rotate(-1deg);
+          filter: grayscale(0.8);
+        }
+        100% {
+          transform: scale(0.95) rotate(-1deg);
+          filter: grayscale(1) brightness(0.6);
+          box-shadow: none;
+          border-color: #333;
+          color: #555;
+        }
+      }
+
+      .terminal-form {
+        margin-top: 40px;
+        padding: 20px;
+        border: 1px dashed #00ff00;
+        background: rgba(0, 255, 0, 0.05);
+      }
+
+      .terminal-form input[type='email'] {
+        width: calc(100% - 22px);
+        max-width: 400px;
+        background: #000;
+        border: 1px solid #ff003c;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        font-size: 1.3rem;
+        padding: 10px;
+        margin-bottom: 15px;
+        outline: none;
+      }
+
+      .terminal-form input[type='email']::placeholder {
+        color: #005500;
+      }
+      .terminal-form input[type='email']:focus {
+        box-shadow: 0 0 10px #ff003c;
+      }
+
+      .terminal-form button {
+        background: #ff003c;
+        color: #000;
+        font-family: 'Anton', sans-serif;
+        font-size: 1.5rem;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+      }
+
+      .terminal-form button:hover {
+        background: #fff;
+        color: #ff003c;
+        box-shadow: 0 0 15px #ff003c;
+      }
+
+      .terminal-footer {
+        margin-top: 60px;
+        font-size: 1.1rem;
+        color: #555;
+        border-top: 1px solid #333;
+        padding-top: 20px;
+      }
+
+      @media (max-width: 600px) {
         .header-glitch {
-            font-family: 'Anton', sans-serif;
-            color: #ff003c;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #ff003c;
-            padding-bottom: 10px;
-            text-shadow: 2px 2px 0px #000, -2px -2px 0px #00ffff;
-            line-height: 1.1;
+          font-size: 2rem;
         }
-
         .body-text p {
-            font-size: 1.4rem;
-            line-height: 1.4;
-            margin-bottom: 20px;
+          font-size: 1.2rem;
         }
-
-        .highlight-red { color: #ff003c; font-weight: bold; }
-        .highlight-white { color: #ffffff; }
-
-        #beatrix-intrusion {
-            display: none;
-            background-color: #e6ecf0;
-            color: #2b3a42;
-            font-family: 'Playfair Display', serif;
-            border: 2px solid #5a7d9a;
-            border-left: 8px solid #5a7d9a;
-            padding: 20px;
-            margin: 30px 0;
-            position: relative;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease-out;
-            box-shadow: 5px 5px 0px rgba(90, 125, 154, 0.3);
-        }
-
-        #beatrix-intrusion.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .bea-header {
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #5a7d9a;
-            margin-bottom: 10px;
-            font-family: 'VT323', monospace; 
-        }
-
-        .bea-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        #beatrix-intrusion.crushed {
-            animation: crush-box 0.4s forwards;
-            pointer-events: none;
-        }
-
         .merrick-stamp {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-8deg);
-            font-family: 'Anton', sans-serif;
-            color: #ff003c;
-            font-size: 3.5rem;
-            line-height: 1;
-            white-space: nowrap;
-            text-shadow: 3px 3px 0 #000;
-            z-index: 10;
+          font-size: 2rem;
         }
-
-        @keyframes crush-box {
-            0% { transform: scale(1) rotate(0); filter: grayscale(0); opacity: 1; }
-            40% { transform: scale(0.98) rotate(1deg); filter: grayscale(0.3); }
-            80% { transform: scale(0.95) rotate(-1deg); filter: grayscale(0.8); }
-            100% { transform: scale(0.95) rotate(-1deg); filter: grayscale(1) brightness(0.6); box-shadow: none; border-color: #333; color: #555; }
-        }
-
-        .terminal-form {
-            margin-top: 40px;
-            padding: 20px;
-            border: 1px dashed #00ff00;
-            background: rgba(0, 255, 0, 0.05);
-        }
-
-        .terminal-form input[type="email"] {
-            width: calc(100% - 22px);
-            max-width: 400px;
-            background: #000;
-            border: 1px solid #ff003c;
-            color: #00ff00;
-            font-family: 'VT323', monospace;
-            font-size: 1.3rem;
-            padding: 10px;
-            margin-bottom: 15px;
-            outline: none;
-        }
-        
-        .terminal-form input[type="email"]::placeholder { color: #005500; }
-        .terminal-form input[type="email"]:focus { box-shadow: 0 0 10px #ff003c; }
-
-        .terminal-form button {
-            background: #ff003c;
-            color: #000;
-            font-family: 'Anton', sans-serif;
-            font-size: 1.5rem;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-        }
-
-        .terminal-form button:hover {
-            background: #fff;
-            color: #ff003c;
-            box-shadow: 0 0 15px #ff003c;
-        }
-
-        .terminal-footer {
-            margin-top: 60px;
-            font-size: 1.1rem;
-            color: #555;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .header-glitch { font-size: 2rem; }
-            .body-text p { font-size: 1.2rem; }
-            .merrick-stamp { font-size: 2rem; }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="facade">
-        <h1>City of Everywhere</h1>
-        <p>Welcome to your perfect, peaceful getaway. Loading your itinerary...</p>
+      <h1>City of Everywhere</h1>
+      <p>Welcome to your perfect, peaceful getaway. Loading your itinerary...</p>
     </div>
 
     <div id="underground">
-        <div class="container">
-            <div class="header-glitch">SYSTEM OVERRIDE SUCCESSFUL.<br>WELCOME TO THE UNDERGROUND, POSER.</div>
-            
-            <div class="body-text">
-                <p>So, you actually scanned it.</p>
-                <p>I’ll admit, I thought you were just another brain-dead tourist wandering around the City of Everywhere, drinking the NOVA Kool-Aid and keeping your head down.</p>
-                <p>But you saw the glitch in the matrix, didn't you? You saw our handiwork.</p>
-                <p>I’m Merrick. The City calls my crew 'Team Rabbit.' They also call us domestic terrorists, vandals, and a statistical anomaly. <span class="highlight-red">We just call ourselves awake.</span></p>
-                <p>That little brochure you’re holding? We hijacked a whole shipment of them. We hid the truth in the margins—codes, frequencies, the real dirt on this plastic city.</p>
-                <p id="bea-trigger-point">If you solved the "Author Signature" puzzle on page 12, congratulations. You aren't totally useless. (The real artist's name is <span class="highlight-white">[Artist Name]</span>, by the way. Give them some cred, their portfolio is linked below).</p>
-
-                <!-- PHASE 3: BEATRIX'S INTRUSION -->
-                <div id="beatrix-intrusion">
-                    <div class="bea-header">[SECONDARY OVERRIDE INITIATED - USER: B. CANDELA]</div>
-                    <p class="bea-text">Salutations. I am instituting a localized override to counteract this visual atrocity. The ocular strain induced by this individual's 'terminal' aesthetic is frankly barbaric. Please hold while I execute a civilized graphical interface and correct her numerous grammatical—</p>
-                    
-                    <div class="merrick-stamp" id="merrick-stamp">ACCESS DENIED.<br>BACK TO YOUR BOOKS, WIKI-BOY.</div>
-                </div>
-
-                <p>But that zine is just the bedrock. We are planning something massive, and we need people who actually know how to open their eyes.</p>
-                <p>Our comms are heavily monitored by the MLTK supercomputers. We can't just broadcast our next move.</p>
-                <p>Drop your secure comms link (your email address) in the terminal below. If you do, I’ll send you a secure data packet right now: High-res digital blueprints of the Seedless Grapes Motel (Wallpapers) and a classified, uncut puzzle file we couldn't fit in the physical zine.</p>
-                <p class="highlight-red">Don't be a sheep. Join the war.</p>
-            </div>
-
-            <div class="terminal-form">
-                <form onsubmit="breachMainframe(event)">
-                    <input type="email" id="comms-link" aria-label="Secure comms link email address" placeholder="Enter Comms Link..." required>
-                    <br>
-                    <button type="submit">BREACH THE MAINFRAME</button>
-                </form>
-            </div>
-
-            <div class="terminal-footer">
-                <p>Transmission intercepted by 3minsto9 Operations.</p>
-                <p>By joining this frequency, you agree to receive future transmissions, classified puzzle drops, and crowdfunding intel for 'Unknown: Volume 1'. No spam. We leave the junk to the City of Everywhere.</p>
-            </div>
+      <div class="container">
+        <div class="header-glitch">
+          SYSTEM OVERRIDE SUCCESSFUL.<br />WELCOME TO THE UNDERGROUND, POSER.
         </div>
+
+        <div class="body-text">
+          <p>So, you actually scanned it.</p>
+          <p>
+            I’ll admit, I thought you were just another brain-dead tourist wandering around the City
+            of Everywhere, drinking the NOVA Kool-Aid and keeping your head down.
+          </p>
+          <p>But you saw the glitch in the matrix, didn't you? You saw our handiwork.</p>
+          <p>
+            I’m Merrick. The City calls my crew 'Team Rabbit.' They also call us domestic
+            terrorists, vandals, and a statistical anomaly.
+            <span class="highlight-red">We just call ourselves awake.</span>
+          </p>
+          <p>
+            That little brochure you’re holding? We hijacked a whole shipment of them. We hid the
+            truth in the margins—codes, frequencies, the real dirt on this plastic city.
+          </p>
+          <p id="bea-trigger-point">
+            If you solved the "Author Signature" puzzle on page 12, congratulations. You aren't
+            totally useless. (The real artist's name is
+            <span class="highlight-white">[Artist Name]</span>, by the way. Give them some cred,
+            their portfolio is linked below).
+          </p>
+
+          <!-- PHASE 3: BEATRIX'S INTRUSION -->
+          <div id="beatrix-intrusion">
+            <div class="bea-header">[SECONDARY OVERRIDE INITIATED - USER: B. CANDELA]</div>
+            <p class="bea-text">
+              Salutations. I am instituting a localized override to counteract this visual atrocity.
+              The ocular strain induced by this individual's 'terminal' aesthetic is frankly
+              barbaric. Please hold while I execute a civilized graphical interface and correct her
+              numerous grammatical—
+            </p>
+
+            <div class="merrick-stamp" id="merrick-stamp">
+              ACCESS DENIED.<br />BACK TO YOUR BOOKS, WIKI-BOY.
+            </div>
+          </div>
+
+          <p>
+            But that zine is just the bedrock. We are planning something massive, and we need people
+            who actually know how to open their eyes.
+          </p>
+          <p>
+            Our comms are heavily monitored by the MLTK supercomputers. We can't just broadcast our
+            next move.
+          </p>
+          <p>
+            Drop your secure comms link (your email address) in the terminal below. If you do, I’ll
+            send you a secure data packet right now: High-res digital blueprints of the Seedless
+            Grapes Motel (Wallpapers) and a classified, uncut puzzle file we couldn't fit in the
+            physical zine.
+          </p>
+          <p class="highlight-red">Don't be a sheep. Join the war.</p>
+        </div>
+
+        <div class="terminal-form">
+          <form onsubmit="breachMainframe(event)">
+            <input
+              type="email"
+              id="comms-link"
+              aria-label="Secure comms link email address"
+              placeholder="Enter Comms Link..."
+              required
+            />
+            <br />
+            <button type="submit">BREACH THE MAINFRAME</button>
+          </form>
+        </div>
+
+        <div class="terminal-footer">
+          <p>Transmission intercepted by 3minsto9 Operations.</p>
+          <p>
+            By joining this frequency, you agree to receive future transmissions, classified puzzle
+            drops, and crowdfunding intel for 'Unknown: Volume 1'. No spam. We leave the junk to the
+            City of Everywhere.
+          </p>
+        </div>
+      </div>
     </div>
 
     <script>
+      setTimeout(() => {
+        const facade = document.getElementById('facade');
+        const underground = document.getElementById('underground');
+
+        facade.classList.add('screen-tear');
+
         setTimeout(() => {
-            const facade = document.getElementById('facade');
-            const underground = document.getElementById('underground');
-            
-            facade.classList.add('screen-tear');
-            
-            setTimeout(() => {
-                facade.style.display = 'none';
-                underground.style.display = 'block';
-                document.body.style.backgroundColor = '#050505'; 
-                document.title = "SYSTEM OVERRIDE // TEAM RABBIT"; 
-                
-                const beaBox = document.getElementById('beatrix-intrusion');
-                const triggerPoint = document.getElementById('bea-trigger-point');
-                let hasTriggered = false;
+          facade.style.display = 'none';
+          underground.style.display = 'block';
+          document.body.style.backgroundColor = '#050505';
+          document.title = 'SYSTEM OVERRIDE // TEAM RABBIT';
 
-                const scrollHandler = () => {
-                    const triggerPosition = triggerPoint.getBoundingClientRect().top;
-                    const screenHalfway = window.innerHeight * 0.5;
+          const beaBox = document.getElementById('beatrix-intrusion');
+          const triggerPoint = document.getElementById('bea-trigger-point');
+          let hasTriggered = false;
 
-                    if (triggerPosition < screenHalfway && !hasTriggered) {
-                        hasTriggered = true;
-                        window.removeEventListener('scroll', scrollHandler);
-                        
-                        beaBox.style.display = 'block';
-                        
-                        setTimeout(() => beaBox.classList.add('visible'), 50);
+          const scrollHandler = () => {
+            const triggerPosition = triggerPoint.getBoundingClientRect().top;
+            const screenHalfway = window.innerHeight * 0.5;
 
-                        setTimeout(() => {
-                            beaBox.classList.add('crushed');
-                            document.getElementById('merrick-stamp').style.display = 'block';
-                        }, 8000);
-                    }
-                };
+            if (triggerPosition < screenHalfway && !hasTriggered) {
+              hasTriggered = true;
+              window.removeEventListener('scroll', scrollHandler);
 
-                window.addEventListener('scroll', scrollHandler);
+              beaBox.style.display = 'block';
 
-            }, 400); 
-            
-        }, 2000);
+              setTimeout(() => beaBox.classList.add('visible'), 50);
 
-        function breachMainframe(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "LINK ESTABLISHED...";
-            btn.style.backgroundColor = "#fff";
-            btn.style.color = "#ff003c";
-            
-            setTimeout(() => {
-                // In production, uncomment the line below to redirect:
-                // window.location.href = "Secure%20Data%20Drop%20Page.html";
-                
-                const customBox = document.createElement('div');
-                customBox.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff003c; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
-                customBox.innerHTML = "<p>COMMUNICATION SECURED.</p><p style='color:#fff; font-size:1.1rem;'>[Developer Note: In the live version, this button will submit the email address and redirect to Secure%20Data%20Drop%20Page.html.]</p><button onclick='this.parentElement.remove()' style='background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;'>CLOSE</button>";
-                document.body.appendChild(customBox);
-            }, 800);
-        }
+              setTimeout(() => {
+                beaBox.classList.add('crushed');
+                document.getElementById('merrick-stamp').style.display = 'block';
+              }, 8000);
+            }
+          };
+
+          window.addEventListener('scroll', scrollHandler);
+        }, 400);
+      }, 2000);
+
+      function breachMainframe(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        btn.innerText = 'LINK ESTABLISHED...';
+        btn.style.backgroundColor = '#fff';
+        btn.style.color = '#ff003c';
+
+        setTimeout(() => {
+          // In production, uncomment the line below to redirect:
+          // window.location.href = "Secure%20Data%20Drop%20Page.html";
+
+          const customBox = document.createElement('div');
+          customBox.style.cssText =
+            "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff003c; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
+          customBox.innerHTML =
+            "<p>COMMUNICATION SECURED.</p><p style='color:#fff; font-size:1.1rem;'>[Developer Note: In the live version, this button will submit the email address and redirect to Secure%20Data%20Drop%20Page.html.]</p><button onclick='this.parentElement.remove()' style='background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;'>CLOSE</button>";
+          document.body.appendChild(customBox);
+        }, 800);
+      }
     </script>
-</body>
+  </body>
 </html>
