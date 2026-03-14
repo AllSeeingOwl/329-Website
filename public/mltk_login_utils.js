@@ -1,10 +1,20 @@
 function setupEventListeners() {
   const inputField = document.getElementById('serial-input');
   if (inputField) {
+    // Set initial width
+    inputField.style.width = inputField.value ? inputField.value.length + 'ch' : '0ch';
+
     inputField.addEventListener('input', function (e) {
       let target = e.target;
       let val = target.value.replace(/-/g, '').toUpperCase();
       target.value = val.match(/.{1,4}/g)?.join('-') || '';
+
+      // Adjust width dynamically so the cursor sticks to the text
+      target.style.width = target.value.length + 'ch';
+
+      if (target.value.length === 14) {
+        verifyCode(e);
+      }
     });
   }
 
