@@ -258,7 +258,6 @@
         outline-offset: 2px;
       }
 
-
       footer {
         padding: 40px 0;
         text-align: center;
@@ -270,18 +269,49 @@
         .hero {
           grid-template-columns: 1fr;
           text-align: center;
+          padding: 60px 0;
         }
         .hero-content p {
           margin: 0 auto 40px auto;
+          font-size: 1rem;
+        }
+        .nav-inner {
+          flex-direction: column;
+          gap: 20px;
         }
         .nav-links {
-          display: none;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
         }
         .hero-content h1 {
-          font-size: 3.5rem;
+          font-size: 3rem;
+        }
+        .manifesto {
+          padding: 60px 0;
         }
         .manifesto h2 {
-          font-size: 2.5rem;
+          font-size: 2.2rem;
+        }
+        .manifesto p {
+          font-size: 1.1rem;
+        }
+        .newsletter {
+          padding: 60px 0;
+        }
+        .newsletter h3 {
+          font-size: 1.8rem;
+        }
+        .newsletter-form {
+          flex-direction: column;
+          gap: 15px;
+          max-width: 90%;
+        }
+        .newsletter-form input[type='email'] {
+          border-right: 1px solid var(--border-color);
+        }
+        .newsletter-form button {
+          padding: 15px 30px;
         }
       }
     </style>

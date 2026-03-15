@@ -79,7 +79,6 @@
         box-shadow: 0 1px 5px rgba(0, 255, 0, 0.7);
       }
 
-
       .cursor {
         display: inline-block;
         width: 10px;
@@ -154,10 +153,30 @@
       }
 
       @media (max-width: 600px) {
+        .bsod-container, #success-screen {
+          padding: 20px;
+        }
+        .bsod-header {
+          font-size: 0.9rem;
+          margin-bottom: 20px;
+        }
         .bsod-text p,
         .terminal-input-group,
         input[type='text'] {
           font-size: 1rem;
+        }
+        .success-title {
+          font-size: 1.5rem;
+        }
+        .success-body {
+          font-size: 1rem;
+        }
+        .terminal-input-group {
+          flex-wrap: wrap;
+        }
+        input[type='text'] {
+          width: 100%;
+          max-width: 15ch;
         }
       }
       /* CRT Overlay Effect */
@@ -232,7 +251,6 @@
         outline: 2px dashed #00ff00;
         outline-offset: 4px;
       }
-
 
       @keyframes link-glitch {
         0% {

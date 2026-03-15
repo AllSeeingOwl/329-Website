@@ -179,7 +179,6 @@
         }
       }
 
-
       input[type='text']:focus,
       select:focus,
       textarea:focus,
@@ -238,6 +237,35 @@
         100% {
           transform: translate(0);
           text-shadow: none;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .header-bar {
+          padding: 10px;
+        }
+        .header-bar h2 {
+          font-size: 1.2rem;
+          margin: 0;
+        }
+        .header-bar p {
+          font-size: 0.8rem;
+          margin: 5px 0 0;
+        }
+        .terminal-container {
+          padding: 15px;
+          margin-top: 100px;
+          width: 95%;
+          box-sizing: border-box;
+        }
+        .terminal-header {
+          font-size: 1.2rem;
+        }
+        .automated-response {
+          font-size: 1rem;
+        }
+        button {
+          font-size: 1rem;
         }
       }
     </style>
