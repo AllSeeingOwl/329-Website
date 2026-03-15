@@ -4,7 +4,7 @@
   "description": "3minsto9 ARG web assets",
   "scripts": {
     "dev:server": "nodemon server.js",
-    "test": "jest",
+    "test": "jest --testPathIgnorePatterns=\"e2e\"",
     "test:e2e:playwright": "playwright test",
     "test:e2e:cypress": "cypress open",
     "lint": "eslint .",
