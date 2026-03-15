@@ -299,7 +299,7 @@
             );
 
           let responseText = `\n\n> RECEIVING TRANSMISSION...`;
-          responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput).substring(0, 30)}..."`;
+          responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput.substring(0, 30))}..."`;
 
           if (category === 'report') {
             responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
