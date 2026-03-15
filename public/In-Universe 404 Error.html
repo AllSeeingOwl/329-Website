@@ -259,6 +259,45 @@
         50% { opacity: 1; }
         100% { opacity: 0.95; }
       }
+
+      /* Glitch Effect for Links and Buttons */
+      a, button {
+        display: inline-block;
+        transition: background-color 0.2s, color 0.2s;
+      }
+
+      a:hover, button:hover {
+        animation: link-glitch 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        z-index: 10;
+        position: relative;
+      }
+
+      @keyframes link-glitch {
+        0% {
+          transform: translate(0);
+          text-shadow: none;
+        }
+        20% {
+          transform: translate(-2px, 1px);
+          text-shadow: 2px 0 #00ffff, -2px 0 #ff003c;
+        }
+        40% {
+          transform: translate(2px, -1px);
+          text-shadow: -2px 0 #00ffff, 2px 0 #ff003c;
+        }
+        60% {
+          transform: translate(-1px, 2px);
+          text-shadow: 2px 0 #00ffff, -2px 0 #ff003c;
+        }
+        80% {
+          transform: translate(1px, -2px);
+          text-shadow: -2px 0 #00ffff, 2px 0 #ff003c;
+        }
+        100% {
+          transform: translate(0);
+          text-shadow: none;
+        }
+      }
     </style>
   </head>
   <body>
