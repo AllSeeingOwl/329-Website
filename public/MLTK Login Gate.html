@@ -153,7 +153,8 @@
       }
 
       @media (max-width: 600px) {
-        .bsod-container, #success-screen {
+        .bsod-container,
+        #success-screen {
           padding: 20px;
         }
         .bsod-header {
@@ -284,6 +285,15 @@
         100% {
           transform: translate(0);
           text-shadow: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
         }
       }
     </style>
