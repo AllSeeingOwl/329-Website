@@ -1,3 +1,8 @@
+const CONFIG = {
+  USE_MOCK_API_FALLBACK: true, // Set to true to allow static site logic fallback
+  MOCK_PASSWORD: '0408-1998-XXXX', // The known correct code for the ARG
+};
+
 function setupEventListeners() {
   const inputField = document.getElementById('serial-input');
   if (inputField) {
@@ -36,17 +41,37 @@ async function verifyCode(e) {
   const inputGroup = document.getElementById('input-group');
 
   try {
-    const response = await fetch('/api/verify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ code: code }),
-    });
+    let success = false;
 
-    const result = await response.json();
+    try {
+      const response = await fetch('/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: code }),
+      });
 
-    if (result.success) {
+      if (!response.ok) {
+        throw new Error('API returned an error or is not available');
+      }
+
+      const result = await response.json();
+      success = result.success;
+    } catch (apiError) {
+      console.error('Error verifying code via API:', apiError);
+      // Fallback for static GitHub Pages deployments where Express /api/verify fails
+      if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
+        success = true;
+      } else {
+        success = false;
+        // Rethrow the error if we want it to be caught by the outer catch
+        // Actually, we don't want to swallow it if the fallback is false.
+        // Let's just log it and proceed to the fallback logic which will fail the auth.
+      }
+    }
+
+    if (success) {
       document.body.style.backgroundColor = '#050505';
       const lockdownScreen = document.getElementById('lockdown-screen');
       if (lockdownScreen) lockdownScreen.style.display = 'none';
@@ -81,5 +106,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { setupEventListeners, verifyCode };
+  module.exports = { setupEventListeners, verifyCode, CONFIG };
 }

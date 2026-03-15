@@ -120,7 +120,7 @@ describe('MLTK Login Gate Tests', () => {
     expect(errorMsg.style.display).toBe('none');
   });
 
-  test('verifyCode fetch error - catches error and logs to console', async () => {
+  test('verifyCode fetch error - catches error and logs to console, falls back to static check', async () => {
     const originalConsoleError = console.error;
     console.error = jest.fn();
 
@@ -130,10 +130,15 @@ describe('MLTK Login Gate Tests', () => {
     const inputField = document.getElementById('serial-input');
     inputField.value = 'ANY-CODE';
 
+    // Test a code that is not the mock password
     const event = { preventDefault: jest.fn() };
     await verifyCode(event);
 
-    expect(console.error).toHaveBeenCalledWith('Error verifying code:', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error verifying code via API:', mockError);
+
+    // Because ANY-CODE fails the fallback, it should show the error msg
+    const errorMsg = document.getElementById('error-msg');
+    expect(errorMsg.style.display).toBe('block');
 
     console.error = originalConsoleError;
   });
