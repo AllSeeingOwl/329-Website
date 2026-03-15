@@ -74,6 +74,12 @@
         text-transform: uppercase;
       }
 
+      input[type='text']:focus {
+        border-bottom: 1px solid #00ff00;
+        box-shadow: 0 1px 5px rgba(0, 255, 0, 0.7);
+      }
+
+
       .cursor {
         display: inline-block;
         width: 10px;
@@ -220,6 +226,13 @@
         z-index: 10;
         position: relative;
       }
+
+      a:focus,
+      button:focus {
+        outline: 2px dashed #00ff00;
+        outline-offset: 4px;
+      }
+
 
       @keyframes link-glitch {
         0% {
