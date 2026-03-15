@@ -12,8 +12,10 @@ function setupEventListeners() {
       // Adjust width dynamically so the cursor sticks to the text
       target.style.width = target.value.length + 'ch';
 
-      if (target.value.length === 14) {
-        verifyCode(e);
+      // If we want to auto-submit on 14 characters we should NOT pass the input event to verifyCode
+      // Instead, we just let them press enter, or if we want to auto-submit we need to verify we aren't doing it when backspacing
+      if (target.value.length === 14 && e.inputType !== 'deleteContentBackward') {
+        verifyCode();
       }
     });
   }
