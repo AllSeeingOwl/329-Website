@@ -17,7 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
+// 🔒 Sentinel: Limit request body size to prevent DoS attacks via large JSON payloads
+app.use(express.json({ limit: '100kb' }));
 
 // Check if maintenance mode is enabled
 const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
