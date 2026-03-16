@@ -101,23 +101,29 @@
         transition: 0.5s;
       }
 
-      .portal-card:hover::before {
+      .portal-card:hover::before,
+      .portal-card:focus-visible::before {
         left: 100%;
       }
 
-      .portal-card.studio:hover {
+      .portal-card.studio:hover,
+      .portal-card.studio:focus-visible {
         border-color: #fff;
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         transform: translateY(-5px);
+        outline: none;
       }
 
-      .portal-card.mltk:hover {
+      .portal-card.mltk:hover,
+      .portal-card.mltk:focus-visible {
         border-color: #ff003c;
         box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
         transform: translateY(-5px);
+        outline: none;
       }
 
-      .portal-card.mltk:hover .card-title {
+      .portal-card.mltk:hover .card-title,
+      .portal-card.mltk:focus-visible .card-title {
         color: #ff003c;
         text-shadow: 0 0 8px #ff003c;
       }
@@ -181,8 +187,11 @@
         transition: color 0.2s;
       }
 
-      .footer-links a:hover {
+      .footer-links a:hover,
+      .footer-links a:focus-visible {
         color: #fff;
+        outline: 1px dashed #fff;
+        outline-offset: 4px;
       }
 
       @media (max-width: 700px) {
