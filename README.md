@@ -25,6 +25,13 @@ npm install
 
 _(Note: If you experience timeouts during installation, use `--prefer-offline` and `--no-audit` flags.)_
 
+### Environment Variables
+
+The local Express server (`server.js`) relies on the following environment variables:
+
+- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set. (Note: For static deployments like GitHub Pages, the frontend uses a client-side static fallback mechanism instead).
+- **`MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
+
 ### Available Scripts
 
 - **`npm run dev:server`**: Starts the local development backend server using `nodemon`.
@@ -41,6 +48,14 @@ _(Note: If you experience timeouts during installation, use `--prefer-offline` a
 
 - **Jest**: Unit tests are located in the repository root alongside the scripts they test. Tests requiring DOM interaction use `jest-environment-jsdom` and include the `/** @jest-environment jsdom */` pragma.
 - **End-to-End**: Playwright and Cypress are used for robust E2E verification.
+
+## Project Management
+
+The repository includes an ARG-specific GitHub Project management setup to track code, narrative, puzzles, and art assets. Please refer to:
+
+- **[PROJECT_MANAGEMENT.md](PROJECT_MANAGEMENT.md)**: Configuration guide and key practices.
+- **Issue Templates**: Found in `.github/ISSUE_TEMPLATE/` (`bug_report.yml`, `feature_request.yml`, `arg_task.yml`).
+- **PR Template**: Located at `.github/pull_request_template.md`.
 
 ## Deployment
 
