@@ -1,17 +1,12 @@
----
-name: ARG Task
-description: Template for creating tasks involving argumentation-related issues.
----
+# ARG Task Template
+
+<!-- Provide a clear and concise description of the task, including relevant details and context. -->
 
 ## Task Description
 
-- [ ] Describe the task clearly.
-- [ ] Specify any constraints or requirements.
-
-## Background
-
-- [ ] Provide context or background information.
+- [ ] Identify the specific ARG related to this task.
+- [ ] Describe what needs to be accomplished.
 
 ## Acceptance Criteria
 
-- [ ] Clearly define what must be achieved for the task to be considered complete.
+- [ ] List the criteria for successful completion.
