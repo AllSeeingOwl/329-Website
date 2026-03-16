@@ -23,18 +23,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const allTextNodes = [];
 
+  // ⚡ Bolt: Cache ignored tags in a Set for O(1) lookups instead of recreating an array
+  // and performing O(n) includes() checks on every recursive call.
+  const IGNORED_TAGS = new Set([
+    'SCRIPT',
+    'STYLE',
+    'NOSCRIPT',
+    'INPUT',
+    'TEXTAREA',
+    'SELECT',
+    'OPTION',
+  ]);
+
   function walkDom(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       if (node.textContent.trim() !== '') {
         allTextNodes.push({
           node: node,
-          text: node.textContent
+          text: node.textContent,
         });
         node.textContent = '';
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if (['SCRIPT', 'STYLE', 'NOSCRIPT', 'INPUT', 'TEXTAREA', 'SELECT', 'OPTION'].includes(node.nodeName)) return;
-      Array.from(node.childNodes).forEach(walkDom);
+      if (IGNORED_TAGS.has(node.nodeName)) return;
+
+      // ⚡ Bolt: Optimize child traversal by iterating with nextSibling instead of
+      // generating an intermediate Array via Array.from(node.childNodes).forEach().
+      // Reduces memory allocation and speeds up deep DOM traversals significantly.
+      let child = node.firstChild;
+      while (child) {
+        const next = child.nextSibling;
+        walkDom(child);
+        child = next;
+      }
     }
   }
 
