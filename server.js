@@ -4,6 +4,19 @@ const crypto = require('crypto');
 const app = express();
 const port = 3000;
 
+// 🛡️ Sentinel: Add security headers to protect against common web vulnerabilities
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME sniffing
+  res.setHeader('X-Frame-Options', 'DENY'); // Prevent clickjacking
+  res.setHeader('X-XSS-Protection', '1; mode=block'); // Enable browser XSS filtering
+  // Restrict resource loading to trusted sources
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+  );
+  next();
+});
+
 app.use(express.json());
 
 // Check if maintenance mode is enabled

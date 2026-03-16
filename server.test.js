@@ -97,4 +97,21 @@ describe('Server Tests', () => {
 
     expect(response.text).toContain('3minsto9 Operations - Portal');
   });
+
+  it('should set appropriate security headers on responses', async () => {
+    // Set up environment
+    process.env.AUTH_PASSWORD = 'test_password_123';
+
+    // Require the app after setting environment variables
+    app = require('./server');
+
+    const response = await request(app).get('/').expect(200);
+
+    expect(response.headers['x-content-type-options']).toBe('nosniff');
+    expect(response.headers['x-frame-options']).toBe('DENY');
+    expect(response.headers['x-xss-protection']).toBe('1; mode=block');
+    expect(response.headers['content-security-policy']).toBe(
+      "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+    );
+  });
 });
