@@ -462,8 +462,28 @@
           const customBox = document.createElement('div');
           customBox.style.cssText =
             "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff003c; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
-          customBox.innerHTML =
-            "<p>COMMUNICATION SECURED.</p><p style='color:#fff; font-size:1.1rem;'>[Developer Note: In the live version, this button will submit the email address and redirect to Secure%20Data%20Drop%20Page.html.]</p><button onclick='this.parentElement.remove()' style='background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;'>CLOSE</button>";
+
+          const p1 = document.createElement('p');
+          p1.textContent = 'COMMUNICATION SECURED.';
+
+          const p2 = document.createElement('p');
+          p2.style.cssText = 'color:#fff; font-size:1.1rem;';
+          p2.textContent = '[Developer Note: In the live version, this button will submit the email address and redirect to Secure%20Data%20Drop%20Page.html.]';
+
+          const closeBtn = document.createElement('button');
+          closeBtn.textContent = 'CLOSE';
+          closeBtn.style.cssText =
+            'background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
+          closeBtn.onclick = function () {
+            if (this.parentElement) {
+              this.parentElement.remove();
+            }
+          };
+
+          customBox.appendChild(p1);
+          customBox.appendChild(p2);
+          customBox.appendChild(closeBtn);
+
           document.body.appendChild(customBox);
         }, 800);
       }
