@@ -14,3 +14,8 @@
 **Vulnerability:** Timing attack via strict equality (`===`) comparison for authentication passwords in `/api/verify`.
 **Learning:** Comparing sensitive strings character-by-character using `===` allows attackers to infer the password length and content by measuring response times.
 **Prevention:** Always use `crypto.timingSafeEqual` for comparing passwords or tokens, and ensure inputs are padded or handled with dummy comparisons if lengths mismatch to prevent length-based timing leaks.
+
+## 2026-03-17 - Algorithmic Complexity DoS in Rate Limiter
+**Vulnerability:** Algorithmic complexity (CPU exhaustion) and memory DoS via an unbounded or eagerly-iterated IP rate limit map.
+**Learning:** Iterating over a `Map` of IPs on every request when a size threshold is reached creates an O(N) loop per request. Attackers can exploit this by flooding requests with unique IPs, permanently keeping the map at the threshold and causing high CPU load.
+**Prevention:** Use an O(1) eviction policy (like deleting `keys().next().value`) to enforce hard size limits without iterating over the entire collection on the request path.

@@ -52,13 +52,11 @@ app.post('/api/verify', (req, res) => {
   const now = Date.now();
   const record = rateLimitMap.get(ip) || { count: 0, firstAttempt: now };
 
-  // Clean up expired entries to prevent memory leak
-  if (rateLimitMap.size > 1000) {
-    for (const [key, value] of rateLimitMap.entries()) {
-      if (now - value.firstAttempt > RATE_LIMIT_WINDOW_MS) {
-        rateLimitMap.delete(key);
-      }
-    }
+  // 🛡️ Sentinel: Enforce an O(1) eviction policy to prevent memory leaks and
+  // algorithmic complexity DoS attacks (which occur when iterating over a large map).
+  if (rateLimitMap.size >= 1000 && !rateLimitMap.has(ip)) {
+    const oldestKey = rateLimitMap.keys().next().value;
+    rateLimitMap.delete(oldestKey);
   }
 
   if (now - record.firstAttempt > RATE_LIMIT_WINDOW_MS) {
