@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYSTEM BOOT // MLTK MAINFRAME</title>
+    <!-- Importing Gretchen's corporate font from the Master Font Sheet -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        overflow: hidden;
+      }
+
+      /* CRT Overlay Effect */
+      body::before {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 9998;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.05);
+        z-index: 9999;
+        pointer-events: none;
+        animation: crt-flicker 0.15s infinite;
+      }
+
+      @keyframes crt-flicker {
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
+      }
+
+      #terminal-container {
+        padding: 20px;
+        box-sizing: border-box;
+        height: 100%;
+        overflow-y: hidden; /* Hide scrollbar but allow JS scrolling */
+        font-size: 1.2rem;
+        line-height: 1.2;
+        white-space: pre-wrap;
+        word-break: break-all;
+        position: relative;
+        z-index: 10;
+      }
+
+      .loading-line {
+        margin: 0;
+      }
+
+      #passcode-prompt {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .prompt-text {
+        display: inline-block;
+      }
+
+      #passcode-input {
+        background: transparent;
+        border: none;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        outline: none;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        width: 1ch;
+        padding: 0;
+        margin: 0;
+        caret-color: transparent; /* Hide default caret, use custom block */
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 1ch;
+        height: 1.2rem;
+        background-color: #00ff00;
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="terminal-container">
+      <div id="boot-sequence"></div>
+      <div id="passcode-prompt">
+        <span class="prompt-text">ENTER PASSCODE: </span><input type="text" id="passcode-input" autocomplete="off" spellcheck="false" autofocus /><span class="cursor"></span>
+      </div>
+    </div>
+
+    <script>
+      const bootMessages = [
+        'INITIALIZING KERNEL...',
+        'MOUNTING ROOT FILESYSTEM...',
+        'CHECKING HARDWARE INTERFACES...',
+        '[ OK ] CPU0 INITIALIZED',
+        '[ OK ] CPU1 INITIALIZED',
+        '[ OK ] MEMORY BANK A: 640K OK',
+        '[ OK ] MEMORY BANK B: 16M OK',
+        'LOADING DRIVERS...',
+        '[ OK ] NETWORK INTERFACE eth0',
+        '[ OK ] DISPLAY ADAPTER vga0',
+        'STARTING BACKGROUND PROCESSES...',
+        'ESTABLISHING SECURE CONNECTION...',
+        'DECRYPTING SECTOR 7G...',
+        'VERIFYING CHECKSUMS...',
+        'WARNING: NON-STANDARD HARDWARE DETECTED.',
+        'BYPASSING SECURITY PROTOCOL...',
+        'SYSTEM BOOT SUCCESSFUL.',
+        'AWAITING USER INPUT...',
+      ];
+
+      const bootContainer = document.getElementById('boot-sequence');
+      const terminalContainer = document.getElementById('terminal-container');
+      const passcodePrompt = document.getElementById('passcode-prompt');
+      const passcodeInput = document.getElementById('passcode-input');
+
+      let bootInterval;
+
+      function generateRandomHex() {
+        return Math.floor(Math.random() * 0xffffff)
+          .toString(16)
+          .padStart(6, '0')
+          .toUpperCase();
+      }
+
+      function startBootSequence() {
+        let i = 0;
+
+        // Random lines for more visual noise
+        bootInterval = setInterval(() => {
+          const line = document.createElement('div');
+          line.className = 'loading-line';
+
+          if (i < bootMessages.length) {
+            line.textContent = `[${generateRandomHex()}] ${bootMessages[i]}`;
+            i++;
+          } else {
+            // Generate random noise if we run out of predefined messages
+            line.textContent = `[${generateRandomHex()}] LOAD 0x${generateRandomHex()} ... OK`;
+          }
+
+          bootContainer.appendChild(line);
+          terminalContainer.scrollTop = terminalContainer.scrollHeight;
+        }, 50); // Rapid scrolling
+
+        // Stop after 4 seconds
+        setTimeout(() => {
+          clearInterval(bootInterval);
+
+          // Clear screen
+          bootContainer.innerHTML = '';
+
+          // Show prompt
+          passcodePrompt.style.display = 'block';
+          passcodeInput.focus();
+        }, 4000);
+      }
+
+      // Handle custom input sizing and behavior
+      passcodeInput.addEventListener('input', (e) => {
+        // Adjust width based on characters (min 1ch)
+        e.target.style.width = Math.max(1, e.target.value.length) + 'ch';
+      });
+
+      // Keep focus on the input if user clicks anywhere
+      document.addEventListener('click', () => {
+        if (passcodePrompt.style.display === 'block') {
+          passcodeInput.focus();
+        }
+      });
+
+      // Submit passcode
+      passcodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          // Simply redirect to login gate
+          window.location.href = 'MLTK Login Gate.html';
+        }
+      });
+
+      // Start sequence
+      startBootSequence();
+    </script>
+  </body>
+</html>
