@@ -1,8 +1,3 @@
-const CONFIG = {
-  USE_MOCK_API_FALLBACK: true, // Set to true to allow static site logic fallback
-  MOCK_PASSWORD: '0408-1998-XXXX', // The known correct code for the ARG
-};
-
 function setupEventListeners() {
   const inputField = document.getElementById('serial-input');
   if (inputField) {
@@ -60,19 +55,13 @@ async function verifyCode(e) {
       success = result.success;
     } catch (apiError) {
       console.error('Error verifying code via API:', apiError);
-      // Fallback for static GitHub Pages deployments where Express /api/verify fails
-      if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
-        success = true;
-      } else {
-        success = false;
-        // Rethrow the error if we want it to be caught by the outer catch
-        // Actually, we don't want to swallow it if the fallback is false.
-        // Let's just log it and proceed to the fallback logic which will fail the auth.
-      }
+      success = false;
     }
 
     if (success) {
-      document.body.style.backgroundColor = '#050505';
+      if (document.body) {
+          document.body.style.backgroundColor = '#050505';
+      }
       const lockdownScreen = document.getElementById('lockdown-screen');
       if (lockdownScreen) lockdownScreen.style.display = 'none';
       const successScreen = document.getElementById('success-screen');
@@ -106,5 +95,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { setupEventListeners, verifyCode, CONFIG };
+  module.exports = { setupEventListeners, verifyCode };
 }
