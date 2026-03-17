@@ -339,22 +339,8 @@
           globalThis.crypto.getRandomValues(randomArray);
           const ticketId = (randomArray[0] % 9000000) + 1000000;
 
-          // Escape input to prevent XSS
-          const escapeHTML = (str) =>
-            str.replace(
-              /[&<>'"]/g,
-              (tag) =>
-                ({
-                  '&': '&amp;',
-                  '<': '&lt;',
-                  '>': '&gt;',
-                  "'": '&#39;',
-                  '"': '&quot;',
-                })[tag]
-            );
-
           let responseText = `\n\n> RECEIVING TRANSMISSION...`;
-          responseText += `\n> ANALYZING COMPLAINT: "${escapeHTML(msgInput.substring(0, 30))}..."`;
+          responseText += `\n> ANALYZING COMPLAINT: "${msgInput.substring(0, 30)}..."`;
 
           if (category === 'report') {
             responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
@@ -366,9 +352,17 @@
             responseText += `\n> PLEASE DO NOT DISCONNECT OR LEAVE YOUR ASSIGNED SECTOR.`;
           }
 
-          responseText += `\n> TICKET <span class="ticket-number">#${ticketId}</span> ASSIGNED. HAVE A PRODUCTIVE CYCLE.`;
+          const responseTextNode = document.createTextNode(responseText + `\n> TICKET `);
 
-          chatWindow.innerHTML += responseText;
+          const ticketSpan = document.createElement('span');
+          ticketSpan.className = 'ticket-number';
+          ticketSpan.textContent = `#${ticketId}`;
+
+          const closingTextNode = document.createTextNode(` ASSIGNED. HAVE A PRODUCTIVE CYCLE.`);
+
+          chatWindow.appendChild(responseTextNode);
+          chatWindow.appendChild(ticketSpan);
+          chatWindow.appendChild(closingTextNode);
 
           // Scroll to bottom
           chatWindow.scrollTop = chatWindow.scrollHeight;
