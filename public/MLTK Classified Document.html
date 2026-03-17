@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classified Document - MLTK Corporation</title>
+    <!-- Corporate aesthetic -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #1a1a1a;
+        --text-white: #ffffff;
+        --text-red: #ff003c;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-white);
+        font-family: 'Share Tech Mono', monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .document-container {
+        width: 90%;
+        max-width: 800px;
+        background-color: var(--bg-color);
+        border: 2px solid var(--text-white);
+        padding: 40px;
+        box-shadow: 10px 10px 0px rgba(255, 255, 255, 0.2);
+        position: relative;
+        z-index: 2;
+      }
+
+      .doc-header {
+        text-align: center;
+        border-bottom: 2px solid var(--text-red);
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: var(--text-red);
+        font-size: 2rem;
+        letter-spacing: 2px;
+      }
+
+      .doc-body {
+        font-size: 1.2rem;
+        line-height: 1.8;
+      }
+
+      /* CRT Overlay Effect */
+      body::before {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 9998;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+        border-radius: 20px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: crt-flicker 0.15s infinite;
+      }
+
+      @keyframes crt-flicker {
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
+      }
+
+      /* Redacted Text CSS */
+      .redacted {
+        background-color: #000;
+        color: #000;
+        cursor: pointer;
+        user-select: none;
+        padding: 0 4px;
+        display: inline-block;
+        transition: background-color 0.2s, color 0.2s;
+      }
+
+      /* Glitch Effect on Reveal */
+      .redacted.revealed {
+        background-color: transparent;
+        color: var(--text-red);
+        animation: link-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+
+      .redacted:focus {
+        outline: 2px dashed var(--text-white);
+        outline-offset: 4px;
+      }
+
+      @keyframes link-glitch {
+        0% {
+          transform: translate(0);
+          text-shadow: none;
+        }
+        20% {
+          transform: translate(-2px, 1px);
+          text-shadow:
+            2px 0 #00ffff,
+            -2px 0 #ff003c;
+        }
+        40% {
+          transform: translate(2px, -1px);
+          text-shadow:
+            -2px 0 #00ffff,
+            2px 0 #ff003c;
+        }
+        60% {
+          transform: translate(-1px, 2px);
+          text-shadow:
+            2px 0 #00ffff,
+            -2px 0 #ff003c;
+        }
+        80% {
+          transform: translate(1px, -2px);
+          text-shadow:
+            -2px 0 #00ffff,
+            2px 0 #ff003c;
+        }
+        100% {
+          transform: translate(0);
+          text-shadow: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="document-container">
+      <div class="doc-header">CLASSIFIED // EYES ONLY</div>
+      <div class="doc-body">
+        <p>SUBJECT: Project <span class="redacted" tabindex="0">TETROMINO</span> Initialization</p>
+        <p>
+          As per the directives from Director <span class="redacted" tabindex="0">G. Meredith</span>, Phase 2 of the
+          Virtue Village deployment has been <span class="redacted" tabindex="0">authorized</span>. The
+          underground facilities located beneath Sector <span class="redacted" tabindex="0">4</span> must be
+          secured prior to the arrival of the <span class="redacted" tabindex="0">Specimen</span>.
+        </p>
+        <p>
+          Warning: Any unauthorized disclosure of this document will result in immediate
+          <span class="redacted" tabindex="0">termination</span> and relocation to Re-education Center
+          <span class="redacted" tabindex="0">B</span>.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const redactedElements = document.querySelectorAll('.redacted');
+
+      function revealText(el) {
+        if (!el.classList.contains('revealed')) {
+          el.classList.add('revealed');
+          setTimeout(() => {
+            el.classList.remove('revealed');
+          }, 1500); // Briefly reveal for 1.5 seconds
+        }
+      }
+
+      redactedElements.forEach((el) => {
+        el.addEventListener('click', () => revealText(el));
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            revealText(el);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
