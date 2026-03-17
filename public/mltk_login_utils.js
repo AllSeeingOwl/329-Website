@@ -33,6 +33,32 @@ function setupEventListeners() {
   });
 }
 
+async function attemptApiVerification(code) {
+  try {
+    const response = await fetch('/api/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: code }),
+    });
+
+    if (!response.ok) {
+      throw new Error('API returned an error or is not available');
+    }
+
+    const result = await response.json();
+    return result.success;
+  } catch (apiError) {
+    console.error('Error verifying code via API:', apiError);
+    // Fallback for static GitHub Pages deployments where Express /api/verify fails
+    if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
+      return true;
+    }
+    return false;
+  }
+}
+
 async function verifyCode(e) {
   if (e) e.preventDefault();
   const inputField = document.getElementById('serial-input');
@@ -41,35 +67,7 @@ async function verifyCode(e) {
   const inputGroup = document.getElementById('input-group');
 
   try {
-    let success = false;
-
-    try {
-      const response = await fetch('/api/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: code }),
-      });
-
-      if (!response.ok) {
-        throw new Error('API returned an error or is not available');
-      }
-
-      const result = await response.json();
-      success = result.success;
-    } catch (apiError) {
-      console.error('Error verifying code via API:', apiError);
-      // Fallback for static GitHub Pages deployments where Express /api/verify fails
-      if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
-        success = true;
-      } else {
-        success = false;
-        // Rethrow the error if we want it to be caught by the outer catch
-        // Actually, we don't want to swallow it if the fallback is false.
-        // Let's just log it and proceed to the fallback logic which will fail the auth.
-      }
-    }
+    const success = await attemptApiVerification(code);
 
     if (success) {
       document.body.style.backgroundColor = '#050505';
