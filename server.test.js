@@ -24,7 +24,13 @@ describe('Server Tests', () => {
   afterEach(() => {
     // Restore original states
     process.exit = originalExit;
-    process.env = originalEnv;
+    // Restore process.env without reassigning the object to maintain object identity
+    Object.keys(process.env).forEach((key) => {
+      if (!(key in originalEnv)) {
+        delete process.env[key];
+      }
+    });
+    Object.assign(process.env, originalEnv);
     console.error = originalConsoleError;
   });
 
@@ -83,6 +89,31 @@ describe('Server Tests', () => {
 
     expect(response.headers['content-type']).toContain('text/html');
     expect(response.text).toContain('SYSTEM MAINTENANCE');
+  });
+
+  it('should return 503 for API routes when MAINTENANCE_MODE is true', async () => {
+    // Set up environment
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    process.env.MAINTENANCE_MODE = 'true';
+
+    // Require the app after setting environment variables
+    app = require('./server');
+
+    await request(app)
+      .post('/api/verify')
+      .send({ code: 'test_password_123' })
+      .expect(503);
+  });
+
+  it('should return 503 for non-existent routes when MAINTENANCE_MODE is true', async () => {
+    // Set up environment
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    process.env.MAINTENANCE_MODE = 'true';
+
+    // Require the app after setting environment variables
+    app = require('./server');
+
+    await request(app).get('/non-existent-page').expect(503);
   });
 
   it('should not serve maintenance page when MAINTENANCE_MODE is false', async () => {
