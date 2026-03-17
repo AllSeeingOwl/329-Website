@@ -28,6 +28,32 @@ function setupEventListeners() {
   });
 }
 
+async function attemptApiVerification(code) {
+  try {
+    const response = await fetch('/api/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: code }),
+    });
+
+    if (!response.ok) {
+      throw new Error('API returned an error or is not available');
+    }
+
+    const result = await response.json();
+    return result.success;
+  } catch (apiError) {
+    console.error('Error verifying code via API:', apiError);
+    // Fallback for static GitHub Pages deployments where Express /api/verify fails
+    if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
+      return true;
+    }
+    return false;
+  }
+}
+
 async function verifyCode(e) {
   if (e) e.preventDefault();
   const inputField = document.getElementById('serial-input');
