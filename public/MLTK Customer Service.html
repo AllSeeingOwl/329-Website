@@ -296,7 +296,7 @@
 
       <form id="support-form" onsubmit="submitTicket(event)">
         <div class="input-group">
-          <label for="category">INQUIRY CATEGORY:</label>
+          <label for="category">INQUIRY CATEGORY: <span aria-hidden="true">*</span></label>
           <select id="category" required>
             <option value="" disabled selected>SELECT REASON...</option>
             <option value="housing">Virtue Village Housing Assignment Query</option>
@@ -308,7 +308,7 @@
         </div>
 
         <div class="input-group">
-          <label for="message">COMPLAINT DETAILS:</label>
+          <label for="message">COMPLAINT DETAILS: <span aria-hidden="true">*</span></label>
           <textarea id="message" rows="3" required></textarea>
         </div>
 
