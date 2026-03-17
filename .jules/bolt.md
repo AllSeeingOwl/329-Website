@@ -7,3 +7,8 @@
 
 **Learning:** Frequent array creation `['A', 'B'].includes()` and `Array.from()` conversions inside deep recursive DOM traversal functions like `walkDom` add huge hidden overheads in both memory allocation and execution time.
 **Action:** Lift static array definitions out of recursive functions as `Set` objects for O(1) lookups, and prefer standard `for` or `while` loops over `NodeList` instead of `Array.from(node.childNodes).forEach()` for maximum performance.
+
+## 2024-05-18 - Optimize DOM traversal with while loops
+
+**Learning:** When performing recursive DOM traversal (like cleaning HTML before rendering), using `NodeList.forEach()` is less performant and allocates more memory compared to using a `while` loop with `nextSibling`. `childNodes` must convert or iterate in a more expensive manner.
+**Action:** Replace `node.childNodes.forEach` with a standard `while(child)` loop using `child = node.firstChild` and `child = child.nextSibling` to speed up DOM parsers and reduce GC pressure.
