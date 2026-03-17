@@ -114,4 +114,17 @@ describe('Server Tests', () => {
       "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
     );
   });
+
+  it('should return 413 Payload Too Large when request body exceeds 100kb', async () => {
+    // Set up environment
+    process.env.AUTH_PASSWORD = 'test_password_123';
+
+    // Require the app after setting environment variables
+    app = require('./server');
+
+    // Create a large payload (> 100kb)
+    const largeCode = 'a'.repeat(1024 * 101); // 101kb
+
+    await request(app).post('/api/verify').send({ code: largeCode }).expect(413);
+  });
 });

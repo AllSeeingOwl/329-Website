@@ -27,11 +27,11 @@ const documents = {
 // -----------------------------------------
 // Modal Logic
 // -----------------------------------------
-const allowedTags = ['p', 'strong', 'em'];
+const allowedTags = new Set(['p', 'strong', 'em']);
 const buildSafe = (node, target) =>
   node.childNodes.forEach((child) => {
     if (child.nodeType === 3) target.appendChild(document.createTextNode(child.textContent));
-    else if (child.nodeType === 1 && allowedTags.includes(child.tagName.toLowerCase())) {
+    else if (child.nodeType === 1 && allowedTags.has(child.tagName.toLowerCase())) {
       const el = document.createElement(child.tagName);
       buildSafe(child, el);
       target.appendChild(el);
