@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLTK // SURVEILLANCE DASHBOARD</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      header {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 2px solid #00ff00;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        margin: 5px 0 0 0;
+        font-size: 1.2rem;
+        color: #888;
+        text-shadow: none;
+      }
+
+      /* CSS Grid Layout for Dashboard */
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 0 40px 40px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 5;
+      }
+
+      /* Square Cards */
+      .card {
+        aspect-ratio: 1 / 1;
+        border: 2px solid #555;
+        background-color: rgba(20, 20, 20, 0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .card-status {
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .card-id {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        font-size: 0.8rem;
+        color: #666;
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      /* Active Glow (Green) */
+      .card.active {
+        border-color: #00ff00;
+        color: #00ff00;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.2);
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
+      }
+
+      .card.active .card-id {
+         color: #00aa00;
+      }
+
+      /* Offline Glow (Red) */
+      .card.offline {
+        border-color: #ff003c;
+        color: #ff003c;
+        box-shadow: 0 0 15px rgba(255, 0, 60, 0.3), inset 0 0 10px rgba(255, 0, 60, 0.2);
+        text-shadow: 0 0 5px rgba(255, 0, 60, 0.8);
+      }
+
+      .card.offline .card-id {
+         color: #aa0028;
+      }
+
+      /* Static/Noise Overlay */
+      .static-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0.05;
+        background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      }
+
+      /* CRT Overlay Effect */
+      body::before {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 9998;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+        border-radius: 20px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: crt-flicker 0.15s infinite;
+      }
+
+      @keyframes crt-flicker {
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .dashboard {
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          padding: 0 20px 20px 20px;
+          gap: 15px;
+        }
+        h1 {
+          font-size: 1.8rem;
+        }
+        .card-title {
+           font-size: 1.2rem;
+        }
+        .card-status {
+           font-size: 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="static-overlay"></div>
+    <header>
+      <h1>MLTK Global Surveillance</h1>
+      <h2>Authorized Personnel Only // Tracker Network v4.2</h2>
+    </header>
+
+    <div class="dashboard">
+      <!-- Sector 1 -->
+      <div class="card active">
+        <span class="card-id">ID: 001-A</span>
+        <div class="card-title">Sector 1: R&D</div>
+        <div class="card-status">[ACTIVE]</div>
+      </div>
+
+      <!-- Sector 2 -->
+      <div class="card offline">
+        <span class="card-id">ID: 002-B</span>
+        <div class="card-title">Sector 2: Server Farm</div>
+        <div class="card-status">[OFFLINE]</div>
+      </div>
+
+      <!-- Employee 1 -->
+      <div class="card active">
+        <span class="card-id">EMP: 8849</span>
+        <div class="card-title">G. Meredith</div>
+        <div class="card-status">[ACTIVE: OFFICE]</div>
+      </div>
+
+      <!-- Employee 2 -->
+      <div class="card active">
+        <span class="card-id">EMP: 9102</span>
+        <div class="card-title">B. Candela</div>
+        <div class="card-status">[ACTIVE: ARCHIVES]</div>
+      </div>
+
+      <!-- Employee 3 -->
+      <div class="card offline">
+        <span class="card-id">EMP: 3321</span>
+        <div class="card-title">Dr. Aris Thorne</div>
+        <div class="card-status">[UNREACHABLE]</div>
+      </div>
+
+      <!-- Sector 3 -->
+      <div class="card active">
+        <span class="card-id">ID: 003-C</span>
+        <div class="card-title">Sector 3: Containment</div>
+        <div class="card-status">[ACTIVE]</div>
+      </div>
+
+       <!-- Employee 4 -->
+      <div class="card offline">
+        <span class="card-id">EMP: 4400</span>
+        <div class="card-title">E. Vance</div>
+        <div class="card-status">[TERMINATED]</div>
+      </div>
+
+      <!-- Sector 4 -->
+      <div class="card offline">
+        <span class="card-id">ID: 004-D</span>
+        <div class="card-title">Sector 4: Quantum Core</div>
+        <div class="card-status">[QUARANTINED]</div>
+      </div>
+
+      <!-- Employee 5 -->
+      <div class="card active">
+        <span class="card-id">EMP: 1001</span>
+        <div class="card-title">Security Drone 1</div>
+        <div class="card-status">[PATROL]</div>
+      </div>
+
+      <!-- Employee 6 -->
+      <div class="card active">
+        <span class="card-id">EMP: 1002</span>
+        <div class="card-title">Security Drone 2</div>
+        <div class="card-status">[PATROL]</div>
+      </div>
+
+    </div>
+  </body>
+</html>
