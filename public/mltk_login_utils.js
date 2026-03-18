@@ -75,22 +75,9 @@ async function verifyCode(e) {
     let success = false;
 
     try {
-      const response = await fetch('/api/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: code }),
-      });
-
-      if (!response.ok) {
-        throw new Error('API returned an error or is not available');
-      }
-
-      const result = await response.json();
-      success = result.success;
+      success = await attemptApiVerification(code);
     } catch (apiError) {
-      console.error('Error verifying code via API:', apiError);
+      console.error('Error in verification:', apiError);
       success = false;
     }
 

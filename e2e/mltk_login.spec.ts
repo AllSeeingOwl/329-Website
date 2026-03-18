@@ -24,9 +24,19 @@ test.describe('MLTK Login Gate E2E', () => {
   });
 
   test('should format input with hyphens and uppercase', async ({ page }) => {
+    // Mock API response to avoid test flakiness due to auto-submit behavior clearing the input
+    await page.route('**/api/verify', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false }),
+      });
+    });
+
     const inputField = page.locator('#serial-input');
-    await inputField.fill('abcd1234efgh');
-    await expect(inputField).toHaveValue('ABCD-1234-EFGH');
+    // Type less than 12 characters to not trigger auto-submit!
+    await inputField.pressSequentially('abcd1234ef');
+    await expect(inputField).toHaveValue('ABCD-1234-EF');
   });
 
   test('should display success screen on valid code', async ({ page }) => {
