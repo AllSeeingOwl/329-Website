@@ -16,6 +16,16 @@ describe('Velvet Rope Utilities Tests', () => {
             </div>
         `;
 
+    // Mock IntersectionObserver
+    global.IntersectionObserver = class {
+      constructor(callback) {
+        this.callback = callback;
+      }
+      observe() {}
+      disconnect() {}
+      unobserve() {}
+    };
+
     // Suppress navigation errors in tests temporarily
     jest.spyOn(console, 'error').mockImplementation((msg) => {
       if (msg && msg.toString().includes('Not implemented: navigation')) return;
@@ -33,19 +43,22 @@ describe('Velvet Rope Utilities Tests', () => {
     jest.clearAllMocks();
     jest.restoreAllMocks();
     document.body.innerHTML = '';
+    delete global.IntersectionObserver;
   });
 
-  test('initVelvetRope handles transition to underground', () => {
+  test('initVelvetRope handles transition to underground', async () => {
     initVelvetRope();
 
     // Initial delay
     jest.advanceTimersByTime(2000);
+    await Promise.resolve(); // Flush microtasks
 
     const facade = document.getElementById('facade');
     expect(facade.classList.contains('screen-tear')).toBe(true);
 
     // Transition delay
     jest.advanceTimersByTime(400);
+    await Promise.resolve(); // Flush microtasks
 
     expect(facade.style.display).toBe('none');
     expect(document.getElementById('underground').style.display).toBe('block');
@@ -53,7 +66,7 @@ describe('Velvet Rope Utilities Tests', () => {
     expect(document.title).toBe('SYSTEM OVERRIDE // TEAM RABBIT');
   });
 
-  test('breachMainframe creates modal when SHOULD_REDIRECT is false', () => {
+  test('breachMainframe creates modal when SHOULD_REDIRECT is false', async () => {
     CONFIG.SHOULD_REDIRECT = false;
     document.body.innerHTML = '<div id="test"></div>';
 
@@ -70,6 +83,7 @@ describe('Velvet Rope Utilities Tests', () => {
     expect(event.preventDefault).toHaveBeenCalled();
 
     jest.advanceTimersByTime(800);
+    await Promise.resolve(); // Flush microtasks
 
     // Find the newly appended modal (it should contain 'COMMUNICATION SECURED.')
     const modals = Array.from(document.querySelectorAll('div')).filter((el) =>
@@ -81,7 +95,7 @@ describe('Velvet Rope Utilities Tests', () => {
     expect(modal.textContent).not.toContain('Developer Note');
   });
 
-  test('breachMainframe redirects when SHOULD_REDIRECT is true', () => {
+  test('breachMainframe redirects when SHOULD_REDIRECT is true', async () => {
     CONFIG.SHOULD_REDIRECT = true;
     CONFIG.REDIRECT_TARGET = 'test-redirect.html';
 
@@ -98,6 +112,7 @@ describe('Velvet Rope Utilities Tests', () => {
     breachMainframe(event, mockWin);
 
     jest.advanceTimersByTime(800);
+    await Promise.resolve(); // Flush microtasks
 
     expect(assignMock).toHaveBeenCalledWith('test-redirect.html');
     // Modal should not be created
@@ -107,14 +122,15 @@ describe('Velvet Rope Utilities Tests', () => {
     expect(modals.length).toBe(0);
   });
 
-  test('gracefully handles missing elements in initVelvetRope', () => {
+  test('gracefully handles missing elements in initVelvetRope', async () => {
     document.body.innerHTML = '';
     // Should not throw
     initVelvetRope();
     jest.advanceTimersByTime(2400);
+    await Promise.resolve();
   });
 
-  test('gracefully handles missing elements in breachMainframe', () => {
+  test('gracefully handles missing elements in breachMainframe', async () => {
     CONFIG.SHOULD_REDIRECT = false;
     document.body.innerHTML = '<div id="test"></div>';
 
@@ -122,6 +138,7 @@ describe('Velvet Rope Utilities Tests', () => {
     // Should not throw
     breachMainframe(null, mockWin);
     jest.advanceTimersByTime(800);
+    await Promise.resolve();
 
     const modals = Array.from(document.querySelectorAll('div')).filter((el) =>
       el.textContent.includes('COMMUNICATION SECURED.')
