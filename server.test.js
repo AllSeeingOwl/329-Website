@@ -64,17 +64,19 @@ describe('Server Tests', () => {
     expect(response.body).toEqual({ success: false });
   });
 
-  it('should log a fatal error and exit(1) if AUTH_PASSWORD is not set', () => {
+  it('should use the default fallback password if AUTH_PASSWORD is not set', async () => {
     // Remove AUTH_PASSWORD from environment
     delete process.env.AUTH_PASSWORD;
 
-    // Require the app, which should trigger the error and exit
-    require('./server');
+    // Require the app, which should use the fallback password
+    app = require('./server');
 
-    expect(console.error).toHaveBeenCalledWith(
-      'FATAL: AUTH_PASSWORD environment variable is not set.'
-    );
-    expect(process.exit).toHaveBeenCalledWith(1);
+    const response = await request(app)
+      .post('/api/verify')
+      .send({ code: '0408-1998-XXXX' })
+      .expect(200);
+
+    expect(response.body).toEqual({ success: true });
   });
 
   it('should serve maintenance page when MAINTENANCE_MODE is true', async () => {

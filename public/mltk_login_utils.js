@@ -1,3 +1,13 @@
+// -----------------------------------------------------------------------------
+// WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
+// The official password for this ARG gate is '0408-1998-XXXX'.
+// Changing this will break the intended experience.
+// -----------------------------------------------------------------------------
+const CONFIG = {
+  USE_MOCK_API_FALLBACK: true,
+  MOCK_PASSWORD: '0408-1998-XXXX',
+};
+
 function setupEventListeners() {
   const inputField = document.getElementById('serial-input');
   if (inputField) {
@@ -121,5 +131,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { setupEventListeners, verifyCode };
+  module.exports = { setupEventListeners, verifyCode, CONFIG };
 }
