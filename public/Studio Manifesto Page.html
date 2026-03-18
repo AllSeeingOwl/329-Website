@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Studio | 3minsto9 Operations</title>
-    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
+    <!-- Clean sans-serif font for the minimalist design -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-color: #faf9f6;
+        --bg-color: #faf9f6; /* Off-white */
         --text-color: #111111;
         --accent-red: #ff003c;
         --border-color: #e0e0e0;
@@ -22,11 +22,24 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', Helvetica, sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
         overflow-x: hidden;
         scroll-behavior: smooth;
+        /* Fade-in animation */
+        animation: fadeIn 1.2s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       a {
@@ -111,27 +124,29 @@
         color: var(--accent-red);
       }
 
-      .page-header {
-        padding: 80px 0 40px 0;
+      .manifesto-content {
+        max-width: 800px;
+        margin: 100px auto;
         text-align: center;
-        border-bottom: 1px solid var(--text-color);
-        margin-bottom: 60px;
       }
 
-      .page-header h1 {
-        font-family: 'Playfair Display', serif;
-        font-size: 5rem;
-        line-height: 1;
-        margin: 0 0 20px 0;
+      .manifesto-headline {
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1.1;
         letter-spacing: -2px;
+        margin: 0 0 60px 0;
       }
 
-      .page-header p {
-        font-size: 1.4rem;
-        color: #555;
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.5;
+      .manifesto-text {
+        text-align: left;
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .manifesto-text p {
+        margin-bottom: 30px;
       }
 
       .highlight {
@@ -139,63 +154,34 @@
         font-weight: bold;
       }
 
-      .manifesto-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 60px;
-        margin-bottom: 80px;
-      }
-
-      .sticky-title {
-        position: sticky;
-        top: 40px;
-      }
-
-      .sticky-title h2 {
-        font-family: 'Playfair Display', serif;
-        font-size: 3rem;
-        margin: 0 0 10px 0;
-        line-height: 1.1;
-      }
-
-      .sticky-title .red-line {
-        width: 50px;
-        height: 4px;
-        background-color: var(--accent-red);
-        margin-top: 20px;
-      }
-
-      .manifesto-body p {
-        font-size: 1.25rem;
-        line-height: 1.8;
-        color: #333;
-        margin-bottom: 30px;
-      }
-
-      .manifesto-body h3 {
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin: 50px 0 20px 0;
-        border-bottom: 1px solid var(--border-color);
+      .manifesto-text h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 60px 0 20px 0;
+        letter-spacing: -1px;
+        border-bottom: 2px solid var(--border-color);
         padding-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .manifesto-text h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 40px 0 15px 0;
+        text-transform: uppercase;
+        color: var(--text-color);
       }
 
       .texture-break {
         width: 100%;
-        height: 300px;
+        padding: 60px 20px;
         background-color: var(--text-color);
         color: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 60px 0;
         text-align: center;
-        font-family: 'Playfair Display', serif;
-        font-size: 2.5rem;
+        font-size: 2rem;
+        font-weight: 300;
         font-style: italic;
-        padding: 0 20px;
+        margin: 80px 0;
         box-sizing: border-box;
       }
 
@@ -205,23 +191,16 @@
         font-size: 0.85rem;
         color: #888;
         border-top: 1px solid var(--border-color);
-        margin-top: 40px;
+        margin-top: 80px;
       }
 
       @media (max-width: 900px) {
-        .manifesto-grid {
-          grid-template-columns: 1fr;
-          gap: 30px;
+        .manifesto-headline {
+          font-size: 3rem;
         }
-        .sticky-title {
-          position: static;
-        }
-        .page-header h1 {
-          font-size: 3.5rem;
-        }
-        .texture-break {
-          font-size: 1.8rem;
-          height: 200px;
+        .manifesto-content {
+          margin: 60px auto;
+          padding: 0 20px;
         }
         .nav-inner {
           flex-direction: column;
@@ -240,6 +219,11 @@
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
+        }
+        body, html {
+          animation: none;
+          opacity: 1;
+          transform: none;
         }
       }
     </style>
@@ -261,17 +245,11 @@
       </div>
     </header>
 
-    <section class="page-header container">
-      <h1>The Studio.</h1>
-      <p>Independent Micro-Press & Immersive Media.</p>
-    </section>
+    <main class="container manifesto-content">
+      <h1 class="manifesto-headline">The Studio.<br>Independent Micro-Press & Immersive Media.</h1>
 
-    <section class="container manifesto-grid">
-      <div class="sticky-title">
-        <h2>Forging<br />Artefacts.</h2>
-        <div class="red-line"></div>
-      </div>
-      <div class="manifesto-body">
+      <div class="manifesto-text">
+        <h2>Forging Artefacts</h2>
         <p>
           Based in Wendover, UK, <strong>3minsto9</strong> operates outside the traditional
           publishing machine. Our philosophy is simple:
@@ -284,18 +262,15 @@
           alternate reality, surviving riots and corporate censorship to reach your hands.
         </p>
       </div>
-    </section>
+    </main>
 
-    <div class="texture-break">
+    <aside class="texture-break">
       "You aren't just reading a story. You are stepping into a labyrinth."
-    </div>
+    </aside>
 
-    <section class="container manifesto-grid">
-      <div class="sticky-title">
-        <h2>Our<br />Protocols.</h2>
-        <div class="red-line"></div>
-      </div>
-      <div class="manifesto-body">
+    <section class="container manifesto-content" style="margin-top: 0;">
+      <div class="manifesto-text">
+        <h2>Our Protocols</h2>
         <p>
           Our studio functions through two highly disciplined design methodologies that bridge the
           gap between graphic novels and Alternate Reality Games (ARGs).
