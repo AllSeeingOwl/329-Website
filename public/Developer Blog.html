@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3minsto9 | Developer Blog</title>
+    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #faf9f6;
+        --text-color: #111111;
+        --accent-red: #ff003c;
+        --border-color: #e0e0e0;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+        background-color: var(--bg-color);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+      }
+
+      .quarter-clock {
+        width: 30px;
+        height: 30px;
+        border-top: 3px solid var(--text-color);
+        border-left: 3px solid var(--text-color);
+        border-radius: 100% 0 0 0;
+        position: relative;
+      }
+
+      .quarter-clock::before {
+        content: '12';
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .quarter-clock::after {
+        content: '9';
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .clock-hands {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--accent-red);
+        border-left: 2px solid var(--accent-red);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent-red);
+      }
+
+      .blog-layout {
+        display: flex;
+        gap: 60px;
+        padding: 60px 0 100px;
+      }
+
+      .main-content {
+        flex: 1;
+        max-width: 800px;
+      }
+
+      .sidebar {
+        width: 300px;
+        flex-shrink: 0;
+      }
+
+      .blog-post {
+        margin-bottom: 80px;
+      }
+
+      .post-date {
+        font-size: 0.85rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .post-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        line-height: 1.1;
+        margin: 0 0 20px 0;
+      }
+
+      .post-content {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .post-content p {
+        margin-bottom: 25px;
+      }
+
+      .post-content h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        margin: 40px 0 20px 0;
+      }
+
+      .sidebar-section {
+        margin-bottom: 40px;
+        background-color: #fff;
+        padding: 30px;
+        border: 1px solid var(--border-color);
+      }
+
+      .sidebar-title {
+        font-size: 1.2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 20px 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--text-color);
+      }
+
+      .updates-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .updates-list li {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed var(--border-color);
+      }
+
+      .updates-list li:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .update-date {
+        display: block;
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 5px;
+      }
+
+      .update-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+
+      .update-title a:hover {
+        color: var(--accent-red);
+      }
+
+      footer {
+        padding: 40px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 900px) {
+        .blog-layout {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-inner {
+          flex-direction: column;
+          gap: 20px;
+        }
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
+        }
+        .post-title {
+          font-size: 2.2rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-inner">
+        <a href="index.html" class="brand-logo">
+          <div class="quarter-clock">
+            <div class="clock-hands"></div>
+          </div>
+          3minsto9
+        </a>
+        <nav class="nav-links">
+          <a href="Releases.html">Releases</a>
+          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
+          <a href="Store.html">Store</a>
+          <a href="Developer%20Blog.html" style="color: var(--accent-red)">Dev Blog</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container blog-layout">
+      <!-- Main Content Column for Blog Articles -->
+      <section class="main-content">
+
+        <article class="blog-post">
+          <span class="post-date">October 24, 2026</span>
+          <h1 class="post-title">Architecting the Unknown: Behind the Scenes of Vol. 0</h1>
+          <div class="post-content">
+            <p>
+              Welcome to the first entry of our developer blog. As we continue to blur the lines between physical artefacts and digital experiences, we wanted a space to discuss the technical and creative hurdles of building an Alternate Reality Game (ARG) layered beneath a traditional indie publishing facade.
+            </p>
+            <p>
+              When we set out to create <strong>The Unknown Field Guide</strong>, the primary challenge wasn't just writing the narrative; it was designing the architecture that would allow players to organically discover the hidden layers of the story.
+            </p>
+            <h3>The Physical-Digital Bridge</h3>
+            <p>
+              Our physical zine is pristine, meant to look like a 1950s tourist brochure. But the real magic happens when players notice the "corrections" scribbled in the margins by Team Rabbit. These corrections are more than just flavor text—they are breadcrumbs leading to our digital infrastructure.
+            </p>
+            <p>
+              Building a robust, un-gameable backend that still feels like a vulnerable, compromised corporate intranet (MLTK) has been a fascinating exercise in contradictory design. We have to build secure systems that pretend to be insecure.
+            </p>
+          </div>
+        </article>
+
+        <article class="blog-post">
+          <span class="post-date">September 15, 2026</span>
+          <h1 class="post-title">Placeholder: Upcoming Infrastructure Changes</h1>
+          <div class="post-content">
+            <p>
+              This is a placeholder post for future updates regarding server migrations, database schema optimizations, and upcoming feature rollouts for the MLTK terminal interface.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Sidebar for Recent Updates -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Recent Updates</h2>
+          <ul class="updates-list">
+            <li>
+              <span class="update-date">Oct 20, 2026</span>
+              <div class="update-title"><a href="#">Patch Notes v1.4.2: Terminal Security Hotfix</a></div>
+            </li>
+            <li>
+              <span class="update-date">Oct 12, 2026</span>
+              <div class="update-title"><a href="#">New Physical Artefact Pre-orders Live</a></div>
+            </li>
+            <li>
+              <span class="update-date">Sep 28, 2026</span>
+              <div class="update-title"><a href="#">Server Maintenance Scheduled for Sunday</a></div>
+            </li>
+            <li>
+              <span class="update-date">Sep 10, 2026</span>
+              <div class="update-title"><a href="#">Welcome to the 3minsto9 Dev Blog</a></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Categories</h2>
+          <ul class="updates-list">
+            <li><div class="update-title"><a href="#">Architecture</a></div></li>
+            <li><div class="update-title"><a href="#">Game Design</a></div></li>
+            <li><div class="update-title"><a href="#">Patch Notes</a></div></li>
+            <li><div class="update-title"><a href="#">Physical Media</a></div></li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
