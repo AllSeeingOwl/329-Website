@@ -40,6 +40,54 @@
         z-index: 2;
       }
 
+      .nav-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: var(--text-white);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 1rem;
+        text-decoration: underline;
+        z-index: 10;
+        text-transform: uppercase;
+      }
+
+      .nav-link:hover {
+        color: var(--text-red);
+      }
+
+      /* The Ticking Countdown Timer */
+      .timer-box {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--bg-color);
+        border: 2px solid var(--text-red);
+        color: var(--text-red);
+        padding: 5px 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        animation: pulse 1s infinite alternate;
+        z-index: 15;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 5px var(--text-red);
+        }
+        100% {
+          box-shadow: 0 0 15px var(--text-red);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .timer-box {
+          position: static;
+          display: inline-block;
+          margin: 10px 20px;
+        }
+      }
+
       .doc-header {
         text-align: center;
         border-bottom: 2px solid var(--text-red);
@@ -177,6 +225,10 @@
     </style>
   </head>
   <body>
+    <!-- Security Timer -->
+    <div class="timer-box" id="ice-timer">ICE PROTOCOL IN: 60s</div>
+
+    <a href="MLTK%20Login%20Gate.html" class="nav-link">&lt;&lt; RETURN TO DASHBOARD</a>
     <div class="document-container">
       <div class="doc-header">CLASSIFIED // EYES ONLY</div>
       <div class="doc-body">
@@ -196,6 +248,30 @@
     </div>
 
     <script>
+      // -----------------------------------------
+      // 1. The ICE Timer Logic
+      // -----------------------------------------
+      let timeLeft = 60; // 60 seconds
+      const timerDisplay = document.getElementById('ice-timer');
+
+      const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerText = `ICE PROTOCOL IN: ${timeLeft}s`;
+
+        if (timeLeft <= 10) {
+          // Panic mode
+          timerDisplay.style.backgroundColor = '#ff003c';
+          timerDisplay.style.color = '#fff';
+          document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          // When timer hits zero, kick them to the 404 dead end!
+          window.location.href = '404.html';
+        }
+      }, 1000);
+
       const redactedElements = document.querySelectorAll('.redacted');
 
       function revealText(el) {
