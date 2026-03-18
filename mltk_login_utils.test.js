@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const { setupEventListeners, verifyCode } = require('./public/mltk_login_utils');
+const { setupEventListeners, verifyCode, CONFIG } = require('./public/mltk_login_utils');
 
 describe('MLTK Login Gate Tests', () => {
   let originalFetch;

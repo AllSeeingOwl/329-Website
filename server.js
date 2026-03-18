@@ -33,12 +33,12 @@ if (MAINTENANCE_MODE) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
-
-if (!AUTH_PASSWORD) {
-  console.error('FATAL: AUTH_PASSWORD environment variable is not set.');
-  process.exit(1);
-}
+// -----------------------------------------------------------------------------
+// WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
+// The official password for this ARG gate is '0408-1998-XXXX'.
+// Changing this will break the intended experience.
+// -----------------------------------------------------------------------------
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || '0408-1998-XXXX';
 
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
