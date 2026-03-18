@@ -288,7 +288,7 @@
     <div class="terminal-container">
       <div class="terminal-header">Automated Support Interface v9.4</div>
 
-      <div class="automated-response" id="chat-window">
+      <div class="automated-response" id="chat-window" role="log">
         > CONNECTION ESTABLISHED. > IDENTIFYING CITIZEN BIOMETRICS... OK. > WELCOME TO MLTK CUSTOMER
         SERVICE. > PLEASE STATE THE NATURE OF YOUR INQUIRY OR DISPLEASURE. > NOTE: ALL
         COMMUNICATIONS ARE RECORDED FOR COMPLIANCE PURPOSES.
@@ -313,7 +313,7 @@
         </div>
 
         <button type="submit" id="submit-btn">SUBMIT INQUIRY TO MAINFRAME</button>
-        <div class="processing-indicator" id="processing-msg">
+        <div class="processing-indicator" id="processing-msg" role="status" aria-live="polite">
           PROCESSING REQUEST... PLEASE STAND BY...
         </div>
       </form>
