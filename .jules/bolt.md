@@ -12,3 +12,8 @@
 
 **Learning:** When performing recursive DOM traversal (like cleaning HTML before rendering), using `NodeList.forEach()` is less performant and allocates more memory compared to using a `while` loop with `nextSibling`. `childNodes` must convert or iterate in a more expensive manner.
 **Action:** Replace `node.childNodes.forEach` with a standard `while(child)` loop using `child = node.firstChild` and `child = child.nextSibling` to speed up DOM parsers and reduce GC pressure.
+
+## 2024-05-19 - Replace scroll event with IntersectionObserver
+
+**Learning:** Binding a `scroll` event listener and constantly calculating `getBoundingClientRect()` within a `requestAnimationFrame` forces the main thread to constantly calculate element visibility. This causes unnecessary layout thrashing and reduces frame rates, especially for simple appearance animations on trigger points.
+**Action:** Replace `scroll` event listeners and `getBoundingClientRect` logic with an `IntersectionObserver`. Set the `rootMargin` property appropriately (e.g., `-50% 0px 0px 0px`) to trigger callbacks only when the target threshold is actually crossed, eliminating scroll overhead.

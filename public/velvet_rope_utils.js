@@ -28,34 +28,35 @@ async function initVelvetRope() {
 
   if (!beaBox || !triggerPoint) return;
 
-  let ticking = false;
-  const scrollHandler = () => {
-    if (!ticking) {
-      window.requestAnimationFrame(async () => {
-        const triggerPosition = triggerPoint.getBoundingClientRect().top;
-        const screenHalfway = window.innerHeight * 0.5;
+  // ⚡ Bolt: Replaced continuous scroll event listener and bounding rect calculations
+  // with an IntersectionObserver. This offloads the visibility check from the main thread
+  // and eliminates scroll jank by firing only when the element actually crosses the threshold.
+  const observer = new IntersectionObserver(
+    async (entries, obs) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !hasTriggered) {
+        hasTriggered = true;
+        obs.disconnect();
 
-        if (triggerPosition < screenHalfway && !hasTriggered) {
-          hasTriggered = true;
-          window.removeEventListener('scroll', scrollHandler);
+        beaBox.style.display = 'block';
 
-          beaBox.style.display = 'block';
+        await sleep(50);
+        beaBox.classList.add('visible');
 
-          await sleep(50);
-          beaBox.classList.add('visible');
-
-          await sleep(8000);
-          beaBox.classList.add('crushed');
-          const merrickStamp = document.getElementById('merrick-stamp');
-          if (merrickStamp) merrickStamp.style.display = 'block';
-        }
-        ticking = false;
-      });
-      ticking = true;
+        await sleep(8000);
+        beaBox.classList.add('crushed');
+        const merrickStamp = document.getElementById('merrick-stamp');
+        if (merrickStamp) merrickStamp.style.display = 'block';
+      }
+    },
+    {
+      root: null,
+      rootMargin: '-50% 0px 0px 0px', // Triggers when the element reaches the vertical center
+      threshold: 0,
     }
-  };
+  );
 
-  window.addEventListener('scroll', scrollHandler);
+  observer.observe(triggerPoint);
 }
 
 async function breachMainframe(e, win = typeof window !== 'undefined' ? window : null) {
@@ -103,7 +104,11 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
 }
 
 if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', initVelvetRope);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVelvetRope);
+  } else {
+    initVelvetRope();
+  }
 }
 
 if (typeof window !== 'undefined') {
