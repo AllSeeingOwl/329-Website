@@ -66,30 +66,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let nodeIndex = 0;
   let charIndex = 0;
+  let lastTime = null;
 
-  function type() {
+  function type(currentTime) {
     if (nodeIndex >= allTextNodes.length) {
       // Done typing, leave the cursor where it is
       return;
     }
 
-    const current = allTextNodes[nodeIndex];
+    if (!lastTime) lastTime = currentTime;
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
 
-    if (charIndex === 0) {
-      current.node.parentNode.insertBefore(cursor, current.node.nextSibling);
+    // ⚡ Bolt: Batch DOM text updates per frame based on elapsed time to prevent main
+    // thread blocking from high-frequency setTimeout calls. 1 char every 2ms.
+    let charsRemaining = Math.max(1, Math.floor(deltaTime / 2));
+
+    while (charsRemaining > 0 && nodeIndex < allTextNodes.length) {
+      const current = allTextNodes[nodeIndex];
+
+      if (charIndex === 0) {
+        current.node.parentNode.insertBefore(cursor, current.node.nextSibling);
+      }
+
+      const charsToTypeInThisNode = Math.min(charsRemaining, current.text.length - charIndex);
+      charIndex += charsToTypeInThisNode;
+      charsRemaining -= charsToTypeInThisNode;
+
+      current.node.textContent = current.text.substring(0, charIndex);
+
+      if (charIndex >= current.text.length) {
+        nodeIndex++;
+        charIndex = 0;
+      }
     }
 
-    current.node.textContent = current.text.substring(0, charIndex + 1);
-    charIndex++;
-
-    if (charIndex >= current.text.length) {
-      nodeIndex++;
-      charIndex = 0;
-    }
-
-    // Faster speed so users don't have to wait forever for whole pages
-    setTimeout(type, 2);
+    requestAnimationFrame(type);
   }
 
-  type();
+  requestAnimationFrame(type);
 });

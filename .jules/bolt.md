@@ -17,3 +17,8 @@
 
 **Learning:** Binding a `scroll` event listener and constantly calculating `getBoundingClientRect()` within a `requestAnimationFrame` forces the main thread to constantly calculate element visibility. This causes unnecessary layout thrashing and reduces frame rates, especially for simple appearance animations on trigger points.
 **Action:** Replace `scroll` event listeners and `getBoundingClientRect` logic with an `IntersectionObserver`. Set the `rootMargin` property appropriately (e.g., `-50% 0px 0px 0px`) to trigger callbacks only when the target threshold is actually crossed, eliminating scroll overhead.
+
+## 2024-05-20 - Batching DOM Updates with requestAnimationFrame
+
+**Learning:** Using `setTimeout` loops with very low delays (e.g., 2ms) to perform sequential DOM manipulation (like a typing effect) causes massive CPU overhead and layout thrashing, as the browser attempts to execute hundreds of redundant renders per second.
+**Action:** Replace high-frequency `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame, and batch the logical progression (e.g., advancing multiple characters) into a single, frame-aligned DOM update.
