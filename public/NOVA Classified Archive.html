@@ -144,6 +144,12 @@
         background-color: rgba(0, 229, 255, 0.1);
       }
 
+      tr.file-row:focus-visible {
+        outline: 2px dashed var(--nova-blue);
+        outline-offset: -2px;
+        background-color: rgba(0, 229, 255, 0.1);
+      }
+
       .icon {
         font-weight: bold;
         color: #fff;
@@ -302,19 +308,52 @@
             <td>-</td>
             <td>-</td>
           </tr>
-          <tr class="file-row" onclick="openDoc('vv')">
+          <tr
+            class="file-row"
+            tabindex="0"
+            role="button"
+            onclick="openDoc('vv')"
+            onkeydown="
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openDoc('vv');
+              }
+            "
+          >
             <td class="icon">[PDF]</td>
             <td>VIRTUE_VILLAGES_SCHEMATICS.pdf</td>
             <td>1998-04-08</td>
             <td>14.2 MB</td>
           </tr>
-          <tr class="file-row" onclick="openDoc('gretchen')">
+          <tr
+            class="file-row"
+            tabindex="0"
+            role="button"
+            onclick="openDoc('gretchen')"
+            onkeydown="
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openDoc('gretchen');
+              }
+            "
+          >
             <td class="icon">[TXT]</td>
             <td>DIR_GRETCHEN_DOSSIER.txt</td>
             <td>SYSTEM_CURRENT</td>
             <td>8 KB</td>
           </tr>
-          <tr class="file-row" onclick="openDoc('tetromino')">
+          <tr
+            class="file-row"
+            tabindex="0"
+            role="button"
+            onclick="openDoc('tetromino')"
+            onkeydown="
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openDoc('tetromino');
+              }
+            "
+          >
             <td class="icon">[LOG]</td>
             <td>TETROMINO_RESTRICTION_PROTOCOL.log</td>
             <td>1995-11-22</td>

@@ -99,24 +99,28 @@
       .card.active {
         border-color: #00ff00;
         color: #00ff00;
-        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.2);
+        box-shadow:
+          0 0 15px rgba(0, 255, 0, 0.3),
+          inset 0 0 10px rgba(0, 255, 0, 0.2);
         text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
       }
 
       .card.active .card-id {
-         color: #00aa00;
+        color: #00aa00;
       }
 
       /* Offline Glow (Red) */
       .card.offline {
         border-color: #ff003c;
         color: #ff003c;
-        box-shadow: 0 0 15px rgba(255, 0, 60, 0.3), inset 0 0 10px rgba(255, 0, 60, 0.2);
+        box-shadow:
+          0 0 15px rgba(255, 0, 60, 0.3),
+          inset 0 0 10px rgba(255, 0, 60, 0.2);
         text-shadow: 0 0 5px rgba(255, 0, 60, 0.8);
       }
 
       .card.offline .card-id {
-         color: #aa0028;
+        color: #aa0028;
       }
 
       /* Static/Noise Overlay */
@@ -193,10 +197,10 @@
           font-size: 1.8rem;
         }
         .card-title {
-           font-size: 1.2rem;
+          font-size: 1.2rem;
         }
         .card-status {
-           font-size: 1rem;
+          font-size: 1rem;
         }
       }
 
@@ -215,8 +219,17 @@
     <header>
       <h1>MLTK Global Surveillance</h1>
       <h2>Authorized Personnel Only // Tracker Network v4.2</h2>
-      <div style="margin-top: 15px;">
-        <a href="MLTK%20Login%20Gate.html" style="color: #00ff00; text-decoration: underline; font-family: 'VT323', monospace; font-size: 1.2rem;">&lt;&lt; RETURN TO DASHBOARD</a>
+      <div style="margin-top: 15px">
+        <a
+          href="MLTK%20Login%20Gate.html"
+          style="
+            color: #00ff00;
+            text-decoration: underline;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+          "
+          >&lt;&lt; RETURN TO DASHBOARD</a
+        >
       </div>
     </header>
 
@@ -263,7 +276,7 @@
         <div class="card-status">[ACTIVE]</div>
       </div>
 
-       <!-- Employee 4 -->
+      <!-- Employee 4 -->
       <div class="card offline">
         <span class="card-id">EMP: 4400</span>
         <div class="card-title">E. Vance</div>
@@ -290,7 +303,6 @@
         <div class="card-title">Security Drone 2</div>
         <div class="card-status">[PATROL]</div>
       </div>
-
     </div>
   </body>
 </html>

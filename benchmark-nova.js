@@ -5,7 +5,9 @@ const dom = new JSDOM(`<!DOCTYPE html><html><body><div id="target"></div></body>
 const document = dom.window.document;
 const allowedTags = new Set(['p', 'strong', 'em']);
 
-const largeHtml = Array(100).fill('<p>Some <strong>bold</strong> and <em>italic</em> text.</p>').join('');
+const largeHtml = Array(100)
+  .fill('<p>Some <strong>bold</strong> and <em>italic</em> text.</p>')
+  .join('');
 const docHtml = new dom.window.DOMParser().parseFromString(largeHtml, 'text/html');
 
 const buildSafeOriginal = (node, target) =>
