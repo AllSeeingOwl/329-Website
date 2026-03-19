@@ -1,23 +1,39 @@
-
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
-                #freq-display { font-size: 24px; margin-bottom: 20px; }
-                #transmission-output { white-space: pre-wrap; font-size: 18px; line-height: 1.5; min-height: 100px; border: 1px solid #0f0; padding: 10px; }
-                input[type=range] { width: 300px; }
-            </style>
-        </head>
-        <body>
-            <div id="radio-body">
-                <p>Frequency: <span id="freq-display">88.0</span> MHz</p>
-                <input type="range" id="freq-slider" min="880" max="1080" value="880">
-                <div id="transmission-output"></div>
-            </div>
-            <script src="./public/radio_scanner_utils.js"></script>
-            <script>
-                window.setupRadioScanner();
-            </script>
-        </body>
-        </html>
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        background: #111;
+        color: #0f0;
+        font-family: monospace;
+        padding: 20px;
+      }
+      #freq-display {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      #transmission-output {
+        white-space: pre-wrap;
+        font-size: 18px;
+        line-height: 1.5;
+        min-height: 100px;
+        border: 1px solid #0f0;
+        padding: 10px;
+      }
+      input[type='range'] {
+        width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="radio-body">
+      <p>Frequency: <span id="freq-display">88.0</span> MHz</p>
+      <input type="range" id="freq-slider" min="880" max="1080" value="880" />
+      <div id="transmission-output"></div>
+    </div>
+    <script src="./public/radio_scanner_utils.js"></script>
+    <script>
+      window.setupRadioScanner();
+    </script>
+  </body>
+</html>

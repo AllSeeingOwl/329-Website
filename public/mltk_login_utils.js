@@ -83,7 +83,7 @@ async function verifyCode(e) {
 
     if (success) {
       if (document.body) {
-          document.body.style.backgroundColor = '#050505';
+        document.body.style.backgroundColor = '#050505';
       }
       const lockdownScreen = document.getElementById('lockdown-screen');
       if (lockdownScreen) lockdownScreen.style.display = 'none';

@@ -101,10 +101,7 @@ describe('Server Tests', () => {
     // Require the app after setting environment variables
     app = require('./server');
 
-    await request(app)
-      .post('/api/verify')
-      .send({ code: 'test_password_123' })
-      .expect(503);
+    await request(app).post('/api/verify').send({ code: 'test_password_123' }).expect(503);
   });
 
   it('should return 503 for non-existent routes when MAINTENANCE_MODE is true', async () => {
