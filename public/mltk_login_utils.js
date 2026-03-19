@@ -9,17 +9,6 @@ const CONFIG = {
 };
 
 function setupEventListeners() {
-  // Check if already logged in via persistent session
-  if (localStorage.getItem('mltk_logged_in') === 'true') {
-    if (document.body) {
-      document.body.style.backgroundColor = '#050505';
-    }
-    const lockdownScreen = document.getElementById('lockdown-screen');
-    if (lockdownScreen) lockdownScreen.style.display = 'none';
-    const successScreen = document.getElementById('success-screen');
-    if (successScreen) successScreen.style.display = 'flex';
-  }
-
   const inputField = document.getElementById('serial-input');
   if (inputField) {
     // Set initial width
@@ -93,7 +82,6 @@ async function verifyCode(e) {
     }
 
     if (success) {
-      localStorage.setItem('mltk_logged_in', 'true');
       if (document.body) {
           document.body.style.backgroundColor = '#050505';
       }
