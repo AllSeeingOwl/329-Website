@@ -4,8 +4,12 @@ const crypto = require('crypto');
 const app = express();
 const port = 3000;
 
+// 🛡️ Sentinel: Disable Express framework leakage
+app.disable('x-powered-by');
+
 // 🛡️ Sentinel: Add security headers to protect against common web vulnerabilities
 app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // Enforce HTTPS
   res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME sniffing
   res.setHeader('X-Frame-Options', 'DENY'); // Prevent clickjacking
   res.setHeader('X-XSS-Protection', '1; mode=block'); // Enable browser XSS filtering

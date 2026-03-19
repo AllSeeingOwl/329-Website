@@ -24,3 +24,8 @@
 **Vulnerability:** Unbounded request body size leading to Denial of Service (DoS) attacks via memory exhaustion.
 **Learning:** Using `express.json()` or `express.urlencoded()` without a limit allows attackers to send massive JSON or URL-encoded payloads, consuming server memory and potentially crashing the application. To prevent Denial of Service (DoS) attacks via memory exhaustion, always specify a `limit` (e.g., '100kb') when using body-parsing middleware in Express applications.
 **Prevention:** Always configure `express.json({ limit: '100kb' })` and `express.urlencoded({ extended: true, limit: '100kb' })` with a reasonable size limit based on application needs to reject oversized payloads.
+
+## 2024-05-24 - [Information Leakage / Missing HSTS]
+**Vulnerability:** Express defaults to leaking its framework presence via the `X-Powered-By: Express` header, and the application was missing Strict-Transport-Security (HSTS) enforcement.
+**Learning:** These defaults in Express can aid attackers in footprinting the application and leave users vulnerable to downgrade attacks. The backend needs defense-in-depth even for ARG web apps.
+**Prevention:** Always use `app.disable('x-powered-by')` or `helmet` to hide framework fingerprints, and enforce HTTPS by default using HSTS headers.
