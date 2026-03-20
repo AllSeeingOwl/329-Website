@@ -128,6 +128,47 @@
         text-shadow: 0 0 8px #ff003c;
       }
 
+      /* Maintenance Styles */
+      .portal-card.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        filter: grayscale(100%);
+      }
+
+      .maintenance-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        font-weight: bold;
+        z-index: 10;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
+
+      .maintenance-label.studio-label {
+        background-color: #f0f0f0;
+        color: #111;
+        font-family: 'Courier New', Courier, monospace;
+        border-top: 2px solid #333;
+        border-bottom: 2px solid #333;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+      }
+
+      .maintenance-label.mltk-label {
+        background-color: #ff003c;
+        color: #fff;
+        font-family: 'Anton', sans-serif;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        letter-spacing: 3px;
+        border: 2px dashed #000;
+        text-shadow: 2px 2px 0px #000;
+      }
+
       .card-icon {
         font-size: 3rem;
         margin-bottom: 20px;
@@ -239,7 +280,7 @@
 
       <div class="portal-grid">
         <!-- Real World / Studio Side -->
-        <a href="Surface%20Home%20Page.html" class="portal-card studio">
+        <a href="Surface%20Home%20Page.html" class="portal-card studio" id="studio-portal">
           <div class="card-icon">🔲</div>
           <div class="card-title">STUDIO OPERATIONS</div>
           <div class="card-desc">
@@ -249,7 +290,7 @@
         </a>
 
         <!-- ARG / In-Universe Side -->
-        <a href="MLTK%20Login%20Gate.html" class="portal-card mltk">
+        <a href="MLTK%20Login%20Gate.html" class="portal-card mltk" id="mltk-portal">
           <div class="card-icon">👁‍🗨</div>
           <div class="card-title">CORPORATE INTRANET</div>
           <div class="card-desc">
@@ -265,5 +306,45 @@
         <a href="Studio%20Contact%20Us.html">Contact</a>
       </div>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          const response = await fetch('/api/maintenance-status');
+          if (response.ok) {
+            const status = await response.json();
+
+            const studioPortal = document.getElementById('studio-portal');
+            const mltkPortal = document.getElementById('mltk-portal');
+
+            if (status.global || status.studio) {
+              studioPortal.classList.add('disabled');
+              studioPortal.removeAttribute('href');
+              studioPortal.setAttribute('tabindex', '-1');
+              studioPortal.setAttribute('aria-disabled', 'true');
+
+              const studioLabel = document.createElement('div');
+              studioLabel.className = 'maintenance-label studio-label';
+              studioLabel.textContent = 'OFFLINE: STUDIO UPGRADE IN PROGRESS';
+              studioPortal.appendChild(studioLabel);
+            }
+
+            if (status.global || status.mltk) {
+              mltkPortal.classList.add('disabled');
+              mltkPortal.removeAttribute('href');
+              mltkPortal.setAttribute('tabindex', '-1');
+              mltkPortal.setAttribute('aria-disabled', 'true');
+
+              const mltkLabel = document.createElement('div');
+              mltkLabel.className = 'maintenance-label mltk-label';
+              mltkLabel.textContent = 'OFFLINE: INTRANET RECALIBRATING';
+              mltkPortal.appendChild(mltkLabel);
+            }
+          }
+        } catch (err) {
+          console.error('Could not fetch maintenance status:', err);
+        }
+      });
+    </script>
   </body>
 </html>
