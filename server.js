@@ -63,7 +63,13 @@ const mltkFiles = new Set([
 // Maintenance Middleware
 app.use((req, res, next) => {
   // Normalize path by stripping query strings and lowercasing encoded spaces if any
-  const reqPath = decodeURIComponent(req.path);
+  // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
+  let reqPath;
+  try {
+    reqPath = decodeURIComponent(req.path);
+  } catch {
+    return res.status(400).json({ error: 'Bad Request: Malformed URI' });
+  }
 
   // Global Maintenance Mode applies to everything except static assets if we want,
   // but originally it was fully blocking everything. Keeping the original behavior:
