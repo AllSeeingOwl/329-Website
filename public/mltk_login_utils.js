@@ -89,6 +89,11 @@ async function verifyCode(e) {
       if (lockdownScreen) lockdownScreen.style.display = 'none';
       const successScreen = document.getElementById('success-screen');
       if (successScreen) successScreen.style.display = 'flex';
+
+      // Briefly display success screen then redirect to surveillance dashboard
+      setTimeout(() => {
+        window.location.href = 'MLTK Surveillance Dashboard.html';
+      }, 2000);
     } else {
       if (errorMsg) errorMsg.style.display = 'block';
       if (inputGroup) {

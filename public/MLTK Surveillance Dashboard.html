@@ -136,6 +136,25 @@
         background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
       }
 
+      /* Focus styles for interactive cards */
+      a.card:focus-visible {
+        outline: none;
+      }
+      a.card.active:focus-visible {
+        box-shadow:
+          0 0 25px rgba(0, 255, 0, 0.6),
+          inset 0 0 15px rgba(0, 255, 0, 0.4);
+        border-color: #00ff00;
+        background-color: rgba(0, 255, 0, 0.1);
+      }
+      a.card.offline:focus-visible {
+        box-shadow:
+          0 0 25px rgba(255, 0, 60, 0.6),
+          inset 0 0 15px rgba(255, 0, 60, 0.4);
+        border-color: #ff003c;
+        background-color: rgba(255, 0, 60, 0.1);
+      }
+
       /* CRT Overlay Effect */
       body::before {
         content: ' ';
@@ -248,6 +267,20 @@
         <div class="card-status">[OFFLINE]</div>
       </div>
 
+      <!-- Document 1: Virtue Village Layouts -->
+      <a href="VIRTUE_VILLAGE_LAYOUTS.pdf" download class="card active" style="text-decoration: none; outline: none; display: flex;">
+        <span class="card-id">DOC: 001-VVL</span>
+        <div class="card-title">Virtue Village Layouts</div>
+        <div class="card-status">[DOWNLOAD]</div>
+      </a>
+
+      <!-- Document 2: Gretchen Dossier -->
+      <a href="GRETCHEN_DOSSIER.txt" download class="card active" style="text-decoration: none; outline: none; display: flex;">
+        <span class="card-id">DOC: 002-GD</span>
+        <div class="card-title">Gretchen Dossier</div>
+        <div class="card-status">[DOWNLOAD]</div>
+      </a>
+
       <!-- Employee 1 -->
       <div class="card active">
         <span class="card-id">EMP: 8849</span>
@@ -262,6 +295,20 @@
         <div class="card-status">[ACTIVE: ARCHIVES]</div>
       </div>
 
+      <!-- Portal 1: NOVA Classified Archive -->
+      <a href="NOVA%20Classified%20Archive.html" class="card active" style="text-decoration: none; outline: none; display: flex;">
+        <span class="card-id">ARCHIVE: NOVA</span>
+        <div class="card-title">NOVA Classified Archive</div>
+        <div class="card-status">[ENTER]</div>
+      </a>
+
+      <!-- Portal 2: Customer Service -->
+      <a href="MLTK%20Customer%20Service.html" class="card active" style="text-decoration: none; outline: none; display: flex;">
+        <span class="card-id">PORTAL: CS</span>
+        <div class="card-title">Customer Service Portal</div>
+        <div class="card-status">[ENTER]</div>
+      </a>
+
       <!-- Employee 3 -->
       <div class="card offline">
         <span class="card-id">EMP: 3321</span>
@@ -275,6 +322,13 @@
         <div class="card-title">Sector 3: Containment</div>
         <div class="card-status">[ACTIVE]</div>
       </div>
+
+      <!-- Portal 3: Classified Document -->
+      <a href="MLTK%20Classified%20Document.html" class="card offline" style="text-decoration: none; outline: none; display: flex;">
+        <span class="card-id">DOC: TETROMINO</span>
+        <div class="card-title">Project Tetromino Initialization</div>
+        <div class="card-status">[CLASSIFIED: EYES ONLY]</div>
+      </a>
 
       <!-- Employee 4 -->
       <div class="card offline">
