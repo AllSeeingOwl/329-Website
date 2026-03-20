@@ -22,3 +22,8 @@
 
 **Learning:** Using `setTimeout` loops with very low delays (e.g., 2ms) to perform sequential DOM manipulation (like a typing effect) causes massive CPU overhead and layout thrashing, as the browser attempts to execute hundreds of redundant renders per second.
 **Action:** Replace high-frequency `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame, and batch the logical progression (e.g., advancing multiple characters) into a single, frame-aligned DOM update.
+
+## 2024-05-21 - Batching DOM Updates with requestAnimationFrame in radio_scanner_utils
+
+**Learning:** Using `setInterval` with a low delay (e.g., 30ms) for high-frequency DOM manipulation like typing effects causes main-thread blocking and layout thrashing. It forces the browser to evaluate layouts and repaint unnecessarily often.
+**Action:** Replace `setInterval` and `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame and use it to batch multiple logical updates (e.g., advancing multiple characters) into a single DOM update per frame. This aligns the updates with the browser's refresh rate, reducing CPU overhead and preventing layout thrashing.

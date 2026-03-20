@@ -40,7 +40,7 @@ const studioFiles = new Set([
   '/Business Privacy Policy.html',
   '/Business Terms of Service.html',
   '/Procure Volume 1.html',
-  '/Procure Physical Artefact.html'
+  '/Procure Physical Artefact.html',
 ]);
 
 const mltkFiles = new Set([
@@ -57,7 +57,7 @@ const mltkFiles = new Set([
   '/NOVA Classified Archive.html',
   '/Ollies Radio Scanner.html',
   '/Secure Data Drop Page.html',
-  '/Developer Blog.html'
+  '/Developer Blog.html',
 ]);
 
 // Maintenance Middleware
@@ -95,7 +95,7 @@ app.get('/api/maintenance-status', (req, res) => {
   res.json({
     global: MAINTENANCE_MODE,
     studio: STUDIO_MAINTENANCE_MODE,
-    mltk: MLTK_MAINTENANCE_MODE
+    mltk: MLTK_MAINTENANCE_MODE,
   });
 });
 

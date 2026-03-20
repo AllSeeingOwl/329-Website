@@ -27,10 +27,18 @@ function setupRadioScanner() {
   const decryptedMessage =
     "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
 
+  let typingAnimationId; // Store the requestAnimationFrame ID so we can cancel it
+
   slider.addEventListener('input', function () {
     let rawVal = parseInt(this.value);
     let freq = (rawVal / 10).toFixed(1);
     display.innerText = freq;
+
+    // Clear any existing animation frame to prevent overlapping typing effects
+    if (typingAnimationId) {
+      cancelAnimationFrame(typingAnimationId);
+      typingAnimationId = null;
+    }
 
     if (freq === '104.9') {
       radioBody.classList.add('locked-in');
@@ -38,14 +46,38 @@ function setupRadioScanner() {
 
       output.textContent = '';
       let i = 0;
-      let typingInterval = setInterval(() => {
-        if (i < decryptedMessage.length) {
-          output.textContent = decryptedMessage.substring(0, i + 1);
-          i++;
-        } else {
-          clearInterval(typingInterval);
+      let lastTime = null;
+
+      // ⚡ Bolt: Replace setInterval with requestAnimationFrame to prevent main thread blocking
+      // and layout thrashing. By calculating elapsed time, we can batch multiple characters
+      // into a single DOM update per frame instead of forcing a re-render every 30ms.
+      function type(currentTime) {
+        if (!lastTime) lastTime = currentTime;
+        const deltaTime = currentTime - lastTime;
+
+        // Output 1 character every 30ms
+        let charsToType = Math.floor(deltaTime / 30);
+
+        if (charsToType > 0) {
+          i += charsToType;
+          lastTime = currentTime - (deltaTime % 30); // Keep remainder for accurate timing
+
+          // Cap the index to the length of the message
+          if (i > decryptedMessage.length) {
+            i = decryptedMessage.length;
+          }
+
+          output.textContent = decryptedMessage.substring(0, i);
         }
-      }, 30);
+
+        if (i < decryptedMessage.length) {
+          typingAnimationId = requestAnimationFrame(type);
+        } else {
+          typingAnimationId = null;
+        }
+      }
+
+      typingAnimationId = requestAnimationFrame(type);
     } else {
       radioBody.classList.remove('locked-in');
       output.classList.add('anim-shake');
