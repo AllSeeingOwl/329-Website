@@ -12,3 +12,8 @@
 
 **Learning:** When using structural HTML elements like `<tr>` for custom interactive components (such as clickable file rows in a simulated file explorer or archive directory), these elements are not natively focusable or actionable by keyboards or screen readers, creating a significant accessibility barrier.
 **Action:** For custom interactive rows (e.g., `tr.file-row` triggering a click event), always add `tabindex="0"` to make them focusable, apply `role="button"` to inform screen readers of their interactive nature, and attach an `onkeydown` event handler to explicitly trigger the action on `Enter` or `Space` key presses.
+
+## 2025-02-12 - Accessible Processing States During Form Submissions
+
+**Learning:** Hiding form submit buttons (e.g., via `display: none`) and replacing them with separate loading text or spinners can unexpectedly shift focus for screen reader users or make the form's processing state unclear.
+**Action:** Do not hide submit buttons during simulated processing. Instead, set the button's `disabled` property to true, set `aria-disabled="true"`, change its inner text to indicate processing (e.g., "PROCESSING..."), and apply `aria-busy="true"` to the parent form to explicitly alert assistive technologies of the ongoing background activity. Always restore these properties upon completion.
