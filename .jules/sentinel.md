@@ -32,3 +32,8 @@
 **Vulnerability:** Express defaults to leaking its framework presence via the `X-Powered-By: Express` header, and the application was missing Strict-Transport-Security (HSTS) enforcement.
 **Learning:** These defaults in Express can aid attackers in footprinting the application and leave users vulnerable to downgrade attacks. The backend needs defense-in-depth even for ARG web apps.
 **Prevention:** Always use `app.disable('x-powered-by')` or `helmet` to hide framework fingerprints, and enforce HTTPS by default using HSTS headers.
+
+## 2026-06-25 - Unhandled URIError DoS via decodeURIComponent
+**Vulnerability:** Denial of Service (DoS) and potential information disclosure via unhandled `URIError` exceptions when parsing request paths.
+**Learning:** Built-in JavaScript functions like `decodeURIComponent` throw a `URIError` when encountering malformed URI encoding (e.g., `%ff`). If called directly on `req.path` within Express middleware without a `try...catch` block, it bypasses standard error handlers, crashing the request or bubbling up to the default Express error handler which might expose stack traces in development/testing.
+**Prevention:** Always wrap `decodeURIComponent` calls in a `try...catch` block when processing untrusted user input or request paths, and handle the error gracefully (e.g., returning a `400 Bad Request`).
