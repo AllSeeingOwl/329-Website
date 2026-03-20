@@ -25,15 +25,73 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// Check if maintenance mode is enabled
+// Maintenance Mode Configuration
 const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
+const STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
+const MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 
-if (MAINTENANCE_MODE) {
-  app.use((req, res, next) => {
-    // Exclude certain assets like CSS/JS if needed, but for a simple maintenance page we just serve the maintenance HTML
-    res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+// Lists of files belonging to each portal
+const studioFiles = new Set([
+  '/Surface Home Page.html',
+  '/Studio Manifesto Page.html',
+  '/Store.html',
+  '/Releases.html',
+  '/Studio Contact Us.html',
+  '/Business Privacy Policy.html',
+  '/Business Terms of Service.html',
+  '/Procure Volume 1.html',
+  '/Procure Physical Artefact.html'
+]);
+
+const mltkFiles = new Set([
+  '/MLTK Login Gate.html',
+  '/MLTK Surveillance Dashboard.html',
+  '/MLTK Privacy Policy.html',
+  '/MLTK Terms of Service.html',
+  '/MLTK Boot Sequence.html',
+  '/MLTK Customer Service.html',
+  '/MLTK Classified Document.html',
+  '/MLTK Timer.html',
+  '/Velvet Rope Landing Page.html',
+  '/NOVA Parent Directory.html',
+  '/NOVA Classified Archive.html',
+  '/Ollies Radio Scanner.html',
+  '/Secure Data Drop Page.html',
+  '/Developer Blog.html'
+]);
+
+// Maintenance Middleware
+app.use((req, res, next) => {
+  // Normalize path by stripping query strings and lowercasing encoded spaces if any
+  const reqPath = decodeURIComponent(req.path);
+
+  // Global Maintenance Mode applies to everything except static assets if we want,
+  // but originally it was fully blocking everything. Keeping the original behavior:
+  if (MAINTENANCE_MODE) {
+    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+  }
+
+  // Check specific maintenance modes for HTML pages.
+  // We only block specific paths to allow CSS/JS to pass through freely.
+  if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
+    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+  }
+
+  if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
+    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+  }
+
+  next();
+});
+
+// Endpoint for frontend to check maintenance status dynamically
+app.get('/api/maintenance-status', (req, res) => {
+  res.json({
+    global: MAINTENANCE_MODE,
+    studio: STUDIO_MAINTENANCE_MODE,
+    mltk: MLTK_MAINTENANCE_MODE
   });
-}
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
