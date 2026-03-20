@@ -343,7 +343,10 @@
         const category = document.getElementById('category').value;
         const msgInput = document.getElementById('message').value;
 
-        btn.style.display = 'none';
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        btn.innerText = 'PROCESSING...';
+        form.setAttribute('aria-busy', 'true');
         processingMsg.style.display = 'block';
 
         // Simulate "Processing"
@@ -382,7 +385,10 @@
 
           // Reset form
           form.reset();
-          btn.style.display = 'block';
+          btn.disabled = false;
+          btn.removeAttribute('aria-disabled');
+          btn.innerText = 'SUBMIT INQUIRY TO MAINFRAME';
+          form.removeAttribute('aria-busy');
           processingMsg.style.display = 'none';
         }, 2500); // 2.5 second delay for corporate realism
       }
