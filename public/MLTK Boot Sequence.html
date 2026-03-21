@@ -186,35 +186,61 @@
 
       function startBootSequence() {
         let i = 0;
+        let lastTime = null;
+        const startTime = performance.now();
+        let isBooting = true;
 
-        // Random lines for more visual noise
-        bootInterval = setInterval(() => {
-          const line = document.createElement('div');
-          line.className = 'loading-line';
+        // ⚡ Bolt: Replace setInterval with requestAnimationFrame to prevent main thread blocking
+        // and layout thrashing (especially since we read/write scrollTop & scrollHeight).
+        // Calculate elapsed time to batch multiple line additions into a single DOM update.
+        function type(currentTime) {
+          if (!isBooting) return;
+          if (!lastTime) lastTime = currentTime;
 
-          if (i < bootMessages.length) {
-            line.textContent = `[${generateRandomHex()}] ${bootMessages[i]}`;
-            i++;
-          } else {
-            // Generate random noise if we run out of predefined messages
-            line.textContent = `[${generateRandomHex()}] LOAD 0x${generateRandomHex()} ... OK`;
+          const deltaTime = currentTime - lastTime;
+          const elapsedTotal = currentTime - startTime;
+
+          // Stop after 4 seconds
+          if (elapsedTotal >= 4000) {
+            isBooting = false;
+            // Clear screen
+            bootContainer.innerHTML = '';
+            // Show prompt
+            passcodePrompt.style.display = 'block';
+            passcodeInput.focus();
+            return;
           }
 
-          bootContainer.appendChild(line);
-          terminalContainer.scrollTop = terminalContainer.scrollHeight;
-        }, 50); // Rapid scrolling
+          // Output 1 line every 50ms
+          let linesToType = Math.floor(deltaTime / 50);
 
-        // Stop after 4 seconds
-        setTimeout(() => {
-          clearInterval(bootInterval);
+          if (linesToType > 0) {
+            lastTime = currentTime - (deltaTime % 50); // Keep remainder for accurate timing
 
-          // Clear screen
-          bootContainer.innerHTML = '';
+            const fragment = document.createDocumentFragment();
 
-          // Show prompt
-          passcodePrompt.style.display = 'block';
-          passcodeInput.focus();
-        }, 4000);
+            for (let j = 0; j < linesToType; j++) {
+              const line = document.createElement('div');
+              line.className = 'loading-line';
+
+              if (i < bootMessages.length) {
+                line.textContent = `[${generateRandomHex()}] ${bootMessages[i]}`;
+                i++;
+              } else {
+                // Generate random noise if we run out of predefined messages
+                line.textContent = `[${generateRandomHex()}] LOAD 0x${generateRandomHex()} ... OK`;
+              }
+              fragment.appendChild(line);
+            }
+
+            bootContainer.appendChild(fragment);
+            terminalContainer.scrollTop = terminalContainer.scrollHeight;
+          }
+
+          requestAnimationFrame(type);
+        }
+
+        requestAnimationFrame(type);
       }
 
       // Handle custom input sizing and behavior

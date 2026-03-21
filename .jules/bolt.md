@@ -27,3 +27,8 @@
 
 **Learning:** Using `setInterval` with a low delay (e.g., 30ms) for high-frequency DOM manipulation like typing effects causes main-thread blocking and layout thrashing. It forces the browser to evaluate layouts and repaint unnecessarily often.
 **Action:** Replace `setInterval` and `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame and use it to batch multiple logical updates (e.g., advancing multiple characters) into a single DOM update per frame. This aligns the updates with the browser's refresh rate, reducing CPU overhead and preventing layout thrashing.
+
+## 2024-05-22 - Batching DOM Updates with requestAnimationFrame in MLTK Boot Sequence
+
+**Learning:** Using `setInterval` with a low delay (e.g., 50ms) for high-frequency DOM manipulation and layout reads (like `scrollTop` and `scrollHeight`) causes main-thread blocking and layout thrashing. It forces the browser to evaluate layouts and repaint unnecessarily often.
+**Action:** Replace `setInterval` and `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame and use it to batch multiple logical updates (e.g., adding multiple log lines) into a single DOM update per frame using a `DocumentFragment`. This aligns the updates with the browser's refresh rate, reducing CPU overhead and preventing layout thrashing.
