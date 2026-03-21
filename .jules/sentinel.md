@@ -35,6 +35,7 @@
 **Prevention:** Always use `app.disable('x-powered-by')` or `helmet` to hide framework fingerprints, and enforce HTTPS by default using HSTS headers.
 
 ## 2026-06-25 - Unhandled URIError DoS via decodeURIComponent
+
 **Vulnerability:** Denial of Service (DoS) and potential information disclosure via unhandled `URIError` exceptions when parsing request paths.
 **Learning:** Built-in JavaScript functions like `decodeURIComponent` throw a `URIError` when encountering malformed URI encoding (e.g., `%ff`). If called directly on `req.path` within Express middleware without a `try...catch` block, it bypasses standard error handlers, crashing the request or bubbling up to the default Express error handler which might expose stack traces in development/testing.
 **Prevention:** Always wrap `decodeURIComponent` calls in a `try...catch` block when processing untrusted user input or request paths, and handle the error gracefully (e.g., returning a `400 Bad Request`).
