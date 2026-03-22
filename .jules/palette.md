@@ -17,3 +17,8 @@
 
 **Learning:** Hiding form submit buttons (e.g., via `display: none`) and replacing them with separate loading text or spinners can unexpectedly shift focus for screen reader users or make the form's processing state unclear.
 **Action:** Do not hide submit buttons during simulated processing. Instead, set the button's `disabled` property to true, set `aria-disabled="true"`, change its inner text to indicate processing (e.g., "PROCESSING..."), and apply `aria-busy="true"` to the parent form to explicitly alert assistive technologies of the ongoing background activity. Always restore these properties upon completion.
+
+## 2025-02-13 - Accessible Interactive "Redacted" Text Blocks
+
+**Learning:** When using custom text styling for interactive effects, such as "redacted" text blocks that reveal their content upon click, these elements (usually `<span>` tags) are not natively recognized as interactive by screen readers. Merely adding `tabindex="0"` and keyboard event listeners is insufficient for proper accessibility.
+**Action:** Always provide appropriate ARIA attributes for custom interactive text elements. Add `role="button"` to inform screen readers that the element can be activated, and use `aria-expanded="false"` (toggling to `true` when revealed) to communicate the state of the content reveal.

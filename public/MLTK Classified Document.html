@@ -234,18 +234,18 @@
     <div class="document-container">
       <div class="doc-header">CLASSIFIED // EYES ONLY</div>
       <div class="doc-body">
-        <p>SUBJECT: Project <span class="redacted" tabindex="0">TETROMINO</span> Initialization</p>
+        <p>SUBJECT: Project <span class="redacted" tabindex="0" role="button" aria-expanded="false">TETROMINO</span> Initialization</p>
         <p>
           As per the directives from Director
-          <span class="redacted" tabindex="0">G. Meredith</span>, Phase 2 of the Virtue Village
-          deployment has been <span class="redacted" tabindex="0">authorized</span>. The underground
-          facilities located beneath Sector <span class="redacted" tabindex="0">4</span> must be
-          secured prior to the arrival of the <span class="redacted" tabindex="0">Specimen</span>.
+          <span class="redacted" tabindex="0" role="button" aria-expanded="false">G. Meredith</span>, Phase 2 of the Virtue Village
+          deployment has been <span class="redacted" tabindex="0" role="button" aria-expanded="false">authorized</span>. The underground
+          facilities located beneath Sector <span class="redacted" tabindex="0" role="button" aria-expanded="false">4</span> must be
+          secured prior to the arrival of the <span class="redacted" tabindex="0" role="button" aria-expanded="false">Specimen</span>.
         </p>
         <p>
           Warning: Any unauthorized disclosure of this document will result in immediate
-          <span class="redacted" tabindex="0">termination</span> and relocation to Re-education
-          Center <span class="redacted" tabindex="0">B</span>.
+          <span class="redacted" tabindex="0" role="button" aria-expanded="false">termination</span> and relocation to Re-education
+          Center <span class="redacted" tabindex="0" role="button" aria-expanded="false">B</span>.
         </p>
       </div>
     </div>
@@ -280,8 +280,10 @@
       function revealText(el) {
         if (!el.classList.contains('revealed')) {
           el.classList.add('revealed');
+          el.setAttribute('aria-expanded', 'true');
           setTimeout(() => {
             el.classList.remove('revealed');
+            el.setAttribute('aria-expanded', 'false');
           }, 1500); // Briefly reveal for 1.5 seconds
         }
       }
