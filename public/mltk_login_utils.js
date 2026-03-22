@@ -38,21 +38,25 @@ function setupEventListeners() {
   });
 }
 
+async function performApiFetch(code) {
+  const response = await fetch('/api/verify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ code: code }),
+  });
+
+  if (!response.ok) {
+    throw new Error('API returned an error or is not available');
+  }
+
+  return response.json();
+}
+
 async function attemptApiVerification(code) {
   try {
-    const response = await fetch('/api/verify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ code: code }),
-    });
-
-    if (!response.ok) {
-      throw new Error('API returned an error or is not available');
-    }
-
-    const result = await response.json();
+    const result = await performApiFetch(code);
     return result.success;
   } catch (apiError) {
     console.error('Error verifying code via API:', apiError);
@@ -72,14 +76,10 @@ async function verifyCode(e) {
   const inputGroup = document.getElementById('input-group');
 
   try {
-    let success = false;
-
-    try {
-      success = await attemptApiVerification(code);
-    } catch (apiError) {
+    const success = await attemptApiVerification(code).catch(apiError => {
       console.error('Error in verification:', apiError);
-      success = false;
-    }
+      return false;
+    });
 
     if (success) {
       if (document.body) {
