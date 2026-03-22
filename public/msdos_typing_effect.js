@@ -3,24 +3,6 @@
  * Used on MLTK corporate intranet pages to simulate text being typed out
  */
 document.addEventListener('DOMContentLoaded', () => {
-  const style = document.createElement('style');
-  style.textContent = `
-    .ms-dos-cursor {
-      display: inline-block;
-      width: 10px;
-      height: 1.2em;
-      background-color: #00ff00;
-      animation: blink 1s step-end infinite;
-      vertical-align: bottom;
-      margin-left: 2px;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
-
   const allTextNodes = [];
 
   // ⚡ Bolt: Cache ignored tags in a Set for O(1) lookups instead of recreating an array
