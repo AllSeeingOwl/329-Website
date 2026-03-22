@@ -157,4 +157,23 @@ describe('Server Tests', () => {
 
     await request(app).post('/api/verify').send({ code: largeCode }).expect(413);
   });
+
+  it('should not leak stack traces on unhandled errors', async () => {
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    app = require('./server');
+
+    // Inject an error-throwing route before the catch-all
+    app.use('/force-error', (req, res, next) => {
+      next(new Error('Simulated internal error'));
+    });
+
+    // Move the injected route to the front of the router stack
+    const routerStack = app._router ? app._router.stack : app.router.stack;
+    const middleware = routerStack.pop();
+    routerStack.splice(2, 0, middleware);
+
+    const response = await request(app).get('/force-error').expect(500);
+    expect(response.body).toEqual({ error: 'Internal Server Error' });
+    expect(response.text).not.toContain('Error: Simulated internal error');
+  });
 });
