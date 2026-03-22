@@ -119,3 +119,4 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { initVelvetRope, breachMainframe, CONFIG };
 }
+// 🧹 code health improvement: async/await refactoring has already been merged here.
