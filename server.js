@@ -163,6 +163,19 @@ app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
+// 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+
+  // Handle specific standard HTTP errors correctly
+  if (err.status) {
+    return res.status(err.status).json({ error: err.message || 'Error' });
+  }
+
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
