@@ -2,7 +2,12 @@
  * @jest-environment jsdom
  */
 
-const { setupEventListeners, verifyCode, CONFIG } = require('./public/mltk_login_utils');
+const {
+  setupEventListeners,
+  verifyCode,
+  attemptApiVerification,
+  CONFIG,
+} = require('./public/mltk_login_utils');
 
 describe('MLTK Login Gate Tests', () => {
   let originalFetch;
@@ -193,5 +198,50 @@ describe('MLTK Login Gate Tests', () => {
     expect(console.error).toHaveBeenCalledTimes(2);
 
     console.error = originalConsoleError;
+  });
+
+  describe('attemptApiVerification fallback logic', () => {
+    let originalConsoleError;
+
+    beforeEach(() => {
+      originalConsoleError = console.error;
+      console.error = jest.fn();
+    });
+
+    afterEach(() => {
+      console.error = originalConsoleError;
+    });
+
+    test('returns true when API fails but fallback is enabled and code is correct', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('API failure'));
+      CONFIG.USE_MOCK_API_FALLBACK = true;
+
+      const result = await attemptApiVerification(CONFIG.MOCK_PASSWORD);
+      expect(result).toBe(true);
+      expect(console.error).toHaveBeenCalled();
+    });
+
+    test('returns false when API fails, fallback is enabled, but code is incorrect', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('API failure'));
+      CONFIG.USE_MOCK_API_FALLBACK = true;
+
+      const result = await attemptApiVerification('WRONG-PASSWORD');
+      expect(result).toBe(false);
+      expect(console.error).toHaveBeenCalled();
+    });
+
+    test('returns false when API fails and fallback is disabled, even if code is correct', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('API failure'));
+      const originalFallback = CONFIG.USE_MOCK_API_FALLBACK;
+      CONFIG.USE_MOCK_API_FALLBACK = false;
+
+      try {
+        const result = await attemptApiVerification(CONFIG.MOCK_PASSWORD);
+        expect(result).toBe(false);
+        expect(console.error).toHaveBeenCalled();
+      } finally {
+        CONFIG.USE_MOCK_API_FALLBACK = originalFallback;
+      }
+    });
   });
 });

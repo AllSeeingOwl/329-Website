@@ -142,5 +142,11 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { setupEventListeners, verifyCode, CONFIG };
+  module.exports = {
+    setupEventListeners,
+    verifyCode,
+    attemptApiVerification,
+    performApiFetch,
+    CONFIG,
+  };
 }
