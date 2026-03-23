@@ -17,13 +17,13 @@ The project relies on a Node.js Express backend (`server.js`) that serves static
 
 ## Development
 
-Make sure you have Node.js (v22+) and npm (v11+) installed. Install dependencies using:
+Make sure you have Node.js (v22+) and pnpm installed. Install dependencies using:
 
 ```bash
-npm install
+pnpm install
 ```
 
-_(Note: If you experience timeouts during installation, use `--prefer-offline` and `--no-audit` flags.)_
+_(Note: If you experience timeouts during installation, use the `--prefer-offline` flag.)_
 
 ### Environment Variables
 
@@ -34,15 +34,15 @@ The local Express server (`server.js`) relies on the following environment varia
 
 ### Available Scripts
 
-- **`npm run dev:server`**: Starts the local development backend server using `nodemon`.
-- **`npm run lint`**: Runs ESLint to check for code quality.
-- **`npm run format`**: Runs Prettier to format code.
-- **`npm run typecheck`**: Runs TypeScript type checking.
-- **`npm test`**: Runs Jest unit tests.
-- **`npm test -- --coverage`**: Runs tests and generates a coverage report.
-- **`npm run test:e2e:playwright`**: Runs end-to-end tests using Playwright.
-- **`npm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
-- **`npm run build:vite`** / **`npm run build:webpack`**: Executes builds if needed.
+- **`pnpm run dev:server`**: Starts the local development backend server using `nodemon`.
+- **`pnpm run lint`**: Runs ESLint to check for code quality.
+- **`pnpm run format`**: Runs Prettier to format code.
+- **`pnpm run typecheck`**: Runs TypeScript type checking.
+- **`pnpm test`**: Runs Jest unit tests.
+- **`pnpm test -- --coverage`**: Runs tests and generates a coverage report.
+- **`pnpm run test:e2e:playwright`**: Runs end-to-end tests using Playwright.
+- **`pnpm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
+- **`pnpm run build:vite`** / **`pnpm run build:webpack`**: Executes builds if needed.
 
 ## Testing
 
