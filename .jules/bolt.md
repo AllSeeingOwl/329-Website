@@ -32,3 +32,8 @@
 
 **Learning:** Using `setInterval` with a low delay (e.g., 50ms) for high-frequency DOM manipulation and layout reads (like `scrollTop` and `scrollHeight`) causes main-thread blocking and layout thrashing. It forces the browser to evaluate layouts and repaint unnecessarily often.
 **Action:** Replace `setInterval` and `setTimeout` loops with `requestAnimationFrame`. Calculate the elapsed time (`deltaTime`) since the last frame and use it to batch multiple logical updates (e.g., adding multiple log lines) into a single DOM update per frame using a `DocumentFragment`. This aligns the updates with the browser's refresh rate, reducing CPU overhead and preventing layout thrashing.
+
+## 2026-03-23 - Cache DOM Queries in Frequently Executed Functions
+
+**Learning:** Repeatedly querying the DOM with `document.getElementById` or `document.querySelector` inside frequently triggered event handlers (like `input` or `click`) or core validation functions (like `verifyCode`) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
+**Action:** Query DOM elements once and store them in a persistent cache object. Use a helper function (e.g., `getDomCache`) to initialize the cache only when needed, and reference the cached elements thereafter to improve performance and reduce CPU usage.
