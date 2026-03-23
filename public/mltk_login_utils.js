@@ -8,8 +8,24 @@ const CONFIG = {
   MOCK_PASSWORD: '0408-1998-XXXX',
 };
 
+let domCache = null;
+
+function getDomCache() {
+  if (!domCache && typeof document !== 'undefined') {
+    domCache = {
+      inputField: document.getElementById('serial-input'),
+      errorMsg: document.getElementById('error-msg'),
+      inputGroup: document.getElementById('input-group'),
+      lockdownScreen: document.getElementById('lockdown-screen'),
+      successScreen: document.getElementById('success-screen'),
+    };
+  }
+  return domCache;
+}
+
 function setupEventListeners() {
-  const inputField = document.getElementById('serial-input');
+  const cache = getDomCache();
+  const inputField = cache ? cache.inputField : null;
   if (inputField) {
     // Set initial width
     inputField.style.width = inputField.value ? inputField.value.length + 'ch' : '0ch';
@@ -31,7 +47,9 @@ function setupEventListeners() {
   }
 
   document.addEventListener('click', () => {
-    const lockdownScreen = document.getElementById('lockdown-screen');
+    const cache = getDomCache();
+    const lockdownScreen = cache ? cache.lockdownScreen : null;
+    const inputField = cache ? cache.inputField : null;
     if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
       inputField.focus();
     }
@@ -70,10 +88,11 @@ async function attemptApiVerification(code) {
 
 async function verifyCode(e) {
   if (e) e.preventDefault();
-  const inputField = document.getElementById('serial-input');
+  const cache = getDomCache();
+  const inputField = cache ? cache.inputField : null;
   const code = inputField ? inputField.value.trim().toUpperCase() : '';
-  const errorMsg = document.getElementById('error-msg');
-  const inputGroup = document.getElementById('input-group');
+  const errorMsg = cache ? cache.errorMsg : null;
+  const inputGroup = cache ? cache.inputGroup : null;
 
   try {
     const success = await attemptApiVerification(code).catch((apiError) => {
@@ -85,9 +104,9 @@ async function verifyCode(e) {
       if (document.body) {
         document.body.style.backgroundColor = '#050505';
       }
-      const lockdownScreen = document.getElementById('lockdown-screen');
+      const lockdownScreen = cache ? cache.lockdownScreen : null;
       if (lockdownScreen) lockdownScreen.style.display = 'none';
-      const successScreen = document.getElementById('success-screen');
+      const successScreen = cache ? cache.successScreen : null;
       if (successScreen) successScreen.style.display = 'flex';
 
       // Briefly display success screen then redirect to surveillance dashboard
