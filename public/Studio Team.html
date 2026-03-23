@@ -67,6 +67,10 @@
         text-transform: uppercase;
       }
 
+      .brand-logo:hover, .brand-logo:focus-visible {
+        color: var(--accent-red);
+      }
+
       .quarter-clock {
         width: 30px;
         height: 30px;
@@ -74,6 +78,12 @@
         border-left: 3px solid var(--text-color);
         border-radius: 100% 0 0 0;
         position: relative;
+        transition: border-color 0.3s ease;
+      }
+
+      .brand-logo:hover .quarter-clock, .brand-logo:focus-visible .quarter-clock {
+        border-top-color: var(--accent-red);
+        border-left-color: var(--accent-red);
       }
 
       .quarter-clock::before {
@@ -322,6 +332,8 @@
 
           <article class="team-card" tabindex="0">
             <div class="team-card-image" role="img" aria-label="Portrait of Jordan Clarke"></div>
+            <h2>Jordan Clarke</h2>
+            <div class="role">Creative Director, Illustration</div>
             <h2>Jordan Clarke <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
             <div class="role">Creative Director, Illustration (Placeholder)</div>
             <p>Jordan is the visual mastermind shaping the world of 3minsto9. With a background in indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic details, and the kind of art that makes you look twice.</p>
@@ -333,6 +345,8 @@
 
           <article class="team-card" tabindex="0">
             <div class="team-card-image" role="img" aria-label="Portrait of Sam Rivera"></div>
+            <h2>Sam Rivera</h2>
+            <div class="role">Lead Puzzlesmith, Narrative</div>
             <h2>Sam Rivera <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
             <div class="role">Lead Puzzlesmith, Narrative (Placeholder)</div>
             <p>Sam weaves complex Alternate Reality Game mechanics into physical media. Former cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to be solved, blurring the line between fiction and reality.</p>
@@ -344,6 +358,8 @@
 
           <article class="team-card" tabindex="0">
             <div class="team-card-image" role="img" aria-label="Portrait of Alex Chen"></div>
+            <h2>Alex Chen</h2>
+            <div class="role">Operations & Production</div>
             <h2>Alex Chen <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
             <div class="role">Operations & Production (Placeholder)</div>
             <p>The glue that holds the studio together. Alex manages the supply chain, coordinates physical print runs with our bespoke manufacturing partners, and ensures every volume arrives in pristine (or intentionally distressed) condition.</p>
