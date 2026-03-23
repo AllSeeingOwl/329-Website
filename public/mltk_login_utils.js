@@ -76,7 +76,7 @@ async function verifyCode(e) {
   const inputGroup = document.getElementById('input-group');
 
   try {
-    const success = await attemptApiVerification(code).catch(apiError => {
+    const success = await attemptApiVerification(code).catch((apiError) => {
       console.error('Error in verification:', apiError);
       return false;
     });

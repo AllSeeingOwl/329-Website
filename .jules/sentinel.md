@@ -39,3 +39,8 @@
 **Vulnerability:** Denial of Service (DoS) and potential information disclosure via unhandled `URIError` exceptions when parsing request paths.
 **Learning:** Built-in JavaScript functions like `decodeURIComponent` throw a `URIError` when encountering malformed URI encoding (e.g., `%ff`). If called directly on `req.path` within Express middleware without a `try...catch` block, it bypasses standard error handlers, crashing the request or bubbling up to the default Express error handler which might expose stack traces in development/testing.
 **Prevention:** Always wrap `decodeURIComponent` calls in a `try...catch` block when processing untrusted user input or request paths, and handle the error gracefully (e.g., returning a `400 Bad Request`).
+
+## 2026-11-20 - Unbounded Input Lengths (Defense in Depth)
+**Vulnerability:** Missing input length limitations (`maxlength`) on form elements (e.g., text, email, textarea).
+**Learning:** Allowing unbounded input from the frontend can increase the risk of excessively large payloads being submitted, which may contribute to DoS conditions or performance degradation, even if the backend ultimately has a payload limit. Adding limits to the frontend adds a layer of defense-in-depth.
+**Prevention:** As a defense-in-depth security measure against client-side DoS and excessively large payloads, always explicitly define reasonable `maxlength` attributes on HTML `<input>` and `<textarea>` form elements.
