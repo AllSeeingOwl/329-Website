@@ -33,8 +33,213 @@
         }
       }
     </style>
-  </head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-color: #faf9f6;
+        --text-color: #111111;
+        --accent-red: #ff003c;
+        --border-color: #e0e0e0;
+      }
+
+      .studio-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Inter', sans-serif;
+      }
+
+      .studio-header .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .studio-header .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .studio-header .quarter-clock {
+        width: 30px;
+        height: 30px;
+        border-top: 3px solid var(--text-color);
+        border-left: 3px solid var(--text-color);
+        border-radius: 100% 0 0 0;
+        position: relative;
+      }
+
+      .studio-header .quarter-clock::before {
+        content: '12';
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .studio-header .quarter-clock::after {
+        content: '9';
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .studio-header .clock-hands {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--accent-red);
+        border-left: 2px solid var(--accent-red);
+      }
+
+      .studio-header .nav-links {
+        display: flex;
+        gap: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .studio-header .nav-links a {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s ease;
+      }
+
+      .studio-header .nav-links a:hover {
+        color: var(--accent-red);
+      }
+
+      @media (max-width: 768px) {
+        .studio-header .container {
+          flex-direction: column;
+          gap: 20px;
+        }
+      }
+    </style>
+
+
+    <style id="hamburger-override">
+      header, .studio-header {
+        position: relative !important;
+        z-index: 1000 !important;
+        background-color: var(--bg-color) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        padding: 20px 0 !important;
+      }
+      .nav-inner {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        padding: 0 20px !important;
+      }
+      .brand-logo {
+        display: flex !important;
+        align-items: center !important;
+        gap: 15px !important;
+        font-weight: 900 !important;
+        font-size: 1.5rem !important;
+        letter-spacing: -1px !important;
+        text-transform: uppercase !important;
+        text-decoration: none !important;
+        color: inherit !important;
+      }
+      .menu-toggle {
+        display: block !important;
+        background: none !important;
+        border: none !important;
+        font-size: 2rem !important;
+        cursor: pointer !important;
+        color: var(--text-color) !important;
+        padding: 5px !important;
+        line-height: 1 !important;
+      }
+      .menu-toggle:focus-visible {
+        outline: 2px solid var(--accent-red) !important;
+        outline-offset: 4px !important;
+      }
+      .nav-links {
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100% !important;
+        background-color: var(--bg-color) !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 20px 0 !important;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        z-index: 999 !important;
+      }
+      .nav-links.active {
+        display: flex !important;
+      }
+      .nav-links a {
+        display: block !important;
+        padding: 15px 0 !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 1.1rem !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
+        text-decoration: none !important;
+      }
+      .nav-links a:hover {
+        color: var(--accent-red) !important;
+        background-color: #f5f5f5 !important;
+      }
+      .nav-links a:last-child {
+        border-bottom: none !important;
+      }
+    </style>
+</head>
   <body>
+            <header class="studio-header">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand-logo">
+          <div class="quarter-clock">
+            <div class="clock-hands"></div>
+          </div>
+          3minsto9
+        </a>
+        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+          &#9776;
+        </button>
+        <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
+          <a href="Surface%20Home%20Page.html">Home</a>
+          <a href="Releases.html">Releases</a>
+          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
+          <a href="Studio%20Team.html">Team</a>
+          <a href="Store.html">Store</a>
+          <a href="Developer%20Blog.html">Dev Blog</a>
+          <a href="Studio%20Contact%20Us.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
     <div class="container">
       <h1>Privacy Policy</h1>
       <p>Last updated: [Current Date]</p>
