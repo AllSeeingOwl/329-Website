@@ -181,10 +181,7 @@
       function generateRandomHex() {
         const array = new Uint32Array(1);
         globalThis.crypto.getRandomValues(array);
-        return (array[0] % 0xffffff)
-          .toString(16)
-          .padStart(6, '0')
-          .toUpperCase();
+        return (array[0] % 0xffffff).toString(16).padStart(6, '0').toUpperCase();
       }
 
       function startBootSequence() {
