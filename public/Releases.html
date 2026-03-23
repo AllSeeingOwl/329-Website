@@ -4,8 +4,132 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Releases</title>
-  </head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-color: #faf9f6;
+        --text-color: #111111;
+        --accent-red: #ff003c;
+        --border-color: #e0e0e0;
+      }
+
+      .studio-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Inter', sans-serif;
+      }
+
+      .studio-header .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .studio-header .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .studio-header .quarter-clock {
+        width: 30px;
+        height: 30px;
+        border-top: 3px solid var(--text-color);
+        border-left: 3px solid var(--text-color);
+        border-radius: 100% 0 0 0;
+        position: relative;
+      }
+
+      .studio-header .quarter-clock::before {
+        content: '12';
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .studio-header .quarter-clock::after {
+        content: '9';
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .studio-header .clock-hands {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--accent-red);
+        border-left: 2px solid var(--accent-red);
+      }
+
+      .studio-header .nav-links {
+        display: flex;
+        gap: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .studio-header .nav-links a {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s ease;
+      }
+
+      .studio-header .nav-links a:hover {
+        color: var(--accent-red);
+      }
+
+      @media (max-width: 768px) {
+        .studio-header .container {
+          flex-direction: column;
+          gap: 20px;
+        }
+      }
+    </style>
+</head>
   <body>
+    <header class="studio-header">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand-logo">
+          <div class="quarter-clock">
+            <div class="clock-hands"></div>
+          </div>
+          3minsto9
+        </a>
+        <nav class="nav-links" aria-label="Main Navigation">
+          <a href="Surface%20Home%20Page.html">Home</a>
+          <a href="Releases.html" style="color: var(--accent-red)">Releases</a>
+          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
+          <a href="Studio%20Team.html">Team</a>
+          <a href="Store.html">Store</a>
+          <a href="Developer%20Blog.html">Dev Blog</a>
+          <a href="Studio%20Contact%20Us.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
     <h1>Placeholder: Releases</h1>
     <p>This page is currently under construction.</p>
     <a href="Surface%20Home%20Page.html">Return Home</a>
