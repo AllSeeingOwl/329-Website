@@ -29,6 +29,14 @@ if (typeof module !== 'undefined' && module.exports) {
     domCache = null;
   };
 }
+const lockdownClickHandler = () => {
+  const cache = getDomCache();
+  const lockdownScreen = cache ? cache.lockdownScreen : null;
+  const inputField = cache ? cache.inputField : null;
+  if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
+    inputField.focus();
+  }
+};
 
 function setupEventListeners() {
   const cache = getDomCache();
@@ -53,14 +61,8 @@ function setupEventListeners() {
     });
   }
 
-  document.addEventListener('click', () => {
-    const cache = getDomCache();
-    const lockdownScreen = cache ? cache.lockdownScreen : null;
-    const inputField = cache ? cache.inputField : null;
-    if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
-      inputField.focus();
-    }
-  });
+  document.removeEventListener('click', lockdownClickHandler);
+  document.addEventListener('click', lockdownClickHandler);
 }
 
 async function performApiFetch(code) {
@@ -155,5 +157,6 @@ if (typeof module !== 'undefined' && module.exports) {
     attemptApiVerification,
     performApiFetch,
     CONFIG,
+    clearDomCache: () => { domCache = null; }
   };
 }

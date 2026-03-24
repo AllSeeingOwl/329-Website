@@ -764,13 +764,23 @@
           });
         });
 
+        // ⚡ Bolt: Debounce the resize event using requestAnimationFrame to prevent layout thrashing.
+        // Reading scrollHeight forces a synchronous reflow. Doing this on every resize event
+        // (which fires multiple times per frame) causes significant performance degradation.
+        let resizeTicking = false;
         window.addEventListener('resize', () => {
-          accordions.forEach(btn => {
-            if (btn.getAttribute('aria-expanded') === 'true') {
-              const content = document.getElementById(btn.getAttribute('aria-controls'));
-              content.style.maxHeight = content.scrollHeight + 'px';
-            }
-          });
+          if (!resizeTicking) {
+            window.requestAnimationFrame(() => {
+              accordions.forEach(btn => {
+                if (btn.getAttribute('aria-expanded') === 'true') {
+                  const content = document.getElementById(btn.getAttribute('aria-controls'));
+                  content.style.maxHeight = content.scrollHeight + 'px';
+                }
+              });
+              resizeTicking = false;
+            });
+            resizeTicking = true;
+          }
         });
       });
     </script>
