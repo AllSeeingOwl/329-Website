@@ -11,6 +11,11 @@ const {
 
 describe('MLTK Login Gate Tests', () => {
   let originalFetch;
+  let mltkUtils;
+
+  beforeAll(() => {
+    mltkUtils = require('./public/mltk_login_utils');
+  });
 
   beforeEach(() => {
     // Setup DOM
@@ -23,6 +28,10 @@ describe('MLTK Login Gate Tests', () => {
             </div>
             <div id="success-screen" style="display: none;"></div>
         `;
+
+    if (mltkUtils._resetDomCache) {
+      mltkUtils._resetDomCache();
+    }
 
     // Mock fetch
     originalFetch = global.fetch;

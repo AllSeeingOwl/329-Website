@@ -23,6 +23,13 @@ function getDomCache() {
   return domCache;
 }
 
+// Ensure tests can reset domCache
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports._resetDomCache = function() {
+    domCache = null;
+  };
+}
+
 function setupEventListeners() {
   const cache = getDomCache();
   const inputField = cache ? cache.inputField : null;

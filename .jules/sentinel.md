@@ -44,3 +44,8 @@
 **Vulnerability:** Missing input length limitations (`maxlength`) on form elements (e.g., text, email, textarea).
 **Learning:** Allowing unbounded input from the frontend can increase the risk of excessively large payloads being submitted, which may contribute to DoS conditions or performance degradation, even if the backend ultimately has a payload limit. Adding limits to the frontend adds a layer of defense-in-depth.
 **Prevention:** As a defense-in-depth security measure against client-side DoS and excessively large payloads, always explicitly define reasonable `maxlength` attributes on HTML `<input>` and `<textarea>` form elements.
+
+## 2026-12-05 - Missing Cache Control Headers for Sensitive Content
+**Vulnerability:** Sensitive API responses or authenticated views can be cached by browsers, proxies, or CDNs if explicit cache prevention directives are not used, leading to information disclosure.
+**Learning:** A global Express middleware handles setting security headers. Including `Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate`, `Pragma: no-cache`, and `Expires: 0` alongside the existing CSP and XSS headers provides robust defense-in-depth against unauthorized data recovery via local or network caches.
+**Prevention:** Always explicitly define `Cache-Control` directives in the global security headers middleware to ensure sensitive data (such as decrypted ARG files or tokenized paths) is not inadvertently stored offline or in proxy caches.
