@@ -37,3 +37,8 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` or `document.querySelector` inside frequently triggered event handlers (like `input` or `click`) or core validation functions (like `verifyCode`) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
 **Action:** Query DOM elements once and store them in a persistent cache object. Use a helper function (e.g., `getDomCache`) to initialize the cache only when needed, and reference the cached elements thereafter to improve performance and reduce CPU usage.
+
+## 2026-03-24 - Debounce Resize Events with requestAnimationFrame
+
+**Learning:** Binding a `resize` event listener that reads layout properties like `scrollHeight` or `clientHeight` forces a synchronous reflow. Because `resize` events can fire dozens of times per second, executing this without a debounce causes layout thrashing and severe main-thread blocking.
+**Action:** Use `requestAnimationFrame` to debounce the `resize` event, ensuring that layout calculations and DOM updates are batched and executed at most once per frame.

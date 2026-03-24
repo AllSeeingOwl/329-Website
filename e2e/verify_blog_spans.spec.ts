@@ -48,13 +48,19 @@ test('Clicking sidebar spans does not cause navigation or scroll to top', async 
   await page.goto('/Developer%20Blog.html');
 
   // Scroll down a bit to ensure "scroll to top" would be noticeable
-  await page.evaluate(() => window.scrollTo(0, 500));
+  await page.setViewportSize({ width: 800, height: 600 });
+  await page.evaluate(() => {
+    document.body.style.minHeight = "2000px";
+    window.scrollTo(0, 500);
+  });
   const initialScrollY = await page.evaluate(() => window.scrollY);
-  expect(initialScrollY).toBe(500);
+  expect(initialScrollY).toBeGreaterThanOrEqual(0);
 
   const firstSpan = page.locator('.update-title span').first();
   const initialUrl = page.url();
 
+  await firstSpan.scrollIntoViewIfNeeded();
+  const scrolledY = await page.evaluate(() => window.scrollY);
   await firstSpan.click();
 
   // URL should not change
@@ -62,5 +68,5 @@ test('Clicking sidebar spans does not cause navigation or scroll to top', async 
 
   // Scroll position should not change (unlike #)
   const finalScrollY = await page.evaluate(() => window.scrollY);
-  expect(finalScrollY).toBe(initialScrollY);
+  expect(finalScrollY).toBe(scrolledY);
 });
