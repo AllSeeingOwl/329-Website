@@ -5,28 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3minsto9 Operations - Portal</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Anton&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Anton&family=Inter:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
       rel="stylesheet"
     />
     <style>
+      :root {
+        --studio-bg: #faf9f6;
+        --studio-text: #111111;
+        --studio-accent: #ff003c;
+        --mltk-bg: #050505;
+        --mltk-text: #e0e0e0;
+        --mltk-accent: #ff003c;
+      }
+
       body,
       html {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100vh;
-        background-color: #050505;
-        color: #e0e0e0;
-        font-family: 'Share Tech Mono', monospace;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         overflow: hidden;
         position: relative;
+        display: flex;
+        font-family: 'Inter', sans-serif;
       }
 
-      /* Glitch effect overlay */
-      body::before {
+      /* Base Split Sections */
+      .split {
+        width: 50%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: width 0.3s ease;
+      }
+
+      /* Studio Operations (Left) */
+      .split.studio {
+        background-color: var(--studio-bg);
+        color: var(--studio-text);
+        font-family: 'Inter', sans-serif;
+      }
+
+      /* Corporate Intranet (Right) */
+      .split.mltk {
+        background-color: var(--mltk-bg);
+        color: var(--mltk-text);
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      /* Glitch effect overlay for MLTK side only */
+      .split.mltk::before {
         content: '';
         position: absolute;
         top: 0;
@@ -44,11 +75,16 @@
         z-index: 10;
       }
 
-      .container {
+      /* Center Header Container */
+      .header-container {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
         text-align: center;
-        z-index: 5;
-        max-width: 800px;
-        padding: 20px;
+        z-index: 20;
+        pointer-events: none;
+        mix-blend-mode: difference;
       }
 
       .main-title {
@@ -61,36 +97,59 @@
         text-shadow:
           2px 2px 0px rgba(255, 0, 60, 0.5),
           -2px -2px 0px rgba(0, 255, 255, 0.5);
-        animation: text-glitch 3s infinite;
       }
 
       .subtitle {
+        font-family: 'Inter', sans-serif;
         font-size: 1.2rem;
-        color: #888;
-        margin-bottom: 50px;
+        color: #ffffff;
         letter-spacing: 2px;
       }
 
-      .portal-grid {
-        display: flex;
-        gap: 40px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
+      /* Cards Styling */
       .portal-card {
-        background-color: #111;
-        border: 1px solid #333;
         width: 300px;
         padding: 40px 20px;
         transition: all 0.3s ease;
         text-decoration: none;
         color: inherit;
         position: relative;
+        text-align: center;
+        z-index: 5;
+      }
+
+      /* Studio Card */
+      .portal-card.studio-card {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      }
+
+      .portal-card.studio-card:hover,
+      .portal-card.studio-card:focus-visible {
+        border-color: var(--studio-text);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+        outline: none;
+      }
+
+      .portal-card.studio-card .card-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+      }
+
+      .portal-card.studio-card .card-desc {
+        color: #555;
+      }
+
+      /* MLTK Card */
+      .portal-card.mltk-card {
+        background-color: #111;
+        border: 1px solid #333;
         overflow: hidden;
       }
 
-      .portal-card::before {
+      .portal-card.mltk-card::before {
         content: '';
         position: absolute;
         top: 0;
@@ -101,31 +160,43 @@
         transition: 0.5s;
       }
 
-      .portal-card:hover::before,
-      .portal-card:focus-visible::before {
+      .portal-card.mltk-card:hover::before,
+      .portal-card.mltk-card:focus-visible::before {
         left: 100%;
       }
 
-      .portal-card.studio:hover,
-      .portal-card.studio:focus-visible {
-        border-color: #fff;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        transform: translateY(-5px);
-        outline: none;
-      }
-
-      .portal-card.mltk:hover,
-      .portal-card.mltk:focus-visible {
-        border-color: #ff003c;
+      .portal-card.mltk-card:hover,
+      .portal-card.mltk-card:focus-visible {
+        border-color: var(--mltk-accent);
         box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
         transform: translateY(-5px);
         outline: none;
       }
 
-      .portal-card.mltk:hover .card-title,
-      .portal-card.mltk:focus-visible .card-title {
-        color: #ff003c;
-        text-shadow: 0 0 8px #ff003c;
+      .portal-card.mltk-card:hover .card-title,
+      .portal-card.mltk-card:focus-visible .card-title {
+        color: var(--mltk-accent);
+        text-shadow: 0 0 8px var(--mltk-accent);
+      }
+
+      /* Card Content */
+      .card-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        opacity: 0.8;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s;
+      }
+
+      .card-desc {
+        font-size: 0.9rem;
+        line-height: 1.5;
       }
 
       /* Maintenance Styles */
@@ -159,7 +230,7 @@
       }
 
       .maintenance-label.mltk-label {
-        background-color: #ff003c;
+        background-color: var(--mltk-accent);
         color: #fff;
         font-family: 'Anton', sans-serif;
         text-transform: uppercase;
@@ -167,26 +238,6 @@
         letter-spacing: 3px;
         border: 2px dashed #000;
         text-shadow: 2px 2px 0px #000;
-      }
-
-      .card-icon {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        opacity: 0.8;
-      }
-
-      .card-title {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: color 0.3s;
-      }
-
-      .card-desc {
-        font-size: 0.9rem;
-        color: #777;
-        line-height: 1.5;
       }
 
       /* Subtle text glitch animation */
@@ -213,53 +264,95 @@
         }
       }
 
-      .footer-links {
-        margin-top: 60px;
-        font-size: 0.8rem;
-        color: #555;
+      .main-title {
+        animation: text-glitch 3s infinite;
+      }
+
+      /* Footer Links Container */
+      .footer-container {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
-        justify-content: center;
         gap: 20px;
+        z-index: 20;
+        mix-blend-mode: difference;
       }
 
-      .footer-links a {
-        color: #555;
+      .footer-container a {
+        color: #ffffff;
         text-decoration: none;
-        transition: color 0.2s;
+        font-size: 0.8rem;
+        font-family: 'Inter', sans-serif;
+        transition: opacity 0.2s;
       }
 
-      .footer-links a:hover,
-      .footer-links a:focus-visible {
-        color: #fff;
-        outline: 1px dashed #fff;
+      .footer-container a:hover,
+      .footer-container a:focus-visible {
+        opacity: 0.7;
+        outline: 1px dashed #ffffff;
         outline-offset: 4px;
       }
 
+      /* Responsive styling */
       @media (max-width: 700px) {
         body,
         html {
+          flex-direction: column;
           height: auto;
           overflow: auto;
         }
-        .container {
-          padding: 40px 20px;
+        .split {
+          width: 100%;
+          height: auto;
+          padding: 80px 20px;
+          box-sizing: border-box;
+        }
+        .header-container {
+          position: static;
+          transform: none;
+          margin: 40px auto 20px;
+          mix-blend-mode: normal;
+          order: 0;
+          width: 100%;
+          text-align: center;
+        }
+        .main-title, .subtitle {
+          color: var(--studio-text);
+          text-shadow: none;
         }
         .main-title {
           font-size: 3rem;
+          color: #000;
         }
-        .portal-grid {
+        .subtitle {
+          color: #555;
+        }
+        .footer-container {
+          position: static;
+          transform: none;
           flex-direction: column;
           align-items: center;
-        }
-        .portal-card {
-          width: 100%;
-          box-sizing: border-box;
-          padding: 30px 20px;
-        }
-        .footer-links {
-          flex-direction: column;
           gap: 10px;
           margin-top: 40px;
+          padding-bottom: 40px;
+          mix-blend-mode: normal;
+        }
+        .footer-container a {
+          color: var(--mltk-text);
+        }
+        .split.studio {
+          order: 1; /* Keep Studio on top on mobile */
+        }
+        .split.mltk {
+          order: 2;
+        }
+        .footer-container {
+          order: 3;
+          background-color: var(--mltk-bg);
+          width: 100%;
+          padding-top: 20px;
         }
       }
 
@@ -274,39 +367,43 @@
     </style>
   </head>
   <body>
-    <div class="container">
+    <!-- Center Header -->
+    <div class="header-container">
       <div class="main-title">3minsto9</div>
       <div class="subtitle">SELECT YOUR INTERFACE</div>
+    </div>
 
-      <div class="portal-grid">
-        <!-- Real World / Studio Side -->
-        <a href="Surface%20Home%20Page.html" class="portal-card studio" id="studio-portal">
-          <div class="card-icon">🔲</div>
-          <div class="card-title">STUDIO OPERATIONS</div>
-          <div class="card-desc">
-            Enter the public-facing hub for 3minsto9. Access the manifesto, secure physical field
-            guides, and contact the real-world creation team.
-          </div>
-        </a>
+    <!-- Left Split: Studio Operations -->
+    <div class="split studio">
+      <a href="Surface%20Home%20Page.html" class="portal-card studio-card" id="studio-portal">
+        <div class="card-icon">🔲</div>
+        <div class="card-title">STUDIO OPERATIONS</div>
+        <div class="card-desc">
+          Enter the public-facing hub for 3minsto9. Access the manifesto, secure physical field
+          guides, and contact the real-world creation team.
+        </div>
+      </a>
+    </div>
 
-        <!-- ARG / In-Universe Side -->
-        <a href="MLTK%20Login%20Gate.html" class="portal-card mltk" id="mltk-portal">
-          <div class="card-icon">👁‍🗨</div>
-          <div class="card-title">CORPORATE INTRANET</div>
-          <div class="card-desc">
-            WARNING: Restricted access. Initialize connection to the MLTK Network Mainframe.
-            Unauthorized telemetry will be logged.
-          </div>
-        </a>
-      </div>
+    <!-- Right Split: MLTK Corporate Intranet -->
+    <div class="split mltk">
+      <a href="MLTK%20Login%20Gate.html" class="portal-card mltk-card" id="mltk-portal">
+        <div class="card-icon">👁‍🗨</div>
+        <div class="card-title">CORPORATE INTRANET</div>
+        <div class="card-desc">
+          WARNING: Restricted access. Initialize connection to the MLTK Network Mainframe.
+          Unauthorized telemetry will be logged.
+        </div>
+      </a>
+    </div>
 
-      <div class="footer-links">
-        <a href="Business%20Privacy%20Policy.html">Privacy Policy</a>
-        <a href="Business%20Terms%20of%20Service.html">Terms of Service</a>
-        <a href="Studio%20FAQ.html">FAQ</a>
-        <a href="Studio%20Contact%20Us.html">Contact</a>
-        <a href="Studio%20Press%20Kit.html">Press Kit</a>
-      </div>
+    <!-- Footer Links -->
+    <div class="footer-container">
+      <a href="Business%20Privacy%20Policy.html">Privacy Policy</a>
+      <a href="Business%20Terms%20of%20Service.html">Terms of Service</a>
+      <a href="Studio%20FAQ.html">FAQ</a>
+      <a href="Studio%20Contact%20Us.html">Contact</a>
+      <a href="Studio%20Press%20Kit.html">Press Kit</a>
     </div>
 
     <script>
