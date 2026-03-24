@@ -13,6 +13,9 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME sniffing
   res.setHeader('X-Frame-Options', 'DENY'); // Prevent clickjacking
   res.setHeader('X-XSS-Protection', '1; mode=block'); // Enable browser XSS filtering
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate'); // Prevent caching of sensitive data
+  res.setHeader('Pragma', 'no-cache'); // HTTP 1.0 backward compatibility
+  res.setHeader('Expires', '0'); // Proxies
   // Restrict resource loading to trusted sources
   res.setHeader(
     'Content-Security-Policy',

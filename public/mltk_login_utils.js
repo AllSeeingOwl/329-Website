@@ -23,6 +23,12 @@ function getDomCache() {
   return domCache;
 }
 
+// Ensure tests can reset domCache
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports._resetDomCache = function() {
+    domCache = null;
+  };
+}
 const lockdownClickHandler = () => {
   const cache = getDomCache();
   const lockdownScreen = cache ? cache.lockdownScreen : null;
