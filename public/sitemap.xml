@@ -36,4 +36,10 @@
       <changefreq>yearly</changefreq>
       <priority>0.7</priority>
    </url>
+   <url>
+      <loc>https://www.yourdomain.com/Studio%20Press%20Kit.html</loc>
+      <lastmod>2026-03-23</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.6</priority>
+   </url>
 </urlset>
