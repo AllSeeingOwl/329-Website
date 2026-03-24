@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How 3minsto9 Puzzles Work | 3minsto9 Operations</title>
+    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #faf9f6;
+        --text-color: #111111;
+        --accent-red: #ff003c;
+        --border-color: #e0e0e0;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        animation: fadeIn 1.2s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+      }
+
+      .nav-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 900;
+        font-size: 1.5rem;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+      }
+
+      .quarter-clock {
+        width: 30px;
+        height: 30px;
+        border-top: 3px solid var(--text-color);
+        border-left: 3px solid var(--text-color);
+        border-radius: 100% 0 0 0;
+        position: relative;
+      }
+
+      .quarter-clock::before {
+        content: '12';
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .quarter-clock::after {
+        content: '9';
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        font-size: 0.6rem;
+        font-weight: bold;
+      }
+
+      .clock-hands {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 15px;
+        height: 15px;
+        border-top: 2px solid var(--accent-red);
+        border-left: 2px solid var(--accent-red);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
+        color: var(--accent-red);
+        outline: none;
+      }
+
+      .hero {
+        padding: 100px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        line-height: 1.1;
+        margin: 0 0 20px 0;
+        font-weight: 700;
+      }
+
+      .hero p {
+        font-size: 1.5rem;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      section {
+        padding: 80px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      section:last-of-type {
+        border-bottom: none;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin: 0 0 15px 0;
+        text-transform: uppercase;
+      }
+
+      .protocols-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+
+      .protocol-card {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        padding: 40px;
+        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05);
+      }
+
+      .protocol-card h3 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--accent-red);
+        font-family: 'Playfair Display', serif;
+      }
+
+      .protocol-card p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .protocol-card ul {
+        margin-bottom: 30px;
+        padding-left: 20px;
+        line-height: 1.6;
+      }
+
+      .lazy-image {
+        background-color: #eae8e1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border: 1px solid var(--border-color);
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+      }
+
+      .lazy-image.visible {
+        opacity: 1;
+      }
+
+      .aspect-16-9 {
+        aspect-ratio: 16 / 9;
+      }
+
+      .aspect-4-3 {
+        aspect-ratio: 4 / 3;
+      }
+
+      .aspect-1-1 {
+        aspect-ratio: 1 / 1;
+      }
+
+      .lazy-image::after {
+        content: attr(data-placeholder);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .meta-puzzle-content {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.2rem;
+        line-height: 1.8;
+      }
+
+      /* Accordion Styles */
+      .accordion-item {
+        margin-top: 30px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: #fff;
+      }
+
+      .accordion-header {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 20px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-color);
+      }
+
+      .accordion-header:hover,
+      .accordion-header:focus-visible {
+        color: var(--accent-red);
+        background-color: #f9f9f9;
+        outline: none;
+      }
+
+      .accordion-icon {
+        transition: transform 0.3s ease;
+      }
+
+      .accordion-header[aria-expanded="true"] .accordion-icon {
+        transform: rotate(180deg);
+      }
+
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0 20px;
+        background: #faf9f6;
+      }
+
+      .accordion-content.open {
+        max-height: 1000px; /* arbitrary large value for transition */
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .step-card {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .step-number {
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--border-color);
+        line-height: 1;
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+      }
+
+      .step-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+
+      .step-card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      .difficulty-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .difficulty-card {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        padding: 30px 20px;
+        text-align: center;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.05);
+      }
+
+      .difficulty-card h3 {
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+
+      .difficulty-card.easy h3 { color: #2e7d32; }
+      .difficulty-card.medium h3 { color: #ed6c02; }
+      .difficulty-card.hard h3 { color: #d32f2f; }
+      .difficulty-card.expert h3 { color: var(--text-color); }
+
+      .difficulty-card p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #444;
+      }
+
+      .resources-section {
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        text-align: center;
+      }
+
+      .resources-section .section-header h2 {
+        color: var(--bg-color);
+      }
+
+      .resource-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+      }
+
+      .btn-resource {
+        display: inline-block;
+        border: 2px solid var(--border-color);
+        color: var(--bg-color);
+        padding: 15px 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-resource:hover,
+      .btn-resource:focus-visible {
+        background-color: var(--accent-red);
+        border-color: var(--accent-red);
+        color: #fff;
+        outline: none;
+      }
+
+      .faq-grid {
+        max-width: 800px;
+        margin: 0 auto;
+        display: grid;
+        gap: 30px;
+      }
+
+      .faq-item h3 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        color: var(--accent-red);
+      }
+
+      .faq-item p {
+        line-height: 1.6;
+        color: #444;
+      }
+
+      footer {
+        padding: 40px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 900px) {
+        .protocols-grid,
+        .steps-grid,
+        .difficulty-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+          font-size: 3rem;
+        }
+
+        .hero p {
+          font-size: 1.2rem;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          gap: 20px;
+        }
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+        body, html {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="studio-header">
+      <div class="container nav-inner">
+        <a href="index.html" class="brand-logo">
+          <div class="quarter-clock">
+            <div class="clock-hands"></div>
+          </div>
+          3minsto9
+        </a>
+        <nav class="nav-links" aria-label="Main Navigation">
+          <a href="Surface%20Home%20Page.html">Home</a>
+          <a href="Releases.html">Releases</a>
+          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
+          <a href="Studio%20Team.html">Team</a>
+          <a href="Store.html">Store</a>
+          <a href="Studio%20FAQ.html">FAQ</a>
+          <a href="Developer%20Blog.html">Dev Blog</a>
+          <a href="Studio%20Contact%20Us.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container" style="border-bottom: none; padding-bottom: 40px;">
+        <h1>How 3minsto9 Puzzles Work</h1>
+        <p>Understanding the Comicsmith Protocol and Puzzlesmith Protocol</p>
+      </section>
+
+      <section class="container" style="padding-top: 40px;">
+        <div class="protocols-grid">
+          <div class="protocol-card">
+            <h3>Comicsmith Protocol</h3>
+            <p>Detailed cross-sections and vandalism layers create an interactive canvas.</p>
+            <ul>
+              <li>Where's Wally style complexity</li>
+              <li>Raw, DIY punk aesthetics</li>
+              <li>Sterile corporate background + aggressive character vandalism</li>
+              <li>Creates friction between "official" and "vandal" narratives</li>
+            </ul>
+            <div class="lazy-image aspect-16-9" role="img" aria-label="Example of Comicsmith Protocol illustration showing corporate background with vandalism" data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE"></div>
+          </div>
+          <div class="protocol-card">
+            <h3>Puzzlesmith Protocol</h3>
+            <p>Multi-tiered meta-puzzle layer called "The Game of Unknown".</p>
+            <ul>
+              <li>Ciphers hidden in copyright pages</li>
+              <li>Physical code wheels and deductive grids</li>
+              <li>Readers become active detectives</li>
+              <li>Functional mechanics embedded in art and text</li>
+            </ul>
+            <div class="lazy-image aspect-16-9" role="img" aria-label="Example of Puzzlesmith Protocol showing hidden cipher in a document" data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="section-header">
+          <h2>What's a Meta-Puzzle?</h2>
+        </div>
+        <div class="meta-puzzle-content">
+          <p>A meta-puzzle is a puzzle that uses the solutions or elements of other, smaller puzzles to reveal a hidden, overarching message. In our books, you might find several standalone ciphers or riddles that, once solved, provide the pieces needed to unlock a larger mystery hidden within the narrative framework.</p>
+
+          <p><strong>Example from "The Unknown Field Guide" (Vol. 0):</strong><br>
+          In Vol. 0, a 1950s-style tourist brochure was &quot;corrupted&quot; by Team Rabbit graffiti. Hidden code in margin notes, when decoded, reveals classified MLTK data. Readers must determine what is &quot;official&quot; brochure content vs. &quot;vandal&quot; clues.</p>
+
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false" aria-controls="walkthrough-content" tabindex="0">
+              See an example puzzle walkthrough
+              <span class="accordion-icon" aria-hidden="true">&#9660;</span>
+            </button>
+            <div id="walkthrough-content" class="accordion-content">
+              <p><strong>Step 1: The Setup</strong><br>
+              You find a seemingly innocuous list of "Recommended Hotels" in the brochure.</p>
+              <p><strong>Step 2: The Clue</strong><br>
+              Team Rabbit has crossed out certain letters in the hotel names using a specific color of red ink.</p>
+              <p><strong>Step 3: The Deduction</strong><br>
+              By reading only the crossed-out letters in order, you spell out a URL leading to a hidden page on the MLTK Surveillance Dashboard.</p>
+              <p><strong>Step 4: The Reward</strong><br>
+              Accessing the dashboard reveals a downloadable file containing backstory on a key character.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="section-header">
+          <h2>How to Read the Layers</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h3>Spot the Vandalism Layer</h3>
+            <p>Look for Team Rabbit tags, unnatural color differences, or out-of-place text.</p>
+            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 1: Spotting vandalism" data-placeholder="IMG: VANDALISM"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h3>Identify the Mechanic</h3>
+            <p>Determine the type of puzzle: code wheel, logic grid, or cipher key.</p>
+            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 2: Identifying puzzle mechanic" data-placeholder="IMG: MECHANIC"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h3>Work the Deduction</h3>
+            <p>Gather the pieces and research what the puzzle is asking of you.</p>
+            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 3: Working the deduction" data-placeholder="IMG: DEDUCTION"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">04</div>
+            <h3>Reveal the Hidden Connection</h3>
+            <p>Apply your solution to unlock lore, hidden websites, or real-world drops.</p>
+            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 4: Revealing connection" data-placeholder="IMG: REVEAL"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="section-header">
+          <h2>Difficulty Levels</h2>
+        </div>
+        <div class="difficulty-grid">
+          <div class="difficulty-card easy">
+            <h3>Easy</h3>
+            <p>Pick-the-answer puzzles, visual riddles, simple ciphers. Newcomers welcome.</p>
+          </div>
+          <div class="difficulty-card medium">
+            <h3>Medium</h3>
+            <p>Multi-step deductions, research required, code wheels, pattern recognition.</p>
+          </div>
+          <div class="difficulty-card hard">
+            <h3>Hard</h3>
+            <p>Cross-book references, encrypted messages, requires external resources (ARG wikis, codebreaking tools).</p>
+          </div>
+          <div class="difficulty-card expert">
+            <h3>Expert</h3>
+            <p>Hidden meta-narrative, requires community collaboration, leads to real-world events or drops.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="resources-section" style="padding: 80px 20px;">
+        <div class="container">
+          <div class="section-header">
+            <h2>Community Resources</h2>
+          </div>
+          <p style="margin-bottom: 30px; font-size: 1.2rem; color: #ccc;">Puzzles are meant to be solved together. No spoilers without warning!</p>
+          <div class="resource-links">
+            <a href="#" class="btn-resource">Join the Community Discord</a>
+            <a href="#" class="btn-resource">Browse the Fan Puzzle Wiki</a>
+            <a href="#" class="btn-resource">Read Puzzle Walkthroughs</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Can I solve puzzles solo?</h3>
+            <p>Yes, but community collaboration often reveals hidden layers and makes the experience richer.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is there a &quot;correct&quot; solution?</h3>
+            <p>The meta-puzzle has objective answers, but the interpretation of the lore and narrative is personal.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What if I get stuck?</h3>
+            <p>Check the community wiki, post on Discord, or email us for hints. We want you to succeed!</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. | <a href="Studio%20Press%20Kit.html">Press Kit</a></p>
+      </div>
+    </footer>
+
+    <script>
+      // Lazy load images using IntersectionObserver
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible'); // trigger CSS fade-in
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '50px' });
+
+        document.querySelectorAll('.lazy-image').forEach(img => observer.observe(img));
+
+        // Accordion Accessibility and Logic
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+          acc.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const content = document.getElementById(this.getAttribute('aria-controls'));
+
+            this.setAttribute('aria-expanded', !isExpanded);
+
+            if (!isExpanded) {
+              content.classList.add('open');
+            } else {
+              content.classList.remove('open');
+            }
+          });
+
+          // Keyboard navigation for accordion group (if multiple)
+          acc.addEventListener('keydown', function(e) {
+            const index = Array.from(accordions).indexOf(this);
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              const next = accordions[index + 1] || accordions[0];
+              next.focus();
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              const prev = accordions[index - 1] || accordions[accordions.length - 1];
+              prev.focus();
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
