@@ -7,12 +7,14 @@ const {
   verifyCode,
   attemptApiVerification,
   CONFIG,
+  clearDomCache,
 } = require('./public/mltk_login_utils');
 
 describe('MLTK Login Gate Tests', () => {
   let originalFetch;
 
   beforeEach(() => {
+    if (clearDomCache) clearDomCache();
     // Setup DOM
     document.body.innerHTML = `
             <div id="lockdown-screen" style="display: block;">

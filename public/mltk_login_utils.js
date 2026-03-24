@@ -23,6 +23,15 @@ function getDomCache() {
   return domCache;
 }
 
+const lockdownClickHandler = () => {
+  const cache = getDomCache();
+  const lockdownScreen = cache ? cache.lockdownScreen : null;
+  const inputField = cache ? cache.inputField : null;
+  if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
+    inputField.focus();
+  }
+};
+
 function setupEventListeners() {
   const cache = getDomCache();
   const inputField = cache ? cache.inputField : null;
@@ -46,14 +55,8 @@ function setupEventListeners() {
     });
   }
 
-  document.addEventListener('click', () => {
-    const cache = getDomCache();
-    const lockdownScreen = cache ? cache.lockdownScreen : null;
-    const inputField = cache ? cache.inputField : null;
-    if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
-      inputField.focus();
-    }
-  });
+  document.removeEventListener('click', lockdownClickHandler);
+  document.addEventListener('click', lockdownClickHandler);
 }
 
 async function performApiFetch(code) {
@@ -148,5 +151,6 @@ if (typeof module !== 'undefined' && module.exports) {
     attemptApiVerification,
     performApiFetch,
     CONFIG,
+    clearDomCache: () => { domCache = null; }
   };
 }
