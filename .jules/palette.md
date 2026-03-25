@@ -22,3 +22,7 @@
 
 **Learning:** When using custom text styling for interactive effects, such as "redacted" text blocks that reveal their content upon click, these elements (usually `<span>` tags) are not natively recognized as interactive by screen readers. Merely adding `tabindex="0"` and keyboard event listeners is insufficient for proper accessibility.
 **Action:** Always provide appropriate ARIA attributes for custom interactive text elements. Add `role="button"` to inform screen readers that the element can be activated, and use `aria-expanded="false"` (toggling to `true` when revealed) to communicate the state of the content reveal.
+## 2026-10-24 - Add focus visible styles for keyboard navigation
+
+**Learning:** Interactive elements like primary buttons should always have an explicit `:focus-visible` state that matches their `:hover` styling, **and** they must include a structural indicator like `outline` or `box-shadow` to ensure keyboard accessibility (especially for high contrast modes). Relying only on background color changes for focus is an accessibility anti-pattern.
+**Action:** Always pair `:hover` and `:focus-visible` states when creating or styling interactive components like `.btn-primary` or `.nav-link`. Ensure `:focus-visible` includes a clear `outline` (e.g., `outline: 2px solid var(--accent-red); outline-offset: 2px;`).
