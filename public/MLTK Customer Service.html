@@ -350,14 +350,31 @@
         form.setAttribute('aria-busy', 'true');
         processingMsg.style.display = 'block';
 
+        // 🛡️ Sentinel: Escape HTML entities in user input for defense-in-depth against XSS
+        const escapeHTML = (str) =>
+          str.replace(
+            /[&<>'"]/g,
+            (tag) =>
+              ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;',
+              })[tag] || tag
+          );
+
         // Simulate "Processing"
         setTimeout(() => {
           const randomArray = new Uint32Array(1);
           globalThis.crypto.getRandomValues(randomArray);
           const ticketId = (randomArray[0] % 9000000) + 1000000;
 
+          // 🛡️ Sentinel: Truncate raw input FIRST, then escape it to prevent splitting HTML entities
+          const safeMsgInput = escapeHTML(msgInput.substring(0, 30));
+
           let responseText = `\n\n> RECEIVING TRANSMISSION...`;
-          responseText += `\n> ANALYZING COMPLAINT: "${msgInput.substring(0, 30)}..."`;
+          responseText += `\n> ANALYZING COMPLAINT: "${safeMsgInput}..."`;
 
           if (category === 'report') {
             responseText += `\n> THANK YOU FOR YOUR VIGILANCE. CORPORATE SECURITY HAS BEEN DISPATCHED TO THE REPORTED COORDINATES. REWARD POINTS ADDED TO YOUR ACCOUNT.`;
