@@ -177,11 +177,14 @@
 
       let bootInterval;
 
+      // ⚡ Bolt: Cache the typed array to prevent massive memory allocations during the high-frequency boot sequence.
+      // Reusing a single Uint32Array avoids allocating and garbage-collecting hundreds of arrays per second.
+      const randomHexArray = new Uint32Array(1);
+
       // 🛡️ Sentinel: Replaced insecure Math.random() with cryptographically secure random number generation
       function generateRandomHex() {
-        const array = new Uint32Array(1);
-        globalThis.crypto.getRandomValues(array);
-        return (array[0] % 0xffffff).toString(16).padStart(6, '0').toUpperCase();
+        globalThis.crypto.getRandomValues(randomHexArray);
+        return (randomHexArray[0] % 0xffffff).toString(16).padStart(6, '0').toUpperCase();
       }
 
       function startBootSequence() {
