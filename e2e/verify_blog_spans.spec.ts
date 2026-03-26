@@ -50,7 +50,7 @@ test('Clicking sidebar spans does not cause navigation or scroll to top', async 
   // Scroll down a bit to ensure "scroll to top" would be noticeable
   await page.setViewportSize({ width: 800, height: 600 });
   await page.evaluate(() => {
-    document.body.style.minHeight = "2000px";
+    document.body.style.minHeight = '2000px';
     window.scrollTo(0, 500);
   });
   const initialScrollY = await page.evaluate(() => window.scrollY);
