@@ -34,7 +34,10 @@
       }
     </style>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --bg-color: #faf9f6;
@@ -138,11 +141,9 @@
       }
     </style>
 
-
-
-
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -191,7 +192,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -218,7 +219,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -255,7 +257,7 @@
         border-bottom: none !important;
       }
     </style>
-</head>
+  </head>
   <body>
     <header class="studio-header">
       <div class="container nav-inner">
@@ -265,7 +267,16 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
@@ -274,12 +285,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
                 <a href="Releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -292,18 +307,27 @@
                 <a href="Studio%20Team.html" class="nav-link">Team</a>
                 <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
                 <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link" style="color: var(--accent-red) !important;">Terms of Service</a>
+                <a
+                  href="Business%20Terms%20of%20Service.html"
+                  class="nav-link"
+                  style="color: var(--accent-red) !important"
+                  >Terms of Service</a
+                >
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
                 <a href="Store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>

@@ -102,7 +102,10 @@
       }
     </style>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --bg-color: #faf9f6;
@@ -206,11 +209,9 @@
       }
     </style>
 
-
-
-
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -259,7 +260,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -286,7 +287,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -323,7 +325,7 @@
         border-bottom: none !important;
       }
     </style>
-</head>
+  </head>
   <body>
     <header class="studio-header">
       <div class="container nav-inner">
@@ -333,7 +335,16 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
@@ -342,12 +353,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
                 <a href="Releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -358,7 +373,12 @@
               <div class="sub-menu">
                 <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
                 <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link" style="color: var(--accent-red) !important;">Contact Us</a>
+                <a
+                  href="Studio%20Contact%20Us.html"
+                  class="nav-link"
+                  style="color: var(--accent-red) !important"
+                  >Contact Us</a
+                >
                 <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
                 <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
                 <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
@@ -367,12 +387,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
                 <a href="Store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -387,14 +411,7 @@
     <div class="container">
       <h1>Contact Us</h1>
 
-      <form
-        action="#"
-        method="POST"
-        onsubmit="
-          alert('Thank you for reaching out! We will get back to you shortly.');
-          return false;
-        "
-      >
+      <form id="contact-form" action="#" method="POST" onsubmit="submitContactForm(event)">
         <div class="form-group">
           <label for="name">Name <span aria-hidden="true" style="color: red">*</span></label>
           <input type="text" id="name" name="name" required autocomplete="name" maxlength="100" />
@@ -424,13 +441,42 @@
           <textarea id="message" name="message" required maxlength="2000"></textarea>
         </div>
 
-        <button type="submit">Send Message</button>
+        <button type="submit" id="submit-btn">Send Message</button>
       </form>
+      <div
+        id="success-message"
+        style="display: none; color: green; margin-top: 15px; font-weight: bold; text-align: center"
+        role="alert"
+        aria-live="polite"
+      >
+        Thank you for reaching out! We will get back to you shortly.
+      </div>
 
       <p class="info-text">
         For press inquiries or technical support regarding the physical field guides, please allow
-        2-3 business days for a response from our operations team. <a href="Studio%20Press%20Kit.html">View Press Resources</a>.
+        2-3 business days for a response from our operations team.
+        <a href="Studio%20Press%20Kit.html">View Press Resources</a>.
       </p>
     </div>
+
+    <script>
+      function submitContactForm(e) {
+        e.preventDefault();
+        const form = document.getElementById('contact-form');
+        const btn = document.getElementById('submit-btn');
+        const successMsg = document.getElementById('success-message');
+
+        form.setAttribute('aria-busy', 'true');
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        btn.textContent = 'SENDING...';
+
+        setTimeout(() => {
+          form.style.display = 'none';
+          form.setAttribute('aria-busy', 'false');
+          successMsg.style.display = 'block';
+        }, 1000);
+      }
+    </script>
   </body>
 </html>

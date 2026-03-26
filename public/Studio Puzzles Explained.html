@@ -281,7 +281,7 @@
         transition: transform 0.3s ease;
       }
 
-      .accordion-header[aria-expanded="true"] .accordion-icon {
+      .accordion-header[aria-expanded='true'] .accordion-icon {
         transform: rotate(180deg);
       }
 
@@ -352,10 +352,18 @@
         text-transform: uppercase;
       }
 
-      .difficulty-card.easy h3 { color: #2e7d32; }
-      .difficulty-card.medium h3 { color: #ed6c02; }
-      .difficulty-card.hard h3 { color: #d32f2f; }
-      .difficulty-card.expert h3 { color: var(--text-color); }
+      .difficulty-card.easy h3 {
+        color: #2e7d32;
+      }
+      .difficulty-card.medium h3 {
+        color: #ed6c02;
+      }
+      .difficulty-card.hard h3 {
+        color: #d32f2f;
+      }
+      .difficulty-card.expert h3 {
+        color: var(--text-color);
+      }
 
       .difficulty-card p {
         font-size: 0.95rem;
@@ -459,7 +467,8 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
-        body, html {
+        body,
+        html {
           animation: none;
           opacity: 1;
           transform: none;
@@ -490,12 +499,12 @@
     </header>
 
     <main>
-      <section class="hero container" style="border-bottom: none; padding-bottom: 40px;">
+      <section class="hero container" style="border-bottom: none; padding-bottom: 40px">
         <h1>How 3minsto9 Puzzles Work</h1>
         <p>Understanding the Comicsmith Protocol and Puzzlesmith Protocol</p>
       </section>
 
-      <section class="container" style="padding-top: 40px;">
+      <section class="container" style="padding-top: 40px">
         <div class="protocols-grid">
           <div class="protocol-card">
             <h3>Comicsmith Protocol</h3>
@@ -506,7 +515,12 @@
               <li>Sterile corporate background + aggressive character vandalism</li>
               <li>Creates friction between "official" and "vandal" narratives</li>
             </ul>
-            <div class="lazy-image aspect-16-9" role="img" aria-label="Example of Comicsmith Protocol illustration showing corporate background with vandalism" data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE"></div>
+            <div
+              class="lazy-image aspect-16-9"
+              role="img"
+              aria-label="Example of Comicsmith Protocol illustration showing corporate background with vandalism"
+              data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE"
+            ></div>
           </div>
           <div class="protocol-card">
             <h3>Puzzlesmith Protocol</h3>
@@ -517,7 +531,12 @@
               <li>Readers become active detectives</li>
               <li>Functional mechanics embedded in art and text</li>
             </ul>
-            <div class="lazy-image aspect-16-9" role="img" aria-label="Example of Puzzlesmith Protocol showing hidden cipher in a document" data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE"></div>
+            <div
+              class="lazy-image aspect-16-9"
+              role="img"
+              aria-label="Example of Puzzlesmith Protocol showing hidden cipher in a document"
+              data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE"
+            ></div>
           </div>
         </div>
       </section>
@@ -527,25 +546,51 @@
           <h2>What's a Meta-Puzzle?</h2>
         </div>
         <div class="meta-puzzle-content">
-          <p>A meta-puzzle is a puzzle that uses the solutions or elements of other, smaller puzzles to reveal a hidden, overarching message. In our books, you might find several standalone ciphers or riddles that, once solved, provide the pieces needed to unlock a larger mystery hidden within the narrative framework.</p>
+          <p>
+            A meta-puzzle is a puzzle that uses the solutions or elements of other, smaller puzzles
+            to reveal a hidden, overarching message. In our books, you might find several standalone
+            ciphers or riddles that, once solved, provide the pieces needed to unlock a larger
+            mystery hidden within the narrative framework.
+          </p>
 
-          <p><strong>Example from "The Unknown Field Guide" (Vol. 0):</strong><br>
-          In Vol. 0, a 1950s-style tourist brochure was &quot;corrupted&quot; by Team Rabbit graffiti. Hidden code in margin notes, when decoded, reveals classified MLTK data. Readers must determine what is &quot;official&quot; brochure content vs. &quot;vandal&quot; clues.</p>
+          <p>
+            <strong>Example from "The Unknown Field Guide" (Vol. 0):</strong><br />
+            In Vol. 0, a 1950s-style tourist brochure was &quot;corrupted&quot; by Team Rabbit
+            graffiti. Hidden code in margin notes, when decoded, reveals classified MLTK data.
+            Readers must determine what is &quot;official&quot; brochure content vs.
+            &quot;vandal&quot; clues.
+          </p>
 
           <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false" aria-controls="walkthrough-content" tabindex="0">
+            <button
+              class="accordion-header"
+              aria-expanded="false"
+              aria-controls="walkthrough-content"
+              tabindex="0"
+            >
               See an example puzzle walkthrough
               <span class="accordion-icon" aria-hidden="true">&#9660;</span>
             </button>
             <div id="walkthrough-content" class="accordion-content">
-              <p><strong>Step 1: The Setup</strong><br>
-              You find a seemingly innocuous list of "Recommended Hotels" in the brochure.</p>
-              <p><strong>Step 2: The Clue</strong><br>
-              Team Rabbit has crossed out certain letters in the hotel names using a specific color of red ink.</p>
-              <p><strong>Step 3: The Deduction</strong><br>
-              By reading only the crossed-out letters in order, you spell out a URL leading to a hidden page on the MLTK Surveillance Dashboard.</p>
-              <p><strong>Step 4: The Reward</strong><br>
-              Accessing the dashboard reveals a downloadable file containing backstory on a key character.</p>
+              <p>
+                <strong>Step 1: The Setup</strong><br />
+                You find a seemingly innocuous list of "Recommended Hotels" in the brochure.
+              </p>
+              <p>
+                <strong>Step 2: The Clue</strong><br />
+                Team Rabbit has crossed out certain letters in the hotel names using a specific
+                color of red ink.
+              </p>
+              <p>
+                <strong>Step 3: The Deduction</strong><br />
+                By reading only the crossed-out letters in order, you spell out a URL leading to a
+                hidden page on the MLTK Surveillance Dashboard.
+              </p>
+              <p>
+                <strong>Step 4: The Reward</strong><br />
+                Accessing the dashboard reveals a downloadable file containing backstory on a key
+                character.
+              </p>
             </div>
           </div>
         </div>
@@ -560,25 +605,45 @@
             <div class="step-number">01</div>
             <h3>Spot the Vandalism Layer</h3>
             <p>Look for Team Rabbit tags, unnatural color differences, or out-of-place text.</p>
-            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 1: Spotting vandalism" data-placeholder="IMG: VANDALISM"></div>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 1: Spotting vandalism"
+              data-placeholder="IMG: VANDALISM"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">02</div>
             <h3>Identify the Mechanic</h3>
             <p>Determine the type of puzzle: code wheel, logic grid, or cipher key.</p>
-            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 2: Identifying puzzle mechanic" data-placeholder="IMG: MECHANIC"></div>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 2: Identifying puzzle mechanic"
+              data-placeholder="IMG: MECHANIC"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">03</div>
             <h3>Work the Deduction</h3>
             <p>Gather the pieces and research what the puzzle is asking of you.</p>
-            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 3: Working the deduction" data-placeholder="IMG: DEDUCTION"></div>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 3: Working the deduction"
+              data-placeholder="IMG: DEDUCTION"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">04</div>
             <h3>Reveal the Hidden Connection</h3>
             <p>Apply your solution to unlock lore, hidden websites, or real-world drops.</p>
-            <div class="lazy-image aspect-1-1" role="img" aria-label="Step 4: Revealing connection" data-placeholder="IMG: REVEAL"></div>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 4: Revealing connection"
+              data-placeholder="IMG: REVEAL"
+            ></div>
           </div>
         </div>
       </section>
@@ -598,25 +663,39 @@
           </div>
           <div class="difficulty-card hard">
             <h3>Hard</h3>
-            <p>Cross-book references, encrypted messages, requires external resources (ARG wikis, codebreaking tools).</p>
+            <p>
+              Cross-book references, encrypted messages, requires external resources (ARG wikis,
+              codebreaking tools).
+            </p>
           </div>
           <div class="difficulty-card expert">
             <h3>Expert</h3>
-            <p>Hidden meta-narrative, requires community collaboration, leads to real-world events or drops.</p>
+            <p>
+              Hidden meta-narrative, requires community collaboration, leads to real-world events or
+              drops.
+            </p>
           </div>
         </div>
       </section>
 
-      <section class="resources-section" style="padding: 80px 20px;">
+      <section class="resources-section" style="padding: 80px 20px">
         <div class="container">
           <div class="section-header">
             <h2>Community Resources</h2>
           </div>
-          <p style="margin-bottom: 30px; font-size: 1.2rem; color: #ccc;">Puzzles are meant to be solved together. No spoilers without warning!</p>
+          <p style="margin-bottom: 30px; font-size: 1.2rem; color: #ccc">
+            Puzzles are meant to be solved together. No spoilers without warning!
+          </p>
           <div class="resource-links">
-            <span class="btn-resource placeholder-link" style="cursor: default !important;">Join the Community Discord</span>
-            <span class="btn-resource placeholder-link" style="cursor: default !important;">Browse the Fan Puzzle Wiki</span>
-            <span class="btn-resource placeholder-link" style="cursor: default !important;">Read Puzzle Walkthroughs</span>
+            <span class="btn-resource placeholder-link" style="cursor: default !important"
+              >Join the Community Discord</span
+            >
+            <span class="btn-resource placeholder-link" style="cursor: default !important"
+              >Browse the Fan Puzzle Wiki</span
+            >
+            <span class="btn-resource placeholder-link" style="cursor: default !important"
+              >Read Puzzle Walkthroughs</span
+            >
           </div>
         </div>
       </section>
@@ -628,46 +707,60 @@
         <div class="faq-grid">
           <div class="faq-item">
             <h3>Can I solve puzzles solo?</h3>
-            <p>Yes, but community collaboration often reveals hidden layers and makes the experience richer.</p>
+            <p>
+              Yes, but community collaboration often reveals hidden layers and makes the experience
+              richer.
+            </p>
           </div>
           <div class="faq-item">
             <h3>Is there a &quot;correct&quot; solution?</h3>
-            <p>The meta-puzzle has objective answers, but the interpretation of the lore and narrative is personal.</p>
+            <p>
+              The meta-puzzle has objective answers, but the interpretation of the lore and
+              narrative is personal.
+            </p>
           </div>
           <div class="faq-item">
             <h3>What if I get stuck?</h3>
-            <p>Check the community wiki, post on Discord, or email us for hints. We want you to succeed!</p>
+            <p>
+              Check the community wiki, post on Discord, or email us for hints. We want you to
+              succeed!
+            </p>
           </div>
         </div>
       </section>
-
     </main>
 
     <footer>
       <div class="container">
-        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. | <a href="Studio%20Press%20Kit.html">Press Kit</a></p>
+        <p>
+          &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
+          <a href="Studio%20Press%20Kit.html">Press Kit</a>
+        </p>
       </div>
     </footer>
 
     <script>
       // Lazy load images using IntersectionObserver
       document.addEventListener('DOMContentLoaded', () => {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible'); // trigger CSS fade-in
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { rootMargin: '50px' });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible'); // trigger CSS fade-in
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '50px' }
+        );
 
-        document.querySelectorAll('.lazy-image').forEach(img => observer.observe(img));
+        document.querySelectorAll('.lazy-image').forEach((img) => observer.observe(img));
 
         // Accordion Accessibility and Logic
         const accordions = document.querySelectorAll('.accordion-header');
 
-        accordions.forEach(acc => {
-          acc.addEventListener('click', function() {
+        accordions.forEach((acc) => {
+          acc.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             const content = document.getElementById(this.getAttribute('aria-controls'));
 
@@ -681,7 +774,7 @@
           });
 
           // Keyboard navigation for accordion group (if multiple)
-          acc.addEventListener('keydown', function(e) {
+          acc.addEventListener('keydown', function (e) {
             const index = Array.from(accordions).indexOf(this);
             if (e.key === 'ArrowDown') {
               e.preventDefault();

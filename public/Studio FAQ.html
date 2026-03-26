@@ -189,18 +189,20 @@
         transition: transform 0.3s ease;
       }
 
-      .accordion-header[aria-expanded="true"] .accordion-icon {
+      .accordion-header[aria-expanded='true'] .accordion-icon {
         transform: rotate(45deg);
       }
 
-      .accordion-header[aria-expanded="true"] {
+      .accordion-header[aria-expanded='true'] {
         color: var(--accent-red);
       }
 
       .accordion-content {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, opacity 0.3s ease;
+        transition:
+          max-height 0.3s ease,
+          opacity 0.3s ease;
         opacity: 0;
       }
 
@@ -328,7 +330,8 @@
     </style>
 
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -377,7 +380,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -404,7 +407,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -451,7 +455,16 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
@@ -460,12 +473,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
                 <a href="Releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -477,7 +494,12 @@
                 <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
                 <a href="Studio%20Team.html" class="nav-link">Team</a>
                 <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link" style="color: var(--accent-red) !important;">FAQ</a>
+                <a
+                  href="Studio%20FAQ.html"
+                  class="nav-link"
+                  style="color: var(--accent-red) !important"
+                  >FAQ</a
+                >
                 <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
                 <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
               </div>
@@ -485,12 +507,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
                 <a href="Store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -520,37 +546,63 @@
         <h2>About the Studio</h2>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-1-1" aria-expanded="false" aria-controls="panel-1-1" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-1-1"
+            aria-expanded="false"
+            aria-controls="panel-1-1"
+            tabindex="0"
+          >
             What is 3minsto9?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-1-1" aria-labelledby="faq-1-1" role="region">
             <div class="accordion-inner">
-              3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK. We operate as Comicsmiths and Puzzlesmiths, forging high-value, low-volume physical artefacts.
+              3minsto9 is an independent micro-press and immersive media studio based in Wendover,
+              UK. We operate as Comicsmiths and Puzzlesmiths, forging high-value, low-volume
+              physical artefacts.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-1-2" aria-expanded="false" aria-controls="panel-1-2" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-1-2"
+            aria-expanded="false"
+            aria-controls="panel-1-2"
+            tabindex="0"
+          >
             Why physical media?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-1-2" aria-labelledby="faq-1-2" role="region">
             <div class="accordion-inner">
-              We believe in creating tactile, dangerous physical media that respects the intelligence of our audience. Our books feel like they have been smuggled out of an alternate reality.
+              We believe in creating tactile, dangerous physical media that respects the
+              intelligence of our audience. Our books feel like they have been smuggled out of an
+              alternate reality.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-1-3" aria-expanded="false" aria-controls="panel-1-3" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-1-3"
+            aria-expanded="false"
+            aria-controls="panel-1-3"
+            tabindex="0"
+          >
             Where are you located?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-1-3" aria-labelledby="faq-1-3" role="region">
             <div class="accordion-inner">
-              We are based in Wendover, UK, operating directly to our readers without traditional middlemen.
+              We are based in Wendover, UK, operating directly to our readers without traditional
+              middlemen.
             </div>
           </div>
         </div>
@@ -561,19 +613,34 @@
         <h2>Ordering &amp; Shipping</h2>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-2-1" aria-expanded="false" aria-controls="panel-2-1" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-2-1"
+            aria-expanded="false"
+            aria-controls="panel-2-1"
+            tabindex="0"
+          >
             How long does shipping take?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-2-1" aria-labelledby="faq-2-1" role="region">
             <div class="accordion-inner">
-              Shipping times vary depending on the destination and the artefact. Domestic orders typically arrive within 3-5 business days.
+              Shipping times vary depending on the destination and the artefact. Domestic orders
+              typically arrive within 3-5 business days.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-2-2" aria-expanded="false" aria-controls="panel-2-2" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-2-2"
+            aria-expanded="false"
+            aria-controls="panel-2-2"
+            tabindex="0"
+          >
             Do you ship internationally?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
@@ -585,13 +652,21 @@
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-2-3" aria-expanded="false" aria-controls="panel-2-3" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-2-3"
+            aria-expanded="false"
+            aria-controls="panel-2-3"
+            tabindex="0"
+          >
             Can I pre-order?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-2-3" aria-labelledby="faq-2-3" role="region">
             <div class="accordion-inner">
-              Yes, joining our Dispatch newsletter is the best way to receive pre-order alerts and secure early drops.
+              Yes, joining our Dispatch newsletter is the best way to receive pre-order alerts and
+              secure early drops.
             </div>
           </div>
         </div>
@@ -602,37 +677,61 @@
         <h2>Puzzle Mechanics</h2>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-3-1" aria-expanded="false" aria-controls="panel-3-1" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-3-1"
+            aria-expanded="false"
+            aria-controls="panel-3-1"
+            tabindex="0"
+          >
             How do I solve the puzzles?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-3-1" aria-labelledby="faq-3-1" role="region">
             <div class="accordion-inner">
-              Every detail could be a functional mechanic. You might need to decipher codes, find hidden signatures, or manipulate physical components of the book.
+              Every detail could be a functional mechanic. You might need to decipher codes, find
+              hidden signatures, or manipulate physical components of the book.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-3-2" aria-expanded="false" aria-controls="panel-3-2" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-3-2"
+            aria-expanded="false"
+            aria-controls="panel-3-2"
+            tabindex="0"
+          >
             Is there a difficulty level?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-3-2" aria-labelledby="faq-3-2" role="region">
             <div class="accordion-inner">
-              Our puzzles range from accessible entry-level mysteries to multi-tiered, complex meta-puzzles embedded in the artwork and text.
+              Our puzzles range from accessible entry-level mysteries to multi-tiered, complex
+              meta-puzzles embedded in the artwork and text.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-3-3" aria-expanded="false" aria-controls="panel-3-3" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-3-3"
+            aria-expanded="false"
+            aria-controls="panel-3-3"
+            tabindex="0"
+          >
             Are there spoiler guides?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-3-3" aria-labelledby="faq-3-3" role="region">
             <div class="accordion-inner">
-              We encourage community collaboration, but official spoiler guides are highly classified and may require their own puzzle-solving to access.
+              We encourage community collaboration, but official spoiler guides are highly
+              classified and may require their own puzzle-solving to access.
             </div>
           </div>
         </div>
@@ -643,37 +742,62 @@
         <h2>Accessibility</h2>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-4-1" aria-expanded="false" aria-controls="panel-4-1" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-4-1"
+            aria-expanded="false"
+            aria-controls="panel-4-1"
+            tabindex="0"
+          >
             Are puzzles screen-reader friendly?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-4-1" aria-labelledby="faq-4-1" role="region">
             <div class="accordion-inner">
-              We are constantly working to make our digital puzzle elements accessible, though some physical mechanics rely on visual or tactile inspection. Digital counterparts with alt-text are provided where possible.
+              We are constantly working to make our digital puzzle elements accessible, though some
+              physical mechanics rely on visual or tactile inspection. Digital counterparts with
+              alt-text are provided where possible.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-4-2" aria-expanded="false" aria-controls="panel-4-2" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-4-2"
+            aria-expanded="false"
+            aria-controls="panel-4-2"
+            tabindex="0"
+          >
             Do you offer alternative formats?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-4-2" aria-labelledby="faq-4-2" role="region">
             <div class="accordion-inner">
-              Currently, our core experience is physical, but we are exploring audio and screen-reader optimized digital versions of our narratives.
+              Currently, our core experience is physical, but we are exploring audio and
+              screen-reader optimized digital versions of our narratives.
             </div>
           </div>
         </div>
 
         <div class="accordion-item">
-          <div class="accordion-header" role="button" id="faq-4-3" aria-expanded="false" aria-controls="panel-4-3" tabindex="0">
+          <div
+            class="accordion-header"
+            role="button"
+            id="faq-4-3"
+            aria-expanded="false"
+            aria-controls="panel-4-3"
+            tabindex="0"
+          >
             What about color blindness?
             <span class="accordion-icon" aria-hidden="true">+</span>
           </div>
           <div class="accordion-content" id="panel-4-3" aria-labelledby="faq-4-3" role="region">
             <div class="accordion-inner">
-              Our graphic design generally relies on high contrast and distinct shapes, ensuring that colour alone is not the only vector for solving a puzzle.
+              Our graphic design generally relies on high contrast and distinct shapes, ensuring
+              that colour alone is not the only vector for solving a puzzle.
             </div>
           </div>
         </div>
@@ -771,7 +895,7 @@
         window.addEventListener('resize', () => {
           if (!resizeTicking) {
             window.requestAnimationFrame(() => {
-              accordions.forEach(btn => {
+              accordions.forEach((btn) => {
                 if (btn.getAttribute('aria-expanded') === 'true') {
                   const content = document.getElementById(btn.getAttribute('aria-controls'));
                   content.style.maxHeight = content.scrollHeight + 'px';
