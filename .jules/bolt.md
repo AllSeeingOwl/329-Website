@@ -42,3 +42,8 @@
 
 **Learning:** Binding a `resize` event listener that reads layout properties like `scrollHeight` or `clientHeight` forces a synchronous reflow. Because `resize` events can fire dozens of times per second, executing this without a debounce causes layout thrashing and severe main-thread blocking.
 **Action:** Use `requestAnimationFrame` to debounce the `resize` event, ensuring that layout calculations and DOM updates are batched and executed at most once per frame.
+
+## 2024-05-25 - Prevent Uint8Array re-allocation in high-frequency event listeners
+
+**Learning:** Allocating typed arrays (like `new Uint8Array(length)`) inside a function called by high-frequency events (like a range slider's `input` event) causes significant garbage collection pressure and main-thread blocking, leading to severe layout jank during user interactions.
+**Action:** Extract typed array allocations outside the hot path to a module-scoped, reasonably sized constant variable (e.g., `const sharedStaticBuffer = new Uint8Array(256);`), and reuse it via `.subarray(0, length)` within the function to prevent continuous memory allocations and GC sweeps.
