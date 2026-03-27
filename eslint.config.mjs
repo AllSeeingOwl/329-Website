@@ -31,7 +31,7 @@ export default [
     },
     rules: {
       ...jestEslint.configs.recommended.rules,
-      'jest/expect-expect': 'off'
+      'jest/expect-expect': 'off',
     },
   },
   {
