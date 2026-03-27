@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLTK // FIVE FINGER WHEEL</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      header {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 2px solid #00ff00;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        margin: 5px 0 0 0;
+        font-size: 1.2rem;
+        color: #888;
+        text-shadow: none;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 5;
+      }
+
+      /* Wheel Container */
+      .wheel-container {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        margin: 20px 0 40px;
+      }
+
+      /* Pointer */
+      .pointer {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 30px solid #ff003c;
+        z-index: 10;
+        filter: drop-shadow(0 0 10px rgba(255, 0, 60, 0.8));
+      }
+
+      /* The Wheel itself */
+      .wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid #00ff00;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 20px rgba(0, 255, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); /* Smooth deceleration */
+        transform: rotate(0deg);
+      }
+
+      /* Creating 5 segments (360/5 = 72 degrees each) */
+      /* We use conic-gradient on the wheel for the background colors */
+      .wheel-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(
+          #00ff00 0deg 72deg,
+          #00cc00 72deg 144deg,
+          #009900 144deg 216deg,
+          #006600 216deg 288deg,
+          #003300 288deg 360deg
+        );
+        z-index: 1;
+      }
+
+      .label-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+
+      .label {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform-origin: 50% 160px; /* Adjust radius for labels */
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: #000;
+        text-shadow: none;
+        z-index: 3;
+      }
+
+      /* Centering labels in the 72-degree slices */
+      .label.l1 { transform: translateX(-50%) rotate(36deg); }
+      .label.l2 { transform: translateX(-50%) rotate(108deg); color: #fff; } /* better contrast on dark green */
+      .label.l3 { transform: translateX(-50%) rotate(180deg); color: #fff; }
+      .label.l4 { transform: translateX(-50%) rotate(252deg); color: #fff; }
+      .label.l5 { transform: translateX(-50%) rotate(324deg); color: #fff; }
+
+
+      /* Controls */
+      .controls {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      button {
+        background-color: transparent;
+        color: #00ff00;
+        border: 2px solid #00ff00;
+        padding: 15px 30px;
+        font-family: 'VT323', monospace;
+        font-size: 1.8rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.2s;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+      }
+
+      button:hover,
+      button:focus-visible {
+        background-color: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+        outline: none;
+      }
+
+      button:disabled {
+        border-color: #555;
+        color: #555;
+        box-shadow: none;
+        text-shadow: none;
+        cursor: not-allowed;
+        background-color: transparent;
+      }
+
+      /* Result Display */
+      .result-panel {
+        margin-top: 40px;
+        width: 100%;
+        max-width: 600px;
+        border: 1px solid #333;
+        background-color: rgba(10, 10, 10, 0.8);
+        padding: 20px;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+      }
+
+      .result-title {
+        font-size: 1.2rem;
+        color: #888;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .result-value {
+        font-size: 2rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        min-height: 2.4rem;
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      .severity-desc {
+        margin-top: 10px;
+        font-size: 1.2rem;
+        color: #ccc;
+        min-height: 1.5rem;
+      }
+
+      /* Severity Colors */
+      .severity-mild { color: #00ff00; text-shadow: 0 0 8px rgba(0, 255, 0, 0.8); }
+      .severity-moderate { color: #aaff00; text-shadow: 0 0 8px rgba(170, 255, 0, 0.8); }
+      .severity-elevated { color: #ffff00; text-shadow: 0 0 8px rgba(255, 255, 0, 0.8); }
+      .severity-high { color: #ffaa00; text-shadow: 0 0 8px rgba(255, 170, 0, 0.8); }
+      .severity-critical { color: #ff003c; text-shadow: 0 0 8px rgba(255, 0, 60, 0.8); }
+
+      /* Static/Noise Overlay */
+      .static-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0.05;
+        background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      }
+
+      /* CRT Overlay Effect */
+      body::before {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 9998;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+        border-radius: 20px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: crt-flicker 0.15s infinite;
+      }
+
+      @keyframes crt-flicker {
+        0% { opacity: 0.95; }
+        50% { opacity: 1; }
+        100% { opacity: 0.95; }
+      }
+
+      @media (max-width: 600px) {
+        .wheel-container {
+          width: 300px;
+          height: 300px;
+        }
+        .label {
+          transform-origin: 50% 120px; /* Adjust radius for mobile labels */
+          font-size: 1.2rem;
+        }
+        h1 {
+          font-size: 1.8rem;
+        }
+        .result-value {
+          font-size: 1.5rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="static-overlay"></div>
+    <header>
+      <h1>Five Finger Selection</h1>
+      <h2>Authorized Personnel Only // Risk Assessment Utility</h2>
+      <div style="margin-top: 15px">
+        <a
+          href="MLTK%20Surveillance%20Dashboard.html"
+          style="
+            color: #00ff00;
+            text-decoration: underline;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+          "
+          >&lt;&lt; RETURN TO DASHBOARD</a
+        >
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+          <div class="wheel-bg"></div>
+          <div class="label-container">
+            <div class="label l1">PINKY</div>
+            <div class="label l2">RING</div>
+            <div class="label l3">MIDDLE</div>
+            <div class="label l4">INDEX</div>
+            <div class="label l5">THUMB</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="spin-btn">INITIATE SPIN</button>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-title">ASSESSMENT RESULT</div>
+        <div class="result-value" id="result-target" aria-live="polite">AWAITING INPUT...</div>
+        <div class="severity-desc" id="result-desc"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultTarget = document.getElementById('result-target');
+        const resultDesc = document.getElementById('result-desc');
+
+        // Note: The pointer points at the TOP (0 degrees).
+        // Since the wheel rotates clockwise, a slice that is AT the right (90 degrees)
+        // needs to rotate -90 degrees to be at the top.
+        // Slice 0 (Pinky) is from 0 to 72. Its center is at 36.
+        // We want the wheel to spin backwards by that amount, but we apply positive spin,
+        // so we want: finalAngle % 360 == (360 - 36) = 324 to center Pinky.
+        // Let's define it simpler: targetAngle = 360 - centerAngle of slice.
+        const slices = [
+          { name: 'PINKY', class: 'severity-mild', desc: 'SEVERITY: MILD - MINIMAL LOSS IN FUNCTIONALITY', center: 36 },
+          { name: 'RING', class: 'severity-moderate', desc: 'SEVERITY: MODERATE - NEGLIGIBLE IMPACT', center: 108 },
+          { name: 'MIDDLE', class: 'severity-elevated', desc: 'SEVERITY: ELEVATED - NOTICEABLE DEFICIT', center: 180 },
+          { name: 'INDEX', class: 'severity-high', desc: 'SEVERITY: HIGH - SIGNIFICANT IMPAIRMENT', center: 252 },
+          { name: 'THUMB', class: 'severity-critical', desc: 'SEVERITY: CRITICAL - MAXIMUM DISRUPTION', center: 324 }
+        ];
+
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        spinBtn.addEventListener('click', () => {
+          if (isSpinning) return;
+          isSpinning = true;
+          spinBtn.disabled = true;
+          spinBtn.textContent = 'PROCESSING...';
+
+          resultTarget.textContent = 'CALCULATING TRAJECTORY...';
+          resultTarget.className = 'result-value';
+          resultDesc.textContent = '';
+
+          // Pick random target
+          const targetIndex = Math.floor(Math.random() * slices.length);
+          const targetSlice = slices[targetIndex];
+
+          // Determine the angle needed so the target center is at 0 degrees (top).
+          // We need (currentRotation + spinAngle) % 360 to equal (360 - targetSlice.center).
+          const desiredMod = 360 - targetSlice.center;
+
+          // Calculate random full spins (e.g., 5 to 10)
+          const spins = (Math.floor(Math.random() * 6) + 5) * 360;
+
+          // Random offset so it doesn't land perfectly centered every time (-25 to +25 deg)
+          const randomOffset = Math.floor(Math.random() * 50) - 25;
+
+          // Compute new rotation
+          // currentRotation = currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset
+          let newRotation = currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset;
+
+          currentRotation = newRotation;
+          wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+          // Wait for CSS transition (4s)
+          setTimeout(() => {
+            isSpinning = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'INITIATE SPIN';
+
+            resultTarget.textContent = `TARGET: ${targetSlice.name}`;
+            resultTarget.className = `result-value ${targetSlice.class}`;
+            resultDesc.textContent = targetSlice.desc;
+          }, 4000);
+        });
+      });
+    </script>
+  </body>
+</html>
