@@ -51,3 +51,9 @@
 **Vulnerability:** Sensitive API responses or authenticated views can be cached by browsers, proxies, or CDNs if explicit cache prevention directives are not used, leading to information disclosure.
 **Learning:** A global Express middleware handles setting security headers. Including `Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate`, `Pragma: no-cache`, and `Expires: 0` alongside the existing CSP and XSS headers provides robust defense-in-depth against unauthorized data recovery via local or network caches.
 **Prevention:** Always explicitly define `Cache-Control` directives in the global security headers middleware to ensure sensitive data (such as decrypted ARG files or tokenized paths) is not inadvertently stored offline or in proxy caches.
+
+## 2024-05-24 - Cross-Origin Information Leakage (Referrer-Policy)
+
+**Vulnerability:** Missing `Referrer-Policy` header can leak sensitive URL paths or tokens across origins when users navigate away from the application.
+**Learning:** Browsers by default may send the full URL of the referring page to the destination site. Setting the `Referrer-Policy` header to `strict-origin-when-cross-origin` ensures that only the origin is sent for cross-origin requests, protecting sensitive path information while still allowing full referrers for same-origin requests.
+**Prevention:** Always include `Referrer-Policy: strict-origin-when-cross-origin` in the global security headers middleware to enhance user privacy and prevent cross-origin information leakage.
