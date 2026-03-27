@@ -16,6 +16,8 @@ app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate'); // Prevent caching of sensitive data
   res.setHeader('Pragma', 'no-cache'); // HTTP 1.0 backward compatibility
   res.setHeader('Expires', '0'); // Proxies
+  // 🛡️ Sentinel: Add Referrer-Policy to prevent leaking sensitive URLs across origins
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   // Restrict resource loading to trusted sources
   res.setHeader(
     'Content-Security-Policy',
