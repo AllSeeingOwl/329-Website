@@ -1,0 +1,9 @@
+{
+  "name": "3minsto9 ARG",
+  "short_name": "3minsto9",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#ff003c",
+  "description": "3minsto9 Alternate Reality Game"
+}
