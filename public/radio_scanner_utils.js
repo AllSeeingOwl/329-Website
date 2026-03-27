@@ -1,18 +1,31 @@
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!<>{}[]';
 
+// ⚡ Bolt: Prevent garbage collection pressure and layout jank during high-frequency
+// input events (e.g., slider dragging) by extracting the typed array allocation outside
+// the hot path to a module-scoped variable for reuse.
+const sharedStaticBuffer = new Uint8Array(256);
+
 // ⚡ Bolt: Optimized static generation by replacing Uint32Array with Uint8Array
 // and Array.from().join() with string concatenation. Reduces memory by 4x and
 // speeds up execution by ~2.7x, minimizing jank during rapid slider movements.
 function generateStatic(length) {
   if (length <= 0) return '';
-  const randomValues = new Uint8Array(length);
-  globalThis.crypto.getRandomValues(randomValues);
 
   let result = '';
   const charsLen = chars.length;
-  for (let i = 0; i < length; i++) {
-    result += chars[randomValues[i] % charsLen];
+  let remaining = length;
+
+  while (remaining > 0) {
+    const chunkLength = Math.min(remaining, sharedStaticBuffer.length);
+    const randomValues = sharedStaticBuffer.subarray(0, chunkLength);
+    globalThis.crypto.getRandomValues(randomValues);
+
+    for (let i = 0; i < chunkLength; i++) {
+      result += chars[randomValues[i] % charsLen];
+    }
+    remaining -= chunkLength;
   }
+
   return result;
 }
 
