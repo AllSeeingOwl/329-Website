@@ -569,9 +569,26 @@
       </p>
       <form
         class="newsletter-form"
+        id="surface-newsletter-form"
         onsubmit="
-          alert('Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)');
-          return false;
+          event.preventDefault();
+          const btn = this.querySelector('button[type=\'submit\']');
+          const successMsg = document.getElementById('surface-newsletter-success');
+
+          this.setAttribute('aria-busy', 'true');
+          btn.disabled = true;
+          btn.setAttribute('aria-disabled', 'true');
+          btn.textContent = 'SUBSCRIBING...';
+
+          setTimeout(() => {
+            this.reset();
+            this.style.display = 'none';
+            this.setAttribute('aria-busy', 'false');
+            btn.disabled = false;
+            btn.removeAttribute('aria-disabled');
+            btn.textContent = 'Subscribe';
+            successMsg.style.display = 'block';
+          }, 1000);
         "
       >
         <input
@@ -584,6 +601,21 @@
         />
         <button type="submit">Subscribe</button>
       </form>
+      <div
+        id="surface-newsletter-success"
+        class="newsletter-success"
+        role="alert"
+        aria-live="polite"
+        style="
+          display: none;
+          margin-top: 15px;
+          color: var(--accent-red);
+          font-weight: bold;
+          text-align: center;
+        "
+      >
+        Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)
+      </div>
     </section>
 
     <footer>

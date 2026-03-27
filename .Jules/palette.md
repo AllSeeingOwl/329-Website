@@ -9,3 +9,8 @@
 
 **Learning:** When using the HTML5 'required' attribute, screen readers automatically announce it. However, sighted users still need a visual indicator. Adding a red asterisk with 'aria-hidden="true"' is a simple, accessible pattern to provide this visual cue without double-announcing for screen reader users.
 **Action:** Always pair HTML5 'required' attributes with an aria-hidden visual indicator (like an asterisk) to serve both sighted and non-sighted users efficiently.
+
+## 2026-03-24 - Replaced Native Alerts with Accessible Inline Messages
+
+**Learning:** Replacing native `alert()` calls with inline success messages requires setting `role="alert"` and `aria-live="polite"` to ensure screen readers immediately announce the status change. Additionally, forms should properly manage state by setting `aria-busy="true"` on the form and `aria-disabled="true"` on the disabled submit button.
+**Action:** Always replace `alert()` dialogues with accessible inline messaging that manages both the visual and screen reader state during async operations.
