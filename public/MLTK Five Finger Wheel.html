@@ -84,7 +84,9 @@
         height: 100%;
         border-radius: 50%;
         border: 4px solid #00ff00;
-        box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 20px rgba(0, 255, 0, 0.2);
+        box-shadow:
+          0 0 20px rgba(0, 255, 0, 0.4),
+          inset 0 0 20px rgba(0, 255, 0, 0.2);
         position: relative;
         overflow: hidden;
         transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); /* Smooth deceleration */
@@ -131,12 +133,25 @@
       }
 
       /* Centering labels in the 72-degree slices */
-      .label.l1 { transform: translateX(-50%) rotate(36deg); }
-      .label.l2 { transform: translateX(-50%) rotate(108deg); color: #fff; } /* better contrast on dark green */
-      .label.l3 { transform: translateX(-50%) rotate(180deg); color: #fff; }
-      .label.l4 { transform: translateX(-50%) rotate(252deg); color: #fff; }
-      .label.l5 { transform: translateX(-50%) rotate(324deg); color: #fff; }
-
+      .label.l1 {
+        transform: translateX(-50%) rotate(36deg);
+      }
+      .label.l2 {
+        transform: translateX(-50%) rotate(108deg);
+        color: #fff;
+      } /* better contrast on dark green */
+      .label.l3 {
+        transform: translateX(-50%) rotate(180deg);
+        color: #fff;
+      }
+      .label.l4 {
+        transform: translateX(-50%) rotate(252deg);
+        color: #fff;
+      }
+      .label.l5 {
+        transform: translateX(-50%) rotate(324deg);
+        color: #fff;
+      }
 
       /* Controls */
       .controls {
@@ -219,11 +234,26 @@
       }
 
       /* Severity Colors */
-      .severity-mild { color: #00ff00; text-shadow: 0 0 8px rgba(0, 255, 0, 0.8); }
-      .severity-moderate { color: #aaff00; text-shadow: 0 0 8px rgba(170, 255, 0, 0.8); }
-      .severity-elevated { color: #ffff00; text-shadow: 0 0 8px rgba(255, 255, 0, 0.8); }
-      .severity-high { color: #ffaa00; text-shadow: 0 0 8px rgba(255, 170, 0, 0.8); }
-      .severity-critical { color: #ff003c; text-shadow: 0 0 8px rgba(255, 0, 60, 0.8); }
+      .severity-mild {
+        color: #00ff00;
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+      }
+      .severity-moderate {
+        color: #aaff00;
+        text-shadow: 0 0 8px rgba(170, 255, 0, 0.8);
+      }
+      .severity-elevated {
+        color: #ffff00;
+        text-shadow: 0 0 8px rgba(255, 255, 0, 0.8);
+      }
+      .severity-high {
+        color: #ffaa00;
+        text-shadow: 0 0 8px rgba(255, 170, 0, 0.8);
+      }
+      .severity-critical {
+        color: #ff003c;
+        text-shadow: 0 0 8px rgba(255, 0, 60, 0.8);
+      }
 
       /* Static/Noise Overlay */
       .static-overlay {
@@ -278,9 +308,15 @@
       }
 
       @keyframes crt-flicker {
-        0% { opacity: 0.95; }
-        50% { opacity: 1; }
-        100% { opacity: 0.95; }
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
       }
 
       @media (max-width: 600px) {
@@ -310,8 +346,8 @@
       }
     </style>
     <script src="/app.js"></script>
-  <link rel="manifest" href="/manifest.json">
-</head>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
     <div class="static-overlay"></div>
     <header>
@@ -372,11 +408,36 @@
         // so we want: finalAngle % 360 == (360 - 36) = 324 to center Pinky.
         // Let's define it simpler: targetAngle = 360 - centerAngle of slice.
         const slices = [
-          { name: 'PINKY', class: 'severity-mild', desc: 'SEVERITY: MILD - MINIMAL LOSS IN FUNCTIONALITY', center: 36 },
-          { name: 'RING', class: 'severity-moderate', desc: 'SEVERITY: MODERATE - NEGLIGIBLE IMPACT', center: 108 },
-          { name: 'MIDDLE', class: 'severity-elevated', desc: 'SEVERITY: ELEVATED - NOTICEABLE DEFICIT', center: 180 },
-          { name: 'INDEX', class: 'severity-high', desc: 'SEVERITY: HIGH - SIGNIFICANT IMPAIRMENT', center: 252 },
-          { name: 'THUMB', class: 'severity-critical', desc: 'SEVERITY: CRITICAL - MAXIMUM DISRUPTION', center: 324 }
+          {
+            name: 'PINKY',
+            class: 'severity-mild',
+            desc: 'SEVERITY: MILD - MINIMAL LOSS IN FUNCTIONALITY',
+            center: 36,
+          },
+          {
+            name: 'RING',
+            class: 'severity-moderate',
+            desc: 'SEVERITY: MODERATE - NEGLIGIBLE IMPACT',
+            center: 108,
+          },
+          {
+            name: 'MIDDLE',
+            class: 'severity-elevated',
+            desc: 'SEVERITY: ELEVATED - NOTICEABLE DEFICIT',
+            center: 180,
+          },
+          {
+            name: 'INDEX',
+            class: 'severity-high',
+            desc: 'SEVERITY: HIGH - SIGNIFICANT IMPAIRMENT',
+            center: 252,
+          },
+          {
+            name: 'THUMB',
+            class: 'severity-critical',
+            desc: 'SEVERITY: CRITICAL - MAXIMUM DISRUPTION',
+            center: 324,
+          },
         ];
 
         let currentRotation = 0;
@@ -408,7 +469,8 @@
 
           // Compute new rotation
           // currentRotation = currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset
-          let newRotation = currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset;
+          let newRotation =
+            currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset;
 
           currentRotation = newRotation;
           wheel.style.transform = `rotate(${currentRotation}deg)`;

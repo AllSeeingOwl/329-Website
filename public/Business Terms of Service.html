@@ -258,8 +258,8 @@
       }
     </style>
     <script src="/app.js"></script>
-  <link rel="manifest" href="/manifest.json">
-</head>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
     <header class="studio-header">
       <div class="container nav-inner">
@@ -273,6 +273,7 @@
           class="menu-toggle"
           aria-label="Toggle Menu"
           aria-expanded="false"
+          aria-controls="main-nav"
           onclick="
             const nav = document.getElementById('main-nav');
             const expanded = nav.classList.toggle('active');

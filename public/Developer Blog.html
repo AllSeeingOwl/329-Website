@@ -397,7 +397,8 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false"
+          aria-controls="main-nav" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
