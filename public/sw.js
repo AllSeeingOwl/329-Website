@@ -7,6 +7,7 @@ const urlsToCache = [
   '/404.html',
   '/Business Privacy Policy.html',
   '/Business Terms of Service.html',
+  '/Online Selling Policies.html',
   '/Developer Blog.html',
   '/GRETCHEN_DOSSIER.txt',
   '/In-Universe 404 Error.html',
