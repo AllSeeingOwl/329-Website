@@ -288,15 +288,16 @@
       .accordion-content {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease;
+        transition: max-height 0.3s ease, opacity 0.3s ease;
         padding: 0 20px;
         background: #faf9f6;
+        opacity: 0;
       }
 
       .accordion-content.open {
-        max-height: 1000px; /* arbitrary large value for transition */
         padding: 20px;
         border-top: 1px solid var(--border-color);
+        opacity: 1;
       }
 
       .steps-grid {
@@ -761,23 +762,41 @@
         // Accordion Accessibility and Logic
         const accordions = document.querySelectorAll('.accordion-header');
 
-        accordions.forEach((acc) => {
-          acc.addEventListener('click', function () {
-            const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            const content = document.getElementById(this.getAttribute('aria-controls'));
+        function toggleAccordion(btn) {
+          const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+          const content = document.getElementById(btn.getAttribute('aria-controls'));
 
-            this.setAttribute('aria-expanded', !isExpanded);
+          btn.setAttribute('aria-expanded', !isExpanded);
 
-            if (!isExpanded) {
-              content.classList.add('open');
-            } else {
-              content.classList.remove('open');
-            }
+          if (!isExpanded) {
+            content.classList.add('open');
+            content.style.maxHeight = content.scrollHeight + 'px';
+          } else {
+            content.style.maxHeight = '0px';
+            content.addEventListener('transitionend', function handler(e) {
+              if (e.target !== content) return;
+              if (btn.getAttribute('aria-expanded') === 'false') {
+                content.classList.remove('open');
+              }
+              content.removeEventListener('transitionend', handler);
+            });
+          }
+        }
+
+        accordions.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            toggleAccordion(btn);
           });
 
           // Keyboard navigation for accordion group (if multiple)
-          acc.addEventListener('keydown', function (e) {
-            const index = Array.from(accordions).indexOf(this);
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleAccordion(btn);
+              return;
+            }
+
+            const index = Array.from(accordions).indexOf(btn);
             if (e.key === 'ArrowDown') {
               e.preventDefault();
               const next = accordions[index + 1] || accordions[0];
@@ -788,6 +807,25 @@
               prev.focus();
             }
           });
+        });
+
+        // ⚡ Bolt: Debounce the resize event using requestAnimationFrame to prevent layout thrashing.
+        // Reading scrollHeight forces a synchronous reflow. Doing this on every resize event
+        // (which fires multiple times per frame) causes significant performance degradation.
+        let resizeTicking = false;
+        window.addEventListener('resize', () => {
+          if (!resizeTicking) {
+            window.requestAnimationFrame(() => {
+              accordions.forEach((btn) => {
+                if (btn.getAttribute('aria-expanded') === 'true') {
+                  const content = document.getElementById(btn.getAttribute('aria-controls'));
+                  content.style.maxHeight = content.scrollHeight + 'px';
+                }
+              });
+              resizeTicking = false;
+            });
+            resizeTicking = true;
+          }
         });
       });
     </script>
