@@ -447,6 +447,12 @@
         <button type="submit" id="submit-btn">Send Message</button>
       </form>
       <div
+        id="rate-limit-message"
+        style="display: none; color: red; margin-top: 15px; font-weight: bold; text-align: center"
+        role="alert"
+        aria-live="polite"
+      ></div>
+      <div
         id="success-message"
         style="display: none; color: green; margin-top: 15px; font-weight: bold; text-align: center"
         role="alert"
@@ -468,6 +474,22 @@
         const form = document.getElementById('contact-form');
         const btn = document.getElementById('submit-btn');
         const successMsg = document.getElementById('success-message');
+        const rateLimitMsg = document.getElementById('rate-limit-message');
+
+        // 🛡️ Sentinel: Client-side rate limiting to prevent spam
+        const lastSubmissionTime = localStorage.getItem('lastContactSubmission');
+        const now = Date.now();
+        const rateLimitWindow = 60000; // 60 seconds
+
+        if (lastSubmissionTime && (now - lastSubmissionTime < rateLimitWindow)) {
+          const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
+          rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
+          rateLimitMsg.style.display = 'block';
+          return;
+        }
+
+        rateLimitMsg.style.display = 'none';
+        localStorage.setItem('lastContactSubmission', now);
 
         form.setAttribute('aria-busy', 'true');
         btn.disabled = true;
