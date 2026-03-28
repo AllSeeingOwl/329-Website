@@ -40,6 +40,8 @@ const studioFiles = new Set([
   '/Surface Home Page.html',
   '/Studio Manifesto Page.html',
   '/Store.html',
+  '/Cart.html',
+  '/Checkout.html',
   '/Releases.html',
   '/Studio Contact Us.html',
   '/Business Privacy Policy.html',
