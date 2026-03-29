@@ -14,3 +14,8 @@
 
 **Learning:** Replacing native `alert()` calls with inline success messages requires setting `role="alert"` and `aria-live="polite"` to ensure screen readers immediately announce the status change. Additionally, forms should properly manage state by setting `aria-busy="true"` on the form and `aria-disabled="true"` on the disabled submit button.
 **Action:** Always replace `alert()` dialogues with accessible inline messaging that manages both the visual and screen reader state during async operations.
+
+## 2026-03-29 - Explicit Aria-Disabled State for Async Buttons
+
+**Learning:** When disabling a button during an async operation or animation (e.g., using `btn.disabled = true;`), relying solely on the native `disabled` attribute may not sufficiently or consistently notify screen readers of the state change while the element still has focus. Explicitly managing `aria-disabled="true"` provides a more robust accessibility cue.
+**Action:** Always set `aria-disabled="true"` when setting a button's native `disabled` property to true during interactive states, and be sure to `removeAttribute('aria-disabled')` when re-enabling it.

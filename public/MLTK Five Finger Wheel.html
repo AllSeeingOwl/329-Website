@@ -447,6 +447,7 @@
           if (isSpinning) return;
           isSpinning = true;
           spinBtn.disabled = true;
+          spinBtn.setAttribute('aria-disabled', 'true');
           spinBtn.textContent = 'PROCESSING...';
 
           resultTarget.textContent = 'CALCULATING TRAJECTORY...';
@@ -479,6 +480,7 @@
           setTimeout(() => {
             isSpinning = false;
             spinBtn.disabled = false;
+            spinBtn.removeAttribute('aria-disabled');
             spinBtn.textContent = 'INITIATE SPIN';
 
             resultTarget.textContent = `TARGET: ${targetSlice.name}`;
