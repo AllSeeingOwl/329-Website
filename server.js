@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const crypto = require('crypto');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // 🛡️ Sentinel: Disable Express framework leakage
 app.disable('x-powered-by');
