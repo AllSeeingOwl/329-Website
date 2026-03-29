@@ -27,7 +27,7 @@ const documents = {
 // -----------------------------------------
 // Modal Logic
 // -----------------------------------------
-const allowedTags = new Set(['p', 'strong', 'em']);
+const allowedTags = new Set(['P', 'STRONG', 'EM']); // ⚡ Bolt: Uppercase to match node.nodeName without conversion
 
 // ⚡ Bolt: Optimized recursive DOM traversal by replacing NodeList.forEach()
 // with a fast while loop utilizing nextSibling. This reduces intermediate
@@ -36,8 +36,9 @@ const buildSafe = (node, target) => {
   let child = node.firstChild;
   while (child) {
     if (child.nodeType === 3) target.appendChild(document.createTextNode(child.textContent));
-    else if (child.nodeType === 1 && allowedTags.has(child.tagName.toLowerCase())) {
-      const el = document.createElement(child.tagName);
+    // ⚡ Bolt: Use nodeName directly against an uppercase Set to avoid creating a new lowercase string allocation per element
+    else if (child.nodeType === 1 && allowedTags.has(child.nodeName)) {
+      const el = document.createElement(child.nodeName);
       buildSafe(child, el);
       target.appendChild(el);
     }
