@@ -57,3 +57,9 @@
 **Vulnerability:** Missing `Referrer-Policy` header can leak sensitive URL paths or tokens across origins when users navigate away from the application.
 **Learning:** Browsers by default may send the full URL of the referring page to the destination site. Setting the `Referrer-Policy` header to `strict-origin-when-cross-origin` ensures that only the origin is sent for cross-origin requests, protecting sensitive path information while still allowing full referrers for same-origin requests.
 **Prevention:** Always include `Referrer-Policy: strict-origin-when-cross-origin` in the global security headers middleware to enhance user privacy and prevent cross-origin information leakage.
+
+## 2024-05-24 - Client-Side Rate Limiting for Simulated Forms
+
+**Vulnerability:** Missing client-side rate limiting on simulated frontend forms allows users to spam submissions, potentially causing client-side Denial of Service (DoS) or performance degradation.
+**Learning:** Simulated frontend forms (e.g., ticket submissions) can be spammed by users if there is no client-side rate limiting, leading to unnecessary DOM updates and potential performance issues. Adding a simple `localStorage`-based rate limit provides a layer of defense-in-depth against client-side DoS.
+**Prevention:** Implement client-side rate limiting using `localStorage` to track submission timestamps and prevent rapid subsequent submissions, ensuring the corresponding error message is accessible to screen readers (e.g., using `role="alert"` and `aria-live="polite"`).
