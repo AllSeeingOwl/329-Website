@@ -201,9 +201,21 @@
 
       /* Maintenance Styles */
       .portal-card.disabled {
-        opacity: 0.5;
         pointer-events: none;
         filter: grayscale(100%);
+      }
+
+      .portal-card.disabled .card-icon,
+      .portal-card.disabled .card-title {
+        opacity: 0.5;
+      }
+
+      .portal-card.studio-card.disabled .card-desc {
+        color: #767676; /* Higher contrast grey than the original 0.5 opacity of #555 */
+      }
+
+      .portal-card.mltk-card.disabled .card-desc {
+        color: #828282; /* Higher contrast grey than the original 0.5 opacity of #e0e0e0 */
       }
 
       .maintenance-label {
@@ -231,13 +243,13 @@
 
       .maintenance-label.mltk-label {
         background-color: var(--mltk-accent);
-        color: #fff;
+        color: #000;
         font-family: 'Anton', sans-serif;
         text-transform: uppercase;
         font-size: 1.5rem;
         letter-spacing: 3px;
         border: 2px dashed #000;
-        text-shadow: 2px 2px 0px #000;
+        text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3);
       }
 
       /* Subtle text glitch animation */
