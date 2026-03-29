@@ -333,6 +333,12 @@
           PROCESSING REQUEST... PLEASE STAND BY...
         </div>
       </form>
+      <div
+        id="rate-limit-message"
+        style="display: none; color: red; margin-top: 15px; font-weight: bold; text-align: center"
+        role="alert"
+        aria-live="polite"
+      ></div>
     </div>
 
     <script>
@@ -343,8 +349,24 @@
         const processingMsg = document.getElementById('processing-msg');
         const chatWindow = document.getElementById('chat-window');
         const form = document.getElementById('support-form');
+        const rateLimitMsg = document.getElementById('rate-limit-message');
         const category = document.getElementById('category').value;
         const msgInput = document.getElementById('message').value;
+
+        // 🛡️ Sentinel: Client-side rate limiting to prevent spam
+        const lastSubmissionTime = localStorage.getItem('lastMltkSupportSubmission');
+        const now = Date.now();
+        const rateLimitWindow = 60000; // 60 seconds
+
+        if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
+          const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
+          rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
+          rateLimitMsg.style.display = 'block';
+          return;
+        }
+
+        rateLimitMsg.style.display = 'none';
+        localStorage.setItem('lastMltkSupportSubmission', now);
 
         btn.disabled = true;
         btn.setAttribute('aria-disabled', 'true');
