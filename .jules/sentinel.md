@@ -63,3 +63,9 @@
 **Vulnerability:** Missing client-side rate limiting on simulated frontend forms allows users to spam submissions, potentially causing client-side Denial of Service (DoS) or performance degradation.
 **Learning:** Simulated frontend forms (e.g., ticket submissions) can be spammed by users if there is no client-side rate limiting, leading to unnecessary DOM updates and potential performance issues. Adding a simple `localStorage`-based rate limit provides a layer of defense-in-depth against client-side DoS.
 **Prevention:** Implement client-side rate limiting using `localStorage` to track submission timestamps and prevent rapid subsequent submissions, ensuring the corresponding error message is accessible to screen readers (e.g., using `role="alert"` and `aria-live="polite"`).
+
+## 2026-03-30 - Direct DOM Manipulation with innerHTML
+
+**Vulnerability:** Use of `innerHTML` for clearing element content, which can pose a security risk if misused or if the content is later updated with unsanitized user input.
+**Learning:** While setting `innerHTML = ''` is not directly exploitable, it is a bad practice that can lead to XSS vulnerabilities. `textContent` is a safer alternative for handling plain text and clearing elements as it does not trigger the HTML parser.
+**Prevention:** Always prefer `textContent` over `innerHTML` when dealing with plain text or when clearing the contents of an element to prevent potential XSS vectors and improve performance.
