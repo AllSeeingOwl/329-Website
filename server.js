@@ -35,6 +35,10 @@ const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
 const STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
 const MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 
+// ⚡ Bolt: Pre-calculate static asset paths to avoid redundant path logic and allocations.
+const MAINTENANCE_PATH = path.join(__dirname, 'public', 'maintenance.html');
+const NOT_FOUND_PATH = path.join(__dirname, 'public', '404.html');
+
 // Lists of files belonging to each portal
 const studioFiles = new Set([
   '/Surface Home Page.html',
@@ -81,17 +85,17 @@ app.use((req, res, next) => {
   // Global Maintenance Mode applies to everything except static assets if we want,
   // but originally it was fully blocking everything. Keeping the original behavior:
   if (MAINTENANCE_MODE) {
-    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+    return res.status(503).sendFile(MAINTENANCE_PATH);
   }
 
   // Check specific maintenance modes for HTML pages.
   // We only block specific paths to allow CSS/JS to pass through freely.
   if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
-    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+    return res.status(503).sendFile(MAINTENANCE_PATH);
   }
 
   if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
-    return res.status(503).sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+    return res.status(503).sendFile(MAINTENANCE_PATH);
   }
 
   next();
@@ -167,7 +171,7 @@ app.post('/api/verify', (req, res) => {
 
 // Catch-all route to serve the custom 404 page
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+  res.status(404).sendFile(NOT_FOUND_PATH);
 });
 
 // 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
