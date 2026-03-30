@@ -938,12 +938,20 @@
         window.addEventListener('resize', () => {
           if (!resizeTicking) {
             window.requestAnimationFrame(() => {
+              // ⚡ Bolt: Batch DOM reads to prevent layout thrashing
+              const activeUpdates = [];
               accordions.forEach((btn) => {
                 if (btn.getAttribute('aria-expanded') === 'true') {
                   const content = document.getElementById(btn.getAttribute('aria-controls'));
-                  content.style.maxHeight = content.scrollHeight + 'px';
+                  activeUpdates.push({ content, height: content.scrollHeight });
                 }
               });
+
+              // ⚡ Bolt: Batch DOM writes sequentially after reads
+              activeUpdates.forEach((update) => {
+                update.content.style.maxHeight = update.height + 'px';
+              });
+
               resizeTicking = false;
             });
             resizeTicking = true;
