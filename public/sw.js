@@ -37,6 +37,7 @@ const urlsToCache = [
   '/Studio Puzzles Explained.html',
   '/Studio Team.html',
   '/Surface Home Page.html',
+  '/System Override.html',
   '/Velvet Rope Landing Page.html',
   '/maintenance.html',
   '/mltk_login_utils.js',
