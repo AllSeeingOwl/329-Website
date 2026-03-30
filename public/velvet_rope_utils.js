@@ -66,6 +66,8 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
     btn.innerText = 'LINK ESTABLISHED...';
     btn.style.backgroundColor = '#fff';
     btn.style.color = '#ff003c';
+    btn.disabled = true;
+    btn.setAttribute('aria-disabled', 'true');
   }
 
   await sleep(800);
@@ -95,6 +97,13 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   closeBtn.onclick = function () {
     if (this.parentElement) {
       this.parentElement.remove();
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.removeAttribute('aria-disabled');
+      btn.innerText = 'BREACH THE MAINFRAME';
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
     }
   };
 
