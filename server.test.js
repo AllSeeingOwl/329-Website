@@ -176,4 +176,14 @@ describe('Server Tests', () => {
     expect(response.body).toEqual({ error: 'Internal Server Error' });
     expect(response.text).not.toContain('Error: Simulated internal error');
   });
+
+  it('should return 400 Bad Request when provided with a malformed URI', async () => {
+    // Require the app
+    app = require('./server');
+
+    // Send a request with a deliberately malformed URI
+    const response = await request(app).get('/%c0%af').expect(400);
+
+    expect(response.body).toEqual({ error: 'Bad Request: Malformed URI' });
+  });
 });
