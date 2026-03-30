@@ -422,7 +422,7 @@
              messageBox.className = 'message-box message-error';
 
              // Escape HTML visually using createTextNode
-             messageBox.innerHTML = '';
+             messageBox.textContent = '';
              messageBox.appendChild(document.createTextNode(`HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${secondsLeft}s.`));
 
              // Setup countdown
@@ -434,7 +434,7 @@
                      enableForm();
                      messageBox.style.display = 'none';
                  } else {
-                     messageBox.innerHTML = '';
+                     messageBox.textContent = '';
                      messageBox.appendChild(document.createTextNode(`HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${remaining}s.`));
                  }
              }, 1000);
@@ -470,7 +470,7 @@
             // Show success message (using text node to prevent XSS)
             messageBox.style.display = 'block';
             messageBox.className = 'message-box message-success';
-            messageBox.innerHTML = '';
+            messageBox.textContent = '';
 
             // XSS mitigation for input rendering
             const truncatedEmail = email.substring(0, 50); // Prevent massive payloads
