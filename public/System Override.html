@@ -515,11 +515,13 @@
           if (!email) return;
 
           // Simulate processing
+          form.setAttribute('aria-busy', 'true');
           submitBtn.disabled = true;
           submitBtn.setAttribute('aria-disabled', 'true');
           submitBtn.textContent = 'TRANSMITTING...';
 
           setTimeout(() => {
+            form.removeAttribute('aria-busy');
             // Set rate limit
             localStorage.setItem('systemOverrideUplinkTime', Date.now().toString());
 

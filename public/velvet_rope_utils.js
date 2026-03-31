@@ -61,7 +61,10 @@ async function initVelvetRope() {
 
 async function breachMainframe(e, win = typeof window !== 'undefined' ? window : null) {
   if (e && typeof e.preventDefault === 'function') e.preventDefault();
-  const btn = e && e.target ? e.target.querySelector('button') : null;
+  if (e && e.target && typeof e.target.setAttribute === 'function') {
+    e.target.setAttribute('aria-busy', 'true');
+  }
+  const btn = e && e.target && typeof e.target.querySelector === 'function' ? e.target.querySelector('button') : null;
   if (btn) {
     btn.innerText = 'LINK ESTABLISHED...';
     btn.style.backgroundColor = '#fff';
@@ -97,6 +100,9 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   closeBtn.onclick = function () {
     if (this.parentElement) {
       this.parentElement.remove();
+    }
+    if (e && e.target && typeof e.target.removeAttribute === 'function') {
+      e.target.removeAttribute('aria-busy');
     }
     if (btn) {
       btn.disabled = false;
