@@ -28,7 +28,7 @@ describe('NOVA Classified Archive Modal', () => {
       openDoc('vv');
 
       expect(viewer.classList.contains('visible')).toBe(true);
-      expect(header.innerText).toBe(documents['vv'].title);
+      expect(header.textContent).toBe(documents['vv'].title);
       expect(body.innerHTML).toBe(documents['vv'].content);
     });
 

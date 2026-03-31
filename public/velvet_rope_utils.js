@@ -66,7 +66,8 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   }
   const btn = e && e.target && typeof e.target.querySelector === 'function' ? e.target.querySelector('button') : null;
   if (btn) {
-    btn.innerText = 'LINK ESTABLISHED...';
+    // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows when updating text
+    btn.textContent = 'LINK ESTABLISHED...';
     btn.style.backgroundColor = '#fff';
     btn.style.color = '#ff003c';
     btn.disabled = true;
@@ -107,7 +108,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
     if (btn) {
       btn.disabled = false;
       btn.removeAttribute('aria-disabled');
-      btn.innerText = 'BREACH THE MAINFRAME';
+      btn.textContent = 'BREACH THE MAINFRAME';
       btn.style.backgroundColor = '';
       btn.style.color = '';
     }

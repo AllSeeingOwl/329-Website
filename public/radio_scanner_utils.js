@@ -45,7 +45,8 @@ function setupRadioScanner() {
   slider.addEventListener('input', function () {
     let rawVal = parseInt(this.value);
     let freq = (rawVal / 10).toFixed(1);
-    display.innerText = freq;
+    // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows during high-frequency slider input events
+    display.textContent = freq;
 
     // Clear any existing animation frame to prevent overlapping typing effects
     if (typingAnimationId) {

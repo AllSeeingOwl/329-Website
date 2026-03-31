@@ -401,7 +401,8 @@
 
       const countdown = setInterval(() => {
         timeLeft--;
-        timerDisplay.innerText = `ICE PROTOCOL IN: ${timeLeft}s`;
+        // ⚡ Bolt: Replace innerText with textContent to prevent synchronous layout recalculations every second
+        timerDisplay.textContent = `ICE PROTOCOL IN: ${timeLeft}s`;
 
         if (timeLeft <= 10) {
           // Panic mode

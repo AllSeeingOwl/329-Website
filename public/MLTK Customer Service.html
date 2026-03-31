@@ -370,7 +370,8 @@
 
         btn.disabled = true;
         btn.setAttribute('aria-disabled', 'true');
-        btn.innerText = 'PROCESSING...';
+        // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows on form submission
+        btn.textContent = 'PROCESSING...';
         form.setAttribute('aria-busy', 'true');
         processingMsg.style.display = 'block';
 
@@ -429,7 +430,7 @@
           form.reset();
           btn.disabled = false;
           btn.removeAttribute('aria-disabled');
-          btn.innerText = 'SUBMIT INQUIRY TO MAINFRAME';
+          btn.textContent = 'SUBMIT INQUIRY TO MAINFRAME';
           form.removeAttribute('aria-busy');
           processingMsg.style.display = 'none';
         }, 2500); // 2.5 second delay for corporate realism
