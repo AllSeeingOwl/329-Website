@@ -19,3 +19,8 @@
 
 **Learning:** When disabling a button during an async operation or animation (e.g., using `btn.disabled = true;`), relying solely on the native `disabled` attribute may not sufficiently or consistently notify screen readers of the state change while the element still has focus. Explicitly managing `aria-disabled="true"` provides a more robust accessibility cue.
 **Action:** Always set `aria-disabled="true"` when setting a button's native `disabled` property to true during interactive states, and be sure to `removeAttribute('aria-disabled')` when re-enabling it.
+
+## 2026-03-31 - Aria-Busy State for Asynchronous Forms
+
+**Learning:** For forms that handle their submissions asynchronously (like simulating loading states with `setTimeout`), adding the `aria-busy="true"` attribute to the `<form>` element while the simulated delay occurs properly informs screen readers that a background process is active.
+**Action:** When a form intercepts its submission to run custom asynchronous code, apply `form.setAttribute('aria-busy', 'true')` and remove it or set it to `'false'` upon completion.
