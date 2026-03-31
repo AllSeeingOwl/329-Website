@@ -61,7 +61,8 @@ function openDoc(docId) {
     return;
   }
 
-  header.innerText = documents[docId].title;
+  // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows when opening documents
+  header.textContent = documents[docId].title;
 
   // Secure DOM construction to prevent XSS
   body.textContent = '';

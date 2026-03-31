@@ -112,7 +112,7 @@ describe('setupRadioScanner', () => {
     slider.value = '880';
     slider.dispatchEvent(new Event('input'));
 
-    expect(display.innerText).toBe('88.0');
+    expect(display.textContent).toBe('88.0');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
     expect(output.textContent.length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe('setupRadioScanner', () => {
     slider.value = '1046'; // distance is 3 (1049 - 1046)
     slider.dispatchEvent(new Event('input'));
 
-    expect(display.innerText).toBe('104.6');
+    expect(display.textContent).toBe('104.6');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
     expect(output.textContent).toContain('...TRANSMISSION S');
@@ -139,7 +139,7 @@ describe('setupRadioScanner', () => {
     slider.value = '1049';
     slider.dispatchEvent(new Event('input'));
 
-    expect(display.innerText).toBe('104.9');
+    expect(display.textContent).toBe('104.9');
     expect(radioBody.classList.contains('locked-in')).toBe(true);
     expect(output.classList.contains('anim-shake')).toBe(false);
 

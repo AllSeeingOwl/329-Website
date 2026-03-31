@@ -48,6 +48,11 @@
 **Learning:** Allocating typed arrays (like `new Uint8Array(length)`) inside a function called by high-frequency events (like a range slider's `input` event) causes significant garbage collection pressure and main-thread blocking, leading to severe layout jank during user interactions.
 **Action:** Extract typed array allocations outside the hot path to a module-scoped, reasonably sized constant variable (e.g., `const sharedStaticBuffer = new Uint8Array(256);`), and reuse it via `.subarray(0, length)` within the function to prevent continuous memory allocations and GC sweeps.
 
+## 2026-03-25 - Prevent Layout Thrashing with textContent vs innerText
+
+**Learning:** Updating text in the DOM using `innerText` triggers a synchronous layout recalculation (reflow) because it is aware of CSS styling and text transformations. During high-frequency updates, such as slider inputs or countdown timers, this causes unnecessary main-thread blocking and layout thrashing.
+**Action:** Replace `innerText` with `textContent` for simple string assignments. `textContent` directly sets the text value of the node, bypassing the layout engine and significantly improving performance during repetitive DOM updates.
+
 ## 2026-03-25 - Prevent String Allocation in Recursive DOM Traversals
 
 **Learning:** Repeatedly calling `String.prototype.toLowerCase()` (e.g., `child.tagName.toLowerCase()`) inside deep, recursive DOM traversal loops creates significant garbage collection pressure by allocating a new string for every single element node processed.
