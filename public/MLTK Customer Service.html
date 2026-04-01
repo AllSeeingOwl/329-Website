@@ -396,7 +396,7 @@
           const ticketId = (randomArray[0] % 9000000) + 1000000;
 
           // 🛡️ Sentinel: Truncate raw input FIRST, then escape it to prevent splitting HTML entities
-          const safeMsgInput = escapeHTML(msgInput.substring(0, 30));
+          const safeMsgInput = escapeHTML(msgInput).substring(0, 30);
 
           let responseText = `\n\n> RECEIVING TRANSMISSION...`;
           responseText += `\n> ANALYZING COMPLAINT: "${safeMsgInput}..."`;
