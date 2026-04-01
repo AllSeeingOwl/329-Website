@@ -24,3 +24,7 @@
 
 **Learning:** For forms that handle their submissions asynchronously (like simulating loading states with `setTimeout`), adding the `aria-busy="true"` attribute to the `<form>` element while the simulated delay occurs properly informs screen readers that a background process is active.
 **Action:** When a form intercepts its submission to run custom asynchronous code, apply `form.setAttribute('aria-busy', 'true')` and remove it or set it to `'false'` upon completion.
+## 2026-04-01 - Added Aria-Label for Passcode Input
+
+**Learning:** Sighted users can easily infer the purpose of an input field based on adjacent visual prompts (like "ENTER PASSCODE:"), but screen readers may not intrinsically associate that text with the input.
+**Action:** Always add an explicit `aria-label` to form inputs, particularly standalone ones like command prompts or passcodes, so that screen reader users are provided with clear context.
