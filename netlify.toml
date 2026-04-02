@@ -1,7 +1,2 @@
 [build]
   publish = "public"
-  command = ""
-  ignore = "git diff --quiet $DEPLOY_PRIME_GIT_COMMIT_SHA^ $DEPLOY_PRIME_GIT_COMMIT_SHA -- ."
-
-[build.environment]
-  SKIP_BUILD = "true"
