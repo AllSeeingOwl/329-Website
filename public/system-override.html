@@ -445,27 +445,35 @@
           emailInput.disabled = true;
 
           if (secondsLeft) {
-             submitBtn.textContent = 'COOLDOWN ACTIVE';
-             messageBox.style.display = 'block';
-             messageBox.className = 'message-box message-error';
+            submitBtn.textContent = 'COOLDOWN ACTIVE';
+            messageBox.style.display = 'block';
+            messageBox.className = 'message-box message-error';
 
-             // Escape HTML visually using createTextNode
-             messageBox.textContent = '';
-             messageBox.appendChild(document.createTextNode(`HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${secondsLeft}s.`));
+            // Escape HTML visually using createTextNode
+            messageBox.textContent = '';
+            messageBox.appendChild(
+              document.createTextNode(
+                `HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${secondsLeft}s.`
+              )
+            );
 
-             // Setup countdown
-             let remaining = secondsLeft;
-             const interval = setInterval(() => {
-                 remaining--;
-                 if (remaining <= 0) {
-                     clearInterval(interval);
-                     enableForm();
-                     messageBox.style.display = 'none';
-                 } else {
-                     messageBox.textContent = '';
-                     messageBox.appendChild(document.createTextNode(`HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${remaining}s.`));
-                 }
-             }, 1000);
+            // Setup countdown
+            let remaining = secondsLeft;
+            const interval = setInterval(() => {
+              remaining--;
+              if (remaining <= 0) {
+                clearInterval(interval);
+                enableForm();
+                messageBox.style.display = 'none';
+              } else {
+                messageBox.textContent = '';
+                messageBox.appendChild(
+                  document.createTextNode(
+                    `HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${remaining}s.`
+                  )
+                );
+              }
+            }, 1000);
           }
         }
 

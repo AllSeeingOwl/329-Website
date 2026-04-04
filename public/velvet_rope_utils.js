@@ -64,7 +64,10 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   if (e && e.target && typeof e.target.setAttribute === 'function') {
     e.target.setAttribute('aria-busy', 'true');
   }
-  const btn = e && e.target && typeof e.target.querySelector === 'function' ? e.target.querySelector('button') : null;
+  const btn =
+    e && e.target && typeof e.target.querySelector === 'function'
+      ? e.target.querySelector('button')
+      : null;
   if (btn) {
     // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows when updating text
     btn.textContent = 'LINK ESTABLISHED...';
