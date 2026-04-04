@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3minsto9 | Checkout</title>
+    <title>3minsto9 | Cart</title>
     <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
@@ -154,25 +154,22 @@
         margin: 0 auto;
       }
 
-      .checkout-placeholder {
-        max-width: 600px;
-        margin: 0 auto 100px;
-        padding: 40px 20px;
-        background-color: #fff;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      .cart-placeholder {
         text-align: center;
+        padding: 60px 20px;
+        border: 1px dashed var(--border-color);
+        margin: 40px 0 100px;
+        background-color: #fff;
       }
 
-      .checkout-placeholder h2 {
+      .cart-placeholder h2 {
         font-size: 2rem;
         margin-bottom: 20px;
       }
 
-      .checkout-placeholder p {
+      .cart-placeholder p {
         color: #666;
         margin-bottom: 30px;
-        line-height: 1.5;
       }
 
       footer {
@@ -351,14 +348,14 @@
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
             <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
+                <a href="releases.html" class="nav-link">All Releases</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Vol 1 (Future)</span
                 >
@@ -373,13 +370,13 @@
             <details class="nav-group">
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link"
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link"
                   >Online Selling Policies</a
                 >
               </div>
@@ -390,7 +387,7 @@
             <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
+                <a href="store.html" class="nav-link">Main Store</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Apparel (Future)</span
                 >
@@ -402,11 +399,13 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link" style="color: var(--accent-red) !important"
+              >Cart</a
+            >
           </div>
         </nav>
       </div>
@@ -414,24 +413,27 @@
 
     <main class="container">
       <section class="store-header">
-        <h1>Secure Checkout</h1>
-        <p>Complete your artefact requisition transaction.</p>
+        <h1>Your Requisition Cart</h1>
+        <p>Review your artefact procurements before finalizing checkout.</p>
       </section>
 
-      <section class="checkout-placeholder">
-        <h2>Checkout System Offline</h2>
-        <p>
-          The secure payment gateway and fulfillment processing systems are currently pending
-          integration.
-        </p>
-        <p>
-          <em
-            >(Payment processing boilerplate loaded. Actual transactions cannot be processed at this
-            time.)</em
+      <section class="cart-placeholder">
+        <h2>Your Cart is Empty</h2>
+        <p>You haven't added any items to your requisition yet.</p>
+        <p><em>(E-commerce integration coming soon)</em></p>
+        <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px">
+          <a
+            href="store.html"
+            class="btn-primary"
+            style="
+              background-color: transparent;
+              color: var(--text-color);
+              border: 2px solid var(--text-color);
+            "
+            >Return to Store</a
           >
-        </p>
-        <br />
-        <a href="Cart.html" class="btn-primary">Return to Cart</a>
+          <a href="checkout.html" class="btn-primary">Proceed to Checkout</a>
+        </div>
       </section>
     </main>
 

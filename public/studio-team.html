@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3minsto9 | Independent Micro-Press & Immersive Media</title>
+    <title>3minsto9 | Studio Team</title>
     <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
@@ -32,6 +32,12 @@
       a {
         text-decoration: none;
         color: inherit;
+        transition: color 0.3s ease;
+      }
+
+      a:focus-visible, button:focus-visible {
+        outline: 2px solid var(--accent-red);
+        outline-offset: 4px;
       }
 
       .container {
@@ -61,6 +67,10 @@
         text-transform: uppercase;
       }
 
+      .brand-logo:hover, .brand-logo:focus-visible {
+        color: var(--accent-red);
+      }
+
       .quarter-clock {
         width: 30px;
         height: 30px;
@@ -68,6 +78,12 @@
         border-left: 3px solid var(--text-color);
         border-radius: 100% 0 0 0;
         position: relative;
+        transition: border-color 0.3s ease;
+      }
+
+      .brand-logo:hover .quarter-clock, .brand-logo:focus-visible .quarter-clock {
+        border-top-color: var(--accent-red);
+        border-left-color: var(--accent-red);
       }
 
       .quarter-clock::before {
@@ -107,181 +123,145 @@
         letter-spacing: 1px;
       }
 
-      .nav-links a:hover {
+      .nav-links a:hover, .nav-links a:focus-visible {
         color: var(--accent-red);
       }
 
-      .hero {
-        padding: 100px 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
+      .team-hero {
+        padding: 100px 0 60px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
       }
 
-      .hero-content h1 {
+      .team-hero h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 4.5rem;
+        font-size: 4rem;
         line-height: 1.1;
         margin: 0 0 20px 0;
         font-weight: 700;
       }
 
-      .hero-content p {
+      .team-hero p {
         font-size: 1.2rem;
         line-height: 1.6;
         color: #555;
-        margin-bottom: 40px;
-        max-width: 90%;
+        max-width: 600px;
+        margin: 0 auto;
       }
 
-      .btn-primary {
-        display: inline-block;
-        background-color: var(--text-color);
-        color: var(--bg-color);
-        padding: 18px 36px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        transition: all 0.3s ease;
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        padding: 80px 0;
       }
 
-      .btn-primary:hover {
-        background-color: var(--accent-red);
-        color: #fff;
-      }
-
-      .btn-primary:focus-visible {
-        outline: 2px solid var(--accent-red);
-        outline-offset: 2px;
-        background-color: var(--accent-red);
-        color: #fff;
-      }
-
-      .hero-image {
-        background-color: #eae8e1;
-        width: 100%;
-        aspect-ratio: 3/4;
+      .team-card {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        padding: 40px 30px;
         display: flex;
         flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+
+      .team-card:hover, .team-card:focus-within {
+        transform: translateY(-5px);
+        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05);
+        border-color: var(--text-color);
+      }
+
+      .team-card-image {
+        width: 100%;
+        aspect-ratio: 1/1;
+        display: block;
+        background-color: #eae8e1;
+        margin-bottom: 30px;
+        display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-        box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.05);
-        border: 1px solid var(--border-color);
+        overflow: hidden;
       }
 
-      .hero-image::after {
-        content: 'IMAGE PLACEHOLDER: UNKNOWN VOL. 1 (A5 ZINE)';
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9rem;
-        color: #888;
-        text-align: center;
-        padding: 20px;
-      }
+      /* .team-card-image::after removed, using picture img fallback instead */
 
-      .manifesto {
-        background-color: var(--text-color);
-        color: var(--bg-color);
-        padding: 100px 0;
-        text-align: center;
-      }
-
-      .manifesto-inner {
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .manifesto h2 {
+      .team-card h2 {
         font-family: 'Playfair Display', serif;
-        font-size: 3rem;
-        margin: 0 0 30px 0;
-      }
-
-      .manifesto p {
-        font-size: 1.3rem;
-        line-height: 1.8;
-        color: #aaa;
-      }
-
-      .manifesto .highlight {
-        color: var(--accent-red);
-        font-weight: bold;
-      }
-
-      .newsletter {
-        padding: 100px 0;
-        text-align: center;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .newsletter h3 {
-        font-size: 2rem;
+        font-size: 1.8rem;
         margin: 0 0 10px 0;
+        line-height: 1.2;
       }
 
-      .newsletter p {
-        font-size: 1.1rem;
-        color: #666;
-        margin-bottom: 30px;
-      }
-
-      .newsletter-form {
-        display: flex;
-        justify-content: center;
-        max-width: 500px;
-        margin: 0 auto;
-      }
-
-      .newsletter-form input[type='email'] {
-        flex-grow: 1;
-        padding: 15px 20px;
-        font-size: 1rem;
-        border: 1px solid var(--border-color);
-        border-right: none;
-        outline: none;
-        font-family: 'Inter', sans-serif;
-        background: transparent;
-      }
-
-      .newsletter-form button {
-        background-color: var(--text-color);
-        color: var(--bg-color);
-        border: none;
-        padding: 0 30px;
-        font-weight: 700;
+      .team-card .role {
+        font-size: 0.8rem;
+        font-weight: 900;
+        color: var(--accent-red);
         text-transform: uppercase;
-        cursor: pointer;
-        transition: background 0.3s;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
       }
 
-      .newsletter-form button:hover {
-        background-color: var(--accent-red);
+      .team-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin: 0 0 20px 0;
+        flex-grow: 1;
       }
 
-      .newsletter-form input[type='email']:focus,
-      .newsletter-form button:focus {
-        outline: 2px solid var(--accent-red);
-        outline-offset: 2px;
+      .team-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: auto;
+      }
+
+      .tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 6px 12px;
+        background-color: #f0f0f0;
+        color: var(--text-color);
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       footer {
-        padding: 40px 0;
+        padding: 60px 0 40px;
         text-align: center;
         font-size: 0.85rem;
         color: #888;
+        border-top: 1px solid var(--border-color);
+        background-color: #fff;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .footer-links a {
+        color: var(--text-color);
+      }
+
+      .footer-links a:hover, .footer-links a:focus-visible {
+        color: var(--accent-red);
+      }
+
+      @media (max-width: 992px) {
+        .team-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
 
       @media (max-width: 768px) {
-        .hero {
-          grid-template-columns: 1fr;
-          text-align: center;
-          padding: 60px 0;
-        }
-        .hero-content p {
-          margin: 0 auto 40px auto;
-          font-size: 1rem;
-        }
         .nav-inner {
           flex-direction: column;
           gap: 20px;
@@ -291,34 +271,20 @@
           justify-content: center;
           gap: 15px;
         }
-        .hero-content h1 {
+        .team-hero {
+          padding: 60px 0 40px;
+        }
+        .team-hero h1 {
           font-size: 3rem;
         }
-        .manifesto {
+        .team-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
           padding: 60px 0;
         }
-        .manifesto h2 {
-          font-size: 2.2rem;
-        }
-        .manifesto p {
-          font-size: 1.1rem;
-        }
-        .newsletter {
-          padding: 60px 0;
-        }
-        .newsletter h3 {
-          font-size: 1.8rem;
-        }
-        .newsletter-form {
+        .footer-links {
           flex-direction: column;
           gap: 15px;
-          max-width: 90%;
-        }
-        .newsletter-form input[type='email'] {
-          border-right: 1px solid var(--border-color);
-        }
-        .newsletter-form button {
-          padding: 15px 30px;
         }
       }
 
@@ -332,9 +298,11 @@
       }
     </style>
 
+
+
+
     <style id="hamburger-override">
-      header,
-      .studio-header {
+      header, .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -383,7 +351,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -410,8 +378,7 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover,
-      details.nav-group summary:hover {
+      .nav-link:hover, details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -508,11 +475,12 @@
       }
 
     </style>
-    <script src="/app.js"></script>
-    <link rel="manifest" href="/manifest.json" />
-  </head>
+  <script src="/app.js"></script>
+  <link rel="manifest" href="/manifest.json">
+</head>
   <body>
-    <header class="studio-header">
+    <!-- Development Note: x-powered-by header is disabled server-side in Express for security -->
+                    <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
           <div class="quarter-clock">
@@ -520,179 +488,141 @@
           </div>
           3minsto9
         </a>
-        <button
-          class="menu-toggle"
-          aria-label="Toggle Menu"
-          aria-expanded="false"
-          aria-controls="main-nav"
-          onclick="
-            const nav = document.getElementById('main-nav');
-            const expanded = nav.classList.toggle('active');
-            this.setAttribute('aria-expanded', expanded);
-          "
-        >
+        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false"
+          aria-controls="main-nav" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a
-              href="Surface%20Home%20Page.html"
-              class="nav-link"
-              style="color: var(--accent-red) !important"
-              >Home</a
-            >
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group">
+            <details class="nav-group" >
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Vol 1 (Future)</span
-                >
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Vol 2 (Future)</span
-                >
+                <a href="releases.html" class="nav-link">All Releases</a>
+                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group">
+            <details class="nav-group" open>
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link"
-                  >Online Selling Policies</a
-                >
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link" style="color: var(--accent-red) !important;">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link">Online Selling Policies</a>
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group">
+            <details class="nav-group" >
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Apparel (Future)</span
-                >
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Artefacts (Future)</span
-                >
+                <a href="store.html" class="nav-link">Main Store</a>
+                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
+        <nav class="nav-links" aria-label="Main Navigation">
+          <a href="surface-home-page.html">Home</a>
+          <a href="releases.html">Releases</a>
+          <a href="studio-manifesto-page.html">The Studio</a>
+          <a href="studio-team.html" style="color: var(--accent-red)">Team</a>
+          <a href="store.html">Store</a>
+          <a href="studio-faq.html">FAQ</a>
+          <a href="developer-blog.html">Dev Blog</a>
+          <a href="cart.html">Cart</a>
+          <a href="studio-contact-us.html">Contact</a>
         </nav>
       </div>
     </header>
 
-    <section class="hero container">
-      <div class="hero-content">
-        <h1>Welcome to the Unknown.</h1>
-        <p>
-          <strong>The Unknown Field (MINE) Guide (Vol. 0)</strong> is a 32-page interactive puzzle
-          zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been
-          stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
-        </p>
-        <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
-        <a href="Procure%20Volume%201.html" class="btn-primary">Procure Volume 1</a>
-      </div>
-      <picture class="responsive-picture hero-image">
-        <source srcset="images/placeholder.webp" type="image/webp" />
-        <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
-      </picture>
-    </section>
+    <main>
+      <section class="team-hero container">
+        <h1>Meet the Makers</h1>
+        <p>The architects behind the artefacts. We are a small, dedicated team of creators forging immersive experiences and physical media.</p>
+      </section>
 
-    <section class="manifesto">
-      <div class="container manifesto-inner">
-        <h2>High Value. Low Volume. Direct to Reader.</h2>
-        <p>
-          3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
-          We operate as <span class="highlight">Comicsmiths</span> and
-          <span class="highlight">Puzzlesmiths</span>. Our mission is to bridge the gap between
-          graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You
-          aren't just reading a story; you are stepping into a labyrinth.
-        </p>
-      </div>
-    </section>
+      <section class="container">
+        <div class="team-grid">
 
-    <section class="newsletter container">
-      <h3>Join the Dispatch</h3>
-      <p>
-        Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
-      </p>
-      <form
-        class="newsletter-form"
-        id="surface-newsletter-form"
-        onsubmit="
-          event.preventDefault();
-          const btn = this.querySelector('button[type=\'submit\']');
-          const successMsg = document.getElementById('surface-newsletter-success');
+          <article class="team-card" tabindex="0">
+            <picture class="responsive-picture team-card-image">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Jordan Clarke" data-placeholder="PORTRAIT" loading="lazy" />
+            </picture>
+            <h2>Jordan Clarke</h2>
+            <div class="role">Creative Director, Illustration</div>
+            <h2>Jordan Clarke <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Creative Director, Illustration (Placeholder)</div>
+            <p>Jordan is the visual mastermind shaping the world of 3minsto9. With a background in indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic details, and the kind of art that makes you look twice.</p>
+            <div class="team-tags">
+              <span class="tag">Comicsmith</span>
+              <span class="tag">Character Vandalism</span>
+            </div>
+          </article>
 
-          this.setAttribute('aria-busy', 'true');
-          btn.disabled = true;
-          btn.setAttribute('aria-disabled', 'true');
-          btn.textContent = 'SUBSCRIBING...';
+          <article class="team-card" tabindex="0">
+            <picture class="responsive-picture team-card-image">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Sam Rivera" data-placeholder="PORTRAIT" loading="lazy" />
+            </picture>
+            <h2>Sam Rivera</h2>
+            <div class="role">Lead Puzzlesmith, Narrative</div>
+            <h2>Sam Rivera <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Lead Puzzlesmith, Narrative (Placeholder)</div>
+            <p>Sam weaves complex Alternate Reality Game mechanics into physical media. Former cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to be solved, blurring the line between fiction and reality.</p>
+            <div class="team-tags">
+              <span class="tag">Cryptography</span>
+              <span class="tag">Worldbuilding</span>
+            </div>
+          </article>
 
-          setTimeout(() => {
-            this.reset();
-            this.style.display = 'none';
-            this.setAttribute('aria-busy', 'false');
-            btn.disabled = false;
-            btn.removeAttribute('aria-disabled');
-            btn.textContent = 'Subscribe';
-            successMsg.style.display = 'block';
-          }, 1000);
-        "
-      >
-        <input
-          type="email"
-          aria-label="Email address"
-          placeholder="Enter your email address..."
-          required
-          autocomplete="email"
-          maxlength="254"
-        />
-        <button type="submit">Subscribe</button>
-      </form>
-      <div
-        id="surface-newsletter-success"
-        class="newsletter-success"
-        role="alert"
-        aria-live="polite"
-        style="
-          display: none;
-          margin-top: 15px;
-          color: var(--accent-red);
-          font-weight: bold;
-          text-align: center;
-        "
-      >
-        Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)
-      </div>
-    </section>
+          <article class="team-card" tabindex="0">
+            <picture class="responsive-picture team-card-image">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Alex Chen" data-placeholder="PORTRAIT" loading="lazy" />
+            </picture>
+            <h2>Alex Chen</h2>
+            <div class="role">Operations & Production</div>
+            <h2>Alex Chen <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Operations & Production (Placeholder)</div>
+            <p>The glue that holds the studio together. Alex manages the supply chain, coordinates physical print runs with our bespoke manufacturing partners, and ensures every volume arrives in pristine (or intentionally distressed) condition.</p>
+            <div class="team-tags">
+              <span class="tag">Logistics</span>
+              <span class="tag">Print Production</span>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </main>
 
     <footer>
       <div class="container">
-        <p>
-          &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
-          <a href="Studio%20Press%20Kit.html">Press Kit</a>
-        </p>
+        <nav class="footer-links" aria-label="Footer Navigation">
+          <a href="studio-contact-us.html">Contact Us</a>
+          <a href="studio-manifesto-page.html">Studio Manifesto</a>
+        </nav>
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
       </div>
     </footer>
   </body>

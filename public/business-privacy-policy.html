@@ -3,93 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Us - 3minsto9 Operations</title>
+    <title>Privacy Policy - 3minsto9 Operations</title>
     <style>
       body {
         font-family: sans-serif;
         line-height: 1.6;
         color: #333;
-        max-width: 600px;
+        max-width: 800px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 20px;
       }
-      h1 {
+      h1,
+      h2 {
         color: #222;
-        text-align: center;
-        margin-bottom: 30px;
       }
       .container {
         background-color: #f9f9f9;
-        padding: 40px;
-        border-radius: 8px;
+        padding: 30px;
+        border-radius: 5px;
         border: 1px solid #ddd;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-      .form-group {
-        margin-bottom: 20px;
-      }
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-      }
-      input[type='text'],
-      input[type='email'],
-      textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-family: inherit;
-      }
-      textarea {
-        resize: vertical;
-        min-height: 120px;
-      }
-      button {
-        background-color: #333;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
-        font-size: 16px;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      button:hover {
-        background-color: #555;
-      }
-      input:focus,
-      textarea:focus,
-      button:focus {
-        outline: 2px solid #333;
-        outline-offset: 2px;
-        border-color: #333;
-      }
-
-      .info-text {
-        text-align: center;
-        margin-top: 20px;
-        font-size: 0.9em;
-        color: #666;
-      }
-
-      @media (max-width: 600px) {
-        body {
-          padding: 20px 10px;
-        }
-        .container {
-          padding: 20px;
-        }
-        h1 {
-          font-size: 1.8rem;
-        }
-        button {
-          font-size: 14px;
-        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -352,14 +284,14 @@
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
             <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
+                <a href="releases.html" class="nav-link">All Releases</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Vol 1 (Future)</span
                 >
@@ -374,18 +306,17 @@
             <details class="nav-group" open>
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
                 <a
-                  href="Studio%20Contact%20Us.html"
+                  href="business-privacy-policy.html"
                   class="nav-link"
                   style="color: var(--accent-red) !important"
-                  >Contact Us</a
+                  >Privacy Policy</a
                 >
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link"
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link"
                   >Online Selling Policies</a
                 >
               </div>
@@ -396,7 +327,7 @@
             <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
+                <a href="store.html" class="nav-link">Main Store</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Apparel (Future)</span
                 >
@@ -408,107 +339,65 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
         </nav>
       </div>
     </header>
 
     <div class="container">
-      <h1>Contact Us</h1>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: [Current Date]</p>
 
-      <form id="contact-form" action="#" method="POST" onsubmit="submitContactForm(event)">
-        <div class="form-group">
-          <label for="name">Name <span aria-hidden="true" style="color: red">*</span></label>
-          <input type="text" id="name" name="name" required autocomplete="name" maxlength="100" />
-        </div>
+      <h2>1. Information We Collect</h2>
+      <p>
+        We may collect personal information such as your name, email address, and IP address when
+        you interact with our website, sign up for our newsletter, or contact us. We also collect
+        non-personal information through cookies and similar technologies to improve user
+        experience.
+      </p>
 
-        <div class="form-group">
-          <label for="email"
-            >Email Address <span aria-hidden="true" style="color: red">*</span></label
-          >
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            autocomplete="email"
-            maxlength="254"
-          />
-        </div>
+      <h2>2. How We Use Your Information</h2>
+      <p>
+        We use the information we collect to operate and maintain our website, communicate with you,
+        analyze website usage, and provide you with information or services you request.
+      </p>
 
-        <div class="form-group">
-          <label for="subject">Subject <span aria-hidden="true" style="color: red">*</span></label>
-          <input type="text" id="subject" name="subject" required maxlength="150" />
-        </div>
+      <h2>3. Information Sharing</h2>
+      <p>
+        We do not sell, trade, or otherwise transfer your personally identifiable information to
+        outside parties without your consent, except to trusted third parties who assist us in
+        operating our website or conducting our business, so long as those parties agree to keep
+        this information confidential.
+      </p>
 
-        <div class="form-group">
-          <label for="message">Message <span aria-hidden="true" style="color: red">*</span></label>
-          <textarea id="message" name="message" required maxlength="2000"></textarea>
-        </div>
+      <h2>4. Data Security</h2>
+      <p>
+        We implement a variety of security measures to maintain the safety of your personal
+        information. However, no method of transmission over the Internet or electronic storage is
+        100% secure.
+      </p>
 
-        <button type="submit" id="submit-btn">Send Message</button>
-      </form>
-      <div
-        id="rate-limit-message"
-        style="display: none; color: red; margin-top: 15px; font-weight: bold; text-align: center"
-        role="alert"
-        aria-live="polite"
-      ></div>
-      <div
-        id="success-message"
-        style="display: none; color: green; margin-top: 15px; font-weight: bold; text-align: center"
-        role="alert"
-        aria-live="polite"
-      >
-        Thank you for reaching out! We will get back to you shortly.
-      </div>
+      <h2>5. Your Rights</h2>
+      <p>
+        You have the right to access, correct, or delete your personal information. If you wish to
+        exercise these rights, please contact us using the information provided below.
+      </p>
 
-      <p class="info-text">
-        For press inquiries or technical support regarding the physical field guides, please allow
-        2-3 business days for a response from our operations team.
-        <a href="Studio%20Press%20Kit.html">View Press Resources</a>.
+      <h2>6. Changes to This Privacy Policy</h2>
+      <p>
+        We may update this privacy policy from time to time. We will notify you of any changes by
+        posting the new privacy policy on this page.
+      </p>
+
+      <h2>7. Contact Us</h2>
+      <p>
+        If you have any questions about this Privacy Policy, please contact us at [Contact Email].
       </p>
     </div>
-
-    <script>
-      function submitContactForm(e) {
-        e.preventDefault();
-        const form = document.getElementById('contact-form');
-        const btn = document.getElementById('submit-btn');
-        const successMsg = document.getElementById('success-message');
-        const rateLimitMsg = document.getElementById('rate-limit-message');
-
-        // 🛡️ Sentinel: Client-side rate limiting to prevent spam
-        const lastSubmissionTime = localStorage.getItem('lastContactSubmission');
-        const now = Date.now();
-        const rateLimitWindow = 60000; // 60 seconds
-
-        if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
-          const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
-          rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
-          rateLimitMsg.style.display = 'block';
-          return;
-        }
-
-        rateLimitMsg.style.display = 'none';
-        localStorage.setItem('lastContactSubmission', now);
-
-        form.setAttribute('aria-busy', 'true');
-        btn.disabled = true;
-        btn.setAttribute('aria-disabled', 'true');
-        btn.textContent = 'SENDING...';
-
-        setTimeout(() => {
-          form.style.display = 'none';
-          form.setAttribute('aria-busy', 'false');
-          successMsg.style.display = 'block';
-        }, 1000);
-      }
-    </script>
   </body>
 </html>

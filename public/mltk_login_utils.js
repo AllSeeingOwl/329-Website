@@ -120,7 +120,7 @@ async function verifyCode(e) {
 
       // Briefly display success screen then redirect to surveillance dashboard
       setTimeout(() => {
-        window.location.href = 'MLTK Surveillance Dashboard.html';
+        window.location.href = 'mltk-surveillance-dashboard.html';
       }, 2000);
     } else {
       if (errorMsg) errorMsg.style.display = 'block';

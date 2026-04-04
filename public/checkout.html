@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Studio | 3minsto9 Operations</title>
-    <!-- Clean sans-serif font for the minimalist design -->
+    <title>3minsto9 | Checkout</title>
+    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-color: #faf9f6; /* Off-white */
+        --bg-color: #faf9f6;
         --text-color: #111111;
         --accent-red: #ff003c;
         --border-color: #e0e0e0;
@@ -22,24 +22,11 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        font-family: 'Inter', Helvetica, sans-serif;
+        font-family: 'Inter', sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
         overflow-x: hidden;
         scroll-behavior: smooth;
-        /* Fade-in animation */
-        animation: fadeIn 1.2s ease-out forwards;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(15px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
       }
 
       a {
@@ -124,65 +111,68 @@
         color: var(--accent-red);
       }
 
-      .manifesto-content {
-        max-width: 800px;
-        margin: 100px auto;
-        text-align: center;
-      }
-
-      .manifesto-headline {
-        font-size: 4rem;
-        font-weight: 900;
-        line-height: 1.1;
-        letter-spacing: -2px;
-        margin: 0 0 60px 0;
-      }
-
-      .manifesto-text {
-        text-align: left;
-        font-size: 1.25rem;
-        line-height: 1.8;
-        color: #333;
-      }
-
-      .manifesto-text p {
-        margin-bottom: 30px;
-      }
-
-      .highlight {
-        color: var(--accent-red);
-        font-weight: bold;
-      }
-
-      .manifesto-text h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 60px 0 20px 0;
-        letter-spacing: -1px;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 10px;
-        text-transform: uppercase;
-      }
-
-      .manifesto-text h3 {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 40px 0 15px 0;
-        text-transform: uppercase;
-        color: var(--text-color);
-      }
-
-      .texture-break {
-        width: 100%;
-        padding: 60px 20px;
+      .btn-primary {
+        display: inline-block;
         background-color: var(--text-color);
         color: var(--bg-color);
+        padding: 18px 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-red);
+        color: #fff;
+      }
+
+      .btn-primary:focus-visible {
+        outline: none;
+        background-color: var(--accent-red);
+        color: #fff;
+      }
+
+      /* Store Specific Styles */
+      .store-header {
         text-align: center;
+        padding: 60px 0 40px;
+      }
+
+      .store-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        margin: 0 0 15px 0;
+      }
+
+      .store-header p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .checkout-placeholder {
+        max-width: 600px;
+        margin: 0 auto 100px;
+        padding: 40px 20px;
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      .checkout-placeholder h2 {
         font-size: 2rem;
-        font-weight: 300;
-        font-style: italic;
-        margin: 80px 0;
-        box-sizing: border-box;
+        margin-bottom: 20px;
+      }
+
+      .checkout-placeholder p {
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.5;
       }
 
       footer {
@@ -191,17 +181,9 @@
         font-size: 0.85rem;
         color: #888;
         border-top: 1px solid var(--border-color);
-        margin-top: 80px;
       }
 
-      @media (max-width: 900px) {
-        .manifesto-headline {
-          font-size: 3rem;
-        }
-        .manifesto-content {
-          margin: 60px auto;
-          padding: 0 20px;
-        }
+      @media (max-width: 768px) {
         .nav-inner {
           flex-direction: column;
           gap: 20px;
@@ -210,6 +192,9 @@
           flex-wrap: wrap;
           justify-content: center;
           gap: 15px;
+        }
+        .store-header h1 {
+          font-size: 2.5rem;
         }
       }
 
@@ -220,20 +205,12 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
-        body,
-        html {
-          animation: none;
-          opacity: 1;
-          transform: none;
-        }
       }
     </style>
 
-
-
-
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -282,7 +259,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -309,7 +286,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -346,11 +324,11 @@
         border-bottom: none !important;
       }
     </style>
-  <script src="/app.js"></script>
-  <link rel="manifest" href="/manifest.json">
-</head>
+    <script src="/app.js"></script>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
-                    <header class="studio-header">
+    <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
           <div class="quarter-clock">
@@ -358,137 +336,108 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false"
-          aria-controls="main-nav" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <a href="releases.html" class="nav-link">All Releases</a>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" open>
+            <details class="nav-group">
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link" style="color: var(--accent-red) !important;">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link">Online Selling Policies</a>
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link"
+                  >Online Selling Policies</a
+                >
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <a href="store.html" class="nav-link">Main Store</a>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
-        <nav class="nav-links" aria-label="Main Navigation">
-          <a href="Surface%20Home%20Page.html">Home</a>
-          <a href="Releases.html">Releases</a>
-          <a href="Studio%20Manifesto%20Page.html" style="color: var(--accent-red)">The Studio</a>
-          <a href="Studio%20Team.html">Team</a>
-          <a href="Store.html">Store</a>
-          <a href="Studio%20FAQ.html">FAQ</a>
-          <a href="Developer%20Blog.html">Dev Blog</a>
-          <a href="Cart.html">Cart</a>
-          <a href="Studio%20Contact%20Us.html">Contact</a>
         </nav>
       </div>
     </header>
 
-    <main class="container manifesto-content">
-      <h1 class="manifesto-headline">
-        The Studio.<br />Independent Micro-Press & Immersive Media.
-      </h1>
+    <main class="container">
+      <section class="store-header">
+        <h1>Secure Checkout</h1>
+        <p>Complete your artefact requisition transaction.</p>
+      </section>
 
-      <div class="manifesto-text">
-        <h2>Forging Artefacts</h2>
+      <section class="checkout-placeholder">
+        <h2>Checkout System Offline</h2>
         <p>
-          Based in Wendover, UK, <strong>3minsto9</strong> operates outside the traditional
-          publishing machine. Our philosophy is simple:
-          <span class="highlight">High Value. Low Volume. Direct to Reader.</span>
+          The secure payment gateway and fulfillment processing systems are currently pending
+          integration.
         </p>
         <p>
-          We do not believe in disposable media or algorithm-chasing content. We believe in creating
-          tactile, dangerous physical media that respects the intelligence of our audience. We build
-          "In-World Artefacts"—books and zines that feel like they have been smuggled out of an
-          alternate reality, surviving riots and corporate censorship to reach your hands.
+          <em
+            >(Payment processing boilerplate loaded. Actual transactions cannot be processed at this
+            time.)</em
+          >
         </p>
-      </div>
+        <br />
+        <a href="cart.html" class="btn-primary">Return to Cart</a>
+      </section>
     </main>
-
-    <aside class="texture-break">
-      "You aren't just reading a story. You are stepping into a labyrinth."
-    </aside>
-
-    <section class="container manifesto-content" style="margin-top: 0">
-      <div class="manifesto-text">
-        <h2>Our Protocols</h2>
-        <p>
-          Our studio functions through two highly disciplined design methodologies that bridge the
-          gap between graphic novels and Alternate Reality Games (ARGs).
-        </p>
-
-        <h3>The Comicsmith Protocol</h3>
-        <p>
-          We approach visual storytelling with architectural precision. Our projects feature highly
-          detailed, "Where's Wally" style cross-sections and raw, DIY punk aesthetics. By employing
-          a strict layering rule with our freelance illustrators, we ensure that the sterile,
-          corporate background of the world can be aggressively "vandalised" by our characters,
-          creating an interactive canvas rather than just a picture.
-        </p>
-
-        <h3>The Puzzlesmith Protocol</h3>
-        <p>
-          We gamify the page. 3minsto9 books are designed to be played, not just read. We turn our
-          readers into active detectives by embedding a multi-tiered meta-puzzle layer—dubbed "The
-          Game of Unknown"—directly into the art and text. From cyphers hidden in the legal
-          copyright pages to physical code wheels and deductive grids, every detail is a functional
-          mechanic.
-        </p>
-        <p>
-          We don't use standard "Art By..." credit pages, because that ruins the illusion. Instead,
-          our artists hide their personal signatures as "red herring" puzzles within the dense
-          clutter of the artwork itself.
-        </p>
-      </div>
-    </section>
 
     <footer>
       <div class="container">
-        <p>
-          &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. Do not copy. We do
-          what we want. | <a href="Studio%20Press%20Kit.html">Media Kit</a>
-        </p>
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
       </div>
     </footer>
   </body>
