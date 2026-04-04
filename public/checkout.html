@@ -3,39 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Policy - 3minsto9 Operations</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        line-height: 1.6;
-        color: #333;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      h1,
-      h2 {
-        color: #222;
-      }
-      .container {
-        background-color: #f9f9f9;
-        padding: 30px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-          scroll-behavior: auto !important;
-        }
-      }
-    </style>
-
+    <title>3minsto9 | Checkout</title>
+    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -46,24 +17,41 @@
         --border-color: #e0e0e0;
       }
 
-      .studio-header {
-        border-bottom: 1px solid var(--border-color);
-        padding: 20px 0;
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
-        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
       }
 
-      .studio-header .container {
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+      }
+
+      .nav-inner {
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
 
-      .studio-header .brand-logo {
+      .brand-logo {
         display: flex;
         align-items: center;
         gap: 15px;
@@ -71,11 +59,9 @@
         font-size: 1.5rem;
         letter-spacing: -1px;
         text-transform: uppercase;
-        text-decoration: none;
-        color: inherit;
       }
 
-      .studio-header .quarter-clock {
+      .quarter-clock {
         width: 30px;
         height: 30px;
         border-top: 3px solid var(--text-color);
@@ -84,7 +70,7 @@
         position: relative;
       }
 
-      .studio-header .quarter-clock::before {
+      .quarter-clock::before {
         content: '12';
         position: absolute;
         top: -15px;
@@ -93,7 +79,7 @@
         font-weight: bold;
       }
 
-      .studio-header .quarter-clock::after {
+      .quarter-clock::after {
         content: '9';
         position: absolute;
         top: 25px;
@@ -102,7 +88,7 @@
         font-weight: bold;
       }
 
-      .studio-header .clock-hands {
+      .clock-hands {
         position: absolute;
         bottom: -2px;
         right: -2px;
@@ -112,31 +98,112 @@
         border-left: 2px solid var(--accent-red);
       }
 
-      .studio-header .nav-links {
+      .nav-links {
         display: flex;
         gap: 30px;
         font-size: 0.9rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        flex-wrap: wrap;
-        justify-content: center;
       }
 
-      .studio-header .nav-links a {
-        text-decoration: none;
-        color: inherit;
-        transition: color 0.3s ease;
-      }
-
-      .studio-header .nav-links a:hover {
+      .nav-links a:hover {
         color: var(--accent-red);
       }
 
+      .btn-primary {
+        display: inline-block;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        padding: 18px 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-red);
+        color: #fff;
+      }
+
+      .btn-primary:focus-visible {
+        outline: none;
+        background-color: var(--accent-red);
+        color: #fff;
+      }
+
+      /* Store Specific Styles */
+      .store-header {
+        text-align: center;
+        padding: 60px 0 40px;
+      }
+
+      .store-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        margin: 0 0 15px 0;
+      }
+
+      .store-header p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .checkout-placeholder {
+        max-width: 600px;
+        margin: 0 auto 100px;
+        padding: 40px 20px;
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      .checkout-placeholder h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .checkout-placeholder p {
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.5;
+      }
+
+      footer {
+        padding: 40px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+        border-top: 1px solid var(--border-color);
+      }
+
       @media (max-width: 768px) {
-        .studio-header .container {
+        .nav-inner {
           flex-direction: column;
           gap: 20px;
+        }
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
+        }
+        .store-header h1 {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
         }
       }
     </style>
@@ -284,14 +351,14 @@
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
             <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
+                <a href="releases.html" class="nav-link">All Releases</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Vol 1 (Future)</span
                 >
@@ -303,20 +370,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" open>
+            <details class="nav-group">
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a
-                  href="Business%20Privacy%20Policy.html"
-                  class="nav-link"
-                  style="color: var(--accent-red) !important"
-                  >Privacy Policy</a
-                >
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link"
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link"
                   >Online Selling Policies</a
                 >
               </div>
@@ -327,7 +390,7 @@
             <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
+                <a href="store.html" class="nav-link">Main Store</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important"
                   >Placeholder: Apparel (Future)</span
                 >
@@ -339,65 +402,43 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
         </nav>
       </div>
     </header>
 
-    <div class="container">
-      <h1>Privacy Policy</h1>
-      <p>Last updated: [Current Date]</p>
+    <main class="container">
+      <section class="store-header">
+        <h1>Secure Checkout</h1>
+        <p>Complete your artefact requisition transaction.</p>
+      </section>
 
-      <h2>1. Information We Collect</h2>
-      <p>
-        We may collect personal information such as your name, email address, and IP address when
-        you interact with our website, sign up for our newsletter, or contact us. We also collect
-        non-personal information through cookies and similar technologies to improve user
-        experience.
-      </p>
+      <section class="checkout-placeholder">
+        <h2>Checkout System Offline</h2>
+        <p>
+          The secure payment gateway and fulfillment processing systems are currently pending
+          integration.
+        </p>
+        <p>
+          <em
+            >(Payment processing boilerplate loaded. Actual transactions cannot be processed at this
+            time.)</em
+          >
+        </p>
+        <br />
+        <a href="cart.html" class="btn-primary">Return to Cart</a>
+      </section>
+    </main>
 
-      <h2>2. How We Use Your Information</h2>
-      <p>
-        We use the information we collect to operate and maintain our website, communicate with you,
-        analyze website usage, and provide you with information or services you request.
-      </p>
-
-      <h2>3. Information Sharing</h2>
-      <p>
-        We do not sell, trade, or otherwise transfer your personally identifiable information to
-        outside parties without your consent, except to trusted third parties who assist us in
-        operating our website or conducting our business, so long as those parties agree to keep
-        this information confidential.
-      </p>
-
-      <h2>4. Data Security</h2>
-      <p>
-        We implement a variety of security measures to maintain the safety of your personal
-        information. However, no method of transmission over the Internet or electronic storage is
-        100% secure.
-      </p>
-
-      <h2>5. Your Rights</h2>
-      <p>
-        You have the right to access, correct, or delete your personal information. If you wish to
-        exercise these rights, please contact us using the information provided below.
-      </p>
-
-      <h2>6. Changes to This Privacy Policy</h2>
-      <p>
-        We may update this privacy policy from time to time. We will notify you of any changes by
-        posting the new privacy policy on this page.
-      </p>
-
-      <h2>7. Contact Us</h2>
-      <p>
-        If you have any questions about this Privacy Policy, please contact us at [Contact Email].
-      </p>
-    </div>
+    <footer>
+      <div class="container">
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>
