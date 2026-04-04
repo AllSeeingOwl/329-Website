@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "3minsto9 ARG web assets",
   "scripts": {
-    "dev:server": "nodemon server.js",
+    "dev:server": "nodemon --exec ts-node server.ts",
     "test": "jest --testPathIgnorePatterns=\"e2e\"",
     "test:e2e:playwright": "playwright test",
     "test:e2e:cypress": "cypress open",
@@ -43,6 +43,7 @@
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
     "supertest": "^7.2.2",
+    "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.0",
@@ -51,8 +52,8 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@vercel/speed-insights": "^2.0.0",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "express": "^5.2.1",
     "jsdom": "^28.1.0"
   }

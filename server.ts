@@ -1,6 +1,7 @@
-const express = require('express');
-const path = require('path');
-const crypto = require('crypto');
+import express, { Request, Response, NextFunction } from 'express';
+import path from 'path';
+import crypto from 'crypto';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -8,7 +9,7 @@ const port = process.env.PORT || 3000;
 app.disable('x-powered-by');
 
 // 🛡️ Sentinel: Add security headers to protect against common web vulnerabilities
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // Enforce HTTPS
   res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME sniffing
   res.setHeader('X-Frame-Options', 'DENY'); // Prevent clickjacking
@@ -72,37 +73,41 @@ const mltkFiles = new Set([
 ]);
 
 // Maintenance Middleware
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   // Normalize path by stripping query strings and lowercasing encoded spaces if any
   // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
-  let reqPath;
+  let reqPath: string;
   try {
     reqPath = decodeURIComponent(req.path);
   } catch {
-    return res.status(400).json({ error: 'Bad Request: Malformed URI' });
+    res.status(400).json({ error: 'Bad Request: Malformed URI' });
+    return;
   }
 
   // Global Maintenance Mode applies to everything except static assets if we want,
   // but originally it was fully blocking everything. Keeping the original behavior:
   if (MAINTENANCE_MODE) {
-    return res.status(503).sendFile(MAINTENANCE_PATH);
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
   }
 
   // Check specific maintenance modes for HTML pages.
   // We only block specific paths to allow CSS/JS to pass through freely.
   if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
-    return res.status(503).sendFile(MAINTENANCE_PATH);
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
   }
 
   if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
-    return res.status(503).sendFile(MAINTENANCE_PATH);
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
   }
 
   next();
 });
 
 // Endpoint for frontend to check maintenance status dynamically
-app.get('/api/maintenance-status', (req, res) => {
+app.get('/api/maintenance-status', (req: Request, res: Response) => {
   res.json({
     global: MAINTENANCE_MODE,
     studio: STUDIO_MAINTENANCE_MODE,
@@ -119,7 +124,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // -----------------------------------------------------------------------------
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || '0408-1998-XXXX';
 
-const rateLimitMap = new Map();
+interface RateLimitRecord {
+  count: number;
+  firstAttempt: number;
+}
+const rateLimitMap = new Map<string, RateLimitRecord>();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
 // ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
@@ -127,8 +136,8 @@ const MAX_ATTEMPTS = 5;
 // We provide a fallback empty string if AUTH_PASSWORD is undefined during mocked test environments that mock process.exit.
 const authBuffer = Buffer.from(AUTH_PASSWORD || '');
 
-app.post('/api/verify', (req, res) => {
-  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+app.post('/api/verify', (req: Request, res: Response) => {
+  const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
   const record = rateLimitMap.get(ip) || { count: 0, firstAttempt: now };
 
@@ -136,7 +145,9 @@ app.post('/api/verify', (req, res) => {
   // algorithmic complexity DoS attacks (which occur when iterating over a large map).
   if (rateLimitMap.size >= 1000 && !rateLimitMap.has(ip)) {
     const oldestKey = rateLimitMap.keys().next().value;
-    rateLimitMap.delete(oldestKey);
+    if (oldestKey !== undefined) {
+      rateLimitMap.delete(oldestKey);
+    }
   }
 
   if (now - record.firstAttempt > RATE_LIMIT_WINDOW_MS) {
@@ -145,9 +156,8 @@ app.post('/api/verify', (req, res) => {
   } else {
     record.count++;
     if (record.count > MAX_ATTEMPTS) {
-      return res
-        .status(429)
-        .json({ success: false, error: 'Too many attempts, please try again later.' });
+      res.status(429).json({ success: false, error: 'Too many attempts, please try again later.' });
+      return;
     }
   }
   rateLimitMap.set(ip, record);
@@ -170,18 +180,19 @@ app.post('/api/verify', (req, res) => {
 });
 
 // Catch-all route to serve the custom 404 page
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).sendFile(NOT_FOUND_PATH);
 });
 
 // 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled error:', err);
 
   // Handle specific standard HTTP errors correctly
   if (err.status) {
-    return res.status(err.status).json({ error: err.message || 'Error' });
+    res.status(err.status).json({ error: err.message || 'Error' });
+    return;
   }
 
   res.status(500).json({ error: 'Internal Server Error' });
@@ -193,4 +204,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = app;
+export = app;
