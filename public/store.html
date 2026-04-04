@@ -269,11 +269,9 @@
       }
     </style>
 
-
-
-
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -322,7 +320,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -349,7 +347,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -435,7 +434,7 @@
 
       /* Hide the default broken image icon in webkit */
       picture.responsive-picture img.placeholder-fallback::before {
-        content: " ";
+        content: ' ';
         display: block;
         position: absolute;
         top: 0;
@@ -444,13 +443,12 @@
         height: 100%;
         background-color: #eae8e1;
       }
-
     </style>
-  <script src="/app.js"></script>
-  <link rel="manifest" href="/manifest.json">
-</head>
+    <script src="/app.js"></script>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
-                    <header class="studio-header">
+    <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
           <div class="quarter-clock">
@@ -458,8 +456,17 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false"
-          aria-controls="main-nav" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
@@ -468,18 +475,22 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
                 <a href="releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
                 <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
@@ -497,9 +508,15 @@
             <details class="nav-group" open>
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="store.html" class="nav-link" style="color: var(--accent-red) !important;">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <a href="store.html" class="nav-link" style="color: var(--accent-red) !important"
+                  >Main Store</a
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -511,16 +528,6 @@
           <div class="nav-item-wrapper">
             <a href="cart.html" class="nav-link">Cart</a>
           </div>
-        <nav class="nav-links" aria-label="Main Navigation">
-          <a href="surface-home-page.html">Home</a>
-          <a href="releases.html">Releases</a>
-          <a href="studio-manifesto-page.html">The Studio</a>
-          <a href="studio-team.html">Team</a>
-          <a href="store.html" style="color: var(--accent-red)">Store</a>
-          <a href="studio-faq.html">FAQ</a>
-          <a href="developer-blog.html">Dev Blog</a>
-          <a href="cart.html">Cart</a>
-          <a href="studio-contact-us.html">Contact</a>
         </nav>
       </div>
     </header>
@@ -536,7 +543,13 @@
         <article class="product-card">
           <picture class="responsive-picture product-image">
             <source srcset="images/placeholder.webp" type="image/webp" />
-            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for Unknown Field Guide (Vol. 0)" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
+            <img
+              class="placeholder-fallback"
+              src="images/placeholder.jpg"
+              alt="Placeholder image for Unknown Field Guide (Vol. 0)"
+              data-placeholder="IMAGE PLACEHOLDER"
+              loading="lazy"
+            />
           </picture>
           <div
             class="product-image"
@@ -549,7 +562,12 @@
               A 32-page interactive puzzle zine. Officially a pristine 1950s tourist brochure.
               Unofficially corrected by Team Rabbit.
             </p>
-            <a href="cart.html" class="btn-primary" aria-label="Acquire Unknown Field Guide (Vol. 0)" style="text-align: center;">
+            <a
+              href="cart.html"
+              class="btn-primary"
+              aria-label="Acquire Unknown Field Guide (Vol. 0)"
+              style="text-align: center"
+            >
               Acquire
             </a>
           </div>
@@ -559,7 +577,13 @@
         <article class="product-card">
           <picture class="responsive-picture product-image">
             <source srcset="images/placeholder.webp" type="image/webp" />
-            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for Product Title Placeholder 2" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
+            <img
+              class="placeholder-fallback"
+              src="images/placeholder.jpg"
+              alt="Placeholder image for Product Title Placeholder 2"
+              data-placeholder="IMAGE PLACEHOLDER"
+              loading="lazy"
+            />
           </picture>
           <div
             class="product-image"
@@ -572,7 +596,12 @@
               A brief description of this artifact. This text serves as a placeholder until actual
               product copy is provided.
             </p>
-            <a href="cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 2" style="text-align: center;">
+            <a
+              href="cart.html"
+              class="btn-primary"
+              aria-label="Acquire Product Title Placeholder 2"
+              style="text-align: center"
+            >
               Acquire
             </a>
           </div>
@@ -582,7 +611,13 @@
         <article class="product-card">
           <picture class="responsive-picture product-image">
             <source srcset="images/placeholder.webp" type="image/webp" />
-            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for Product Title Placeholder 3" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
+            <img
+              class="placeholder-fallback"
+              src="images/placeholder.jpg"
+              alt="Placeholder image for Product Title Placeholder 3"
+              data-placeholder="IMAGE PLACEHOLDER"
+              loading="lazy"
+            />
           </picture>
           <div
             class="product-image"
@@ -595,7 +630,12 @@
               A brief description of this artifact. This text serves as a placeholder until actual
               product copy is provided.
             </p>
-            <a href="cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 3" style="text-align: center;">
+            <a
+              href="cart.html"
+              class="btn-primary"
+              aria-label="Acquire Product Title Placeholder 3"
+              style="text-align: center"
+            >
               Acquire
             </a>
           </div>
@@ -605,7 +645,13 @@
         <article class="product-card">
           <picture class="responsive-picture product-image">
             <source srcset="images/placeholder.webp" type="image/webp" />
-            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for Product Title Placeholder 4" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
+            <img
+              class="placeholder-fallback"
+              src="images/placeholder.jpg"
+              alt="Placeholder image for Product Title Placeholder 4"
+              data-placeholder="IMAGE PLACEHOLDER"
+              loading="lazy"
+            />
           </picture>
           <div
             class="product-image"
@@ -618,7 +664,12 @@
               A brief description of this artifact. This text serves as a placeholder until actual
               product copy is provided.
             </p>
-            <a href="cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 4" style="text-align: center;">
+            <a
+              href="cart.html"
+              class="btn-primary"
+              aria-label="Acquire Product Title Placeholder 4"
+              style="text-align: center"
+            >
               Acquire
             </a>
           </div>

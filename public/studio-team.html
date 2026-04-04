@@ -35,7 +35,8 @@
         transition: color 0.3s ease;
       }
 
-      a:focus-visible, button:focus-visible {
+      a:focus-visible,
+      button:focus-visible {
         outline: 2px solid var(--accent-red);
         outline-offset: 4px;
       }
@@ -67,7 +68,8 @@
         text-transform: uppercase;
       }
 
-      .brand-logo:hover, .brand-logo:focus-visible {
+      .brand-logo:hover,
+      .brand-logo:focus-visible {
         color: var(--accent-red);
       }
 
@@ -81,7 +83,8 @@
         transition: border-color 0.3s ease;
       }
 
-      .brand-logo:hover .quarter-clock, .brand-logo:focus-visible .quarter-clock {
+      .brand-logo:hover .quarter-clock,
+      .brand-logo:focus-visible .quarter-clock {
         border-top-color: var(--accent-red);
         border-left-color: var(--accent-red);
       }
@@ -123,7 +126,8 @@
         letter-spacing: 1px;
       }
 
-      .nav-links a:hover, .nav-links a:focus-visible {
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
         color: var(--accent-red);
       }
 
@@ -162,10 +166,14 @@
         padding: 40px 30px;
         display: flex;
         flex-direction: column;
-        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
       }
 
-      .team-card:hover, .team-card:focus-within {
+      .team-card:hover,
+      .team-card:focus-within {
         transform: translateY(-5px);
         box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05);
         border-color: var(--text-color);
@@ -258,7 +266,8 @@
         color: var(--text-color);
       }
 
-      .footer-links a:hover, .footer-links a:focus-visible {
+      .footer-links a:hover,
+      .footer-links a:focus-visible {
         color: var(--accent-red);
       }
 
@@ -305,11 +314,9 @@
       }
     </style>
 
-
-
-
     <style id="hamburger-override">
-      header, .studio-header {
+      header,
+      .studio-header {
         position: relative !important;
         z-index: 1000 !important;
         background-color: var(--bg-color) !important;
@@ -358,7 +365,7 @@
         background-color: var(--bg-color) !important;
         flex-direction: column !important;
         align-items: center !important;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid var(--border-color) !important;
         z-index: 999 !important;
       }
@@ -385,7 +392,8 @@
         cursor: pointer !important;
         position: relative !important;
       }
-      .nav-link:hover, details.nav-group summary:hover {
+      .nav-link:hover,
+      details.nav-group summary:hover {
         color: var(--accent-red) !important;
         background-color: #f5f5f5 !important;
       }
@@ -471,7 +479,7 @@
 
       /* Hide the default broken image icon in webkit */
       picture.responsive-picture img.placeholder-fallback::before {
-        content: " ";
+        content: ' ';
         display: block;
         position: absolute;
         top: 0;
@@ -480,14 +488,13 @@
         height: 100%;
         background-color: #eae8e1;
       }
-
     </style>
-  <script src="/app.js"></script>
-  <link rel="manifest" href="/manifest.json">
-</head>
+    <script src="/app.js"></script>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
     <!-- Development Note: x-powered-by header is disabled server-side in Express for security -->
-                    <header class="studio-header">
+    <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
           <div class="quarter-clock">
@@ -495,8 +502,17 @@
           </div>
           3minsto9
         </a>
-        <button class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false"
-          aria-controls="main-nav" onclick="const nav = document.getElementById('main-nav'); const expanded = nav.classList.toggle('active'); this.setAttribute('aria-expanded', expanded);">
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          onclick="
+            const nav = document.getElementById('main-nav');
+            const expanded = nav.classList.toggle('active');
+            this.setAttribute('aria-expanded', expanded);
+          "
+        >
           &#9776;
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
@@ -505,12 +521,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
                 <a href="releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 1 (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Vol 2 (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -520,7 +540,12 @@
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
                 <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
-                <a href="studio-team.html" class="nav-link" style="color: var(--accent-red) !important;">Team</a>
+                <a
+                  href="studio-team.html"
+                  class="nav-link"
+                  style="color: var(--accent-red) !important"
+                  >Team</a
+                >
                 <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
                 <a href="studio-faq.html" class="nav-link">FAQ</a>
                 <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
@@ -531,12 +556,16 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group">
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
                 <a href="store.html" class="nav-link">Main Store</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
-                <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Apparel (Future)</span
+                >
+                <span class="nav-link placeholder-link" style="cursor: default !important"
+                  >Placeholder: Artefacts (Future)</span
+                >
               </div>
             </details>
           </div>
@@ -548,16 +577,6 @@
           <div class="nav-item-wrapper">
             <a href="cart.html" class="nav-link">Cart</a>
           </div>
-        <nav class="nav-links" aria-label="Main Navigation">
-          <a href="surface-home-page.html">Home</a>
-          <a href="releases.html">Releases</a>
-          <a href="studio-manifesto-page.html">The Studio</a>
-          <a href="studio-team.html" style="color: var(--accent-red)">Team</a>
-          <a href="store.html">Store</a>
-          <a href="studio-faq.html">FAQ</a>
-          <a href="developer-blog.html">Dev Blog</a>
-          <a href="cart.html">Cart</a>
-          <a href="studio-contact-us.html">Contact</a>
         </nav>
       </div>
     </header>
@@ -565,23 +584,46 @@
     <main>
       <section class="team-hero container">
         <h1>Meet the Makers</h1>
-        <p>The architects behind the artefacts. We are a small, dedicated team of creators forging immersive experiences and physical media.</p>
+        <p>
+          The architects behind the artefacts. We are a small, dedicated team of creators forging
+          immersive experiences and physical media.
+        </p>
       </section>
 
       <section class="container">
         <div class="team-grid">
-
           <article class="team-card" tabindex="0">
             <picture class="responsive-picture team-card-image">
               <source srcset="images/placeholder.webp" type="image/webp" />
-              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Jordan Clarke" data-placeholder="PORTRAIT" loading="lazy" />
+              <img
+                class="placeholder-fallback"
+                src="images/placeholder.jpg"
+                alt="Portrait of Jordan Clarke"
+                data-placeholder="PORTRAIT"
+                loading="lazy"
+              />
             </picture>
             <div class="team-card-image" role="img" aria-label="Portrait of Jordan Clarke"></div>
             <h2>Jordan Clarke</h2>
             <div class="role">Creative Director, Illustration</div>
-            <h2>Jordan Clarke <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <h2>
+              Jordan Clarke
+              <span
+                style="
+                  font-size: 0.5em;
+                  color: #888;
+                  font-weight: normal;
+                  font-family: 'Inter', sans-serif;
+                "
+                >(Placeholder)</span
+              >
+            </h2>
             <div class="role">Creative Director, Illustration (Placeholder)</div>
-            <p>Jordan is the visual mastermind shaping the world of 3minsto9. With a background in indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic details, and the kind of art that makes you look twice.</p>
+            <p>
+              Jordan is the visual mastermind shaping the world of 3minsto9. With a background in
+              indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic
+              details, and the kind of art that makes you look twice.
+            </p>
             <div class="team-tags">
               <span class="tag">Comicsmith</span>
               <span class="tag">Character Vandalism</span>
@@ -591,14 +633,35 @@
           <article class="team-card" tabindex="0">
             <picture class="responsive-picture team-card-image">
               <source srcset="images/placeholder.webp" type="image/webp" />
-              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Sam Rivera" data-placeholder="PORTRAIT" loading="lazy" />
+              <img
+                class="placeholder-fallback"
+                src="images/placeholder.jpg"
+                alt="Portrait of Sam Rivera"
+                data-placeholder="PORTRAIT"
+                loading="lazy"
+              />
             </picture>
             <div class="team-card-image" role="img" aria-label="Portrait of Sam Rivera"></div>
             <h2>Sam Rivera</h2>
             <div class="role">Lead Puzzlesmith, Narrative</div>
-            <h2>Sam Rivera <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <h2>
+              Sam Rivera
+              <span
+                style="
+                  font-size: 0.5em;
+                  color: #888;
+                  font-weight: normal;
+                  font-family: 'Inter', sans-serif;
+                "
+                >(Placeholder)</span
+              >
+            </h2>
             <div class="role">Lead Puzzlesmith, Narrative (Placeholder)</div>
-            <p>Sam weaves complex Alternate Reality Game mechanics into physical media. Former cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to be solved, blurring the line between fiction and reality.</p>
+            <p>
+              Sam weaves complex Alternate Reality Game mechanics into physical media. Former
+              cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to
+              be solved, blurring the line between fiction and reality.
+            </p>
             <div class="team-tags">
               <span class="tag">Cryptography</span>
               <span class="tag">Worldbuilding</span>
@@ -608,20 +671,40 @@
           <article class="team-card" tabindex="0">
             <picture class="responsive-picture team-card-image">
               <source srcset="images/placeholder.webp" type="image/webp" />
-              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Alex Chen" data-placeholder="PORTRAIT" loading="lazy" />
+              <img
+                class="placeholder-fallback"
+                src="images/placeholder.jpg"
+                alt="Portrait of Alex Chen"
+                data-placeholder="PORTRAIT"
+                loading="lazy"
+              />
             </picture>
             <div class="team-card-image" role="img" aria-label="Portrait of Alex Chen"></div>
             <h2>Alex Chen</h2>
             <div class="role">Operations & Production</div>
-            <h2>Alex Chen <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <h2>
+              Alex Chen
+              <span
+                style="
+                  font-size: 0.5em;
+                  color: #888;
+                  font-weight: normal;
+                  font-family: 'Inter', sans-serif;
+                "
+                >(Placeholder)</span
+              >
+            </h2>
             <div class="role">Operations & Production (Placeholder)</div>
-            <p>The glue that holds the studio together. Alex manages the supply chain, coordinates physical print runs with our bespoke manufacturing partners, and ensures every volume arrives in pristine (or intentionally distressed) condition.</p>
+            <p>
+              The glue that holds the studio together. Alex manages the supply chain, coordinates
+              physical print runs with our bespoke manufacturing partners, and ensures every volume
+              arrives in pristine (or intentionally distressed) condition.
+            </p>
             <div class="team-tags">
               <span class="tag">Logistics</span>
               <span class="tag">Print Production</span>
             </div>
           </article>
-
         </div>
       </section>
     </main>

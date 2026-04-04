@@ -180,18 +180,19 @@ app.post('/api/verify', (req: Request, res: Response) => {
 });
 
 // Catch-all route to serve the custom 404 page
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response) => {
   res.status(404).sendFile(NOT_FOUND_PATH);
 });
 
 // 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled error:', err);
 
   // Handle specific standard HTTP errors correctly
-  if (err.status) {
-    res.status(err.status).json({ error: err.message || 'Error' });
+  if (err instanceof Error && 'status' in err) {
+    const httpErr = err as Error & { status: number };
+    res.status(httpErr.status).json({ error: httpErr.message || 'Error' });
     return;
   }
 
