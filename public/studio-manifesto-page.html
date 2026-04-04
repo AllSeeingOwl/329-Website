@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3minsto9 | Store</title>
-    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
+    <title>The Studio | 3minsto9 Operations</title>
+    <!-- Clean sans-serif font for the minimalist design -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-color: #faf9f6;
+        --bg-color: #faf9f6; /* Off-white */
         --text-color: #111111;
         --accent-red: #ff003c;
         --border-color: #e0e0e0;
@@ -22,11 +22,24 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', Helvetica, sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
         overflow-x: hidden;
         scroll-behavior: smooth;
+        /* Fade-in animation */
+        animation: fadeIn 1.2s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       a {
@@ -111,124 +124,65 @@
         color: var(--accent-red);
       }
 
-      .btn-primary {
-        display: inline-block;
+      .manifesto-content {
+        max-width: 800px;
+        margin: 100px auto;
+        text-align: center;
+      }
+
+      .manifesto-headline {
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin: 0 0 60px 0;
+      }
+
+      .manifesto-text {
+        text-align: left;
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .manifesto-text p {
+        margin-bottom: 30px;
+      }
+
+      .highlight {
+        color: var(--accent-red);
+        font-weight: bold;
+      }
+
+      .manifesto-text h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 60px 0 20px 0;
+        letter-spacing: -1px;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .manifesto-text h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 40px 0 15px 0;
+        text-transform: uppercase;
+        color: var(--text-color);
+      }
+
+      .texture-break {
+        width: 100%;
+        padding: 60px 20px;
         background-color: var(--text-color);
         color: var(--bg-color);
-        padding: 18px 36px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-      }
-
-      .btn-primary:hover {
-        background-color: var(--accent-red);
-        color: #fff;
-      }
-
-      .btn-primary:focus-visible {
-        outline: none;
-        background-color: var(--accent-red);
-        color: #fff;
-      }
-
-      /* Store Specific Styles */
-      .store-header {
         text-align: center;
-        padding: 60px 0 40px;
-      }
-
-      .store-header h1 {
-        font-family: 'Playfair Display', serif;
-        font-size: 3.5rem;
-        margin: 0 0 15px 0;
-      }
-
-      .store-header p {
-        font-size: 1.2rem;
-        color: #666;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-
-      .product-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 40px;
-        padding: 40px 0 100px;
-      }
-
-      .product-card {
-        background-color: #fff;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-
-      .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      .product-card:focus-within {
-        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      .product-image {
-        background-color: #eae8e1;
-        width: 100%;
-        aspect-ratio: 1/1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .product-image::after {
-        content: 'IMAGE PLACEHOLDER';
-        font-family: 'Inter', sans-serif;
-        font-size: 0.8rem;
-        color: #888;
-        text-align: center;
-      }
-
-      .product-info {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .product-title {
-        font-size: 1.4rem;
-        font-weight: 900;
-        margin: 0 0 10px 0;
-        line-height: 1.2;
-      }
-
-      .product-description {
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #555;
-        margin-bottom: 25px;
-        flex-grow: 1;
-      }
-
-      .product-card .btn-primary {
-        width: 100%;
-        padding: 15px;
-        font-size: 0.9rem;
-        letter-spacing: 1px;
+        font-size: 2rem;
+        font-weight: 300;
+        font-style: italic;
+        margin: 80px 0;
+        box-sizing: border-box;
       }
 
       footer {
@@ -237,9 +191,17 @@
         font-size: 0.85rem;
         color: #888;
         border-top: 1px solid var(--border-color);
+        margin-top: 80px;
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 900px) {
+        .manifesto-headline {
+          font-size: 3rem;
+        }
+        .manifesto-content {
+          margin: 60px auto;
+          padding: 0 20px;
+        }
         .nav-inner {
           flex-direction: column;
           gap: 20px;
@@ -249,12 +211,6 @@
           justify-content: center;
           gap: 15px;
         }
-        .store-header h1 {
-          font-size: 2.5rem;
-        }
-        .product-gallery {
-          gap: 30px;
-        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -263,6 +219,12 @@
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
+        }
+        body,
+        html {
+          animation: none;
+          opacity: 1;
+          transform: none;
         }
       }
     </style>
@@ -402,14 +364,14 @@
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
             <details class="nav-group" >
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
+                <a href="releases.html" class="nav-link">All Releases</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
               </div>
@@ -417,25 +379,25 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" >
+            <details class="nav-group" open>
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link">Online Selling Policies</a>
+                <a href="studio-manifesto-page.html" class="nav-link" style="color: var(--accent-red) !important;">Manifesto</a>
+                <a href="studio-team.html" class="nav-link">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link">Online Selling Policies</a>
               </div>
             </details>
           </div>
 
           <div class="nav-item-wrapper">
-            <details class="nav-group" open>
+            <details class="nav-group" >
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link" style="color: var(--accent-red) !important;">Main Store</a>
+                <a href="store.html" class="nav-link">Main Store</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
               </div>
@@ -443,114 +405,90 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
         <nav class="nav-links" aria-label="Main Navigation">
-          <a href="Surface%20Home%20Page.html">Home</a>
-          <a href="Releases.html">Releases</a>
-          <a href="Studio%20Manifesto%20Page.html">The Studio</a>
-          <a href="Studio%20Team.html">Team</a>
-          <a href="Store.html" style="color: var(--accent-red)">Store</a>
-          <a href="Studio%20FAQ.html">FAQ</a>
-          <a href="Developer%20Blog.html">Dev Blog</a>
-          <a href="Cart.html">Cart</a>
-          <a href="Studio%20Contact%20Us.html">Contact</a>
+          <a href="surface-home-page.html">Home</a>
+          <a href="releases.html">Releases</a>
+          <a href="studio-manifesto-page.html" style="color: var(--accent-red)">The Studio</a>
+          <a href="studio-team.html">Team</a>
+          <a href="store.html">Store</a>
+          <a href="studio-faq.html">FAQ</a>
+          <a href="developer-blog.html">Dev Blog</a>
+          <a href="cart.html">Cart</a>
+          <a href="studio-contact-us.html">Contact</a>
         </nav>
       </div>
     </header>
 
-    <main class="container">
-      <section class="store-header">
-        <h1>Artefact Procurement</h1>
-        <p>Explore our catalogue of tactile physical media, zines, and immersive experiences.</p>
-      </section>
+    <main class="container manifesto-content">
+      <h1 class="manifesto-headline">
+        The Studio.<br />Independent Micro-Press & Immersive Media.
+      </h1>
 
-      <section class="product-gallery">
-        <!-- Product 1 -->
-        <article class="product-card">
-          <div
-            class="product-image"
-            role="img"
-            aria-label="Placeholder image for Unknown Field Guide (Vol. 0)"
-          ></div>
-          <div class="product-info">
-            <h2 class="product-title">Unknown Field Guide (Vol. 0)</h2>
-            <p class="product-description">
-              A 32-page interactive puzzle zine. Officially a pristine 1950s tourist brochure.
-              Unofficially corrected by Team Rabbit.
-            </p>
-            <a href="Cart.html" class="btn-primary" aria-label="Acquire Unknown Field Guide (Vol. 0)" style="text-align: center;">
-              Acquire
-            </a>
-          </div>
-        </article>
-
-        <!-- Product 2 -->
-        <article class="product-card">
-          <div
-            class="product-image"
-            role="img"
-            aria-label="Placeholder image for Product Title Placeholder 2"
-          ></div>
-          <div class="product-info">
-            <h2 class="product-title">Product Title Placeholder 2</h2>
-            <p class="product-description">
-              A brief description of this artifact. This text serves as a placeholder until actual
-              product copy is provided.
-            </p>
-            <a href="Cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 2" style="text-align: center;">
-              Acquire
-            </a>
-          </div>
-        </article>
-
-        <!-- Product 3 -->
-        <article class="product-card">
-          <div
-            class="product-image"
-            role="img"
-            aria-label="Placeholder image for Product Title Placeholder 3"
-          ></div>
-          <div class="product-info">
-            <h2 class="product-title">Product Title Placeholder 3</h2>
-            <p class="product-description">
-              A brief description of this artifact. This text serves as a placeholder until actual
-              product copy is provided.
-            </p>
-            <a href="Cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 3" style="text-align: center;">
-              Acquire
-            </a>
-          </div>
-        </article>
-
-        <!-- Product 4 -->
-        <article class="product-card">
-          <div
-            class="product-image"
-            role="img"
-            aria-label="Placeholder image for Product Title Placeholder 4"
-          ></div>
-          <div class="product-info">
-            <h2 class="product-title">Product Title Placeholder 4</h2>
-            <p class="product-description">
-              A brief description of this artifact. This text serves as a placeholder until actual
-              product copy is provided.
-            </p>
-            <a href="Cart.html" class="btn-primary" aria-label="Acquire Product Title Placeholder 4" style="text-align: center;">
-              Acquire
-            </a>
-          </div>
-        </article>
-      </section>
+      <div class="manifesto-text">
+        <h2>Forging Artefacts</h2>
+        <p>
+          Based in Wendover, UK, <strong>3minsto9</strong> operates outside the traditional
+          publishing machine. Our philosophy is simple:
+          <span class="highlight">High Value. Low Volume. Direct to Reader.</span>
+        </p>
+        <p>
+          We do not believe in disposable media or algorithm-chasing content. We believe in creating
+          tactile, dangerous physical media that respects the intelligence of our audience. We build
+          "In-World Artefacts"—books and zines that feel like they have been smuggled out of an
+          alternate reality, surviving riots and corporate censorship to reach your hands.
+        </p>
+      </div>
     </main>
+
+    <aside class="texture-break">
+      "You aren't just reading a story. You are stepping into a labyrinth."
+    </aside>
+
+    <section class="container manifesto-content" style="margin-top: 0">
+      <div class="manifesto-text">
+        <h2>Our Protocols</h2>
+        <p>
+          Our studio functions through two highly disciplined design methodologies that bridge the
+          gap between graphic novels and Alternate Reality Games (ARGs).
+        </p>
+
+        <h3>The Comicsmith Protocol</h3>
+        <p>
+          We approach visual storytelling with architectural precision. Our projects feature highly
+          detailed, "Where's Wally" style cross-sections and raw, DIY punk aesthetics. By employing
+          a strict layering rule with our freelance illustrators, we ensure that the sterile,
+          corporate background of the world can be aggressively "vandalised" by our characters,
+          creating an interactive canvas rather than just a picture.
+        </p>
+
+        <h3>The Puzzlesmith Protocol</h3>
+        <p>
+          We gamify the page. 3minsto9 books are designed to be played, not just read. We turn our
+          readers into active detectives by embedding a multi-tiered meta-puzzle layer—dubbed "The
+          Game of Unknown"—directly into the art and text. From cyphers hidden in the legal
+          copyright pages to physical code wheels and deductive grids, every detail is a functional
+          mechanic.
+        </p>
+        <p>
+          We don't use standard "Art By..." credit pages, because that ruins the illusion. Instead,
+          our artists hide their personal signatures as "red herring" puzzles within the dense
+          clutter of the artwork itself.
+        </p>
+      </div>
+    </section>
 
     <footer>
       <div class="container">
-        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
+        <p>
+          &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. Do not copy. We do
+          what we want. | <a href="studio-press-kit.html">Media Kit</a>
+        </p>
       </div>
     </footer>
   </body>

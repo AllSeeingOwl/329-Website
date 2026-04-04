@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('Dev Blog sidebar elements are spans and have correct styling', async ({ page }) => {
   // Navigate to the Dev Blog
-  await page.goto('/Developer%20Blog.html');
+  await page.goto('/developer-blog.html');
 
   // Check Recent Updates spans
   const recentUpdatesSpans = page.locator('.sidebar-section').first().locator('.update-title span');
@@ -45,7 +45,7 @@ test('Dev Blog sidebar elements are spans and have correct styling', async ({ pa
 });
 
 test('Clicking sidebar spans does not cause navigation or scroll to top', async ({ page }) => {
-  await page.goto('/Developer%20Blog.html');
+  await page.goto('/developer-blog.html');
 
   // Scroll down a bit to ensure "scroll to top" would be noticeable
   await page.setViewportSize({ width: 800, height: 600 });

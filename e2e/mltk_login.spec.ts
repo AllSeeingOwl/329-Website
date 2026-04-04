@@ -4,8 +4,8 @@ import * as path from 'path';
 test.describe('MLTK Login Gate E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Intercept requests to serve local files
-    await page.route('**/MLTK%20Login%20Gate.html', async (route) => {
-      const filePath = path.join(__dirname, '..', 'public', 'MLTK Login Gate.html');
+    await page.route('**/mltk-login-gate.html', async (route) => {
+      const filePath = path.join(__dirname, '..', 'public', 'mltk-login-gate.html');
       await route.fulfill({
         contentType: 'text/html',
         path: filePath,
@@ -20,7 +20,7 @@ test.describe('MLTK Login Gate E2E', () => {
       });
     });
 
-    await page.goto('/MLTK%20Login%20Gate.html');
+    await page.goto('/mltk-login-gate.html');
   });
 
   test('should format input with hyphens and uppercase', async ({ page }) => {

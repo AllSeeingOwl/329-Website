@@ -4,8 +4,8 @@ import * as path from 'path';
 test.describe('Velvet Rope E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Intercept requests to serve local files as the server is not reliable in this environment
-    await page.route('**/Velvet%20Rope%20Landing%20Page.html', async (route) => {
-      const filePath = path.join(__dirname, '..', 'public', 'Velvet Rope Landing Page.html');
+    await page.route('**/velvet-rope-landing-page.html', async (route) => {
+      const filePath = path.join(__dirname, '..', 'public', 'velvet-rope-landing-page.html');
       await route.fulfill({
         contentType: 'text/html',
         path: filePath,
@@ -20,7 +20,7 @@ test.describe('Velvet Rope E2E', () => {
       });
     });
 
-    await page.goto('/Velvet%20Rope%20Landing%20Page.html');
+    await page.goto('/velvet-rope-landing-page.html');
   });
 
   test('should display COMMUNICATION SECURED modal upon mainframe breach', async ({ page }) => {

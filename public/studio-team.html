@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Studio | 3minsto9 Operations</title>
-    <!-- Clean sans-serif font for the minimalist design -->
+    <title>3minsto9 | Studio Team</title>
+    <!-- Clean, editorial fonts for the "Professional Indie Publisher" facade -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-color: #faf9f6; /* Off-white */
+        --bg-color: #faf9f6;
         --text-color: #111111;
         --accent-red: #ff003c;
         --border-color: #e0e0e0;
@@ -22,29 +22,22 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        font-family: 'Inter', Helvetica, sans-serif;
+        font-family: 'Inter', sans-serif;
         background-color: var(--bg-color);
         color: var(--text-color);
         overflow-x: hidden;
         scroll-behavior: smooth;
-        /* Fade-in animation */
-        animation: fadeIn 1.2s ease-out forwards;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(15px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
       }
 
       a {
         text-decoration: none;
         color: inherit;
+        transition: color 0.3s ease;
+      }
+
+      a:focus-visible, button:focus-visible {
+        outline: 2px solid var(--accent-red);
+        outline-offset: 4px;
       }
 
       .container {
@@ -74,6 +67,10 @@
         text-transform: uppercase;
       }
 
+      .brand-logo:hover, .brand-logo:focus-visible {
+        color: var(--accent-red);
+      }
+
       .quarter-clock {
         width: 30px;
         height: 30px;
@@ -81,6 +78,12 @@
         border-left: 3px solid var(--text-color);
         border-radius: 100% 0 0 0;
         position: relative;
+        transition: border-color 0.3s ease;
+      }
+
+      .brand-logo:hover .quarter-clock, .brand-logo:focus-visible .quarter-clock {
+        border-top-color: var(--accent-red);
+        border-left-color: var(--accent-red);
       }
 
       .quarter-clock::before {
@@ -120,88 +123,150 @@
         letter-spacing: 1px;
       }
 
-      .nav-links a:hover {
+      .nav-links a:hover, .nav-links a:focus-visible {
         color: var(--accent-red);
       }
 
-      .manifesto-content {
-        max-width: 800px;
-        margin: 100px auto;
+      .team-hero {
+        padding: 100px 0 60px;
         text-align: center;
+        border-bottom: 1px solid var(--border-color);
       }
 
-      .manifesto-headline {
+      .team-hero h1 {
+        font-family: 'Playfair Display', serif;
         font-size: 4rem;
-        font-weight: 900;
         line-height: 1.1;
-        letter-spacing: -2px;
-        margin: 0 0 60px 0;
-      }
-
-      .manifesto-text {
-        text-align: left;
-        font-size: 1.25rem;
-        line-height: 1.8;
-        color: #333;
-      }
-
-      .manifesto-text p {
-        margin-bottom: 30px;
-      }
-
-      .highlight {
-        color: var(--accent-red);
-        font-weight: bold;
-      }
-
-      .manifesto-text h2 {
-        font-size: 2rem;
+        margin: 0 0 20px 0;
         font-weight: 700;
-        margin: 60px 0 20px 0;
-        letter-spacing: -1px;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 10px;
-        text-transform: uppercase;
       }
 
-      .manifesto-text h3 {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 40px 0 15px 0;
-        text-transform: uppercase;
-        color: var(--text-color);
+      .team-hero p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #555;
+        max-width: 600px;
+        margin: 0 auto;
       }
 
-      .texture-break {
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        padding: 80px 0;
+      }
+
+      .team-card {
+        background-color: #fff;
+        border: 1px solid var(--border-color);
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+
+      .team-card:hover, .team-card:focus-within {
+        transform: translateY(-5px);
+        box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05);
+        border-color: var(--text-color);
+      }
+
+      .team-card-image {
         width: 100%;
-        padding: 60px 20px;
-        background-color: var(--text-color);
-        color: var(--bg-color);
-        text-align: center;
-        font-size: 2rem;
-        font-weight: 300;
-        font-style: italic;
-        margin: 80px 0;
-        box-sizing: border-box;
+        aspect-ratio: 1/1;
+        background-color: #eae8e1;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .team-card-image::after {
+        content: 'PORTRAIT';
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        color: #888;
+        letter-spacing: 2px;
+      }
+
+      .team-card h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        margin: 0 0 10px 0;
+        line-height: 1.2;
+      }
+
+      .team-card .role {
+        font-size: 0.8rem;
+        font-weight: 900;
+        color: var(--accent-red);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
+      }
+
+      .team-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin: 0 0 20px 0;
+        flex-grow: 1;
+      }
+
+      .team-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: auto;
+      }
+
+      .tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 6px 12px;
+        background-color: #f0f0f0;
+        color: var(--text-color);
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       footer {
-        padding: 40px 0;
+        padding: 60px 0 40px;
         text-align: center;
         font-size: 0.85rem;
         color: #888;
         border-top: 1px solid var(--border-color);
-        margin-top: 80px;
+        background-color: #fff;
       }
 
-      @media (max-width: 900px) {
-        .manifesto-headline {
-          font-size: 3rem;
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .footer-links a {
+        color: var(--text-color);
+      }
+
+      .footer-links a:hover, .footer-links a:focus-visible {
+        color: var(--accent-red);
+      }
+
+      @media (max-width: 992px) {
+        .team-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
-        .manifesto-content {
-          margin: 60px auto;
-          padding: 0 20px;
-        }
+      }
+
+      @media (max-width: 768px) {
         .nav-inner {
           flex-direction: column;
           gap: 20px;
@@ -209,6 +274,21 @@
         .nav-links {
           flex-wrap: wrap;
           justify-content: center;
+          gap: 15px;
+        }
+        .team-hero {
+          padding: 60px 0 40px;
+        }
+        .team-hero h1 {
+          font-size: 3rem;
+        }
+        .team-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+          padding: 60px 0;
+        }
+        .footer-links {
+          flex-direction: column;
           gap: 15px;
         }
       }
@@ -219,12 +299,6 @@
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
-        }
-        body,
-        html {
-          animation: none;
-          opacity: 1;
-          transform: none;
         }
       }
     </style>
@@ -350,6 +424,7 @@
   <link rel="manifest" href="/manifest.json">
 </head>
   <body>
+    <!-- Development Note: x-powered-by header is disabled server-side in Express for security -->
                     <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
@@ -364,14 +439,14 @@
         </button>
         <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
           <div class="nav-item-wrapper">
-            <a href="Surface%20Home%20Page.html" class="nav-link">Home</a>
+            <a href="surface-home-page.html" class="nav-link">Home</a>
           </div>
 
           <div class="nav-item-wrapper">
             <details class="nav-group" >
               <summary class="nav-link">Releases</summary>
               <div class="sub-menu">
-                <a href="Releases.html" class="nav-link">All Releases</a>
+                <a href="releases.html" class="nav-link">All Releases</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 1 (Future)</span>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Vol 2 (Future)</span>
               </div>
@@ -382,13 +457,13 @@
             <details class="nav-group" open>
               <summary class="nav-link">The Studio</summary>
               <div class="sub-menu">
-                <a href="Studio%20Manifesto%20Page.html" class="nav-link" style="color: var(--accent-red) !important;">Manifesto</a>
-                <a href="Studio%20Team.html" class="nav-link">Team</a>
-                <a href="Studio%20Contact%20Us.html" class="nav-link">Contact Us</a>
-                <a href="Studio%20FAQ.html" class="nav-link">FAQ</a>
-                <a href="Business%20Privacy%20Policy.html" class="nav-link">Privacy Policy</a>
-                <a href="Business%20Terms%20of%20Service.html" class="nav-link">Terms of Service</a>
-                <a href="Online%20Selling%20Policies.html" class="nav-link">Online Selling Policies</a>
+                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                <a href="studio-team.html" class="nav-link" style="color: var(--accent-red) !important;">Team</a>
+                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                <a href="studio-faq.html" class="nav-link">FAQ</a>
+                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                <a href="online-selling-policies.html" class="nav-link">Online Selling Policies</a>
               </div>
             </details>
           </div>
@@ -397,7 +472,7 @@
             <details class="nav-group" >
               <summary class="nav-link">Store</summary>
               <div class="sub-menu">
-                <a href="Store.html" class="nav-link">Main Store</a>
+                <a href="store.html" class="nav-link">Main Store</a>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Apparel (Future)</span>
                 <span class="nav-link placeholder-link" style="cursor: default !important;">Placeholder: Artefacts (Future)</span>
               </div>
@@ -405,90 +480,85 @@
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Developer%20Blog.html" class="nav-link">Dev Blog</a>
+            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
 
           <div class="nav-item-wrapper">
-            <a href="Cart.html" class="nav-link">Cart</a>
+            <a href="cart.html" class="nav-link">Cart</a>
           </div>
         <nav class="nav-links" aria-label="Main Navigation">
-          <a href="Surface%20Home%20Page.html">Home</a>
-          <a href="Releases.html">Releases</a>
-          <a href="Studio%20Manifesto%20Page.html" style="color: var(--accent-red)">The Studio</a>
-          <a href="Studio%20Team.html">Team</a>
-          <a href="Store.html">Store</a>
-          <a href="Studio%20FAQ.html">FAQ</a>
-          <a href="Developer%20Blog.html">Dev Blog</a>
-          <a href="Cart.html">Cart</a>
-          <a href="Studio%20Contact%20Us.html">Contact</a>
+          <a href="surface-home-page.html">Home</a>
+          <a href="releases.html">Releases</a>
+          <a href="studio-manifesto-page.html">The Studio</a>
+          <a href="studio-team.html" style="color: var(--accent-red)">Team</a>
+          <a href="store.html">Store</a>
+          <a href="studio-faq.html">FAQ</a>
+          <a href="developer-blog.html">Dev Blog</a>
+          <a href="cart.html">Cart</a>
+          <a href="studio-contact-us.html">Contact</a>
         </nav>
       </div>
     </header>
 
-    <main class="container manifesto-content">
-      <h1 class="manifesto-headline">
-        The Studio.<br />Independent Micro-Press & Immersive Media.
-      </h1>
+    <main>
+      <section class="team-hero container">
+        <h1>Meet the Makers</h1>
+        <p>The architects behind the artefacts. We are a small, dedicated team of creators forging immersive experiences and physical media.</p>
+      </section>
 
-      <div class="manifesto-text">
-        <h2>Forging Artefacts</h2>
-        <p>
-          Based in Wendover, UK, <strong>3minsto9</strong> operates outside the traditional
-          publishing machine. Our philosophy is simple:
-          <span class="highlight">High Value. Low Volume. Direct to Reader.</span>
-        </p>
-        <p>
-          We do not believe in disposable media or algorithm-chasing content. We believe in creating
-          tactile, dangerous physical media that respects the intelligence of our audience. We build
-          "In-World Artefacts"—books and zines that feel like they have been smuggled out of an
-          alternate reality, surviving riots and corporate censorship to reach your hands.
-        </p>
-      </div>
+      <section class="container">
+        <div class="team-grid">
+
+          <article class="team-card" tabindex="0">
+            <div class="team-card-image" role="img" aria-label="Portrait of Jordan Clarke"></div>
+            <h2>Jordan Clarke</h2>
+            <div class="role">Creative Director, Illustration</div>
+            <h2>Jordan Clarke <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Creative Director, Illustration (Placeholder)</div>
+            <p>Jordan is the visual mastermind shaping the world of 3minsto9. With a background in indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic details, and the kind of art that makes you look twice.</p>
+            <div class="team-tags">
+              <span class="tag">Comicsmith</span>
+              <span class="tag">Character Vandalism</span>
+            </div>
+          </article>
+
+          <article class="team-card" tabindex="0">
+            <div class="team-card-image" role="img" aria-label="Portrait of Sam Rivera"></div>
+            <h2>Sam Rivera</h2>
+            <div class="role">Lead Puzzlesmith, Narrative</div>
+            <h2>Sam Rivera <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Lead Puzzlesmith, Narrative (Placeholder)</div>
+            <p>Sam weaves complex Alternate Reality Game mechanics into physical media. Former cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to be solved, blurring the line between fiction and reality.</p>
+            <div class="team-tags">
+              <span class="tag">Cryptography</span>
+              <span class="tag">Worldbuilding</span>
+            </div>
+          </article>
+
+          <article class="team-card" tabindex="0">
+            <div class="team-card-image" role="img" aria-label="Portrait of Alex Chen"></div>
+            <h2>Alex Chen</h2>
+            <div class="role">Operations & Production</div>
+            <h2>Alex Chen <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
+            <div class="role">Operations & Production (Placeholder)</div>
+            <p>The glue that holds the studio together. Alex manages the supply chain, coordinates physical print runs with our bespoke manufacturing partners, and ensures every volume arrives in pristine (or intentionally distressed) condition.</p>
+            <div class="team-tags">
+              <span class="tag">Logistics</span>
+              <span class="tag">Print Production</span>
+            </div>
+          </article>
+
+        </div>
+      </section>
     </main>
-
-    <aside class="texture-break">
-      "You aren't just reading a story. You are stepping into a labyrinth."
-    </aside>
-
-    <section class="container manifesto-content" style="margin-top: 0">
-      <div class="manifesto-text">
-        <h2>Our Protocols</h2>
-        <p>
-          Our studio functions through two highly disciplined design methodologies that bridge the
-          gap between graphic novels and Alternate Reality Games (ARGs).
-        </p>
-
-        <h3>The Comicsmith Protocol</h3>
-        <p>
-          We approach visual storytelling with architectural precision. Our projects feature highly
-          detailed, "Where's Wally" style cross-sections and raw, DIY punk aesthetics. By employing
-          a strict layering rule with our freelance illustrators, we ensure that the sterile,
-          corporate background of the world can be aggressively "vandalised" by our characters,
-          creating an interactive canvas rather than just a picture.
-        </p>
-
-        <h3>The Puzzlesmith Protocol</h3>
-        <p>
-          We gamify the page. 3minsto9 books are designed to be played, not just read. We turn our
-          readers into active detectives by embedding a multi-tiered meta-puzzle layer—dubbed "The
-          Game of Unknown"—directly into the art and text. From cyphers hidden in the legal
-          copyright pages to physical code wheels and deductive grids, every detail is a functional
-          mechanic.
-        </p>
-        <p>
-          We don't use standard "Art By..." credit pages, because that ruins the illusion. Instead,
-          our artists hide their personal signatures as "red herring" puzzles within the dense
-          clutter of the artwork itself.
-        </p>
-      </div>
-    </section>
 
     <footer>
       <div class="container">
-        <p>
-          &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. Do not copy. We do
-          what we want. | <a href="Studio%20Press%20Kit.html">Media Kit</a>
-        </p>
+        <nav class="footer-links" aria-label="Footer Navigation">
+          <a href="studio-contact-us.html">Contact Us</a>
+          <a href="studio-manifesto-page.html">Studio Manifesto</a>
+        </nav>
+        <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
       </div>
     </footer>
   </body>

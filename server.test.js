@@ -125,7 +125,7 @@ describe('Server Tests', () => {
 
     const response = await request(app).get('/').expect(200);
 
-    expect(response.text).toContain('3minsto9 Operations - Portal');
+    expect(response.text).toContain('<title>329 Website</title>');
   });
 
   it('should set appropriate security headers on responses', async () => {
