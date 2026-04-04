@@ -230,6 +230,7 @@
         aspect-ratio: 1 / 1;
       }
 
+      /* .lazy-image::after removed, using picture img fallback instead */
       .lazy-image::after {
         content: attr(data-placeholder);
         font-family: 'Inter', sans-serif;
@@ -477,6 +478,66 @@
           transform: none;
         }
       }
+
+      /* Responsive Image Utilities */
+      picture.responsive-picture {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      picture.responsive-picture img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background-color: #eae8e1;
+        /* Hide the broken image icon */
+        color: transparent;
+      }
+
+      picture.responsive-picture img:-moz-loading {
+        visibility: hidden;
+      }
+
+      /* Image fallback/placeholder text when src is broken or missing */
+      picture.responsive-picture img.placeholder-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      picture.responsive-picture img.placeholder-fallback::after {
+        content: attr(data-placeholder);
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Hide the default broken image icon in webkit */
+      picture.responsive-picture img.placeholder-fallback::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #eae8e1;
+      }
+
     </style>
     <script src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
@@ -521,6 +582,10 @@
               <li>Sterile corporate background + aggressive character vandalism</li>
               <li>Creates friction between "official" and "vandal" narratives</li>
             </ul>
+            <picture class="responsive-picture lazy-image aspect-16-9">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Example of Comicsmith Protocol illustration showing corporate background with vandalism" data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-16-9"
               role="img"
@@ -537,6 +602,10 @@
               <li>Readers become active detectives</li>
               <li>Functional mechanics embedded in art and text</li>
             </ul>
+            <picture class="responsive-picture lazy-image aspect-16-9">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Example of Puzzlesmith Protocol showing hidden cipher in a document" data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-16-9"
               role="img"
@@ -611,6 +680,10 @@
             <div class="step-number">01</div>
             <h3>Spot the Vandalism Layer</h3>
             <p>Look for Team Rabbit tags, unnatural color differences, or out-of-place text.</p>
+            <picture class="responsive-picture lazy-image aspect-1-1">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 1: Spotting vandalism" data-placeholder="IMG: VANDALISM" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-1-1"
               role="img"
@@ -622,6 +695,10 @@
             <div class="step-number">02</div>
             <h3>Identify the Mechanic</h3>
             <p>Determine the type of puzzle: code wheel, logic grid, or cipher key.</p>
+            <picture class="responsive-picture lazy-image aspect-1-1">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 2: Identifying puzzle mechanic" data-placeholder="IMG: MECHANIC" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-1-1"
               role="img"
@@ -633,6 +710,10 @@
             <div class="step-number">03</div>
             <h3>Work the Deduction</h3>
             <p>Gather the pieces and research what the puzzle is asking of you.</p>
+            <picture class="responsive-picture lazy-image aspect-1-1">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 3: Working the deduction" data-placeholder="IMG: DEDUCTION" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-1-1"
               role="img"
@@ -644,6 +725,10 @@
             <div class="step-number">04</div>
             <h3>Reveal the Hidden Connection</h3>
             <p>Apply your solution to unlock lore, hidden websites, or real-world drops.</p>
+            <picture class="responsive-picture lazy-image aspect-1-1">
+              <source srcset="images/placeholder.webp" type="image/webp" />
+              <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 4: Revealing connection" data-placeholder="IMG: REVEAL" loading="lazy" />
+            </picture>
             <div
               class="lazy-image aspect-1-1"
               role="img"
