@@ -231,6 +231,14 @@
       }
 
       /* .lazy-image::after removed, using picture img fallback instead */
+      .lazy-image::after {
+        content: attr(data-placeholder);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+      }
 
       .meta-puzzle-content {
         max-width: 800px;
@@ -578,6 +586,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Example of Comicsmith Protocol illustration showing corporate background with vandalism" data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-16-9"
+              role="img"
+              aria-label="Example of Comicsmith Protocol illustration showing corporate background with vandalism"
+              data-placeholder="IMAGE PLACEHOLDER: COMICSMITH EXAMPLE"
+            ></div>
           </div>
           <div class="protocol-card">
             <h3>Puzzlesmith Protocol</h3>
@@ -592,6 +606,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Example of Puzzlesmith Protocol showing hidden cipher in a document" data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-16-9"
+              role="img"
+              aria-label="Example of Puzzlesmith Protocol showing hidden cipher in a document"
+              data-placeholder="IMAGE PLACEHOLDER: PUZZLESMITH EXAMPLE"
+            ></div>
           </div>
         </div>
       </section>
@@ -664,6 +684,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 1: Spotting vandalism" data-placeholder="IMG: VANDALISM" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 1: Spotting vandalism"
+              data-placeholder="IMG: VANDALISM"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">02</div>
@@ -673,6 +699,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 2: Identifying puzzle mechanic" data-placeholder="IMG: MECHANIC" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 2: Identifying puzzle mechanic"
+              data-placeholder="IMG: MECHANIC"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">03</div>
@@ -682,6 +714,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 3: Working the deduction" data-placeholder="IMG: DEDUCTION" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 3: Working the deduction"
+              data-placeholder="IMG: DEDUCTION"
+            ></div>
           </div>
           <div class="step-card">
             <div class="step-number">04</div>
@@ -691,6 +729,12 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Step 4: Revealing connection" data-placeholder="IMG: REVEAL" loading="lazy" />
             </picture>
+            <div
+              class="lazy-image aspect-1-1"
+              role="img"
+              aria-label="Step 4: Revealing connection"
+              data-placeholder="IMG: REVEAL"
+            ></div>
           </div>
         </div>
       </section>

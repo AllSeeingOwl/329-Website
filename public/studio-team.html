@@ -185,6 +185,13 @@
       }
 
       /* .team-card-image::after removed, using picture img fallback instead */
+      .team-card-image::after {
+        content: 'PORTRAIT';
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        color: #888;
+        letter-spacing: 2px;
+      }
 
       .team-card h2 {
         font-family: 'Playfair Display', serif;
@@ -569,6 +576,7 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Jordan Clarke" data-placeholder="PORTRAIT" loading="lazy" />
             </picture>
+            <div class="team-card-image" role="img" aria-label="Portrait of Jordan Clarke"></div>
             <h2>Jordan Clarke</h2>
             <div class="role">Creative Director, Illustration</div>
             <h2>Jordan Clarke <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
@@ -585,6 +593,7 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Sam Rivera" data-placeholder="PORTRAIT" loading="lazy" />
             </picture>
+            <div class="team-card-image" role="img" aria-label="Portrait of Sam Rivera"></div>
             <h2>Sam Rivera</h2>
             <div class="role">Lead Puzzlesmith, Narrative</div>
             <h2>Sam Rivera <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
@@ -601,6 +610,7 @@
               <source srcset="images/placeholder.webp" type="image/webp" />
               <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Portrait of Alex Chen" data-placeholder="PORTRAIT" loading="lazy" />
             </picture>
+            <div class="team-card-image" role="img" aria-label="Portrait of Alex Chen"></div>
             <h2>Alex Chen</h2>
             <div class="role">Operations & Production</div>
             <h2>Alex Chen <span style="font-size: 0.5em; color: #888; font-weight: normal; font-family: 'Inter', sans-serif;">(Placeholder)</span></h2>
