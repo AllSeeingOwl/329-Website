@@ -420,6 +420,66 @@
           scroll-behavior: auto !important;
         }
       }
+
+      /* Responsive Image Utilities */
+      picture.responsive-picture {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      picture.responsive-picture img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background-color: #eae8e1;
+        /* Hide the broken image icon */
+        color: transparent;
+      }
+
+      picture.responsive-picture img:-moz-loading {
+        visibility: hidden;
+      }
+
+      /* Image fallback/placeholder text when src is broken or missing */
+      picture.responsive-picture img.placeholder-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      picture.responsive-picture img.placeholder-fallback::after {
+        content: attr(data-placeholder);
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Hide the default broken image icon in webkit */
+      picture.responsive-picture img.placeholder-fallback::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #eae8e1;
+      }
+
     </style>
     <script src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
@@ -498,12 +558,10 @@
       </p>
       <div class="assets-grid">
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Cover Art - The Unknown Field Guide Vol. 0"
-            data-placeholder="ASSET PLACEHOLDER: COVER ART"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Cover Art - The Unknown Field Guide Vol. 0" data-placeholder="ASSET PLACEHOLDER: COVER ART" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Cover Art - The Unknown Field Guide Vol. 0</div>
             <div class="asset-meta">PNG - 2400x3200px</div>
@@ -516,12 +574,10 @@
           </div>
         </article>
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Logo - 3minsto9 Primary Dark"
-            data-placeholder="ASSET PLACEHOLDER: LOGO DARK"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Logo - 3minsto9 Primary Dark" data-placeholder="ASSET PLACEHOLDER: LOGO DARK" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Logo - 3minsto9 Primary Dark</div>
             <div class="asset-meta">SVG &amp; PNG - High Res</div>
@@ -534,12 +590,10 @@
           </div>
         </article>
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Logo - 3minsto9 Primary Light"
-            data-placeholder="ASSET PLACEHOLDER: LOGO LIGHT"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Logo - 3minsto9 Primary Light" data-placeholder="ASSET PLACEHOLDER: LOGO LIGHT" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Logo - 3minsto9 Primary Light</div>
             <div class="asset-meta">SVG &amp; PNG - High Res</div>
@@ -552,12 +606,10 @@
           </div>
         </article>
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Product Shot - Zine Open Spread"
-            data-placeholder="ASSET PLACEHOLDER: PRODUCT SHOT"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Product Shot - Zine Open Spread" data-placeholder="ASSET PLACEHOLDER: PRODUCT SHOT" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Product Shot - Zine Open Spread</div>
             <div class="asset-meta">JPG - 3000x2000px</div>
@@ -570,12 +622,10 @@
           </div>
         </article>
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Team Photo - Studio Operations"
-            data-placeholder="ASSET PLACEHOLDER: TEAM PHOTO"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Team Photo - Studio Operations" data-placeholder="ASSET PLACEHOLDER: TEAM PHOTO" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Team Photo - Studio Operations</div>
             <div class="asset-meta">JPG - 4000x3000px</div>
@@ -588,12 +638,10 @@
           </div>
         </article>
         <article class="asset-card">
-          <div
-            class="asset-image"
-            role="img"
-            aria-label="Placeholder for Concept Art - Team Rabbit"
-            data-placeholder="ASSET PLACEHOLDER: CONCEPT ART"
-          ></div>
+          <picture class="responsive-picture asset-image">
+            <source srcset="images/placeholder.webp" type="image/webp" />
+            <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder for Concept Art - Team Rabbit" data-placeholder="ASSET PLACEHOLDER: CONCEPT ART" loading="lazy" />
+          </picture>
           <div class="asset-info">
             <div class="asset-name">Concept Art - Team Rabbit</div>
             <div class="asset-meta">PNG - 1920x1080px</div>

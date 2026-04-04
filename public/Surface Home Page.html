@@ -447,6 +447,66 @@
       .sub-menu .nav-link:last-child {
         border-bottom: none !important;
       }
+
+      /* Responsive Image Utilities */
+      picture.responsive-picture {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      picture.responsive-picture img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background-color: #eae8e1;
+        /* Hide the broken image icon */
+        color: transparent;
+      }
+
+      picture.responsive-picture img:-moz-loading {
+        visibility: hidden;
+      }
+
+      /* Image fallback/placeholder text when src is broken or missing */
+      picture.responsive-picture img.placeholder-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      picture.responsive-picture img.placeholder-fallback::after {
+        content: attr(data-placeholder);
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Hide the default broken image icon in webkit */
+      picture.responsive-picture img.placeholder-fallback::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #eae8e1;
+      }
+
     </style>
     <script src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
@@ -552,11 +612,10 @@
         <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
         <a href="Procure%20Volume%201.html" class="btn-primary">Procure Volume 1</a>
       </div>
-      <div
-        class="hero-image"
-        role="img"
-        aria-label="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)"
-      ></div>
+      <picture class="responsive-picture hero-image">
+        <source srcset="images/placeholder.webp" type="image/webp" />
+        <img class="placeholder-fallback" src="images/placeholder.jpg" alt="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)" data-placeholder="IMAGE PLACEHOLDER" loading="lazy" />
+      </picture>
     </section>
 
     <section class="manifesto">
