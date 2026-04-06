@@ -8,11 +8,11 @@ The experience is centered around the conflict between an underground group know
 
 ## Project Structure
 
-The project relies on a Node.js Express backend (`server.js`) that serves static assets from a `public/` directory.
+The project relies on a Node.js Express backend (`server.ts`) that serves static assets from a `public/` directory.
 
 - **`public/`**: Contains the web assets, including `.html` pages, CSS, and some inline JavaScript files.
   - **JavaScript Utilities**: Extracted business logic and DOM interactions are stored as standard `.js` files within `public/`. They use a UMD-like pattern (`if (typeof module !== 'undefined' && module.exports)`) to allow execution in both the browser and Node.js environments.
-- **`server.js`**: An Express server configured to serve static files from the `public/` directory.
+- **`server.ts`**: An Express server configured to serve static files from the `public/` directory.
 - **Root Directory**: Contains configuration files (Vite, Webpack, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
 
 ## Development
@@ -27,7 +27,7 @@ _(Note: If you experience timeouts during installation, use the `--prefer-offlin
 
 ### Environment Variables
 
-The local Express server (`server.js`) relies on the following environment variables:
+The local Express server (`server.ts`) relies on the following environment variables:
 
 - **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set. (Note: For static deployments like GitHub Pages, the frontend uses a client-side static fallback mechanism instead).
 - **`MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
