@@ -72,10 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const charsToTypeInThisNode = Math.min(charsRemaining, current.text.length - charIndex);
+
+      // ⚡ Bolt: Use appendData() to add only the new characters instead of re-setting
+      // the entire textContent. Significantly reduces string allocations and GC pressure.
+      current.node.appendData(current.text.substring(charIndex, charIndex + charsToTypeInThisNode));
+
       charIndex += charsToTypeInThisNode;
       charsRemaining -= charsToTypeInThisNode;
-
-      current.node.textContent = current.text.substring(0, charIndex);
 
       if (charIndex >= current.text.length) {
         nodeIndex++;
