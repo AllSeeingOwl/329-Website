@@ -7,8 +7,8 @@
 ## 2026-03-16 - Custom Security Headers Middleware
 
 **Vulnerability:** Missing HTTP Security Headers (Defense in Depth)
-**Learning:** The application's Express backend (`server.js`) implements HTTP security headers (such as CSP, X-Frame-Options, X-Content-Type-Options, and X-XSS-Protection) using custom middleware rather than relying on third-party packages like `helmet` to minimize dependencies.
-**Prevention:** When adding or updating global backend responses, always ensure the custom security headers middleware is applied early in the request lifecycle (before body parsers or static file serving) to protect all endpoints without introducing new dependencies.
+**Learning:** The application's Express backend (`server.ts`) implements HTTP security headers (such as CSP, X-Frame-Options, and X-Content-Type-Options) using custom middleware rather than relying on third-party packages like `helmet` to minimize dependencies. The legacy `X-XSS-Protection` header is intentionally omitted as it is deprecated and superseded by modern Content-Security-Policy (CSP).
+**Prevention:** When adding or updating global backend responses, always ensure the custom security headers middleware is applied early in the request lifecycle (before body parsers or static file serving) to protect all endpoints without introducing new dependencies. Rely on robust CSP for XSS protection.
 
 ## 2026-03-16 - Timing Attack on Password Verification
 
@@ -69,3 +69,9 @@
 **Vulnerability:** Use of `innerHTML` for clearing element content, which can pose a security risk if misused or if the content is later updated with unsanitized user input.
 **Learning:** While setting `innerHTML = ''` is not directly exploitable, it is a bad practice that can lead to XSS vulnerabilities. `textContent` is a safer alternative for handling plain text and clearing elements as it does not trigger the HTML parser.
 **Prevention:** Always prefer `textContent` over `innerHTML` when dealing with plain text or when clearing the contents of an element to prevent potential XSS vectors and improve performance.
+
+## 2024-05-24 - Deprecated X-XSS-Protection Header
+
+**Vulnerability:** Use of the deprecated `X-XSS-Protection` header, which can introduce security vulnerabilities in modern browsers or cause unexpected behavior.
+**Learning:** Modern browsers have deprecated the `X-XSS-Protection` header in favor of Content Security Policy (CSP). In some cases, the header's "filter" could actually be exploited to create XSS vulnerabilities that wouldn't otherwise exist.
+**Prevention:** Remove the `X-XSS-Protection` header and rely on a well-configured `Content-Security-Policy` (CSP) to provide superior and more predictable protection against cross-site scripting attacks.
