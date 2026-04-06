@@ -6,6 +6,7 @@ const {
   setupEventListeners,
   verifyCode,
   attemptApiVerification,
+  performApiFetch,
   CONFIG,
   clearDomCache,
 } = require('./public/mltk_login_utils');
@@ -253,6 +254,44 @@ describe('MLTK Login Gate Tests', () => {
       } finally {
         CONFIG.USE_MOCK_API_FALLBACK = originalFallback;
       }
+    });
+  });
+
+  describe('performApiFetch', () => {
+    test('successful fetch returns JSON response', async () => {
+      const mockData = { success: true };
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockData,
+      });
+
+      const result = await performApiFetch('TEST-CODE');
+
+      expect(global.fetch).toHaveBeenCalledWith('/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: 'TEST-CODE' }),
+      });
+      expect(result).toEqual(mockData);
+    });
+
+    test('throws error when response is not ok', async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+      });
+
+      await expect(performApiFetch('TEST-CODE')).rejects.toThrow(
+        'API returned an error or is not available',
+      );
+    });
+
+    test('propagates network errors', async () => {
+      const networkError = new Error('Network failure');
+      global.fetch.mockRejectedValueOnce(networkError);
+
+      await expect(performApiFetch('TEST-CODE')).rejects.toThrow('Network failure');
     });
   });
 });
