@@ -109,11 +109,7 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Fallback if offline and not in cache
-          // Try to return an offline page if applicable or just fail gracefully
           if (event.request.mode === 'navigate') {
-            // We could serve an offline.html here if we had one
-            // return caches.match('/offline.html');
             return new Response('You are offline and this page is not cached.', {
               status: 503,
               statusText: 'Service Unavailable',
