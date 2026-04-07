@@ -1,0 +1,48 @@
+name: Weekly Website Screenshots
+
+on:
+  schedule:
+    # Run at midnight every Sunday
+    - cron: '0 0 * * 0'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  take-screenshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build / Start server
+        run: |
+          AUTH_PASSWORD=test pnpm run dev:server > server.log 2>&1 &
+          # Wait for server to start
+          sleep 10
+
+      - name: Take screenshots
+        run: node scripts/take_screenshots.js
+
+      - name: Upload screenshots artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-screenshots
+          path: screenshots/
+          retention-days: 90
