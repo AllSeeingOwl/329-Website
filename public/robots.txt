@@ -1,13 +1,13 @@
 User-agent: *
-Disallow: /MLTK%20Login%20Gate.html
-Disallow: /Secure%20Data%20Drop%20Page.html
-Disallow: /Ollies%20Radio%20Scanner.html
-Disallow: /NOVA%20Classified%20Archive.html
-Disallow: /In-Universe%20404%20Error.html
-Disallow: /MLTK%20Privacy%20Policy.html
-Disallow: /MLTK%20Terms%20of%20Service.html
-Disallow: /MLTK%20Customer%20Service.html
-Disallow: /Velvet%20Rope%20Landing%20Page.html
+Disallow: /mltk-login-gate.html
+Disallow: /secure-data-drop-page.html
+Disallow: /ollies-radio-scanner.html
+Disallow: /nova-classified-archive.html
+Disallow: /in-universe-404-error.html
+Disallow: /mltk-privacy-policy.html
+Disallow: /mltk-terms-of-service.html
+Disallow: /mltk-customer-service.html
+Disallow: /velvet-rope-landing-page.html
 Disallow: /api/
 
 Sitemap: https://www.yourdomain.com/sitemap.xml
