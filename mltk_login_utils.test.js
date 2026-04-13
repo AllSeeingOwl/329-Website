@@ -283,7 +283,7 @@ describe('MLTK Login Gate Tests', () => {
       });
 
       await expect(performApiFetch('TEST-CODE')).rejects.toThrow(
-        'API returned an error or is not available',
+        'API returned an error or is not available'
       );
     });
 

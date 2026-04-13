@@ -34,6 +34,17 @@ app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
 const STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
 const MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
+const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
+
+// 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
+// Placed at the very top of the stack to bypass all routing, file serving, and parsing.
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (EMERGENCY_LOCKDOWN) {
+    res.status(503).type('text/plain').send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+    return;
+  }
+  next();
+});
 
 // ⚡ Bolt: Pre-calculate static asset paths to avoid redundant path logic and allocations.
 const MAINTENANCE_PATH = path.join(__dirname, 'public', 'maintenance.html');

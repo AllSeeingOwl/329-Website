@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "build:vite": "vite build",
     "build:webpack": "webpack",
-    "prepare": "husky"
+    "prepare": "husky",
+    "maintenance:toggle": "./scripts/toggle_vercel_env.sh"
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx}": [
