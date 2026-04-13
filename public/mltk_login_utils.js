@@ -31,8 +31,8 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 const lockdownClickHandler = () => {
   const cache = getDomCache();
-  const lockdownScreen = cache ? cache.lockdownScreen : null;
-  const inputField = cache ? cache.inputField : null;
+  const lockdownScreen = cache?.lockdownScreen;
+  const inputField = cache?.inputField;
   if (lockdownScreen && lockdownScreen.style.display !== 'none' && inputField) {
     inputField.focus();
   }
@@ -40,7 +40,7 @@ const lockdownClickHandler = () => {
 
 function setupEventListeners() {
   const cache = getDomCache();
-  const inputField = cache ? cache.inputField : null;
+  const inputField = cache?.inputField;
   if (inputField) {
     // Set initial width
     inputField.style.width = inputField.value ? inputField.value.length + 'ch' : '0ch';
@@ -96,12 +96,12 @@ async function attemptApiVerification(code) {
 }
 
 async function verifyCode(e) {
-  if (e) e.preventDefault();
+  e?.preventDefault();
   const cache = getDomCache();
-  const inputField = cache ? cache.inputField : null;
-  const code = inputField ? inputField.value.trim().toUpperCase() : '';
-  const errorMsg = cache ? cache.errorMsg : null;
-  const inputGroup = cache ? cache.inputGroup : null;
+  const inputField = cache?.inputField;
+  const code = inputField?.value?.trim().toUpperCase() ?? '';
+  const errorMsg = cache?.errorMsg;
+  const inputGroup = cache?.inputGroup;
 
   try {
     const success = await attemptApiVerification(code).catch((apiError) => {
@@ -109,20 +109,7 @@ async function verifyCode(e) {
       return false;
     });
 
-    if (success) {
-      if (document.body) {
-        document.body.style.backgroundColor = '#050505';
-      }
-      const lockdownScreen = cache ? cache.lockdownScreen : null;
-      if (lockdownScreen) lockdownScreen.style.display = 'none';
-      const successScreen = cache ? cache.successScreen : null;
-      if (successScreen) successScreen.style.display = 'flex';
-
-      // Briefly display success screen then redirect to surveillance dashboard
-      setTimeout(() => {
-        window.location.href = 'mltk-surveillance-dashboard.html';
-      }, 2000);
-    } else {
+    if (!success) {
       if (errorMsg) errorMsg.style.display = 'block';
       if (inputGroup) {
         inputGroup.classList.remove('shake');
@@ -133,7 +120,21 @@ async function verifyCode(e) {
       setTimeout(() => {
         if (errorMsg) errorMsg.style.display = 'none';
       }, 3000);
+      return;
     }
+
+    if (document.body) {
+      document.body.style.backgroundColor = '#050505';
+    }
+    const lockdownScreen = cache?.lockdownScreen;
+    if (lockdownScreen) lockdownScreen.style.display = 'none';
+    const successScreen = cache?.successScreen;
+    if (successScreen) successScreen.style.display = 'flex';
+
+    // Briefly display success screen then redirect to surveillance dashboard
+    setTimeout(() => {
+      window.location.href = 'mltk-surveillance-dashboard.html';
+    }, 2000);
   } catch (error) {
     console.error('Error verifying code:', error);
   }
