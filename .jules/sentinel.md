@@ -75,3 +75,9 @@
 **Vulnerability:** Use of the deprecated `X-XSS-Protection` header, which can introduce security vulnerabilities in modern browsers or cause unexpected behavior.
 **Learning:** Modern browsers have deprecated the `X-XSS-Protection` header in favor of Content Security Policy (CSP). In some cases, the header's "filter" could actually be exploited to create XSS vulnerabilities that wouldn't otherwise exist.
 **Prevention:** Remove the `X-XSS-Protection` header and rely on a well-configured `Content-Security-Policy` (CSP) to provide superior and more predictable protection against cross-site scripting attacks.
+
+## 2026-04-13 - Insecure Use of Math.random() for Selection Logic
+
+**Vulnerability:** Use of `Math.random()` for critical selection logic in the Five Finger Wheel utility.
+**Learning:** `Math.random()` is not cryptographically secure and its output can be predictable, which is a risk for utilities used in ARG narrative contexts (like "Risk Assessment" or "Selection"). Replacing it with `crypto.getRandomValues()` ensures that the selection process is truly random and resistant to manipulation.
+**Prevention:** Always use `globalThis.crypto.getRandomValues()` for any logic that requires high-quality randomness, especially in security-sensitive or fair-selection components. Use a cached typed array to minimize performance overhead from repeated allocations.
