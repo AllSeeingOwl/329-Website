@@ -29,7 +29,7 @@ _(Note: If you experience timeouts during installation, use the `--prefer-offlin
 
 The local Express server (`server.ts`) relies on the following environment variables:
 
-- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set. (Note: For static deployments like GitHub Pages, the frontend uses a client-side static fallback mechanism instead).
+- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set.
 - **`MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
 
 ### Available Scripts
@@ -59,8 +59,9 @@ The repository includes an ARG-specific GitHub Project management setup to track
 
 ## Deployment
 
-The project is automatically deployed to **GitHub Pages** via a GitHub Actions workflow (`.github/workflows/static.yml`).
+The project is deployed and hosted on **Vercel**, accessible via the custom domain `3minsto9.co.uk` and Vercel-provided subdomains (e.g., `329-website.vercel.app`).
 
-- The workflow uploads the `./public` directory as the deployment artifact.
-- A custom 404 page is handled by natively serving `404.html` from the deployment root.
+- The deployment utilizes the Node.js Express application (`server.ts`).
+- The Express server uses `process.env.PORT` to allow Vercel to dynamically assign the port (falling back to 3000 locally).
+- Critical environment variables like `AUTH_PASSWORD` and `MAINTENANCE_MODE` must be configured in the Vercel project settings.
 - Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `surface-home-page.html`) to avoid 404 errors on subpaths.
