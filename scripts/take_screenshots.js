@@ -32,12 +32,12 @@ async function main() {
   const browser = await chromium.launch();
 
   const desktopContext = await browser.newContext({
-    viewport: { width: 1920, height: 1080 }
+    viewport: { width: 1920, height: 1080 },
   });
 
   const mobileDevice = devices['iPhone 12'];
   const mobileContext = await browser.newContext({
-    ...mobileDevice
+    ...mobileDevice,
   });
 
   const desktopPage = await desktopContext.newPage();
@@ -59,7 +59,7 @@ async function main() {
       await desktopPage.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
       await desktopPage.screenshot({
         path: path.join(fileOutputDir, `${baseName}-desktop.png`),
-        fullPage: true
+        fullPage: true,
       });
       console.log(`  Saved desktop screenshot for ${file}`);
     } catch (err) {
@@ -71,7 +71,7 @@ async function main() {
       await mobilePage.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
       await mobilePage.screenshot({
         path: path.join(fileOutputDir, `${baseName}-mobile.png`),
-        fullPage: true
+        fullPage: true,
       });
       console.log(`  Saved mobile screenshot for ${file}`);
     } catch (err) {
@@ -83,7 +83,7 @@ async function main() {
   console.log('Finished capturing all screenshots.');
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('Error running screenshot script:', err);
   process.exit(1);
 });

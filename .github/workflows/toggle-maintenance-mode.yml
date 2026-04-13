@@ -1,0 +1,68 @@
+name: Toggle Maintenance Mode
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Turn Maintenance Mode ON or OFF'
+        required: true
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      target:
+        description: 'Which portal to target'
+        required: true
+        type: choice
+        options:
+          - 'Global (MAINTENANCE_MODE)'
+          - 'Studio (STUDIO_MAINTENANCE_MODE)'
+          - 'MLTK (MLTK_MAINTENANCE_MODE)'
+          - 'Emergency Lockdown (EMERGENCY_LOCKDOWN)'
+
+jobs:
+  update-vercel-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Variable Name
+        id: set-var
+        run: |
+          if [ "${{ github.event.inputs.target }}" == "Global (MAINTENANCE_MODE)" ]; then
+            echo "ENV_NAME=MAINTENANCE_MODE" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.target }}" == "Studio (STUDIO_MAINTENANCE_MODE)" ]; then
+            echo "ENV_NAME=STUDIO_MAINTENANCE_MODE" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.target }}" == "MLTK (MLTK_MAINTENANCE_MODE)" ]; then
+            echo "ENV_NAME=MLTK_MAINTENANCE_MODE" >> $GITHUB_ENV
+          else
+            echo "ENV_NAME=EMERGENCY_LOCKDOWN" >> $GITHUB_ENV
+          fi
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Remove Existing Env Var
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          vercel env rm ${{ env.ENV_NAME }} production -y --token $VERCEL_TOKEN || true
+          vercel env rm ${{ env.ENV_NAME }} preview -y --token $VERCEL_TOKEN || true
+          vercel env rm ${{ env.ENV_NAME }} development -y --token $VERCEL_TOKEN || true
+
+      - name: Add New Env Var
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          echo "${{ github.event.inputs.action }}" | vercel env add ${{ env.ENV_NAME }} production --token $VERCEL_TOKEN
+          echo "${{ github.event.inputs.action }}" | vercel env add ${{ env.ENV_NAME }} preview --token $VERCEL_TOKEN
+          echo "${{ github.event.inputs.action }}" | vercel env add ${{ env.ENV_NAME }} development --token $VERCEL_TOKEN
+
+      - name: Trigger Redeployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel --prod --token $VERCEL_TOKEN

@@ -185,4 +185,18 @@ describe('Server Tests', () => {
 
     expect(response.body).toEqual({ error: 'Bad Request: Malformed URI' });
   });
+
+  it('should return 503 plain text when EMERGENCY_LOCKDOWN is true', async () => {
+    // Set up environment
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    process.env.EMERGENCY_LOCKDOWN = 'true';
+
+    // Require the app after setting environment variables
+    app = require('./server');
+
+    const response = await request(app).get('/').expect(503);
+
+    expect(response.headers['content-type']).toContain('text/plain');
+    expect(response.text).toContain('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+  });
 });
