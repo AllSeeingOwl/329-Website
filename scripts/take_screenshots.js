@@ -6,27 +6,29 @@ const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 const OUTPUT_DIR = path.join(__dirname, '..', 'screenshots');
 const BASE_URL = 'http://localhost:3000';
 
-function getAllHtmlFiles(dir, fileList = []) {
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
-    const filePath = path.join(dir, file);
-    if (fs.statSync(filePath).isDirectory()) {
-      getAllHtmlFiles(filePath, fileList);
-    } else if (file.endsWith('.html')) {
+async function getAllHtmlFiles(dir, fileList = []) {
+  const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+  const promises = [];
+
+  for (const entry of entries) {
+    const filePath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      promises.push(getAllHtmlFiles(filePath, fileList));
+    } else if (entry.name.endsWith('.html')) {
       // Get the relative path starting from public/ to build the URL correctly
       const relativePath = path.relative(PUBLIC_DIR, filePath);
       fileList.push(relativePath.replace(/\\/g, '/')); // normalize to forward slashes for URLs
     }
   }
+
+  await Promise.all(promises);
   return fileList;
 }
 
 async function main() {
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  }
+  await fs.promises.mkdir(OUTPUT_DIR, { recursive: true });
 
-  const files = getAllHtmlFiles(PUBLIC_DIR);
+  const files = await getAllHtmlFiles(PUBLIC_DIR);
   console.log(`Found ${files.length} HTML files to process.`);
 
   const browser = await chromium.launch();
@@ -47,9 +49,7 @@ async function main() {
     console.log(`Processing ${file}...`);
     // ensure subdirectories exist in screenshots output
     const fileOutputDir = path.join(OUTPUT_DIR, path.dirname(file));
-    if (!fs.existsSync(fileOutputDir)) {
-      fs.mkdirSync(fileOutputDir, { recursive: true });
-    }
+    await fs.promises.mkdir(fileOutputDir, { recursive: true });
 
     const url = `${BASE_URL}/${file}`;
     const baseName = path.basename(file);
