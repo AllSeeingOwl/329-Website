@@ -443,6 +443,14 @@
         let currentRotation = 0;
         let isSpinning = false;
 
+        // 🛡️ Sentinel: Secure random number generation using crypto.getRandomValues
+        const randomArray = new Uint32Array(1);
+        function getRandomInt(min, max) {
+          globalThis.crypto.getRandomValues(randomArray);
+          const range = max - min + 1;
+          return min + (randomArray[0] % range);
+        }
+
         spinBtn.addEventListener('click', () => {
           if (isSpinning) return;
           isSpinning = true;
@@ -455,7 +463,8 @@
           resultDesc.textContent = '';
 
           // Pick random target
-          const targetIndex = Math.floor(Math.random() * slices.length);
+          // 🛡️ Sentinel: Replaced insecure Math.random() with cryptographically secure random number generation
+          const targetIndex = getRandomInt(0, slices.length - 1);
           const targetSlice = slices[targetIndex];
 
           // Determine the angle needed so the target center is at 0 degrees (top).
@@ -463,10 +472,10 @@
           const desiredMod = 360 - targetSlice.center;
 
           // Calculate random full spins (e.g., 5 to 10)
-          const spins = (Math.floor(Math.random() * 6) + 5) * 360;
+          const spins = (getRandomInt(0, 5) + 5) * 360;
 
           // Random offset so it doesn't land perfectly centered every time (-25 to +25 deg)
-          const randomOffset = Math.floor(Math.random() * 50) - 25;
+          const randomOffset = getRandomInt(0, 49) - 25;
 
           // Compute new rotation
           // currentRotation = currentRotation + spins + desiredMod - (currentRotation % 360) + randomOffset
