@@ -11,8 +11,8 @@ on:
 jobs:
   auto-fix:
     runs-on: ubuntu-latest
-    # Optional: don't run on the main branch directly if you only want it on PRs, or only run on PRs.
-    # Given the request to automate this, it's common to run on PRs or branches.
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository

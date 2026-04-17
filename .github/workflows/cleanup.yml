@@ -8,6 +8,9 @@ on:
 jobs:
   cleanup-stale-branches:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
     steps:
       - name: Delete merged branches
         uses: phntxx/delete-merged-branch@v2
@@ -17,6 +20,9 @@ jobs:
 
   cleanup-stale-issues-prs:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - name: Stale Issues and PRs
         uses: actions/stale@v9
