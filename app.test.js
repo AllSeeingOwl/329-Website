@@ -41,10 +41,10 @@ describe('app.js service worker registration', () => {
         }
       }),
       dispatchEvent: jest.fn((event) => {
-          if (event.type === 'load' && global.window._loadCallback) {
-              global.window._loadCallback();
-          }
-      })
+        if (event.type === 'load' && global.window._loadCallback) {
+          global.window._loadCallback();
+        }
+      }),
     };
   });
 
