@@ -7,6 +7,11 @@ jest.mock('@vercel/analytics', () => ({
   inject: jest.fn(),
 }));
 
+// Mock @vercel/speed-insights as well
+jest.mock('@vercel/speed-insights', () => ({
+  injectSpeedInsights: jest.fn(),
+}));
+
 describe('app.js service worker registration', () => {
   let consoleErrorSpy;
   let registerMock;

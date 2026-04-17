@@ -1,6 +1,9 @@
-// Initialize Vercel Web Analytics
+// Initialize Vercel Web Analytics & Speed Insights
 import { inject } from '@vercel/analytics';
+import { injectSpeedInsights } from '@vercel/speed-insights';
+
 inject();
+injectSpeedInsights();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
