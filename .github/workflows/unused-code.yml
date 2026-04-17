@@ -1,0 +1,30 @@
+name: Unused Code & Dependency Checker
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # Run at 2 AM every Monday
+  workflow_dispatch:
+
+jobs:
+  check-unused:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for unused dependencies and files
+        run: npx knip
