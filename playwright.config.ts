@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'AUTH_PASSWORD=test node server.js',
+    command: 'AUTH_PASSWORD=test npx ts-node server.ts',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
