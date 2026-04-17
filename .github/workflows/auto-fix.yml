@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Need a PAT or the default GITHUB_TOKEN to commit
           token: ${{ secrets.GITHUB_TOKEN }}
