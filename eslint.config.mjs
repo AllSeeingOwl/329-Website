@@ -35,6 +35,12 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', 'public/', '.github/workflows/*.yml', '.github/dependabot.yml'],
+    ignores: [
+      'dist/',
+      'node_modules/',
+      'public/',
+      '.github/workflows/*.yml',
+      '.github/dependabot.yml',
+    ],
   },
 ];
