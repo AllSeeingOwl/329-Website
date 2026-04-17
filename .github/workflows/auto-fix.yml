@@ -42,7 +42,7 @@ jobs:
         continue-on-error: true # It might fail if there are unfixable errors, but we still want to commit the fixes
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: apply automated formatting and linting fixes"
           commit_user_name: "github-actions[bot]"
