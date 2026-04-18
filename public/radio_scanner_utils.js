@@ -73,15 +73,22 @@ function setupRadioScanner() {
         let charsToType = Math.floor(deltaTime / 30);
 
         if (charsToType > 0) {
-          i += charsToType;
-          lastTime = currentTime - (deltaTime % 30); // Keep remainder for accurate timing
+          const actualCharsToType = Math.min(charsToType, decryptedMessage.length - i);
 
-          // Cap the index to the length of the message
-          if (i > decryptedMessage.length) {
-            i = decryptedMessage.length;
+          if (actualCharsToType > 0) {
+            lastTime = currentTime - (deltaTime % 30); // Keep remainder for accurate timing
+
+            // ⚡ Bolt: Use appendData() to add only the new characters instead of re-setting
+            // the entire textContent. Significantly reduces string allocations and GC pressure.
+            const newChars = decryptedMessage.substring(i, i + actualCharsToType);
+            if (output.firstChild && output.firstChild.nodeType === Node.TEXT_NODE) {
+              output.firstChild.appendData(newChars);
+            } else {
+              output.appendChild(document.createTextNode(newChars));
+            }
+
+            i += actualCharsToType;
           }
-
-          output.textContent = decryptedMessage.substring(0, i);
         }
 
         if (i < decryptedMessage.length) {
