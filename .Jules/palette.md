@@ -29,3 +29,8 @@
 
 **Learning:** Sighted users can easily infer the purpose of an input field based on adjacent visual prompts (like "ENTER PASSCODE:"), but screen readers may not intrinsically associate that text with the input.
 **Action:** Always add an explicit `aria-label` to form inputs, particularly standalone ones like command prompts or passcodes, so that screen reader users are provided with clear context.
+
+## 2026-04-03 - Descriptive Aria-Labels for Ambiguous Text Content
+
+**Learning:** For elements with purely visual or ambiguous text representations (such as `[X] CLOSE` buttons), using explicit `aria-label` attributes provides much clearer context for screen reader users than the raw text content.
+**Action:** When adding or auditing elements with text that may be interpreted awkwardly by a screen reader (e.g. "[X] CLOSE"), apply an `aria-label` (e.g., `aria-label="Close document viewer"`) to override the text.
