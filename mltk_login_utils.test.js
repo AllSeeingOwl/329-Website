@@ -49,6 +49,11 @@ describe('MLTK Login Gate Tests', () => {
     jest.clearAllMocks();
   });
 
+  beforeAll(() => {
+    delete window.location;
+    window.location = { href: '' };
+  });
+
   test('setupEventListeners formats input with hyphens and uppercase', () => {
     setupEventListeners();
     const inputField = document.getElementById('serial-input');
