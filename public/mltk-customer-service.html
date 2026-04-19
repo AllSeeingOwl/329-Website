@@ -364,7 +364,15 @@
         e.preventDefault();
 
         const cache = getDomCache();
-        const { btn, processingMsg, chatWindow, form, rateLimitMsg, categorySelect, msgInputElement } = cache;
+        const {
+          btn,
+          processingMsg,
+          chatWindow,
+          form,
+          rateLimitMsg,
+          categorySelect,
+          msgInputElement,
+        } = cache;
         const category = categorySelect.value;
         const msgInput = msgInputElement.value;
 
