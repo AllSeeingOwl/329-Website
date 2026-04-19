@@ -57,3 +57,7 @@
 
 **Learning:** Repeatedly calling `String.prototype.toLowerCase()` (e.g., `child.tagName.toLowerCase()`) inside deep, recursive DOM traversal loops creates significant garbage collection pressure by allocating a new string for every single element node processed.
 **Action:** Use the native uppercase `node.nodeName` property directly against a `Set` initialized with uppercase strings (e.g., `new Set(['P', 'STRONG', 'EM'])`). This provides a fast, O(1) lookup with zero intermediate string allocation overhead.
+## 2026-03-25 - Cache DOM Queries in Frequently Executed Functions
+
+**Learning:** Repeatedly querying the DOM with `document.getElementById` inside frequently triggered event handlers (like form submissions or input events) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
+**Action:** Use a lazy-initialization pattern (e.g., a `getDomCache()` function) to query DOM elements once on the first execution, storing them in a module-scoped variable for rapid, O(1) reuse in all subsequent executions.
