@@ -342,16 +342,39 @@
     </div>
 
     <script>
+      // ⚡ Bolt: Cache DOM elements to avoid repeatedly querying the DOM on every form submission.
+      let domCache = null;
+
+      function getDomCache() {
+        if (!domCache) {
+          domCache = {
+            btn: document.getElementById('submit-btn'),
+            processingMsg: document.getElementById('processing-msg'),
+            chatWindow: document.getElementById('chat-window'),
+            form: document.getElementById('support-form'),
+            rateLimitMsg: document.getElementById('rate-limit-message'),
+            categorySelect: document.getElementById('category'),
+            msgInputElement: document.getElementById('message'),
+          };
+        }
+        return domCache;
+      }
+
       function submitTicket(e) {
         e.preventDefault();
 
-        const btn = document.getElementById('submit-btn');
-        const processingMsg = document.getElementById('processing-msg');
-        const chatWindow = document.getElementById('chat-window');
-        const form = document.getElementById('support-form');
-        const rateLimitMsg = document.getElementById('rate-limit-message');
-        const category = document.getElementById('category').value;
-        const msgInput = document.getElementById('message').value;
+        const cache = getDomCache();
+        const {
+          btn,
+          processingMsg,
+          chatWindow,
+          form,
+          rateLimitMsg,
+          categorySelect,
+          msgInputElement,
+        } = cache;
+        const category = categorySelect.value;
+        const msgInput = msgInputElement.value;
 
         // 🛡️ Sentinel: Client-side rate limiting to prevent spam
         const lastSubmissionTime = localStorage.getItem('lastMltkSupportSubmission');
