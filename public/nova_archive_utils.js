@@ -79,12 +79,42 @@ function closeDoc() {
   }
 }
 
-// Attach to window for browser compatibility when used as a module/refactored inline script
-if (typeof window !== 'undefined') {
-  window.openDoc = openDoc;
-  window.closeDoc = closeDoc;
+/**
+ * Programmatically attaches event listeners to document row elements and the close button.
+ * Expects elements with class 'file-row' to have a 'data-doc-id' attribute.
+ * Expects the close button to have the ID 'close-doc-btn'.
+ */
+function setupNovaArchive() {
+  const fileRows = document.querySelectorAll('.file-row');
+  fileRows.forEach((row) => {
+    const docId = row.getAttribute('data-doc-id');
+    if (docId) {
+      row.addEventListener('click', () => openDoc(docId));
+      row.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openDoc(docId);
+        }
+      });
+    }
+  });
+
+  const closeBtn = document.getElementById('close-doc-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeDoc);
+  }
 }
 
+// Initialize when the DOM is ready
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupNovaArchive);
+  } else {
+    setupNovaArchive();
+  }
+}
+
+// Avoid global namespace pollution, but maintain CommonJS support for Node/Jest
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { documents, openDoc, closeDoc };
+  module.exports = { documents, openDoc, closeDoc, setupNovaArchive };
 }
