@@ -81,3 +81,9 @@
 **Vulnerability:** Use of `Math.random()` for critical selection logic in the Five Finger Wheel utility.
 **Learning:** `Math.random()` is not cryptographically secure and its output can be predictable, which is a risk for utilities used in ARG narrative contexts (like "Risk Assessment" or "Selection"). Replacing it with `crypto.getRandomValues()` ensures that the selection process is truly random and resistant to manipulation.
 **Prevention:** Always use `globalThis.crypto.getRandomValues()` for any logic that requires high-quality randomness, especially in security-sensitive or fair-selection components. Use a cached typed array to minimize performance overhead from repeated allocations.
+
+## 2026-04-18 - Express Rate Limiting Behind Proxies (Vercel)
+
+**Vulnerability:** Global Denial of Service (DoS) due to incorrect IP extraction in rate limiting when deployed behind a reverse proxy (like Vercel).
+**Learning:** Deploying an Express application behind a reverse proxy (like Vercel) without explicitly configuring `app.set('trust proxy', 1)` causes `req.ip` to resolve to the proxy's IP address rather than the client's. In a rate-limiting scenario, this causes all user requests to be counted against a single IP, effectively turning a per-user rate limit into a global application DoS.
+**Prevention:** Always configure `app.set('trust proxy', 1)` (or appropriate trust settings) in Express applications deployed behind reverse proxies to ensure accurate client IP extraction for rate limiting and logging.
