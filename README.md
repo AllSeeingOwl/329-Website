@@ -35,6 +35,7 @@ The local Express server (`server.ts`) relies on the following environment varia
 ### Available Scripts
 
 - **`pnpm run dev:server`**: Starts the local development backend server using `nodemon`.
+- **`pnpm run maintenance:toggle`**: Executes script to toggle the Vercel maintenance mode environment variable.
 - **`pnpm run lint`**: Runs ESLint to check for code quality.
 - **`pnpm run format`**: Runs Prettier to format code.
 - **`pnpm run typecheck`**: Runs TypeScript type checking.
@@ -54,7 +55,7 @@ The local Express server (`server.ts`) relies on the following environment varia
 The repository includes an ARG-specific GitHub Project management setup to track code, narrative, puzzles, and art assets. Please refer to:
 
 - **[PROJECT_MANAGEMENT.md](PROJECT_MANAGEMENT.md)**: Configuration guide and key practices.
-- **Issue Templates**: Found in `.github/ISSUE_TEMPLATE/` (`bug_report.yml`, `feature_request.yml`, `arg_task.yml`).
+- **Issue Templates**: Found in `.github/ISSUE_TEMPLATE/` (`bug_report.md`, `feature_request.md`, `arg_task.md`).
 - **PR Template**: Located at `.github/pull_request_template.md`.
 
 ## Deployment
