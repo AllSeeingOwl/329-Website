@@ -131,12 +131,14 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// -----------------------------------------------------------------------------
-// WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
-// The official password for this ARG gate is '0408-1998-XXXX'.
-// Changing this will break the intended experience.
-// -----------------------------------------------------------------------------
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || '0408-1998-XXXX';
+// 🛡️ Sentinel: Enforce AUTH_PASSWORD environment variable and remove hardcoded fallback.
+// While '0408-1998-XXXX' is the official password for the ARG experience,
+// it must be provided via the environment for security.
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
+if (!AUTH_PASSWORD) {
+  console.error('CRITICAL ERROR: AUTH_PASSWORD environment variable is not set.');
+  process.exit(1);
+}
 
 interface RateLimitRecord {
   count: number;
