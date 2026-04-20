@@ -887,7 +887,10 @@
 
         function toggleAccordion(btn) {
           const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-          const content = document.getElementById(btn.getAttribute('aria-controls'));
+          if (!btn._contentNode) {
+            btn._contentNode = document.getElementById(btn.getAttribute('aria-controls'));
+          }
+          const content = btn._contentNode;
 
           btn.setAttribute('aria-expanded', !isExpanded);
 
@@ -943,7 +946,10 @@
               const activeUpdates = [];
               accordions.forEach((btn) => {
                 if (btn.getAttribute('aria-expanded') === 'true') {
-                  const content = document.getElementById(btn.getAttribute('aria-controls'));
+                  if (!btn._contentNode) {
+                    btn._contentNode = document.getElementById(btn.getAttribute('aria-controls'));
+                  }
+                  const content = btn._contentNode;
                   activeUpdates.push({ content, height: content.scrollHeight });
                 }
               });
