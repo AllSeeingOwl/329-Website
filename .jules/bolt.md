@@ -62,3 +62,8 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` inside frequently triggered event handlers (like form submissions or input events) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
 **Action:** Use a lazy-initialization pattern (e.g., a `getDomCache()` function) to query DOM elements once on the first execution, storing them in a module-scoped variable for rapid, O(1) reuse in all subsequent executions.
+
+## 2026-03-25 - Cache DOM Queries in High-Frequency Layout Handlers
+
+**Learning:** Repeatedly querying the DOM with `document.getElementById` inside a high-frequency layout handler, such as a `resize` event or during `requestAnimationFrame`, forces the browser to traverse the DOM tree multiple times per frame. Even though `document.getElementById` is typically O(1), doing this during layout thrashing can degrade frame rates.
+**Action:** Cache the dynamically resolved DOM nodes directly on the element object (e.g., `btn._contentNode = document.getElementById(...)`) or in a closure variable. This ensures that the node is fetched only once and reused during subsequent fast-firing layout frames, saving execution time.
