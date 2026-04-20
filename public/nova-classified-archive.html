@@ -310,52 +310,19 @@
             <td>-</td>
             <td>-</td>
           </tr>
-          <tr
-            class="file-row"
-            tabindex="0"
-            role="button"
-            onclick="openDoc('vv')"
-            onkeydown="
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openDoc('vv');
-              }
-            "
-          >
+          <tr class="file-row" tabindex="0" role="button" data-doc-id="vv">
             <td class="icon">[PDF]</td>
             <td>VIRTUE_VILLAGES_SCHEMATICS.pdf</td>
             <td>1998-04-08</td>
             <td>14.2 MB</td>
           </tr>
-          <tr
-            class="file-row"
-            tabindex="0"
-            role="button"
-            onclick="openDoc('gretchen')"
-            onkeydown="
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openDoc('gretchen');
-              }
-            "
-          >
+          <tr class="file-row" tabindex="0" role="button" data-doc-id="gretchen">
             <td class="icon">[TXT]</td>
             <td>DIR_GRETCHEN_DOSSIER.txt</td>
             <td>SYSTEM_CURRENT</td>
             <td>8 KB</td>
           </tr>
-          <tr
-            class="file-row"
-            tabindex="0"
-            role="button"
-            onclick="openDoc('tetromino')"
-            onkeydown="
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openDoc('tetromino');
-              }
-            "
-          >
+          <tr class="file-row" tabindex="0" role="button" data-doc-id="tetromino">
             <td class="icon">[LOG]</td>
             <td>TETROMINO_RESTRICTION_PROTOCOL.log</td>
             <td>1995-11-22</td>
@@ -385,7 +352,7 @@
 
     <!-- Hidden Document Viewer Modal -->
     <div id="doc-viewer">
-      <button class="close-btn" aria-label="Close document viewer" onclick="closeDoc()">
+      <button id="close-doc-btn" class="close-btn" aria-label="Close document viewer">
         [X] CLOSE
       </button>
       <div class="doc-header" id="modal-header">CONFIDENTIAL DOCUMENT</div>
