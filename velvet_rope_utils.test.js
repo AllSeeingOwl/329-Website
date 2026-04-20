@@ -122,6 +122,31 @@ describe('Velvet Rope Utilities Tests', () => {
     expect(modals.length).toBe(0);
   });
 
+  test('breachMainframe falls back to win.location.href when assign fails', async () => {
+    CONFIG.SHOULD_REDIRECT = true;
+    CONFIG.REDIRECT_TARGET = 'test-redirect-fallback.html';
+
+    const event = {
+      preventDefault: jest.fn(),
+      target: {
+        querySelector: jest.fn().mockReturnValue(document.createElement('button')),
+      },
+    };
+
+    const assignMock = jest.fn().mockImplementation(() => {
+      throw new Error('assign not supported');
+    });
+    const mockWin = { location: { assign: assignMock, href: '' } };
+
+    breachMainframe(event, mockWin);
+
+    jest.advanceTimersByTime(800);
+    await Promise.resolve(); // Flush microtasks
+
+    expect(assignMock).toHaveBeenCalled();
+    expect(mockWin.location.href).toBe('test-redirect-fallback.html');
+  });
+
   test('gracefully handles missing elements in initVelvetRope', async () => {
     document.body.innerHTML = '';
     // Should not throw

@@ -87,3 +87,9 @@
 **Vulnerability:** Global Denial of Service (DoS) due to incorrect IP extraction in rate limiting when deployed behind a reverse proxy (like Vercel).
 **Learning:** Deploying an Express application behind a reverse proxy (like Vercel) without explicitly configuring `app.set('trust proxy', 1)` causes `req.ip` to resolve to the proxy's IP address rather than the client's. In a rate-limiting scenario, this causes all user requests to be counted against a single IP, effectively turning a per-user rate limit into a global application DoS.
 **Prevention:** Always configure `app.set('trust proxy', 1)` (or appropriate trust settings) in Express applications deployed behind reverse proxies to ensure accurate client IP extraction for rate limiting and logging.
+
+## 2024-05-24 - Hardcoded Default Password in Server Code
+
+**Vulnerability:** Hardcoded fallback for a missing `AUTH_PASSWORD` environment variable in `server.ts`.
+**Learning:** Providing a hardcoded fallback for secrets defeats the purpose of using environment variables and can lead to unauthorized access if the environment is not properly configured. The server should fail securely if critical secrets are missing.
+**Prevention:** Always enforce the presence of critical environment variables at startup and fail the process (e.g., `process.exit(1)`) if they are missing, rather than providing insecure default fallbacks.
