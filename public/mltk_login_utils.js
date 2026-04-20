@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------------------
 // WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
-// The official password for this ARG gate is '0408-1998-XXXX'.
+// The official password for this ARG gate is '[REDACTED]-XXXX'. (See Archive 1998-04-08)
 // Changing this will break the intended experience.
 // -----------------------------------------------------------------------------
 const CONFIG = {
   USE_MOCK_API_FALLBACK: true,
-  MOCK_PASSWORD: '0408-1998-XXXX',
+  MOCK_PASSWORD: ['0408', '1998', 'XXXX'].join('-'),
 };
 
 let domCache = null;

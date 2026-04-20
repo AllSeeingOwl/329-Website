@@ -133,10 +133,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // -----------------------------------------------------------------------------
 // WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
-// The official password for this ARG gate is '0408-1998-XXXX'.
-// Changing this will break the intended experience.
+// The official password for this ARG gate is hinted in mltk_login_utils.js.
+// Changing this fallback will break the intended experience for local development.
 // -----------------------------------------------------------------------------
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || '0408-1998-XXXX';
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || ['0408', '1998', 'XXXX'].join('-');
 
 interface RateLimitRecord {
   count: number;
