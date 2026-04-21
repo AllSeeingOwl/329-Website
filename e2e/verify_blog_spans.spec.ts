@@ -6,40 +6,39 @@ test('Dev Blog sidebar elements are spans and have correct styling', async ({ pa
 
   // Check Recent Updates spans
   const recentUpdatesSpans = page.locator('.sidebar-section').first().locator('.update-title span');
-  const countRecent = await recentUpdatesSpans.count();
-  expect(countRecent).toBeGreaterThan(0);
+  const spansRecent = await recentUpdatesSpans.all();
+  expect(spansRecent.length).toBeGreaterThan(0);
 
-  for (let i = 0; i < countRecent; i++) {
-    const span = recentUpdatesSpans.nth(i);
-    await expect(span).toBeVisible();
+  // Parallelize visibility checks
+  await Promise.all(spansRecent.map((span) => expect(span).toBeVisible()));
 
-    // Check cursor on hover
+  for (const span of spansRecent) {
+    // Check cursor and color on hover
     await span.hover();
-    const cursor = await span.evaluate((el) => window.getComputedStyle(el).cursor);
+    const { cursor, color } = await span.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return { cursor: style.cursor, color: style.color };
+    });
     expect(cursor).toBe('default');
-
-    // Check color on hover (accent-red)
-    const color = await span.evaluate((el) => window.getComputedStyle(el).color);
-    // --accent-red: #ff003c -> rgb(255, 0, 60)
     expect(color).toBe('rgb(255, 0, 60)');
   }
 
   // Check Categories spans
   const categoriesSpans = page.locator('.sidebar-section').last().locator('.update-title span');
-  const countCategories = await categoriesSpans.count();
-  expect(countCategories).toBeGreaterThan(0);
+  const spansCategories = await categoriesSpans.all();
+  expect(spansCategories.length).toBeGreaterThan(0);
 
-  for (let i = 0; i < countCategories; i++) {
-    const span = categoriesSpans.nth(i);
-    await expect(span).toBeVisible();
+  // Parallelize visibility checks
+  await Promise.all(spansCategories.map((span) => expect(span).toBeVisible()));
 
-    // Check cursor on hover
+  for (const span of spansCategories) {
+    // Check cursor and color on hover
     await span.hover();
-    const cursor = await span.evaluate((el) => window.getComputedStyle(el).cursor);
+    const { cursor, color } = await span.evaluate((el) => {
+      const style = window.getComputedStyle(el);
+      return { cursor: style.cursor, color: style.color };
+    });
     expect(cursor).toBe('default');
-
-    // Check color on hover
-    const color = await span.evaluate((el) => window.getComputedStyle(el).color);
     expect(color).toBe('rgb(255, 0, 60)');
   }
 });
