@@ -25,7 +25,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   // Restrict resource loading to trusted sources
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';"
   );
   next();
 });
