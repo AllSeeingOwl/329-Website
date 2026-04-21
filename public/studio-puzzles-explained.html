@@ -922,7 +922,9 @@
               return;
             }
 
-            const index = Array.from(accordions).indexOf(btn);
+            // ⚡ Bolt: Prevent O(N) array allocation on high-frequency keydown events
+            // by using Array.prototype.indexOf directly on the NodeList.
+            const index = Array.prototype.indexOf.call(accordions, btn);
             if (e.key === 'ArrowDown') {
               e.preventDefault();
               const next = accordions[index + 1] || accordions[0];
