@@ -67,3 +67,7 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` inside a high-frequency layout handler, such as a `resize` event or during `requestAnimationFrame`, forces the browser to traverse the DOM tree multiple times per frame. Even though `document.getElementById` is typically O(1), doing this during layout thrashing can degrade frame rates.
 **Action:** Cache the dynamically resolved DOM nodes directly on the element object (e.g., `btn._contentNode = document.getElementById(...)`) or in a closure variable. This ensures that the node is fetched only once and reused during subsequent fast-firing layout frames, saving execution time.
+
+## 2026-03-25 - Prevent Array Allocation in Event Listeners
+**Learning:** Using `Array.from(nodeList)` inside a high-frequency event listener (like `keydown`) creates an O(N) array allocation on every event. This causes unnecessary garbage collection pressure.
+**Action:** Use `Array.prototype.indexOf.call(nodeList, element)` to find an item's index in a `NodeList` directly, avoiding the intermediate array allocation entirely.

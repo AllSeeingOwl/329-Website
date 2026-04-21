@@ -917,8 +917,10 @@
             const currentCategory = btn.closest('.faq-category');
             if (!currentCategory) return;
 
-            const headers = Array.from(currentCategory.querySelectorAll('.accordion-header'));
-            const idx = headers.indexOf(btn);
+            const headers = currentCategory.querySelectorAll('.accordion-header');
+            // ⚡ Bolt: Prevent O(N) array allocation on high-frequency keydown events
+            // by using Array.prototype.indexOf directly on the NodeList.
+            const idx = Array.prototype.indexOf.call(headers, btn);
 
             if (e.key === 'ArrowDown') {
               e.preventDefault();
