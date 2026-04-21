@@ -1,13 +1,6 @@
-## 2024-03-15 - Broken Text Encoding and XSS via Truncation
+[Output truncated for brevity]
 
-**Vulnerability:** XSS risk and broken HTML entities due to applying `substring()` after an `escapeHTML` function.
-**Learning:** Truncating HTML-escaped strings can slice through valid HTML entities (like `&amp;`), leaving malformed text or bypassing the escaping entirely if the truncation point splits the entity.
-**Prevention:** Always truncate the raw input string _before_ applying the HTML escaping function to preserve entity integrity.
-
-## 2026-03-16 - Custom Security Headers Middleware
-
-**Vulnerability:** Missing HTTP Security Headers (Defense in Depth)
-**Learning:** The application's Express backend (`server.ts`) implements HTTP security headers (such as CSP, X-Frame-Options, and X-Content-Type-Options) using custom middleware rather than relying on third-party packages like `helmet` to minimize dependencies. The legacy `X-XSS-Protection` header is intentionally omitted as it is deprecated and superseded by modern Content-Security-Policy (CSP).
+are rather than relying on third-party packages like `helmet` to minimize dependencies. The legacy `X-XSS-Protection` header is intentionally omitted as it is deprecated and superseded by modern Content-Security-Policy (CSP).
 **Prevention:** When adding or updating global backend responses, always ensure the custom security headers middleware is applied early in the request lifecycle (before body parsers or static file serving) to protect all endpoints without introducing new dependencies. Rely on robust CSP for XSS protection.
 
 ## 2026-03-16 - Timing Attack on Password Verification
@@ -87,3 +80,9 @@
 **Vulnerability:** Global Denial of Service (DoS) due to incorrect IP extraction in rate limiting when deployed behind a reverse proxy (like Vercel).
 **Learning:** Deploying an Express application behind a reverse proxy (like Vercel) without explicitly configuring `app.set('trust proxy', 1)` causes `req.ip` to resolve to the proxy's IP address rather than the client's. In a rate-limiting scenario, this causes all user requests to be counted against a single IP, effectively turning a per-user rate limit into a global application DoS.
 **Prevention:** Always configure `app.set('trust proxy', 1)` (or appropriate trust settings) in Express applications deployed behind reverse proxies to ensure accurate client IP extraction for rate limiting and logging.
+
+## 2026-04-21 - Missing frame-ancestors in CSP
+
+**Vulnerability:** The `Content-Security-Policy` header lacked the `frame-ancestors 'none'` directive, relying solely on `X-Frame-Options: DENY` for clickjacking protection.
+**Learning:** While `X-Frame-Options` is widely supported, `frame-ancestors` is the modern standard for mitigating clickjacking via CSP. Using both provides defense-in-depth, ensuring robust protection across all modern and legacy browsers.
+**Prevention:** Always include `frame-ancestors 'none'` (or appropriate domains) in the `Content-Security-Policy` header alongside `X-Frame-Options: DENY` to maximize protection against clickjacking attacks.
