@@ -75,7 +75,7 @@ describe('Velvet Rope Utilities Tests', () => {
       target: {
         querySelector: jest.fn().mockReturnValue(document.createElement('button')),
         parentNode: document.body,
-        nextSibling: null
+        nextSibling: null,
       },
     };
 
@@ -107,7 +107,7 @@ describe('Velvet Rope Utilities Tests', () => {
       target: {
         querySelector: jest.fn().mockReturnValue(document.createElement('button')),
         parentNode: document.body,
-        nextSibling: null
+        nextSibling: null,
       },
     };
 
