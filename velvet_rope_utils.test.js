@@ -74,10 +74,13 @@ describe('Velvet Rope Utilities Tests', () => {
       preventDefault: jest.fn(),
       target: {
         querySelector: jest.fn().mockReturnValue(document.createElement('button')),
+        parentNode: document.body,
+        nextSibling: null
       },
     };
 
     const mockWin = { location: { assign: jest.fn(), href: '' } };
+    localStorage.removeItem('lastMainframeBreach');
     breachMainframe(event, mockWin);
 
     expect(event.preventDefault).toHaveBeenCalled();
@@ -103,12 +106,15 @@ describe('Velvet Rope Utilities Tests', () => {
       preventDefault: jest.fn(),
       target: {
         querySelector: jest.fn().mockReturnValue(document.createElement('button')),
+        parentNode: document.body,
+        nextSibling: null
       },
     };
 
     const assignMock = jest.fn();
     const mockWin = { location: { assign: assignMock, href: '' } };
 
+    localStorage.removeItem('lastMainframeBreach');
     breachMainframe(event, mockWin);
 
     jest.advanceTimersByTime(800);
@@ -136,6 +142,7 @@ describe('Velvet Rope Utilities Tests', () => {
 
     const mockWin = { location: { assign: jest.fn(), href: '' } };
     // Should not throw
+    localStorage.removeItem('lastMainframeBreach');
     breachMainframe(null, mockWin);
     jest.advanceTimersByTime(800);
     await Promise.resolve();

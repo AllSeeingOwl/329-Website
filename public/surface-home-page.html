@@ -652,6 +652,35 @@
           const btn = this.querySelector('button[type=\'submit\']');
           const successMsg = document.getElementById('surface-newsletter-success');
 
+          let rateLimitMsg = document.getElementById('surface-rate-limit');
+          if (!rateLimitMsg) {
+            rateLimitMsg = document.createElement('div');
+            rateLimitMsg.id = 'surface-rate-limit';
+            rateLimitMsg.setAttribute('role', 'alert');
+            rateLimitMsg.setAttribute('aria-live', 'polite');
+            rateLimitMsg.style.display = 'none';
+            rateLimitMsg.style.marginTop = '15px';
+            rateLimitMsg.style.color = 'red';
+            rateLimitMsg.style.fontWeight = 'bold';
+            rateLimitMsg.style.textAlign = 'center';
+            this.parentNode.insertBefore(rateLimitMsg, this.nextSibling);
+          }
+
+          const lastSubmissionTime = localStorage.getItem('lastNewsletterSubmission');
+          const now = Date.now();
+          const rateLimitWindow = 60000;
+
+          if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
+            const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
+            rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
+            rateLimitMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            return;
+          }
+
+          rateLimitMsg.style.display = 'none';
+          localStorage.setItem('lastNewsletterSubmission', now);
+
           this.setAttribute('aria-busy', 'true');
           btn.disabled = true;
           btn.setAttribute('aria-disabled', 'true');

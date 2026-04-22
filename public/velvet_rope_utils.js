@@ -61,6 +61,44 @@ async function initVelvetRope() {
 
 async function breachMainframe(e, win = typeof window !== 'undefined' ? window : null) {
   if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
+  // 🛡️ Sentinel: Client-side rate limiting to prevent spam
+  const lastSubmissionTime = localStorage.getItem('lastMainframeBreach');
+  const now = Date.now();
+  const rateLimitWindow = 60000; // 60 seconds
+
+  if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
+    const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
+
+    // Check if rate limit message element exists, otherwise create it
+    let rateLimitMsg = document.getElementById('mainframe-rate-limit');
+    if (!rateLimitMsg && e && e.target && e.target.parentNode) {
+      rateLimitMsg = document.createElement('div');
+      rateLimitMsg.id = 'mainframe-rate-limit';
+      rateLimitMsg.setAttribute('role', 'alert');
+      rateLimitMsg.setAttribute('aria-live', 'polite');
+      rateLimitMsg.style.marginTop = '15px';
+      rateLimitMsg.style.color = '#ff003c';
+      rateLimitMsg.style.fontWeight = 'bold';
+      rateLimitMsg.style.textAlign = 'center';
+      rateLimitMsg.style.fontFamily = "'VT323', monospace";
+      e.target.parentNode.insertBefore(rateLimitMsg, e.target.nextSibling);
+    }
+
+    if (rateLimitMsg) {
+      rateLimitMsg.textContent = `COOLDOWN ACTIVE. PLEASE WAIT ${remainingTime} SECONDS BEFORE RETRYING.`;
+      rateLimitMsg.style.display = 'block';
+    }
+    return;
+  }
+
+  const rateLimitMsg = document.getElementById('mainframe-rate-limit');
+  if (rateLimitMsg) {
+    rateLimitMsg.style.display = 'none';
+  }
+
+  localStorage.setItem('lastMainframeBreach', now);
+
   if (e && e.target && typeof e.target.setAttribute === 'function') {
     e.target.setAttribute('aria-busy', 'true');
   }
