@@ -502,12 +502,28 @@
     </div>
 
     <script>
+      // ⚡ Bolt: Cache DOM elements to avoid repeatedly querying the DOM on every form submission.
+      let domCache = null;
+
+      function getDomCache() {
+        if (!domCache) {
+          domCache = {
+            form: document.getElementById('contact-form'),
+            btn: document.getElementById('submit-btn'),
+            successMsg: document.getElementById('success-message'),
+            rateLimitMsg: document.getElementById('rate-limit-message'),
+          };
+        }
+        return domCache;
+      }
+
       function submitContactForm(e) {
         e.preventDefault();
-        const form = document.getElementById('contact-form');
-        const btn = document.getElementById('submit-btn');
-        const successMsg = document.getElementById('success-message');
-        const rateLimitMsg = document.getElementById('rate-limit-message');
+        const cache = getDomCache();
+        const form = cache.form;
+        const btn = cache.btn;
+        const successMsg = cache.successMsg;
+        const rateLimitMsg = cache.rateLimitMsg;
 
         // 🛡️ Sentinel: Client-side rate limiting to prevent spam
         const lastSubmissionTime = localStorage.getItem('lastContactSubmission');

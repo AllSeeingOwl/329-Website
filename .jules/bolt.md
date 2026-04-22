@@ -72,3 +72,8 @@
 
 **Learning:** Using `Array.from(nodeList)` inside a high-frequency event listener (like `keydown`) creates an O(N) array allocation on every event. This causes unnecessary garbage collection pressure.
 **Action:** Use `Array.prototype.indexOf.call(nodeList, element)` to find an item's index in a `NodeList` directly, avoiding the intermediate array allocation entirely.
+
+## 2026-04-22 - Cache DOM Queries in Form Submissions
+
+**Learning:** Repeatedly querying the DOM with `document.getElementById` inside event handlers (like form submissions) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
+**Action:** Use a lazy-initialization pattern (e.g., a `getDomCache()` function) to query DOM elements once on the first execution, storing them in a module-scoped variable for rapid, O(1) reuse in all subsequent executions. (Applied to `studio-contact-us.html`)
