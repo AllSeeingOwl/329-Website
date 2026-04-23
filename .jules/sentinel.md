@@ -86,3 +86,9 @@ are rather than relying on third-party packages like `helmet` to minimize depend
 **Vulnerability:** The `Content-Security-Policy` header lacked the `frame-ancestors 'none'` directive, relying solely on `X-Frame-Options: DENY` for clickjacking protection.
 **Learning:** While `X-Frame-Options` is widely supported, `frame-ancestors` is the modern standard for mitigating clickjacking via CSP. Using both provides defense-in-depth, ensuring robust protection across all modern and legacy browsers.
 **Prevention:** Always include `frame-ancestors 'none'` (or appropriate domains) in the `Content-Security-Policy` header alongside `X-Frame-Options: DENY` to maximize protection against clickjacking attacks.
+
+## 2026-04-23 - Missing Permissions-Policy Header
+
+**Vulnerability:** The application was missing a `Permissions-Policy` header, which could allow malicious scripts (if XSS were to occur) to access powerful browser features like geolocation, camera, or microphone without explicit restriction from the server.
+**Learning:** Adding a `Permissions-Policy` header acts as a defense-in-depth measure. Even if an attacker manages to execute JavaScript on the page, they are prevented from using sensitive APIs unless explicitly allowed by this policy.
+**Prevention:** Always include `Permissions-Policy: geolocation=(), camera=(), microphone=()` (or similarly restrictive policies) in the global security headers middleware to restrict access to powerful browser features by default.

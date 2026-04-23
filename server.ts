@@ -22,6 +22,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Expires', '0'); // Proxies
   // 🛡️ Sentinel: Add Referrer-Policy to prevent leaking sensitive URLs across origins
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // 🛡️ Sentinel: Restrict powerful browser features to prevent abuse if XSS occurs
+  res.setHeader('Permissions-Policy', 'geolocation=(), camera=(), microphone=()');
   // Restrict resource loading to trusted sources
   res.setHeader(
     'Content-Security-Policy',
