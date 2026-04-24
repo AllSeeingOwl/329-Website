@@ -469,7 +469,7 @@
           aria-expanded="false"
           aria-controls="main-nav"
           onclick="
-            const nav = document.getElementById('main-nav');
+            const nav = this._nav || (this._nav = document.getElementById('main-nav'));
             const expanded = nav.classList.toggle('active');
             this.setAttribute('aria-expanded', expanded);
           "
@@ -830,11 +830,14 @@
         onsubmit="
           event.preventDefault();
           const btn = this.querySelector('button[type=\'submit\']');
-          const successMsg = document.getElementById('faq-newsletter-success');
+          const successMsg =
+            this._successMsg ||
+            (this._successMsg = document.getElementById('faq-newsletter-success'));
 
-          let rateLimitMsg = document.getElementById('faq-rate-limit');
+          let rateLimitMsg =
+            this._rateLimitMsg || (this._rateLimitMsg = document.getElementById('faq-rate-limit'));
           if (!rateLimitMsg) {
-            rateLimitMsg = document.createElement('div');
+            this._rateLimitMsg = rateLimitMsg = document.createElement('div');
             rateLimitMsg.id = 'faq-rate-limit';
             rateLimitMsg.setAttribute('role', 'alert');
             rateLimitMsg.setAttribute('aria-live', 'polite');

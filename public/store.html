@@ -464,7 +464,7 @@
           aria-expanded="false"
           aria-controls="main-nav"
           onclick="
-            const nav = document.getElementById('main-nav');
+            const nav = this._nav || (this._nav = document.getElementById('main-nav'));
             const expanded = nav.classList.toggle('active');
             this.setAttribute('aria-expanded', expanded);
           "
