@@ -77,3 +77,8 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` inside event handlers (like form submissions) adds unnecessary overhead by forcing the browser to traverse the DOM tree multiple times.
 **Action:** Use a lazy-initialization pattern (e.g., a `getDomCache()` function) to query DOM elements once on the first execution, storing them in a module-scoped variable for rapid, O(1) reuse in all subsequent executions. (Applied to `studio-contact-us.html`)
+
+## 2024-05-26 - Cache DOM Queries in Inline Event Handlers
+
+**Learning:** Inline event handlers (like `onclick` or `onsubmit`) that repeatedly call `document.getElementById` or `this.querySelector` on every interaction cause unnecessary DOM traversal overhead.
+**Action:** Use a lazy-initialization pattern directly on the element object (e.g., `this._nav = this._nav || document.getElementById("main-nav")`) to cache the resolved DOM node. This ensures the query is only performed once and reused on subsequent interactions, improving performance.
