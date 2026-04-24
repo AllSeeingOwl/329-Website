@@ -656,9 +656,13 @@
         onsubmit="
           event.preventDefault();
           const btn = this.querySelector('button[type=\'submit\']');
-          const successMsg = this._successMsg || (this._successMsg = document.getElementById('surface-newsletter-success'));
+          const successMsg =
+            this._successMsg ||
+            (this._successMsg = document.getElementById('surface-newsletter-success'));
 
-          let rateLimitMsg = this._rateLimitMsg || (this._rateLimitMsg = document.getElementById('surface-rate-limit'));
+          let rateLimitMsg =
+            this._rateLimitMsg ||
+            (this._rateLimitMsg = document.getElementById('surface-rate-limit'));
           if (!rateLimitMsg) {
             this._rateLimitMsg = rateLimitMsg = document.createElement('div');
             rateLimitMsg.id = 'surface-rate-limit';
