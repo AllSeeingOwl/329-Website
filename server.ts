@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import crypto from 'crypto';
+import { initDb, getMaintenanceConfig, updateMaintenanceConfig, getDashboardConfig, updateDashboardConfig } from './db';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,10 +39,21 @@ app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // Maintenance Mode Configuration
-const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
-const STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
-const MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
+let MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
+let STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
+let MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
+
+// Initialize DB and load maintenance state
+initDb().then(async () => {
+  const config = await getMaintenanceConfig();
+  // Only override if not set by environment variables (useful for tests)
+  if (config['global'] && process.env.MAINTENANCE_MODE === undefined) MAINTENANCE_MODE = config['global'] === 'true';
+  if (config['studio'] && process.env.STUDIO_MAINTENANCE_MODE === undefined) STUDIO_MAINTENANCE_MODE = config['studio'] === 'true';
+  if (config['mltk'] && process.env.MLTK_MAINTENANCE_MODE === undefined) MLTK_MAINTENANCE_MODE = config['mltk'] === 'true';
+}).catch((err) => {
+  console.error("Failed to initialize database", err);
+});
 
 // 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
 // Placed at the very top of the stack to bypass all routing, file serving, and parsing.
@@ -129,6 +141,90 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
     studio: STUDIO_MAINTENANCE_MODE,
     mltk: MLTK_MAINTENANCE_MODE,
   });
+});
+
+// Admin Configuration Auth
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
+// Simple token generation for demo purposes, since this is a basic project
+const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
+let activeAdminToken: string | null = null;
+
+app.post('/api/admin/verify', (req: Request, res: Response) => {
+  const { password } = req.body;
+  if (typeof password === 'string') {
+    const pwdBuffer = Buffer.from(password);
+    if (pwdBuffer.length === adminAuthBuffer.length && crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)) {
+      activeAdminToken = generateAdminToken();
+      res.json({ success: true, token: activeAdminToken });
+      return;
+    }
+  }
+  res.status(401).json({ success: false, error: 'Unauthorized' });
+});
+
+const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    if (token === activeAdminToken && activeAdminToken !== null) {
+      next();
+      return;
+    }
+  }
+  res.status(401).json({ error: 'Unauthorized' });
+};
+
+// Admin API routes
+app.get('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const config = await getDashboardConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch dashboard config' });
+  }
+});
+
+app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
+  const { id, status } = req.body;
+  try {
+    await updateDashboardConfig(id, status);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update dashboard config' });
+  }
+});
+
+app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const config = await getMaintenanceConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch maintenance config' });
+  }
+});
+
+app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+  const { key, value } = req.body;
+  try {
+    await updateMaintenanceConfig(key, value);
+    if (key === 'global') MAINTENANCE_MODE = value;
+    if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
+    if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update maintenance config' });
+  }
+});
+
+// Public dashboard config endpoint
+app.get('/api/dashboard-config', async (req: Request, res: Response) => {
+  try {
+    const config = await getDashboardConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch dashboard config' });
+  }
 });
 
 app.use(express.static(path.join(__dirname, 'public')));

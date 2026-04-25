@@ -362,186 +362,26 @@
       </div>
     </header>
 
-    <!-- Admin Panel to toggle items -->
-    <div class="admin-panel" style="margin-left: 40px; margin-right: 40px">
-      <h3 class="admin-panel-title">NETWORK NODE CONFIGURATION (ADMIN)</h3>
-      <div class="admin-controls" id="admin-controls-container">
-        <!-- Toggles injected here -->
-      </div>
-      <button class="reset-btn" id="reset-config-btn">RESET TO DEFAULTS</button>
-    </div>
-
     <div class="dashboard" id="dashboard-container">
       <!-- Cards will be dynamically injected here via JS -->
     </div>
 
     <script>
-      // Initial Configuration for Dashboard Items
-      // You can modify this directly or use the Admin panel to toggle items
-      const DEFAULT_DASHBOARD_CONFIG = [
-        {
-          id: 'DOC: 001-VVL',
-          title: 'Virtue Village Layouts',
-          status: 'offline', // Default to offline as it is a placeholder
-          link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
-          type: 'DOWNLOAD',
-          isDownload: true,
-        },
-        {
-          id: 'DOC: 002-GD',
-          title: 'Gretchen Dossier',
-          status: 'offline', // Default to offline as it is a placeholder
-          link: 'GRETCHEN_DOSSIER.txt',
-          type: 'DOWNLOAD',
-          isDownload: true,
-        },
-        {
-          id: 'ARCHIVE: NOVA',
-          title: 'NOVA Classified Archive',
-          status: 'active',
-          link: 'nova-classified-archive.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: CS',
-          title: 'Customer Service Portal',
-          status: 'active',
-          link: 'mltk-customer-service.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'DOC: TETROMINO',
-          title: 'Project Tetromino Initialization',
-          status: 'active',
-          link: 'mltk-classified-document.html',
-          type: 'CLASSIFIED: EYES ONLY',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: BOOT',
-          title: 'MLTK Boot Sequence',
-          status: 'active',
-          link: 'mltk-boot-sequence.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: LEGAL',
-          title: 'MLTK Privacy Policy & Terms',
-          status: 'active',
-          link: 'mltk-privacy-policy.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: TIMER',
-          title: 'MLTK Timer',
-          status: 'active',
-          link: 'mltk-timer.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'ARCHIVE: PARENT',
-          title: 'NOVA Parent Directory',
-          status: 'offline', // Default to offline as it is a placeholder
-          link: 'nova-parent-directory.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: RADIO',
-          title: 'Ollies Radio Scanner',
-          status: 'active',
-          link: 'ollies-radio-scanner.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'PORTAL: DROP',
-          title: 'Secure Data Drop Page',
-          status: 'active',
-          link: 'secure-data-drop-page.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-        {
-          id: 'DOC: 003-SGM',
-          title: 'Seedless Grapes Motel Blueprints',
-          status: 'offline', // Default to offline as it is a placeholder
-          link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
-          type: 'DOWNLOAD',
-          isDownload: true,
-        },
-        {
-          id: 'DOC: 004-UP',
-          title: 'Uncut Puzzle',
-          status: 'offline', // Default to offline as it is a placeholder
-          link: 'UNCUT_PUZZLE.pdf',
-          type: 'DOWNLOAD',
-          isDownload: true,
-        },
-        {
-          id: 'PORTAL: 5F-WHEEL',
-          title: 'Five Finger Selection Wheel',
-          status: 'active',
-          link: 'mltk-five-finger-wheel.html',
-          type: 'ENTER',
-          isDownload: false,
-        },
-      ];
+      let dashboardConfig = [];
 
-      // Load config from localStorage or use default
-      let dashboardConfig =
-        JSON.parse(localStorage.getItem('mltk_dashboard_config')) || DEFAULT_DASHBOARD_CONFIG;
-
-      // Save config to localStorage
-      function saveConfig() {
-        localStorage.setItem('mltk_dashboard_config', JSON.stringify(dashboardConfig));
-      }
-
-      // Function to render the admin panel toggles
-      function renderAdminPanel() {
-        const container = document.getElementById('admin-controls-container');
-        container.innerHTML = '';
-
-        dashboardConfig.forEach((item, index) => {
-          const controlItem = document.createElement('div');
-          controlItem.className = 'admin-control-item';
-
-          const label = document.createElement('span');
-          label.className = 'admin-control-label';
-          label.textContent = item.title;
-
-          const switchLabel = document.createElement('label');
-          switchLabel.className = 'switch';
-          switchLabel.title = `Toggle ${item.title}`;
-
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.status === 'active';
-          checkbox.setAttribute('aria-label', `Toggle status for ${item.title}`);
-
-          // Event listener to toggle status
-          checkbox.addEventListener('change', (e) => {
-            dashboardConfig[index].status = e.target.checked ? 'active' : 'offline';
-            saveConfig();
+      // Function to fetch config from the backend
+      async function fetchDashboardConfig() {
+        try {
+          const response = await fetch('/api/dashboard-config');
+          if (response.ok) {
+            dashboardConfig = await response.json();
             renderDashboard();
-          });
-
-          const slider = document.createElement('span');
-          slider.className = 'slider';
-
-          switchLabel.appendChild(checkbox);
-          switchLabel.appendChild(slider);
-
-          controlItem.appendChild(label);
-          controlItem.appendChild(switchLabel);
-
-          container.appendChild(controlItem);
-        });
+          } else {
+            console.error('Failed to fetch dashboard config');
+          }
+        } catch (error) {
+          console.error('Error fetching dashboard config:', error);
+        }
       }
 
       // Function to render the dashboard based on the configuration
@@ -587,19 +427,9 @@
         });
       }
 
-      // Reset config
-      document.getElementById('reset-config-btn').addEventListener('click', () => {
-        // Deep copy default config
-        dashboardConfig = JSON.parse(JSON.stringify(DEFAULT_DASHBOARD_CONFIG));
-        saveConfig();
-        renderAdminPanel();
-        renderDashboard();
-      });
-
       // Initial render
       document.addEventListener('DOMContentLoaded', () => {
-        renderAdminPanel();
-        renderDashboard();
+        fetchDashboardConfig();
       });
     </script>
   </body>
