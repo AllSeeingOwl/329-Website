@@ -8,6 +8,7 @@ import {
   getDashboardConfig,
   updateDashboardConfig,
 } from './db';
+import { initDb } from './db';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -61,6 +62,17 @@ initDb()
       STUDIO_MAINTENANCE_MODE = config['studio'] === 'true';
     if (config['mltk'] && process.env.MLTK_MAINTENANCE_MODE === undefined)
       MLTK_MAINTENANCE_MODE = config['mltk'] === 'true';
+let dbInstance: Awaited<ReturnType<typeof initDb>> | null = null;
+initDb()
+  .then((db) => {
+    dbInstance = db;
+    db.all('SELECT key, value FROM config').then((rows) => {
+      rows.forEach((row) => {
+        if (row.key === 'global') MAINTENANCE_MODE = row.value === 'true';
+        if (row.key === 'studio') STUDIO_MAINTENANCE_MODE = row.value === 'true';
+        if (row.key === 'mltk') MLTK_MAINTENANCE_MODE = row.value === 'true';
+      });
+    });
   })
   .catch((err) => {
     console.error('Failed to initialize database', err);
@@ -229,6 +241,39 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
   } catch (e) {
     res.status(500).json({ error: 'Failed to update maintenance config' });
   }
+  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
+  const rows = await dbInstance.all('SELECT * FROM dashboard');
+  res.json(rows);
+});
+
+app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
+  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
+  const { id, status } = req.body;
+  await dbInstance.run('UPDATE dashboard SET status = ? WHERE id = ?', [status, id]);
+  res.json({ success: true });
+});
+
+app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
+  const rows = await dbInstance.all('SELECT * FROM config');
+  const config = rows.reduce((acc: Record<string, string>, row: { key: string; value: string }) => {
+    acc[row.key] = row.value;
+    return acc;
+  }, {});
+  res.json(config);
+});
+
+app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
+  const { key, value } = req.body;
+  const strValue = value ? 'true' : 'false';
+  await dbInstance.run('UPDATE config SET value = ? WHERE key = ?', [strValue, key]);
+
+  if (key === 'global') MAINTENANCE_MODE = value;
+  if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
+  if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
+
+  res.json({ success: true });
 });
 
 // Public dashboard config endpoint
@@ -239,6 +284,9 @@ app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).json({ error: 'Failed to fetch dashboard config' });
   }
+  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
+  const rows = await dbInstance.all('SELECT * FROM dashboard');
+  res.json(rows);
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
