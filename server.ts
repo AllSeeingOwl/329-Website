@@ -16,6 +16,7 @@ app.set('trust proxy', 1);
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // Enforce HTTPS
   res.setHeader('X-Content-Type-Options', 'nosniff'); // Prevent MIME sniffing
+  res.setHeader('X-XSS-Protection', '1; mode=block'); // Enable XSS filter in legacy browsers
   res.setHeader('X-Frame-Options', 'DENY'); // Prevent clickjacking
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate'); // Prevent caching of sensitive data
   res.setHeader('Pragma', 'no-cache'); // HTTP 1.0 backward compatibility
@@ -27,7 +28,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   // Restrict resource loading to trusted sources
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';"
+    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
   );
   next();
 });
