@@ -1,7 +1,13 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import crypto from 'crypto';
-import { initDb } from './db';
+import {
+  initDb,
+  getMaintenanceConfig,
+  updateMaintenanceConfig,
+  getDashboardConfig,
+  updateDashboardConfig,
+} from './db';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,17 +51,16 @@ let MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
 
 // Initialize DB and load maintenance state
-let dbInstance: Awaited<ReturnType<typeof initDb>> | null = null;
 initDb()
-  .then((db) => {
-    dbInstance = db;
-    db.all('SELECT key, value FROM config').then((rows) => {
-      rows.forEach((row) => {
-        if (row.key === 'global') MAINTENANCE_MODE = row.value === 'true';
-        if (row.key === 'studio') STUDIO_MAINTENANCE_MODE = row.value === 'true';
-        if (row.key === 'mltk') MLTK_MAINTENANCE_MODE = row.value === 'true';
-      });
-    });
+  .then(async () => {
+    const config = await getMaintenanceConfig();
+    // Only override if not set by environment variables (useful for tests)
+    if (config['global'] && process.env.MAINTENANCE_MODE === undefined)
+      MAINTENANCE_MODE = config['global'] === 'true';
+    if (config['studio'] && process.env.STUDIO_MAINTENANCE_MODE === undefined)
+      STUDIO_MAINTENANCE_MODE = config['studio'] === 'true';
+    if (config['mltk'] && process.env.MLTK_MAINTENANCE_MODE === undefined)
+      MLTK_MAINTENANCE_MODE = config['mltk'] === 'true';
   })
   .catch((err) => {
     console.error('Failed to initialize database', err);
@@ -162,7 +167,7 @@ app.post('/api/admin/verify', (req: Request, res: Response) => {
     const pwdBuffer = Buffer.from(password);
     if (
       pwdBuffer.length === adminAuthBuffer.length &&
-      crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)
+      crypto.timingSafeEqual(new Uint8Array(pwdBuffer), new Uint8Array(adminAuthBuffer))
     ) {
       activeAdminToken = generateAdminToken();
       res.json({ success: true, token: activeAdminToken });
@@ -186,46 +191,54 @@ const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
 
 // Admin API routes
 app.get('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
-  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
-  const rows = await dbInstance.all('SELECT * FROM dashboard');
-  res.json(rows);
+  try {
+    const config = await getDashboardConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch dashboard config' });
+  }
 });
 
 app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
-  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
   const { id, status } = req.body;
-  await dbInstance.run('UPDATE dashboard SET status = ? WHERE id = ?', [status, id]);
-  res.json({ success: true });
+  try {
+    await updateDashboardConfig(id, status);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update dashboard config' });
+  }
 });
 
 app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
-  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
-  const rows = await dbInstance.all('SELECT * FROM config');
-  const config = rows.reduce((acc: Record<string, string>, row: { key: string; value: string }) => {
-    acc[row.key] = row.value;
-    return acc;
-  }, {});
-  res.json(config);
+  try {
+    const config = await getMaintenanceConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch maintenance config' });
+  }
 });
 
 app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
-  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
   const { key, value } = req.body;
-  const strValue = value ? 'true' : 'false';
-  await dbInstance.run('UPDATE config SET value = ? WHERE key = ?', [strValue, key]);
-
-  if (key === 'global') MAINTENANCE_MODE = value;
-  if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
-  if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
-
-  res.json({ success: true });
+  try {
+    await updateMaintenanceConfig(key, value);
+    if (key === 'global') MAINTENANCE_MODE = value;
+    if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
+    if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update maintenance config' });
+  }
 });
 
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {
-  if (!dbInstance) return res.status(500).json({ error: 'DB not initialized' });
-  const rows = await dbInstance.all('SELECT * FROM dashboard');
-  res.json(rows);
+  try {
+    const config = await getDashboardConfig();
+    res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch dashboard config' });
+  }
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -281,10 +294,10 @@ app.post('/api/verify', (req: Request, res: Response) => {
     const codeBuffer = Buffer.from(code);
 
     if (codeBuffer.length === authBuffer.length) {
-      success = crypto.timingSafeEqual(codeBuffer, authBuffer);
+      success = crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(authBuffer));
     } else {
       // Prevent length leakage via timing by doing a dummy comparison
-      crypto.timingSafeEqual(authBuffer, authBuffer);
+      crypto.timingSafeEqual(new Uint8Array(authBuffer), new Uint8Array(authBuffer));
     }
   }
 
