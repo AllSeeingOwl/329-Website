@@ -141,7 +141,7 @@ describe('Server Tests', () => {
     expect(response.headers['x-frame-options']).toBe('DENY');
     expect(response.headers['permissions-policy']).toBe('geolocation=(), camera=(), microphone=()');
     expect(response.headers['content-security-policy']).toBe(
-      "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';"
+      "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
     );
   });
 
