@@ -46,18 +46,20 @@ const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
 
 // Initialize DB and load maintenance state
 let dbInstance: Awaited<ReturnType<typeof initDb>> | null = null;
-initDb().then((db) => {
-  dbInstance = db;
-  db.all('SELECT key, value FROM config').then((rows) => {
-    rows.forEach((row) => {
-      if (row.key === 'global') MAINTENANCE_MODE = row.value === 'true';
-      if (row.key === 'studio') STUDIO_MAINTENANCE_MODE = row.value === 'true';
-      if (row.key === 'mltk') MLTK_MAINTENANCE_MODE = row.value === 'true';
+initDb()
+  .then((db) => {
+    dbInstance = db;
+    db.all('SELECT key, value FROM config').then((rows) => {
+      rows.forEach((row) => {
+        if (row.key === 'global') MAINTENANCE_MODE = row.value === 'true';
+        if (row.key === 'studio') STUDIO_MAINTENANCE_MODE = row.value === 'true';
+        if (row.key === 'mltk') MLTK_MAINTENANCE_MODE = row.value === 'true';
+      });
     });
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database', err);
   });
-}).catch((err) => {
-  console.error("Failed to initialize database", err);
-});
 
 // 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
 // Placed at the very top of the stack to bypass all routing, file serving, and parsing.
@@ -158,7 +160,10 @@ app.post('/api/admin/verify', (req: Request, res: Response) => {
   const { password } = req.body;
   if (typeof password === 'string') {
     const pwdBuffer = Buffer.from(password);
-    if (pwdBuffer.length === adminAuthBuffer.length && crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)) {
+    if (
+      pwdBuffer.length === adminAuthBuffer.length &&
+      crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)
+    ) {
       activeAdminToken = generateAdminToken();
       res.json({ success: true, token: activeAdminToken });
       return;

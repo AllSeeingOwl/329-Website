@@ -10,7 +10,8 @@ import path from 'path';
 // and fallback to an in-memory or throw an error if no DB is provided but we need to support the dashboard load.
 
 const isVercel = process.env.VERCEL === '1';
-const dbPath = process.env.DATABASE_URL || (isVercel ? '/tmp/admin.db' : path.join(__dirname, 'admin.db'));
+const dbPath =
+  process.env.DATABASE_URL || (isVercel ? '/tmp/admin.db' : path.join(__dirname, 'admin.db'));
 
 export async function initDb(): Promise<Database<sqlite3.Database, sqlite3.Statement>> {
   // If we had a real Postgres connection string in DATABASE_URL, we'd use pg or another driver.
@@ -18,7 +19,7 @@ export async function initDb(): Promise<Database<sqlite3.Database, sqlite3.State
 
   const db = await open({
     filename: dbPath,
-    driver: sqlite3.Database
+    driver: sqlite3.Database,
   });
 
   await db.exec(`
@@ -48,20 +49,118 @@ export async function initDb(): Promise<Database<sqlite3.Database, sqlite3.State
   const hasDashboard = await db.get('SELECT id FROM dashboard LIMIT 1');
   if (!hasDashboard) {
     const DEFAULT_DASHBOARD_CONFIG = [
-      { id: 'DOC: 001-VVL', title: 'Virtue Village Layouts', status: 'offline', link: 'VIRTUE_VILLAGE_LAYOUTS.pdf', type: 'DOWNLOAD', isDownload: 1 },
-      { id: 'DOC: 002-GD', title: 'Gretchen Dossier', status: 'offline', link: 'GRETCHEN_DOSSIER.txt', type: 'DOWNLOAD', isDownload: 1 },
-      { id: 'ARCHIVE: NOVA', title: 'NOVA Classified Archive', status: 'active', link: 'nova-classified-archive.html', type: 'ENTER', isDownload: 0 },
-      { id: 'PORTAL: CS', title: 'Customer Service Portal', status: 'active', link: 'mltk-customer-service.html', type: 'ENTER', isDownload: 0 },
-      { id: 'DOC: TETROMINO', title: 'Project Tetromino Initialization', status: 'active', link: 'mltk-classified-document.html', type: 'CLASSIFIED: EYES ONLY', isDownload: 0 },
-      { id: 'PORTAL: BOOT', title: 'MLTK Boot Sequence', status: 'active', link: 'mltk-boot-sequence.html', type: 'ENTER', isDownload: 0 },
-      { id: 'PORTAL: LEGAL', title: 'MLTK Privacy Policy & Terms', status: 'active', link: 'mltk-privacy-policy.html', type: 'ENTER', isDownload: 0 },
-      { id: 'PORTAL: TIMER', title: 'MLTK Timer', status: 'active', link: 'mltk-timer.html', type: 'ENTER', isDownload: 0 },
-      { id: 'ARCHIVE: PARENT', title: 'NOVA Parent Directory', status: 'offline', link: 'nova-parent-directory.html', type: 'ENTER', isDownload: 0 },
-      { id: 'PORTAL: RADIO', title: 'Ollies Radio Scanner', status: 'active', link: 'ollies-radio-scanner.html', type: 'ENTER', isDownload: 0 },
-      { id: 'PORTAL: DROP', title: 'Secure Data Drop Page', status: 'active', link: 'secure-data-drop-page.html', type: 'ENTER', isDownload: 0 },
-      { id: 'DOC: 003-SGM', title: 'Seedless Grapes Motel Blueprints', status: 'offline', link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip', type: 'DOWNLOAD', isDownload: 1 },
-      { id: 'DOC: 004-UP', title: 'Uncut Puzzle', status: 'offline', link: 'UNCUT_PUZZLE.pdf', type: 'DOWNLOAD', isDownload: 1 },
-      { id: 'PORTAL: 5F-WHEEL', title: 'Five Finger Selection Wheel', status: 'active', link: 'mltk-five-finger-wheel.html', type: 'ENTER', isDownload: 0 },
+      {
+        id: 'DOC: 001-VVL',
+        title: 'Virtue Village Layouts',
+        status: 'offline',
+        link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
+        type: 'DOWNLOAD',
+        isDownload: 1,
+      },
+      {
+        id: 'DOC: 002-GD',
+        title: 'Gretchen Dossier',
+        status: 'offline',
+        link: 'GRETCHEN_DOSSIER.txt',
+        type: 'DOWNLOAD',
+        isDownload: 1,
+      },
+      {
+        id: 'ARCHIVE: NOVA',
+        title: 'NOVA Classified Archive',
+        status: 'active',
+        link: 'nova-classified-archive.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: CS',
+        title: 'Customer Service Portal',
+        status: 'active',
+        link: 'mltk-customer-service.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'DOC: TETROMINO',
+        title: 'Project Tetromino Initialization',
+        status: 'active',
+        link: 'mltk-classified-document.html',
+        type: 'CLASSIFIED: EYES ONLY',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: BOOT',
+        title: 'MLTK Boot Sequence',
+        status: 'active',
+        link: 'mltk-boot-sequence.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: LEGAL',
+        title: 'MLTK Privacy Policy & Terms',
+        status: 'active',
+        link: 'mltk-privacy-policy.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: TIMER',
+        title: 'MLTK Timer',
+        status: 'active',
+        link: 'mltk-timer.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'ARCHIVE: PARENT',
+        title: 'NOVA Parent Directory',
+        status: 'offline',
+        link: 'nova-parent-directory.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: RADIO',
+        title: 'Ollies Radio Scanner',
+        status: 'active',
+        link: 'ollies-radio-scanner.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'PORTAL: DROP',
+        title: 'Secure Data Drop Page',
+        status: 'active',
+        link: 'secure-data-drop-page.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
+      {
+        id: 'DOC: 003-SGM',
+        title: 'Seedless Grapes Motel Blueprints',
+        status: 'offline',
+        link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
+        type: 'DOWNLOAD',
+        isDownload: 1,
+      },
+      {
+        id: 'DOC: 004-UP',
+        title: 'Uncut Puzzle',
+        status: 'offline',
+        link: 'UNCUT_PUZZLE.pdf',
+        type: 'DOWNLOAD',
+        isDownload: 1,
+      },
+      {
+        id: 'PORTAL: 5F-WHEEL',
+        title: 'Five Finger Selection Wheel',
+        status: 'active',
+        link: 'mltk-five-finger-wheel.html',
+        type: 'ENTER',
+        isDownload: 0,
+      },
     ];
 
     for (const item of DEFAULT_DASHBOARD_CONFIG) {

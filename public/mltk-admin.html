@@ -99,9 +99,15 @@
       }
 
       @keyframes crt-flicker {
-        0% { opacity: 0.95; }
-        50% { opacity: 1; }
-        100% { opacity: 0.95; }
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
       }
 
       /* Admin Panel Styles */
@@ -220,7 +226,7 @@
         z-index: 6;
       }
 
-      input[type="password"] {
+      input[type='password'] {
         background: #000;
         color: #00ff00;
         border: 1px solid #00ff00;
@@ -252,7 +258,9 @@
       }
 
       @media (max-width: 600px) {
-        h1 { font-size: 1.8rem; }
+        h1 {
+          font-size: 1.8rem;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -289,7 +297,7 @@
           <!-- Maintenance Toggles injected here -->
         </div>
 
-        <h3 class="admin-panel-title" style="margin-top: 30px;">NETWORK NODE CONFIGURATION</h3>
+        <h3 class="admin-panel-title" style="margin-top: 30px">NETWORK NODE CONFIGURATION</h3>
         <div class="admin-controls" id="dashboard-controls-container">
           <!-- Dashboard Toggles injected here -->
         </div>
@@ -305,7 +313,7 @@
         const res = await fetch('/api/admin/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pwd })
+          body: JSON.stringify({ password: pwd }),
         });
         const data = await res.json();
         if (data.success) {
@@ -320,8 +328,12 @@
 
       async function loadAdminData() {
         const [dashRes, maintRes] = await Promise.all([
-          fetch('/api/admin/dashboard-config', { headers: { 'Authorization': `Bearer ${adminToken}` } }),
-          fetch('/api/admin/maintenance-config', { headers: { 'Authorization': `Bearer ${adminToken}` } })
+          fetch('/api/admin/dashboard-config', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }),
+          fetch('/api/admin/maintenance-config', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }),
         ]);
 
         const dashboardConfig = await dashRes.json();
@@ -364,20 +376,22 @@
         const keys = [
           { key: 'global', label: 'Global Maintenance' },
           { key: 'studio', label: 'Studio Maintenance' },
-          { key: 'mltk', label: 'MLTK Maintenance' }
+          { key: 'mltk', label: 'MLTK Maintenance' },
         ];
 
         keys.forEach(({ key, label }) => {
-          container.appendChild(createToggle(label, config[key] === 'true' || config[key] === true, async (e) => {
-            await fetch('/api/admin/maintenance-config', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${adminToken}`
-              },
-              body: JSON.stringify({ key, value: e.target.checked })
-            });
-          }));
+          container.appendChild(
+            createToggle(label, config[key] === 'true' || config[key] === true, async (e) => {
+              await fetch('/api/admin/maintenance-config', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({ key, value: e.target.checked }),
+              });
+            })
+          );
         });
       }
 
@@ -386,16 +400,21 @@
         container.innerHTML = '';
 
         config.forEach((item) => {
-          container.appendChild(createToggle(item.title, item.status === 'active', async (e) => {
-            await fetch('/api/admin/dashboard-config', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${adminToken}`
-              },
-              body: JSON.stringify({ id: item.id, status: e.target.checked ? 'active' : 'offline' })
-            });
-          }));
+          container.appendChild(
+            createToggle(item.title, item.status === 'active', async (e) => {
+              await fetch('/api/admin/dashboard-config', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({
+                  id: item.id,
+                  status: e.target.checked ? 'active' : 'offline',
+                }),
+              });
+            })
+          );
         });
       }
     </script>
