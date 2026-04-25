@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLTK // ADMIN CONSOLE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      header {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 2px solid #00ff00;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        margin: 5px 0 0 0;
+        font-size: 1.2rem;
+        color: #888;
+        text-shadow: none;
+      }
+
+      /* Static/Noise Overlay */
+      .static-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0.05;
+        background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      }
+
+      /* CRT Overlay Effect */
+      body::before {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 9998;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+        border-radius: 20px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: crt-flicker 0.15s infinite;
+      }
+
+      @keyframes crt-flicker {
+        0% {
+          opacity: 0.95;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.95;
+        }
+      }
+
+      /* Admin Panel Styles */
+      .admin-panel {
+        max-width: 1200px;
+        margin: 0 auto 30px auto;
+        padding: 20px;
+        border: 1px solid #555;
+        background-color: rgba(10, 10, 10, 0.9);
+        position: relative;
+        z-index: 6;
+      }
+
+      .admin-panel-title {
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #555;
+        padding-bottom: 5px;
+      }
+
+      .admin-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 10px;
+      }
+
+      .admin-control-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: rgba(20, 20, 20, 0.8);
+        border: 1px solid #333;
+      }
+
+      .admin-control-label {
+        font-size: 1.1rem;
+      }
+
+      /* Switch Styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ff003c;
+        transition: 0.3s;
+        border: 1px solid #555;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: '';
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+      }
+
+      input:checked + .slider {
+        background-color: #00ff00;
+      }
+
+      input:focus-visible + .slider {
+        outline: 2px solid white;
+        outline-offset: 2px;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .reset-btn {
+        margin-top: 20px;
+        background-color: transparent;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 5px 15px;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .reset-btn:hover,
+      .reset-btn:focus-visible {
+        background-color: #00ff00;
+        color: #000;
+      }
+
+      .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        border: 1px solid #00ff00;
+        text-align: center;
+        position: relative;
+        z-index: 6;
+      }
+
+      input[type='password'] {
+        background: #000;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 10px;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        width: 80%;
+      }
+
+      button.login-btn {
+        background: #00ff00;
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      #admin-content {
+        display: none;
+      }
+
+      .error-msg {
+        color: #ff003c;
+        margin-bottom: 10px;
+        display: none;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="static-overlay"></div>
+    <header>
+      <h1>MLTK Global Surveillance</h1>
+      <h2>Admin Console // Authorized Personnel Only</h2>
+    </header>
+
+    <div id="login-section" class="login-container">
+      <h3>AUTHENTICATION REQUIRED</h3>
+      <div id="error-msg" class="error-msg">ACCESS DENIED</div>
+      <form id="login-form">
+        <input type="password" id="admin-password" placeholder="ENTER ADMIN PASSWORD" required />
+        <br />
+        <button type="submit" class="login-btn">AUTHENTICATE</button>
+      </form>
+    </div>
+
+    <div id="admin-content">
+      <div class="admin-panel" style="margin-left: 40px; margin-right: 40px">
+        <h3 class="admin-panel-title">SYSTEM MAINTENANCE CONFIGURATION</h3>
+        <div class="admin-controls" id="maintenance-controls-container">
+          <!-- Maintenance Toggles injected here -->
+        </div>
+
+        <h3 class="admin-panel-title" style="margin-top: 30px">NETWORK NODE CONFIGURATION</h3>
+        <div class="admin-controls" id="dashboard-controls-container">
+          <!-- Dashboard Toggles injected here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let adminToken = '';
+
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pwd = document.getElementById('admin-password').value;
+        const res = await fetch('/api/admin/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwd }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          adminToken = data.token;
+          document.getElementById('login-section').style.display = 'none';
+          document.getElementById('admin-content').style.display = 'block';
+          loadAdminData();
+        } else {
+          document.getElementById('error-msg').style.display = 'block';
+        }
+      });
+
+      async function loadAdminData() {
+        const [dashRes, maintRes] = await Promise.all([
+          fetch('/api/admin/dashboard-config', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }),
+          fetch('/api/admin/maintenance-config', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }),
+        ]);
+
+        const dashboardConfig = await dashRes.json();
+        const maintenanceConfig = await maintRes.json();
+
+        renderMaintenancePanel(maintenanceConfig);
+        renderDashboardPanel(dashboardConfig);
+      }
+
+      function createToggle(label, isChecked, onChange) {
+        const controlItem = document.createElement('div');
+        controlItem.className = 'admin-control-item';
+
+        const labelEl = document.createElement('span');
+        labelEl.className = 'admin-control-label';
+        labelEl.textContent = label;
+
+        const switchLabel = document.createElement('label');
+        switchLabel.className = 'switch';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = isChecked;
+        checkbox.addEventListener('change', onChange);
+
+        const slider = document.createElement('span');
+        slider.className = 'slider';
+
+        switchLabel.appendChild(checkbox);
+        switchLabel.appendChild(slider);
+        controlItem.appendChild(labelEl);
+        controlItem.appendChild(switchLabel);
+        return controlItem;
+      }
+
+      function renderMaintenancePanel(config) {
+        const container = document.getElementById('maintenance-controls-container');
+        container.innerHTML = '';
+
+        const keys = [
+          { key: 'global', label: 'Global Maintenance' },
+          { key: 'studio', label: 'Studio Maintenance' },
+          { key: 'mltk', label: 'MLTK Maintenance' },
+        ];
+
+        keys.forEach(({ key, label }) => {
+          container.appendChild(
+            createToggle(label, config[key] === 'true' || config[key] === true, async (e) => {
+              await fetch('/api/admin/maintenance-config', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({ key, value: e.target.checked }),
+              });
+            })
+          );
+        });
+      }
+
+      function renderDashboardPanel(config) {
+        const container = document.getElementById('dashboard-controls-container');
+        container.innerHTML = '';
+
+        config.forEach((item) => {
+          container.appendChild(
+            createToggle(item.title, item.status === 'active', async (e) => {
+              await fetch('/api/admin/dashboard-config', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({
+                  id: item.id,
+                  status: e.target.checked ? 'active' : 'offline',
+                }),
+              });
+            })
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
