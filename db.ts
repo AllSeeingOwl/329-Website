@@ -16,20 +16,118 @@ export interface MaintenanceConfig {
 }
 
 const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
-  { id: 'DOC: 001-VVL', title: 'Virtue Village Layouts', status: 'offline', link: 'VIRTUE_VILLAGE_LAYOUTS.pdf', type: 'DOWNLOAD', isDownload: true },
-  { id: 'DOC: 002-GD', title: 'Gretchen Dossier', status: 'offline', link: 'GRETCHEN_DOSSIER.txt', type: 'DOWNLOAD', isDownload: true },
-  { id: 'ARCHIVE: NOVA', title: 'NOVA Classified Archive', status: 'active', link: 'nova-classified-archive.html', type: 'ENTER', isDownload: false },
-  { id: 'PORTAL: CS', title: 'Customer Service Portal', status: 'active', link: 'mltk-customer-service.html', type: 'ENTER', isDownload: false },
-  { id: 'DOC: TETROMINO', title: 'Project Tetromino Initialization', status: 'active', link: 'mltk-classified-document.html', type: 'CLASSIFIED: EYES ONLY', isDownload: false },
-  { id: 'PORTAL: BOOT', title: 'MLTK Boot Sequence', status: 'active', link: 'mltk-boot-sequence.html', type: 'ENTER', isDownload: false },
-  { id: 'PORTAL: LEGAL', title: 'MLTK Privacy Policy & Terms', status: 'active', link: 'mltk-privacy-policy.html', type: 'ENTER', isDownload: false },
-  { id: 'PORTAL: TIMER', title: 'MLTK Timer', status: 'active', link: 'mltk-timer.html', type: 'ENTER', isDownload: false },
-  { id: 'ARCHIVE: PARENT', title: 'NOVA Parent Directory', status: 'offline', link: 'nova-parent-directory.html', type: 'ENTER', isDownload: false },
-  { id: 'PORTAL: RADIO', title: 'Ollies Radio Scanner', status: 'active', link: 'ollies-radio-scanner.html', type: 'ENTER', isDownload: false },
-  { id: 'PORTAL: DROP', title: 'Secure Data Drop Page', status: 'active', link: 'secure-data-drop-page.html', type: 'ENTER', isDownload: false },
-  { id: 'DOC: 003-SGM', title: 'Seedless Grapes Motel Blueprints', status: 'offline', link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip', type: 'DOWNLOAD', isDownload: true },
-  { id: 'DOC: 004-UP', title: 'Uncut Puzzle', status: 'offline', link: 'UNCUT_PUZZLE.pdf', type: 'DOWNLOAD', isDownload: true },
-  { id: 'PORTAL: 5F-WHEEL', title: 'Five Finger Selection Wheel', status: 'active', link: 'mltk-five-finger-wheel.html', type: 'ENTER', isDownload: false },
+  {
+    id: 'DOC: 001-VVL',
+    title: 'Virtue Village Layouts',
+    status: 'offline',
+    link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
+    type: 'DOWNLOAD',
+    isDownload: true,
+  },
+  {
+    id: 'DOC: 002-GD',
+    title: 'Gretchen Dossier',
+    status: 'offline',
+    link: 'GRETCHEN_DOSSIER.txt',
+    type: 'DOWNLOAD',
+    isDownload: true,
+  },
+  {
+    id: 'ARCHIVE: NOVA',
+    title: 'NOVA Classified Archive',
+    status: 'active',
+    link: 'nova-classified-archive.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: CS',
+    title: 'Customer Service Portal',
+    status: 'active',
+    link: 'mltk-customer-service.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'DOC: TETROMINO',
+    title: 'Project Tetromino Initialization',
+    status: 'active',
+    link: 'mltk-classified-document.html',
+    type: 'CLASSIFIED: EYES ONLY',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: BOOT',
+    title: 'MLTK Boot Sequence',
+    status: 'active',
+    link: 'mltk-boot-sequence.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: LEGAL',
+    title: 'MLTK Privacy Policy & Terms',
+    status: 'active',
+    link: 'mltk-privacy-policy.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: TIMER',
+    title: 'MLTK Timer',
+    status: 'active',
+    link: 'mltk-timer.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'ARCHIVE: PARENT',
+    title: 'NOVA Parent Directory',
+    status: 'offline',
+    link: 'nova-parent-directory.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: RADIO',
+    title: 'Ollies Radio Scanner',
+    status: 'active',
+    link: 'ollies-radio-scanner.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'PORTAL: DROP',
+    title: 'Secure Data Drop Page',
+    status: 'active',
+    link: 'secure-data-drop-page.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
+    id: 'DOC: 003-SGM',
+    title: 'Seedless Grapes Motel Blueprints',
+    status: 'offline',
+    link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
+    type: 'DOWNLOAD',
+    isDownload: true,
+  },
+  {
+    id: 'DOC: 004-UP',
+    title: 'Uncut Puzzle',
+    status: 'offline',
+    link: 'UNCUT_PUZZLE.pdf',
+    type: 'DOWNLOAD',
+    isDownload: true,
+  },
+  {
+    id: 'PORTAL: 5F-WHEEL',
+    title: 'Five Finger Selection Wheel',
+    status: 'active',
+    link: 'mltk-five-finger-wheel.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
 ];
 
 const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
@@ -41,7 +139,7 @@ let pool: Pool | null = null;
 if (connectionString) {
   pool = new Pool({
     connectionString,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
   });
 }
 
@@ -97,15 +195,18 @@ export async function initDb() {
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
   if (pool) {
     const res = await pool.query('SELECT key, value FROM config');
-    return res.rows.reduce((acc, row) => {
-      acc[row.key] = row.value;
-      return acc;
-    }, {} as Record<string, string>);
+    return res.rows.reduce(
+      (acc, row) => {
+        acc[row.key] = row.value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
   }
   return {
     global: String(inMemoryMaintenanceConfig.global),
     studio: String(inMemoryMaintenanceConfig.studio),
-    mltk: String(inMemoryMaintenanceConfig.mltk)
+    mltk: String(inMemoryMaintenanceConfig.mltk),
   };
 }
 
@@ -121,7 +222,9 @@ export async function updateMaintenanceConfig(key: string, value: boolean) {
 
 export async function getDashboardConfig(): Promise<DashboardConfig[]> {
   if (pool) {
-    const res = await pool.query('SELECT id, title, status, link, type, "isDownload" as "isDownload" FROM dashboard');
+    const res = await pool.query(
+      'SELECT id, title, status, link, type, "isDownload" as "isDownload" FROM dashboard'
+    );
     return res.rows;
   }
   return inMemoryDashboardConfig;
@@ -131,7 +234,7 @@ export async function updateDashboardConfig(id: string, status: string) {
   if (pool) {
     await pool.query('UPDATE dashboard SET status = $1 WHERE id = $2', [status, id]);
   } else {
-    const item = inMemoryDashboardConfig.find(d => d.id === id);
+    const item = inMemoryDashboardConfig.find((d) => d.id === id);
     if (item) {
       item.status = status;
     }

@@ -1,7 +1,13 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import crypto from 'crypto';
-import { initDb, getMaintenanceConfig, updateMaintenanceConfig, getDashboardConfig, updateDashboardConfig } from './db';
+import {
+  initDb,
+  getMaintenanceConfig,
+  updateMaintenanceConfig,
+  getDashboardConfig,
+  updateDashboardConfig,
+} from './db';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,15 +51,20 @@ let MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
 
 // Initialize DB and load maintenance state
-initDb().then(async () => {
-  const config = await getMaintenanceConfig();
-  // Only override if not set by environment variables (useful for tests)
-  if (config['global'] && process.env.MAINTENANCE_MODE === undefined) MAINTENANCE_MODE = config['global'] === 'true';
-  if (config['studio'] && process.env.STUDIO_MAINTENANCE_MODE === undefined) STUDIO_MAINTENANCE_MODE = config['studio'] === 'true';
-  if (config['mltk'] && process.env.MLTK_MAINTENANCE_MODE === undefined) MLTK_MAINTENANCE_MODE = config['mltk'] === 'true';
-}).catch((err) => {
-  console.error("Failed to initialize database", err);
-});
+initDb()
+  .then(async () => {
+    const config = await getMaintenanceConfig();
+    // Only override if not set by environment variables (useful for tests)
+    if (config['global'] && process.env.MAINTENANCE_MODE === undefined)
+      MAINTENANCE_MODE = config['global'] === 'true';
+    if (config['studio'] && process.env.STUDIO_MAINTENANCE_MODE === undefined)
+      STUDIO_MAINTENANCE_MODE = config['studio'] === 'true';
+    if (config['mltk'] && process.env.MLTK_MAINTENANCE_MODE === undefined)
+      MLTK_MAINTENANCE_MODE = config['mltk'] === 'true';
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database', err);
+  });
 
 // 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
 // Placed at the very top of the stack to bypass all routing, file serving, and parsing.
@@ -154,7 +165,10 @@ app.post('/api/admin/verify', (req: Request, res: Response) => {
   const { password } = req.body;
   if (typeof password === 'string') {
     const pwdBuffer = Buffer.from(password);
-    if (pwdBuffer.length === adminAuthBuffer.length && crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)) {
+    if (
+      pwdBuffer.length === adminAuthBuffer.length &&
+      crypto.timingSafeEqual(pwdBuffer, adminAuthBuffer)
+    ) {
       activeAdminToken = generateAdminToken();
       res.json({ success: true, token: activeAdminToken });
       return;
