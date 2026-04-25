@@ -208,6 +208,112 @@
         }
       }
 
+      /* Admin Panel Styles */
+      .admin-panel {
+        max-width: 1200px;
+        margin: 0 auto 30px auto;
+        padding: 20px;
+        border: 1px solid #555;
+        background-color: rgba(10, 10, 10, 0.9);
+        position: relative;
+        z-index: 6;
+      }
+
+      .admin-panel-title {
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #555;
+        padding-bottom: 5px;
+      }
+
+      .admin-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 10px;
+      }
+
+      .admin-control-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: rgba(20, 20, 20, 0.8);
+        border: 1px solid #333;
+      }
+
+      .admin-control-label {
+        font-size: 1.1rem;
+      }
+
+      /* Switch Styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ff003c; /* Offline */
+        transition: 0.3s;
+        border: 1px solid #555;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: '';
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+      }
+
+      input:checked + .slider {
+        background-color: #00ff00; /* Active */
+      }
+
+      input:focus-visible + .slider {
+        outline: 2px solid white;
+        outline-offset: 2px;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .reset-btn {
+        margin-top: 20px;
+        background-color: transparent;
+        color: #00ff00;
+        border: 1px solid #00ff00;
+        padding: 5px 15px;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .reset-btn:hover,
+      .reset-btn:focus-visible {
+        background-color: #00ff00;
+        color: #000;
+      }
+
       @media (max-width: 600px) {
         .dashboard {
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -256,205 +362,245 @@
       </div>
     </header>
 
-    <div class="dashboard">
-      <!-- Document 1: Virtue Village Layouts -->
-      <a
-        href="VIRTUE_VILLAGE_LAYOUTS.pdf"
-        download
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">DOC: 001-VVL</span>
-        <div class="card-title">Virtue Village Layouts</div>
-        <div class="card-status">[DOWNLOAD]</div>
-      </a>
-
-      <!-- Document 2: Gretchen Dossier -->
-      <a
-        href="GRETCHEN_DOSSIER.txt"
-        download
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">DOC: 002-GD</span>
-        <div class="card-title">Gretchen Dossier</div>
-        <div class="card-status">[DOWNLOAD]</div>
-      </a>
-
-      <!-- Portal 1: NOVA Classified Archive -->
-      <a
-        href="nova-classified-archive.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">ARCHIVE: NOVA</span>
-        <div class="card-title">NOVA Classified Archive</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 2: Customer Service -->
-      <a
-        href="mltk-customer-service.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: CS</span>
-        <div class="card-title">Customer Service Portal</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 3: Classified Document -->
-      <a
-        href="mltk-classified-document.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">DOC: TETROMINO</span>
-        <div class="card-title">Project Tetromino Initialization</div>
-        <div class="card-status">[CLASSIFIED: EYES ONLY]</div>
-      </a>
-
-      <!-- Portal 4: MLTK Boot Sequence -->
-      <a
-        href="mltk-boot-sequence.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: BOOT</span>
-        <div class="card-title">MLTK Boot Sequence</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 5: MLTK Privacy Policy -->
-      <a
-        href="mltk-privacy-policy.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: PRIVACY</span>
-        <div class="card-title">MLTK Privacy Policy</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 6: MLTK Terms of Service -->
-      <a
-        href="mltk-terms-of-service.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: TOS</span>
-        <div class="card-title">MLTK Terms of Service</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 7: MLTK Timer -->
-      <a
-        href="mltk-timer.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: TIMER</span>
-        <div class="card-title">MLTK Timer</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 8: NOVA Parent Directory -->
-      <a
-        href="nova-parent-directory.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">ARCHIVE: PARENT</span>
-        <div class="card-title">NOVA Parent Directory</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 9: Ollies Radio Scanner -->
-      <a
-        href="ollies-radio-scanner.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: RADIO</span>
-        <div class="card-title">Ollies Radio Scanner</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Portal 10: Secure Data Drop Page -->
-      <a
-        href="secure-data-drop-page.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: DROP</span>
-        <div class="card-title">Secure Data Drop Page</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
-
-      <!-- Document 3: Seedless Grapes Motel Blueprints -->
-      <a
-        href="SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip"
-        download
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">DOC: 003-SGM</span>
-        <div class="card-title">Seedless Grapes Motel Blueprints</div>
-        <div class="card-status">[DOWNLOAD]</div>
-      </a>
-
-      <!-- Document 4: Uncut Puzzle -->
-      <a
-        href="UNCUT_PUZZLE.pdf"
-        download
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">DOC: 004-UP</span>
-        <div class="card-title">Uncut Puzzle</div>
-        <div class="card-status">[DOWNLOAD]</div>
-      </a>
-
-      <!-- Portal 11: Five Finger Wheel -->
-      <a
-        href="mltk-five-finger-wheel.html"
-        class="card active"
-        style="text-decoration: none; outline: none; display: flex"
-        tabindex="0"
-        role="link"
-      >
-        <span class="card-id">PORTAL: 5F-WHEEL</span>
-        <div class="card-title">Five Finger Selection Wheel</div>
-        <div class="card-status">[ENTER]</div>
-      </a>
+    <!-- Admin Panel to toggle items -->
+    <div class="admin-panel" style="margin-left: 40px; margin-right: 40px">
+      <h3 class="admin-panel-title">NETWORK NODE CONFIGURATION (ADMIN)</h3>
+      <div class="admin-controls" id="admin-controls-container">
+        <!-- Toggles injected here -->
+      </div>
+      <button class="reset-btn" id="reset-config-btn">RESET TO DEFAULTS</button>
     </div>
+
+    <div class="dashboard" id="dashboard-container">
+      <!-- Cards will be dynamically injected here via JS -->
+    </div>
+
+    <script>
+      // Initial Configuration for Dashboard Items
+      // You can modify this directly or use the Admin panel to toggle items
+      const DEFAULT_DASHBOARD_CONFIG = [
+        {
+          id: 'DOC: 001-VVL',
+          title: 'Virtue Village Layouts',
+          status: 'offline', // Default to offline as it is a placeholder
+          link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
+          type: 'DOWNLOAD',
+          isDownload: true,
+        },
+        {
+          id: 'DOC: 002-GD',
+          title: 'Gretchen Dossier',
+          status: 'offline', // Default to offline as it is a placeholder
+          link: 'GRETCHEN_DOSSIER.txt',
+          type: 'DOWNLOAD',
+          isDownload: true,
+        },
+        {
+          id: 'ARCHIVE: NOVA',
+          title: 'NOVA Classified Archive',
+          status: 'active',
+          link: 'nova-classified-archive.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: CS',
+          title: 'Customer Service Portal',
+          status: 'active',
+          link: 'mltk-customer-service.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'DOC: TETROMINO',
+          title: 'Project Tetromino Initialization',
+          status: 'active',
+          link: 'mltk-classified-document.html',
+          type: 'CLASSIFIED: EYES ONLY',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: BOOT',
+          title: 'MLTK Boot Sequence',
+          status: 'active',
+          link: 'mltk-boot-sequence.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: LEGAL',
+          title: 'MLTK Privacy Policy & Terms',
+          status: 'active',
+          link: 'mltk-privacy-policy.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: TIMER',
+          title: 'MLTK Timer',
+          status: 'active',
+          link: 'mltk-timer.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'ARCHIVE: PARENT',
+          title: 'NOVA Parent Directory',
+          status: 'offline', // Default to offline as it is a placeholder
+          link: 'nova-parent-directory.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: RADIO',
+          title: 'Ollies Radio Scanner',
+          status: 'active',
+          link: 'ollies-radio-scanner.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'PORTAL: DROP',
+          title: 'Secure Data Drop Page',
+          status: 'active',
+          link: 'secure-data-drop-page.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+        {
+          id: 'DOC: 003-SGM',
+          title: 'Seedless Grapes Motel Blueprints',
+          status: 'offline', // Default to offline as it is a placeholder
+          link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
+          type: 'DOWNLOAD',
+          isDownload: true,
+        },
+        {
+          id: 'DOC: 004-UP',
+          title: 'Uncut Puzzle',
+          status: 'offline', // Default to offline as it is a placeholder
+          link: 'UNCUT_PUZZLE.pdf',
+          type: 'DOWNLOAD',
+          isDownload: true,
+        },
+        {
+          id: 'PORTAL: 5F-WHEEL',
+          title: 'Five Finger Selection Wheel',
+          status: 'active',
+          link: 'mltk-five-finger-wheel.html',
+          type: 'ENTER',
+          isDownload: false,
+        },
+      ];
+
+      // Load config from localStorage or use default
+      let dashboardConfig =
+        JSON.parse(localStorage.getItem('mltk_dashboard_config')) || DEFAULT_DASHBOARD_CONFIG;
+
+      // Save config to localStorage
+      function saveConfig() {
+        localStorage.setItem('mltk_dashboard_config', JSON.stringify(dashboardConfig));
+      }
+
+      // Function to render the admin panel toggles
+      function renderAdminPanel() {
+        const container = document.getElementById('admin-controls-container');
+        container.innerHTML = '';
+
+        dashboardConfig.forEach((item, index) => {
+          const controlItem = document.createElement('div');
+          controlItem.className = 'admin-control-item';
+
+          const label = document.createElement('span');
+          label.className = 'admin-control-label';
+          label.textContent = item.title;
+
+          const switchLabel = document.createElement('label');
+          switchLabel.className = 'switch';
+          switchLabel.title = `Toggle ${item.title}`;
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = item.status === 'active';
+          checkbox.setAttribute('aria-label', `Toggle status for ${item.title}`);
+
+          // Event listener to toggle status
+          checkbox.addEventListener('change', (e) => {
+            dashboardConfig[index].status = e.target.checked ? 'active' : 'offline';
+            saveConfig();
+            renderDashboard();
+          });
+
+          const slider = document.createElement('span');
+          slider.className = 'slider';
+
+          switchLabel.appendChild(checkbox);
+          switchLabel.appendChild(slider);
+
+          controlItem.appendChild(label);
+          controlItem.appendChild(switchLabel);
+
+          container.appendChild(controlItem);
+        });
+      }
+
+      // Function to render the dashboard based on the configuration
+      function renderDashboard() {
+        const container = document.getElementById('dashboard-container');
+        container.innerHTML = ''; // Clear current contents
+
+        dashboardConfig.forEach((item) => {
+          const isOffline = item.status === 'offline';
+          const cardEl = isOffline ? document.createElement('div') : document.createElement('a');
+
+          cardEl.className = `card ${isOffline ? 'offline' : 'active'}`;
+          cardEl.style.textDecoration = 'none';
+          cardEl.style.outline = 'none';
+          cardEl.style.display = 'flex';
+
+          if (!isOffline) {
+            cardEl.href = item.link;
+            cardEl.tabIndex = 0;
+            cardEl.role = 'link';
+            if (item.isDownload) {
+              cardEl.download = '';
+            }
+          }
+
+          const idEl = document.createElement('span');
+          idEl.className = 'card-id';
+          idEl.textContent = item.id;
+
+          const titleEl = document.createElement('div');
+          titleEl.className = 'card-title';
+          titleEl.textContent = item.title;
+
+          const statusEl = document.createElement('div');
+          statusEl.className = 'card-status';
+          statusEl.textContent = isOffline ? '[OFFLINE]' : `[${item.type}]`;
+
+          cardEl.appendChild(idEl);
+          cardEl.appendChild(titleEl);
+          cardEl.appendChild(statusEl);
+
+          container.appendChild(cardEl);
+        });
+      }
+
+      // Reset config
+      document.getElementById('reset-config-btn').addEventListener('click', () => {
+        // Deep copy default config
+        dashboardConfig = JSON.parse(JSON.stringify(DEFAULT_DASHBOARD_CONFIG));
+        saveConfig();
+        renderAdminPanel();
+        renderDashboard();
+      });
+
+      // Initial render
+      document.addEventListener('DOMContentLoaded', () => {
+        renderAdminPanel();
+        renderDashboard();
+      });
+    </script>
   </body>
 </html>

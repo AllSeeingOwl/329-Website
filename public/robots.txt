@@ -5,7 +5,6 @@ Disallow: /ollies-radio-scanner.html
 Disallow: /nova-classified-archive.html
 Disallow: /in-universe-404-error.html
 Disallow: /mltk-privacy-policy.html
-Disallow: /mltk-terms-of-service.html
 Disallow: /mltk-customer-service.html
 Disallow: /velvet-rope-landing-page.html
 Disallow: /api/

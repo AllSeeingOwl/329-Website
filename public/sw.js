@@ -20,7 +20,6 @@ const urlsToCache = [
   '/mltk-login-gate.html',
   '/mltk-privacy-policy.html',
   '/mltk-surveillance-dashboard.html',
-  '/mltk-terms-of-service.html',
   '/mltk-timer.html',
   '/nova-classified-archive.html',
   '/nova-parent-directory.html',

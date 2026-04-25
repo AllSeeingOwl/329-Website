@@ -76,7 +76,6 @@ const mltkFiles = new Set([
   '/mltk-login-gate.html',
   '/mltk-surveillance-dashboard.html',
   '/mltk-privacy-policy.html',
-  '/mltk-terms-of-service.html',
   '/mltk-boot-sequence.html',
   '/mltk-customer-service.html',
   '/mltk-classified-document.html',
