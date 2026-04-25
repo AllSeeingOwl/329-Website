@@ -82,3 +82,8 @@
 
 **Learning:** Inline event handlers (like `onclick` or `onsubmit`) that repeatedly call `document.getElementById` or `this.querySelector` on every interaction cause unnecessary DOM traversal overhead.
 **Action:** Use a lazy-initialization pattern directly on the element object (e.g., `this._nav = this._nav || document.getElementById("main-nav")`) to cache the resolved DOM node. This ensures the query is only performed once and reused on subsequent interactions, improving performance.
+
+## 2026-03-25 - Prevent Timer Drift with requestAnimationFrame
+
+**Learning:** When refactoring low-frequency `setInterval` loops (e.g., 1000ms countdown timers) to `requestAnimationFrame` for API consistency, naive implementations (`lastTime = currentTime`) can cause the timer to drift over time because animation frames rarely hit exactly on the millisecond mark.
+**Action:** Use a modulo calculation (`lastTime = currentTime - (deltaTime % 1000)`) to carry over the fractional remainder of time. This ensures the timer remains accurate across long intervals.

@@ -269,24 +269,39 @@
       let timeLeft = 60; // 60 seconds
       const timerDisplay = document.getElementById('ice-timer');
 
-      const countdown = setInterval(() => {
-        timeLeft--;
-        // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows on timer tick
-        timerDisplay.textContent = `ICE PROTOCOL IN: ${timeLeft}s`;
+      let lastTime = performance.now();
+      let timerAnimationId;
 
-        if (timeLeft <= 10) {
-          // Panic mode
-          timerDisplay.style.backgroundColor = '#ff003c';
-          timerDisplay.style.color = '#fff';
-          document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
+      function updateTimer(currentTime) {
+        if (!lastTime) lastTime = currentTime;
+        const deltaTime = currentTime - lastTime;
+
+        if (deltaTime >= 1000) {
+          timeLeft--;
+          lastTime = currentTime - (deltaTime % 1000); // Keep remainder for accurate timing
+
+          // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows on timer tick
+          timerDisplay.textContent = `ICE PROTOCOL IN: ${timeLeft}s`;
+
+          if (timeLeft <= 10) {
+            // Panic mode
+            timerDisplay.style.backgroundColor = '#ff003c';
+            timerDisplay.style.color = '#fff';
+            document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
+          }
+
+          if (timeLeft <= 0) {
+            cancelAnimationFrame(timerAnimationId);
+            // When timer hits zero, kick them to the 404 dead end!
+            window.location.href = '404.html';
+            return;
+          }
         }
 
-        if (timeLeft <= 0) {
-          clearInterval(countdown);
-          // When timer hits zero, kick them to the 404 dead end!
-          window.location.href = '404.html';
-        }
-      }, 1000);
+        timerAnimationId = requestAnimationFrame(updateTimer);
+      }
+
+      timerAnimationId = requestAnimationFrame(updateTimer);
 
       const redactedElements = document.querySelectorAll('.redacted');
 
