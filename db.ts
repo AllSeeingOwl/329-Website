@@ -1,4 +1,10 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+// Initialize Upstash Redis client with the environment variables provided by the Vercel KV integration
+const kv = new Redis({
+  url: process.env.KV_REST_API_URL || '',
+  token: process.env.KV_REST_API_TOKEN || '',
+});
 
 export interface DashboardConfig {
   id: string;
@@ -137,7 +143,7 @@ const isKvAvailable = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API
 
 export async function initDb() {
   if (isKvAvailable) {
-    console.log('Vercel KV detected. Ensuring default state exists...');
+    console.log('Upstash Redis KV detected. Ensuring default state exists...');
     const hasMaintenance = await kv.exists('config:maintenance');
     if (!hasMaintenance) {
       await kv.hset('config:maintenance', { global: 'false', studio: 'false', mltk: 'false' });
