@@ -42,7 +42,7 @@ importers:
         specifier: ^8.59.0
         version: 8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
       '@typescript-eslint/parser':
-        specifier: ^8.58.2
+        specifier: ^8.59.0
         version: 8.59.0(eslint@10.2.1)(typescript@6.0.3)
       cypress:
         specifier: ^15.14.0
@@ -90,7 +90,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       typescript-eslint:
-        specifier: ^8.58.2
+        specifier: ^8.59.0
         version: 8.59.0(eslint@10.2.1)(typescript@6.0.3)
       vite:
         specifier: ^8.0.10
