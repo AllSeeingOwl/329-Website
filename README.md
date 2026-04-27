@@ -1,3 +1,7 @@
+**[Technical Documentation (README)](README.md)** | **[What is this? (Layman's Guide)](WHAT_IS_THIS.md)**
+
+---
+
 # 3minsto9 ARG / Web Experience
 
 This repository contains the web assets and supporting infrastructure for the **"3minsto9"** Alternate Reality Game (ARG) and immersive media project.
