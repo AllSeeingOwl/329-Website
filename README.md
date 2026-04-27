@@ -17,6 +17,7 @@ The project relies on a Node.js Express backend (`server.ts`) that serves static
 - **`public/`**: Contains the web assets, including `.html` pages, CSS, and some inline JavaScript files.
   - **JavaScript Utilities**: Extracted business logic and DOM interactions are stored as standard `.js` files within `public/`. They use a UMD-like pattern (`if (typeof module !== 'undefined' && module.exports)`) to allow execution in both the browser and Node.js environments.
 - **`server.ts`**: An Express server configured to serve static files from the `public/` directory.
+- **Persistent State**: The application utilizes Upstash Redis (`@upstash/redis`) for persistent storage (e.g., dashboard configuration) replacing previous SQLite/Vercel KV implementations. It includes an in-memory fallback for local development.
 - **Root Directory**: Contains configuration files (Vite, Webpack, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
 
 ## Development
@@ -35,6 +36,8 @@ The local Express server (`server.ts`) relies on the following environment varia
 
 - **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set.
 - **`MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
+- **`KV_REST_API_URL`**: The REST API URL for the Upstash Redis database.
+- **`KV_REST_API_TOKEN`**: The authentication token for the Upstash Redis database.
 
 ### Available Scripts
 
@@ -49,10 +52,12 @@ The local Express server (`server.ts`) relies on the following environment varia
 - **`pnpm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
 - **`pnpm run build:vite`** / **`pnpm run build:webpack`**: Executes builds if needed.
 
-## Testing
+## Testing & CI/CD
 
 - **Jest**: Unit tests are located in the repository root alongside the scripts they test. Tests requiring DOM interaction use `jest-environment-jsdom` and include the `/** @jest-environment jsdom */` pragma.
-- **End-to-End**: Playwright and Cypress are used for robust E2E verification.
+- **End-to-End**: Playwright and Cypress are used for robust E2E verification. Playwright E2E tests (`pnpm run test:e2e:playwright`) spin up the local server with the required `AUTH_PASSWORD=test` environment variable.
+- **CI/CD**: The repository exclusively uses standard GitHub-hosted runners (e.g., `ubuntu-latest`) for all CI/CD workflows to ensure low maintenance and secure ephemeral environments. Self-hosted GitHub Actions runners are explicitly considered unnecessary.
+- **Automated Housekeeping**: A suite of automated GitHub Actions handles weekly unused code and dependency checks (`knip`), weekly broken link checking (`lychee-action`), weekly Dependabot updates, weekly repository cleanup for stale branches and issues, and on-push automated formatting and lint fixing (Prettier and ESLint).
 
 ## Project Management
 
@@ -67,6 +72,8 @@ The repository includes an ARG-specific GitHub Project management setup to track
 The project is deployed and hosted on **Vercel**, accessible via the custom domain `3minsto9.co.uk` and Vercel-provided subdomains (e.g., `329-website.vercel.app`).
 
 - The deployment utilizes the Node.js Express application (`server.ts`).
+  - **Security**: The server enforces strict security headers including a Content-Security-Policy with `upgrade-insecure-requests` and `X-XSS-Protection`. It also implements a 100kb payload limit to prevent Denial-of-Service attacks.
+  - **Proxy Configuration**: `app.set('trust proxy', 1)` is configured to correctly extract the client IP from the `X-Forwarded-For` header on Vercel deployments, preventing proxy IPs from triggering global rate limits.
 - The Express server uses `process.env.PORT` to allow Vercel to dynamically assign the port (falling back to 3000 locally).
-- Critical environment variables like `AUTH_PASSWORD` and `MAINTENANCE_MODE` must be configured in the Vercel project settings.
+- Critical environment variables like `AUTH_PASSWORD`, `MAINTENANCE_MODE`, and the `KV_REST_API_*` variables must be configured in the Vercel project settings.
 - Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `surface-home-page.html`) to avoid 404 errors on subpaths.
