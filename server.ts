@@ -181,9 +181,25 @@ const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
-    if (token === activeAdminToken && activeAdminToken !== null) {
-      next();
-      return;
+
+    if (activeAdminToken !== null) {
+      const tokenBuffer = Buffer.from(token);
+      const activeTokenBuffer = Buffer.from(activeAdminToken);
+
+      if (tokenBuffer.length === activeTokenBuffer.length) {
+        if (
+          crypto.timingSafeEqual(new Uint8Array(tokenBuffer), new Uint8Array(activeTokenBuffer))
+        ) {
+          next();
+          return;
+        }
+      } else {
+        // 🛡️ Sentinel: Prevent token length leakage via timing attacks by performing a dummy comparison.
+        crypto.timingSafeEqual(
+          new Uint8Array(activeTokenBuffer),
+          new Uint8Array(activeTokenBuffer)
+        );
+      }
     }
   }
   res.status(401).json({ error: 'Unauthorized' });
