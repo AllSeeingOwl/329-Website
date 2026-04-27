@@ -195,7 +195,10 @@ const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
         }
       } else {
         // 🛡️ Sentinel: Prevent token length leakage via timing attacks by performing a dummy comparison.
-        crypto.timingSafeEqual(new Uint8Array(activeTokenBuffer), new Uint8Array(activeTokenBuffer));
+        crypto.timingSafeEqual(
+          new Uint8Array(activeTokenBuffer),
+          new Uint8Array(activeTokenBuffer)
+        );
       }
     }
   }
