@@ -200,13 +200,4 @@ describe('Server Tests', () => {
     expect(response.headers['content-type']).toContain('text/plain');
     expect(response.text).toContain('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
   });
-
-
-      });
-
-
-
-
-
-
 });
