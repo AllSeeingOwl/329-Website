@@ -330,6 +330,11 @@ app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/config/storefront', (req: Request, res: Response) => {
+  const url = process.env.STOREFRONT_URL || '#';
+  res.json({ url });
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // -----------------------------------------------------------------------------

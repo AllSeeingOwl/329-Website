@@ -596,10 +596,6 @@
           <div class="nav-item-wrapper">
             <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
-
-          <div class="nav-item-wrapper">
-            <a href="cart.html" class="nav-link">Cart</a>
-          </div>
         </nav>
       </div>
     </header>
@@ -613,7 +609,13 @@
           stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
         </p>
         <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
-        <a href="procure-volume-1.html" class="btn-primary">Procure Volume 1</a>
+        <a
+          href="#"
+          class="btn-primary"
+          id="storefront-link"
+          style="pointer-events: none; opacity: 0.5"
+          >Loading Store...</a
+        >
       </div>
       <picture class="responsive-picture hero-image">
         <source srcset="images/placeholder.webp" type="image/webp" />
@@ -742,5 +744,31 @@
         </p>
       </div>
     </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const storeLink = document.getElementById('storefront-link');
+        if (!storeLink) return;
+
+        try {
+          const res = await fetch('/api/config/storefront');
+          const data = await res.json();
+
+          if (data.url && data.url !== '#') {
+            storeLink.href = data.url;
+            storeLink.textContent = 'Procure Volume 1';
+            storeLink.style.pointerEvents = 'auto';
+            storeLink.style.opacity = '1';
+          } else {
+            storeLink.href = '#';
+            storeLink.textContent = 'Storefront Offline';
+            // Leave it visually disabled
+          }
+        } catch (e) {
+          console.error('Failed to load storefront config:', e);
+          storeLink.href = '#';
+          storeLink.textContent = 'Storefront Offline';
+        }
+      });
+    </script>
   </body>
 </html>
