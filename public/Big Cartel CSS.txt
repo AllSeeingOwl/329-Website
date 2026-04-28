@@ -42,6 +42,11 @@ a:hover, .active a {
     text-shadow: 0 0 8px #ff003c !important;
 }
 
+a:focus-visible {
+    outline: 2px dashed #00ff00 !important;
+    outline-offset: 4px !important;
+}
+
 button, .button, input[type="submit"], .add-to-cart {
     background-color: #ff003c !important;
     color: #000 !important;
@@ -63,6 +68,11 @@ button:hover, .button:hover, input[type="submit"]:hover, .add-to-cart:hover {
     color: #ff003c !important;
     box-shadow: 0px 0px 15px #ff003c !important;
     transform: translate(2px, 2px) !important;
+}
+
+button:focus-visible, .button:focus-visible, input[type="submit"]:focus-visible, .add-to-cart:focus-visible {
+    outline: 2px dashed #ff003c !important;
+    outline-offset: 4px !important;
 }
 
 .product-list-item, .product-list-thumb {
