@@ -526,10 +526,6 @@
           <div class="nav-item-wrapper">
             <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
-
-          <div class="nav-item-wrapper">
-            <a href="cart.html" class="nav-link">Cart</a>
-          </div>
         </nav>
       </div>
     </header>
@@ -565,12 +561,12 @@
               Unofficially corrected by Team Rabbit.
             </p>
             <a
-              href="cart.html"
-              class="btn-primary"
+              href="#"
+              class="btn-primary store-btn"
               aria-label="Acquire Unknown Field Guide (Vol. 0)"
-              style="text-align: center"
+              style="text-align: center; pointer-events: none; opacity: 0.5"
             >
-              Acquire
+              Loading Store...
             </a>
           </div>
         </article>
@@ -599,12 +595,12 @@
               product copy is provided.
             </p>
             <a
-              href="cart.html"
-              class="btn-primary"
+              href="#"
+              class="btn-primary store-btn"
               aria-label="Acquire Product Title Placeholder 2"
-              style="text-align: center"
+              style="text-align: center; pointer-events: none; opacity: 0.5"
             >
-              Acquire
+              Loading Store...
             </a>
           </div>
         </article>
@@ -633,12 +629,12 @@
               product copy is provided.
             </p>
             <a
-              href="cart.html"
-              class="btn-primary"
+              href="#"
+              class="btn-primary store-btn"
               aria-label="Acquire Product Title Placeholder 3"
-              style="text-align: center"
+              style="text-align: center; pointer-events: none; opacity: 0.5"
             >
-              Acquire
+              Loading Store...
             </a>
           </div>
         </article>
@@ -667,12 +663,12 @@
               product copy is provided.
             </p>
             <a
-              href="cart.html"
-              class="btn-primary"
+              href="#"
+              class="btn-primary store-btn"
               aria-label="Acquire Product Title Placeholder 4"
-              style="text-align: center"
+              style="text-align: center; pointer-events: none; opacity: 0.5"
             >
-              Acquire
+              Loading Store...
             </a>
           </div>
         </article>
@@ -684,5 +680,35 @@
         <p>&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.</p>
       </div>
     </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const storeBtns = document.querySelectorAll('.store-btn');
+        if (storeBtns.length === 0) return;
+
+        try {
+          const res = await fetch('/api/config/storefront');
+          const data = await res.json();
+
+          storeBtns.forEach((btn) => {
+            if (data.url && data.url !== '#') {
+              btn.href = data.url;
+              btn.textContent = 'Acquire';
+              btn.style.pointerEvents = 'auto';
+              btn.style.opacity = '1';
+            } else {
+              btn.href = '#';
+              btn.textContent = 'Storefront Offline';
+              // Leave it visually disabled
+            }
+          });
+        } catch (e) {
+          console.error('Failed to load storefront config:', e);
+          storeBtns.forEach((btn) => {
+            btn.href = '#';
+            btn.textContent = 'Storefront Offline';
+          });
+        }
+      });
+    </script>
   </body>
 </html>
