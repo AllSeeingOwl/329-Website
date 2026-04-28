@@ -1,3 +1,4 @@
+import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import crypto from 'crypto';
@@ -110,6 +111,78 @@ const mltkFiles = new Set([
   '/secure-data-drop-page.html',
   '/developer-blog.html',
 ]);
+
+// Sitemap Endpoints
+app.get('/sitemap.xml', async (req: Request, res: Response) => {
+  try {
+    const publicDir = path.join(__dirname, 'public');
+    const files = await fs.promises.readdir(publicDir);
+
+    const host = req.get('host') || 'localhost:3000';
+    const protocol = req.protocol || 'https';
+    const baseUrl = `${protocol}://${host}`;
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+    for (const file of files) {
+      if (file.endsWith('.html')) {
+        const filePath = path.join(publicDir, file);
+        const fileContent = await fs.promises.readFile(filePath, 'utf8');
+
+        if (!fileContent.includes('<meta name="robots" content="noindex"')) {
+          xml += '  <url>\n';
+          xml += `    <loc>${baseUrl}/${file}</loc>\n`;
+
+          try {
+            const stats = await fs.promises.stat(filePath);
+            const lastMod = stats.mtime.toISOString().split('T')[0];
+            xml += `    <lastmod>${lastMod}</lastmod>\n`;
+          } catch (_e) {
+            const today = new Date().toISOString().split('T')[0];
+            xml += `    <lastmod>${today}</lastmod>\n`;
+          }
+
+          xml += '    <changefreq>monthly</changefreq>\n';
+          xml += '    <priority>0.8</priority>\n';
+          xml += '  </url>\n';
+        }
+      }
+    }
+
+    xml += '</urlset>';
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Error generating sitemap.xml:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
+  try {
+    const publicDir = path.join(__dirname, 'public');
+    const files = await fs.promises.readdir(publicDir);
+
+    const host = req.get('host') || 'localhost:3000';
+    const protocol = req.protocol || 'https';
+    const baseUrl = `${protocol}://${host}`;
+
+    const allPages: string[] = [];
+
+    for (const file of files) {
+      if (file.endsWith('.html')) {
+        allPages.push(`${baseUrl}/${file}`);
+      }
+    }
+
+    res.json({ pages: allPages });
+  } catch (err) {
+    console.error('Error generating internal-sitemap.json:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Maintenance Middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
