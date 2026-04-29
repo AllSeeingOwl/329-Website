@@ -598,10 +598,13 @@
           <div class="nav-item-wrapper">
             <a href="developer-blog.html" class="nav-link">Dev Blog</a>
           </div>
+<<<<<<< HEAD
 
           <div class="nav-item-wrapper">
             <a href="#" class="nav-link"><!-- TODO: REPLACE WITH EXTERNAL STORE URL -->Cart</a>
           </div>
+=======
+>>>>>>> origin/main
         </nav>
       </div>
     </header>
@@ -615,8 +618,17 @@
           stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
         </p>
         <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
+<<<<<<< HEAD
         <a href="#" class="btn-primary"
           ><!-- TODO: REPLACE WITH EXTERNAL STORE URL -->Procure Volume 1</a
+=======
+        <a
+          href="#"
+          class="btn-primary"
+          id="storefront-link"
+          style="pointer-events: none; opacity: 0.5"
+          >Loading Store...</a
+>>>>>>> origin/main
         >
       </div>
       <picture class="responsive-picture hero-image">
@@ -746,5 +758,36 @@
         </p>
       </div>
     </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const storeLinks = document.querySelectorAll('.storefront-link');
+        const storeCta = document.getElementById('storefront-link');
+
+        try {
+          const res = await fetch('/api/config/storefront');
+          const data = await res.json();
+
+          if (data.url && data.url !== '#') {
+            if (storeCta) {
+              storeCta.href = data.url;
+              storeCta.textContent = storeCta.textContent.toUpperCase().includes('PROCURE PHYSICAL') ? 'PROCURE PHYSICAL ARTEFACT' : 'Procure Volume 1';
+              storeCta.style.pointerEvents = 'auto';
+              storeCta.style.opacity = '1';
+            }
+
+            storeLinks.forEach(link => {
+              link.href = data.url;
+            });
+          } else {
+            if (storeCta) {
+              storeCta.href = '#';
+              storeCta.textContent = 'Storefront Offline';
+            }
+          }
+        } catch (e) {
+          console.error('Storefront configuration error:', e);
+        }
+      });
+    </script>
   </body>
 </html>

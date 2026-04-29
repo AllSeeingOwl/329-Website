@@ -251,9 +251,19 @@
           <p>Grab a copy. Fund the war. Uncover the truth.</p>
         </div>
 
+<<<<<<< HEAD
         <!-- Replace '#' with your actual Big Cartel URL -->
         <a href="#" class="btn-store"
           ><!-- TODO: REPLACE WITH EXTERNAL STORE URL -->PROCURE PHYSICAL ARTEFACT</a
+=======
+        <!-- This URL is injected dynamically from the server config -->
+        <a
+          href="#"
+          class="btn-store"
+          id="storefront-link"
+          style="pointer-events: none; opacity: 0.5"
+          >LOADING COMM CHANNELS...</a
+>>>>>>> origin/main
         >
       </div>
 
@@ -261,5 +271,36 @@
         <p>End of Transmission. // 3M29 Operations.</p>
       </div>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const storeLinks = document.querySelectorAll('.storefront-link');
+        const storeCta = document.getElementById('storefront-link');
+
+        try {
+          const res = await fetch('/api/config/storefront');
+          const data = await res.json();
+
+          if (data.url && data.url !== '#') {
+            if (storeCta) {
+              storeCta.href = data.url;
+              storeCta.textContent = storeCta.textContent.toUpperCase().includes('PROCURE PHYSICAL') ? 'PROCURE PHYSICAL ARTEFACT' : 'Procure Volume 1';
+              storeCta.style.pointerEvents = 'auto';
+              storeCta.style.opacity = '1';
+            }
+
+            storeLinks.forEach(link => {
+              link.href = data.url;
+            });
+          } else {
+            if (storeCta) {
+              storeCta.href = '#';
+              storeCta.textContent = 'Storefront Offline';
+            }
+          }
+        } catch (e) {
+          console.error('Storefront configuration error:', e);
+        }
+      });
+    </script>
   </body>
 </html>
