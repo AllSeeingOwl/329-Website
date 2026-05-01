@@ -85,15 +85,10 @@ const NOT_FOUND_PATH = path.join(__dirname, 'public', '404.html');
 const studioFiles = new Set([
   '/surface-home-page.html',
   '/studio-manifesto-page.html',
-  '/store.html',
-  '/cart.html',
-  '/checkout.html',
   '/releases.html',
   '/studio-contact-us.html',
   '/business-privacy-policy.html',
   '/business-terms-of-service.html',
-  '/procure-volume-1.html',
-  '/procure-physical-artefact.html',
 ]);
 
 const mltkFiles = new Set([
