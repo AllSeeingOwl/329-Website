@@ -512,233 +512,252 @@
         height: 100%;
         background-color: #eae8e1;
       }
+
+      .btn-primary:disabled,
+      .btn-primary[aria-disabled='true'],
+      .btn-primary[style*='pointer-events: none'] {
+        opacity: 0.5 !important;
+        background-color: #555 !important;
+        color: #fff !important;
+      }
     </style>
     <script type="module" src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <header class="studio-header">
-      <div class="container nav-inner">
-        <a href="index.html" class="brand-logo">
-          <div class="quarter-clock">
-            <div class="clock-hands"></div>
-          </div>
-          3minsto9
-        </a>
-        <button
-          class="menu-toggle"
-          aria-label="Toggle Menu"
-          aria-expanded="false"
-          aria-controls="main-nav"
-          onclick="
-            const nav = this._nav || (this._nav = document.getElementById('main-nav'));
-            const expanded = nav.classList.toggle('active');
-            this.setAttribute('aria-expanded', expanded);
+    <main>
+      <header class="studio-header">
+        <div class="container nav-inner">
+          <a href="index.html" class="brand-logo">
+            <div class="quarter-clock">
+              <div class="clock-hands"></div>
+            </div>
+            3minsto9
+          </a>
+          <button
+            class="menu-toggle"
+            aria-label="Toggle Menu"
+            aria-expanded="false"
+            aria-controls="main-nav"
+            onclick="
+              const nav = this._nav || (this._nav = document.getElementById('main-nav'));
+              const expanded = nav.classList.toggle('active');
+              this.setAttribute('aria-expanded', expanded);
+            "
+          >
+            &#9776;
+          </button>
+          <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
+            <div class="nav-item-wrapper">
+              <a
+                href="surface-home-page.html"
+                class="nav-link"
+                style="color: var(--accent-red) !important"
+                >Home</a
+              >
+            </div>
+
+            <div class="nav-item-wrapper">
+              <details class="nav-group">
+                <summary class="nav-link">Releases</summary>
+                <div class="sub-menu">
+                  <a href="releases.html" class="nav-link">All Releases</a>
+                  <span class="nav-link placeholder-link" style="cursor: default !important"
+                    >Placeholder: Vol 1 (Future)</span
+                  >
+                  <span class="nav-link placeholder-link" style="cursor: default !important"
+                    >Placeholder: Vol 2 (Future)</span
+                  >
+                </div>
+              </details>
+            </div>
+
+            <div class="nav-item-wrapper">
+              <details class="nav-group">
+                <summary class="nav-link">The Studio</summary>
+                <div class="sub-menu">
+                  <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
+                  <a href="studio-team.html" class="nav-link">Team</a>
+                  <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
+                  <a href="studio-faq.html" class="nav-link">FAQ</a>
+                  <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
+                  <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
+                </div>
+              </details>
+            </div>
+
+            <div class="nav-item-wrapper">
+              <details class="nav-group">
+                <summary class="nav-link">Store</summary>
+                <div class="sub-menu">
+                  <span class="nav-link placeholder-link" style="cursor: default !important"
+                    >Placeholder: Apparel (Future)</span
+                  >
+                  <span class="nav-link placeholder-link" style="cursor: default !important"
+                    >Placeholder: Artefacts (Future)</span
+                  >
+                </div>
+              </details>
+            </div>
+
+            <div class="nav-item-wrapper">
+              <a href="developer-blog.html" class="nav-link">Dev Blog</a>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <section class="hero container">
+        <div class="hero-content">
+          <h1>Welcome to the Unknown.</h1>
+          <p>
+            <strong>The Unknown Field (MINE) Guide (Vol. 0)</strong> is a 32-page interactive puzzle
+            zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been
+            stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
+          </p>
+          <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
+          <a
+            href="#"
+            class="btn-primary"
+            id="storefront-link"
+            style="
+              pointer-events: none;
+              opacity: 1 !important;
+              color: #111 !important;
+              background-color: #888 !important;
+            "
+            >Loading Store...</a
+          >
+        </div>
+        <picture class="responsive-picture hero-image">
+          <source srcset="images/placeholder.webp" type="image/webp" />
+          <img
+            class="placeholder-fallback"
+            src="images/placeholder.jpg"
+            alt="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)"
+            data-placeholder="IMAGE PLACEHOLDER"
+            loading="lazy"
+          />
+        </picture>
+        <div
+          class="hero-image"
+          role="img"
+          aria-label="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)"
+        ></div>
+      </section>
+
+      <section class="manifesto">
+        <div class="container manifesto-inner">
+          <h2>High Value. Low Volume. Direct to Reader.</h2>
+          <p>
+            3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
+            We operate as <span class="highlight">Comicsmiths</span> and
+            <span class="highlight">Puzzlesmiths</span>. Our mission is to bridge the gap between
+            graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You
+            aren't just reading a story; you are stepping into a labyrinth.
+          </p>
+        </div>
+      </section>
+
+      <section class="newsletter container">
+        <h3>Join the Dispatch</h3>
+        <p>
+          Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
+        </p>
+        <form
+          class="newsletter-form"
+          id="surface-newsletter-form"
+          onsubmit="
+            event.preventDefault();
+            const btn = this.querySelector('button[type=\'submit\']');
+            const successMsg =
+              this._successMsg ||
+              (this._successMsg = document.getElementById('surface-newsletter-success'));
+
+            let rateLimitMsg =
+              this._rateLimitMsg ||
+              (this._rateLimitMsg = document.getElementById('surface-rate-limit'));
+            if (!rateLimitMsg) {
+              this._rateLimitMsg = rateLimitMsg = document.createElement('div');
+              rateLimitMsg.id = 'surface-rate-limit';
+              rateLimitMsg.setAttribute('role', 'alert');
+              rateLimitMsg.setAttribute('aria-live', 'polite');
+              rateLimitMsg.style.display = 'none';
+              rateLimitMsg.style.marginTop = '15px';
+              rateLimitMsg.style.color = 'red';
+              rateLimitMsg.style.fontWeight = 'bold';
+              rateLimitMsg.style.textAlign = 'center';
+              this.parentNode.insertBefore(rateLimitMsg, this.nextSibling);
+            }
+
+            const lastSubmissionTime = localStorage.getItem('lastNewsletterSubmission');
+            const now = Date.now();
+            const rateLimitWindow = 60000;
+
+            if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
+              const remainingTime = Math.ceil(
+                (rateLimitWindow - (now - lastSubmissionTime)) / 1000
+              );
+              rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
+              rateLimitMsg.style.display = 'block';
+              successMsg.style.display = 'none';
+              return;
+            }
+
+            rateLimitMsg.style.display = 'none';
+            localStorage.setItem('lastNewsletterSubmission', now);
+
+            this.setAttribute('aria-busy', 'true');
+            btn.disabled = true;
+            btn.setAttribute('aria-disabled', 'true');
+            btn.textContent = 'SUBSCRIBING...';
+
+            setTimeout(() => {
+              this.reset();
+              this.style.display = 'none';
+              this.setAttribute('aria-busy', 'false');
+              btn.disabled = false;
+              btn.removeAttribute('aria-disabled');
+              btn.textContent = 'Subscribe';
+              successMsg.style.display = 'block';
+            }, 1000);
           "
         >
-          &#9776;
-        </button>
-        <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
-          <div class="nav-item-wrapper">
-            <a
-              href="surface-home-page.html"
-              class="nav-link"
-              style="color: var(--accent-red) !important"
-              >Home</a
-            >
-          </div>
-
-          <div class="nav-item-wrapper">
-            <details class="nav-group">
-              <summary class="nav-link">Releases</summary>
-              <div class="sub-menu">
-                <a href="releases.html" class="nav-link">All Releases</a>
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Vol 1 (Future)</span
-                >
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Vol 2 (Future)</span
-                >
-              </div>
-            </details>
-          </div>
-
-          <div class="nav-item-wrapper">
-            <details class="nav-group">
-              <summary class="nav-link">The Studio</summary>
-              <div class="sub-menu">
-                <a href="studio-manifesto-page.html" class="nav-link">Manifesto</a>
-                <a href="studio-team.html" class="nav-link">Team</a>
-                <a href="studio-contact-us.html" class="nav-link">Contact Us</a>
-                <a href="studio-faq.html" class="nav-link">FAQ</a>
-                <a href="business-privacy-policy.html" class="nav-link">Privacy Policy</a>
-                <a href="business-terms-of-service.html" class="nav-link">Terms of Service</a>
-              </div>
-            </details>
-          </div>
-
-          <div class="nav-item-wrapper">
-            <details class="nav-group">
-              <summary class="nav-link">Store</summary>
-              <div class="sub-menu">
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Apparel (Future)</span
-                >
-                <span class="nav-link placeholder-link" style="cursor: default !important"
-                  >Placeholder: Artefacts (Future)</span
-                >
-              </div>
-            </details>
-          </div>
-
-          <div class="nav-item-wrapper">
-            <a href="developer-blog.html" class="nav-link">Dev Blog</a>
-          </div>
-        </nav>
-      </div>
-    </header>
-
-    <section class="hero container">
-      <div class="hero-content">
-        <h1>Welcome to the Unknown.</h1>
-        <p>
-          <strong>The Unknown Field (MINE) Guide (Vol. 0)</strong> is a 32-page interactive puzzle
-          zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been
-          stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
-        </p>
-        <p>We don't just print books. We forge artefacts. Secure your physical copy today.</p>
-        <a
-          href="#"
-          class="btn-primary"
-          id="storefront-link"
-          style="pointer-events: none; opacity: 0.5"
-          >Loading Store...</a
+          <input
+            type="email"
+            aria-label="Email address"
+            placeholder="e.g. jane@example.com"
+            required
+            autocomplete="email"
+            maxlength="254"
+          />
+          <button type="submit">Subscribe</button>
+        </form>
+        <div
+          id="surface-newsletter-success"
+          class="newsletter-success"
+          role="alert"
+          aria-live="polite"
+          style="
+            display: none;
+            margin-top: 15px;
+            color: var(--accent-red);
+            font-weight: bold;
+            text-align: center;
+          "
         >
-      </div>
-      <picture class="responsive-picture hero-image">
-        <source srcset="images/placeholder.webp" type="image/webp" />
-        <img
-          class="placeholder-fallback"
-          src="images/placeholder.jpg"
-          alt="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)"
-          data-placeholder="IMAGE PLACEHOLDER"
-          loading="lazy"
-        />
-      </picture>
-      <div
-        class="hero-image"
-        role="img"
-        aria-label="Placeholder image for UNKNOWN VOL. 1 (A5 ZINE)"
-      ></div>
-    </section>
-
-    <section class="manifesto">
-      <div class="container manifesto-inner">
-        <h2>High Value. Low Volume. Direct to Reader.</h2>
-        <p>
-          3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
-          We operate as <span class="highlight">Comicsmiths</span> and
-          <span class="highlight">Puzzlesmiths</span>. Our mission is to bridge the gap between
-          graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You
-          aren't just reading a story; you are stepping into a labyrinth.
-        </p>
-      </div>
-    </section>
-
-    <section class="newsletter container">
-      <h3>Join the Dispatch</h3>
-      <p>
-        Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
-      </p>
-      <form
-        class="newsletter-form"
-        id="surface-newsletter-form"
-        onsubmit="
-          event.preventDefault();
-          const btn = this.querySelector('button[type=\'submit\']');
-          const successMsg =
-            this._successMsg ||
-            (this._successMsg = document.getElementById('surface-newsletter-success'));
-
-          let rateLimitMsg =
-            this._rateLimitMsg ||
-            (this._rateLimitMsg = document.getElementById('surface-rate-limit'));
-          if (!rateLimitMsg) {
-            this._rateLimitMsg = rateLimitMsg = document.createElement('div');
-            rateLimitMsg.id = 'surface-rate-limit';
-            rateLimitMsg.setAttribute('role', 'alert');
-            rateLimitMsg.setAttribute('aria-live', 'polite');
-            rateLimitMsg.style.display = 'none';
-            rateLimitMsg.style.marginTop = '15px';
-            rateLimitMsg.style.color = 'red';
-            rateLimitMsg.style.fontWeight = 'bold';
-            rateLimitMsg.style.textAlign = 'center';
-            this.parentNode.insertBefore(rateLimitMsg, this.nextSibling);
-          }
-
-          const lastSubmissionTime = localStorage.getItem('lastNewsletterSubmission');
-          const now = Date.now();
-          const rateLimitWindow = 60000;
-
-          if (lastSubmissionTime && now - lastSubmissionTime < rateLimitWindow) {
-            const remainingTime = Math.ceil((rateLimitWindow - (now - lastSubmissionTime)) / 1000);
-            rateLimitMsg.textContent = `Please wait ${remainingTime} seconds before submitting again.`;
-            rateLimitMsg.style.display = 'block';
-            successMsg.style.display = 'none';
-            return;
-          }
-
-          rateLimitMsg.style.display = 'none';
-          localStorage.setItem('lastNewsletterSubmission', now);
-
-          this.setAttribute('aria-busy', 'true');
-          btn.disabled = true;
-          btn.setAttribute('aria-disabled', 'true');
-          btn.textContent = 'SUBSCRIBING...';
-
-          setTimeout(() => {
-            this.reset();
-            this.style.display = 'none';
-            this.setAttribute('aria-busy', 'false');
-            btn.disabled = false;
-            btn.removeAttribute('aria-disabled');
-            btn.textContent = 'Subscribe';
-            successMsg.style.display = 'block';
-          }, 1000);
-        "
-      >
-        <input
-          type="email"
-          aria-label="Email address"
-          placeholder="e.g. jane@example.com"
-          required
-          autocomplete="email"
-          maxlength="254"
-        />
-        <button type="submit">Subscribe</button>
-      </form>
-      <div
-        id="surface-newsletter-success"
-        class="newsletter-success"
-        role="alert"
-        aria-live="polite"
-        style="
-          display: none;
-          margin-top: 15px;
-          color: var(--accent-red);
-          font-weight: bold;
-          text-align: center;
-        "
-      >
-        Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)
-      </div>
-    </section>
-
+          Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)
+        </div>
+      </section>
+    </main>
     <footer>
       <div class="container">
-        <p>
+        <p style="color: #555">
           &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
-          <a href="studio-press-kit.html">Press Kit</a> | <a href="/sitemap.xml">Sitemap</a>
+          <a href="studio-press-kit.html" style="color: #333; text-decoration: underline"
+            >Press Kit</a
+          >
+          | <a href="/sitemap.xml" style="color: #333; text-decoration: underline">Sitemap</a>
         </p>
       </div>
     </footer>

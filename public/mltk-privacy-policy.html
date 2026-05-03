@@ -198,81 +198,92 @@
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <div class="header-bar">
-      <h2>MLTK Corporation // Global Data Operations</h2>
-      <p>CONFIDENTIALITY IS MANDATORY</p>
-    </div>
+    <main>
+      <div class="header-bar">
+        <h2>MLTK Corporation // Global Data Operations</h2>
+        <p>CONFIDENTIALITY IS MANDATORY</p>
+      </div>
 
-    <div class="container">
-      <h1>Privacy "Policy" & Terms of Service</h1>
-      <p>
-        <strong>Effective Date:</strong> [000.00.00] //
-        <span class="highlight">MANDATORY COMPLIANCE</span>
-      </p>
+      <div class="container">
+        <h1>Privacy "Policy" & Terms of Service</h1>
+        <p>
+          <strong>Effective Date:</strong> [000.00.00] //
+          <span class="highlight">MANDATORY COMPLIANCE</span>
+        </p>
 
-      <h2>1. TERMS OF SERVICE</h2>
-      <p>
-        By accessing any MLTK Corporation system, terminal, or physical facility, you agree to be
-        bound by these Terms of Service. You are authorized to use MLTK systems solely for official,
-        sanctioned business.
-      </p>
-      <p>
-        MLTK Corporation reserves the right to terminate access, employment, and potentially
-        physical existence for any violations of these terms, including unauthorized access to
-        classified materials (e.g., Project Tetromino).
-      </p>
+        <h2>1. TERMS OF SERVICE</h2>
+        <p>
+          By accessing any MLTK Corporation system, terminal, or physical facility, you agree to be
+          bound by these Terms of Service. You are authorized to use MLTK systems solely for
+          official, sanctioned business.
+        </p>
+        <p>
+          MLTK Corporation reserves the right to terminate access, employment, and potentially
+          physical existence for any violations of these terms, including unauthorized access to
+          classified materials (e.g., Project Tetromino).
+        </p>
 
-      <h2>2. DATA ASSIMILATION</h2>
-      <p>
-        By interfacing with MLTK systems, the City of Everywhere infrastructure, or any affiliated
-        network node, you hereby surrender all rights, claims, and expectations of privacy regarding
-        your digital footprint, biometric data, neuro-kinetic patterns, and genetic sequencing
-        metadata. <span class="highlight">We do not "collect" data; we integrate it.</span>
-      </p>
+        <h2>2. DATA ASSIMILATION</h2>
+        <p>
+          By interfacing with MLTK systems, the City of Everywhere infrastructure, or any affiliated
+          network node, you hereby surrender all rights, claims, and expectations of privacy
+          regarding your digital footprint, biometric data, neuro-kinetic patterns, and genetic
+          sequencing metadata.
+          <span class="highlight">We do not "collect" data; we integrate it.</span>
+        </p>
 
-      <h2>3. UTILIZATION PROTOCOLS</h2>
-      <p>
-        Your assimilated data will be utilized for: <br />- Optimization of the Virtue Villages.
-        <br />- Identification and neutralization of dissenting frequencies (e.g., TEAM RABBIT).
-        <br />- Predictive behavioral modeling to ensure absolute compliance with Corporate Director
-        G. Meredith's directives. <br />-
-        <span class="redacted">[CLASSIFIED PROJECT NOVA EXPLOITATION]</span>.
-      </p>
+        <h2>3. UTILIZATION PROTOCOLS</h2>
+        <p>
+          Your assimilated data will be utilized for: <br />- Optimization of the Virtue Villages.
+          <br />- Identification and neutralization of dissenting frequencies (e.g., TEAM RABBIT).
+          <br />- Predictive behavioral modeling to ensure absolute compliance with Corporate
+          Director G. Meredith's directives. <br />-
+          <span class="redacted">[CLASSIFIED PROJECT NOVA EXPLOITATION]</span>.
+        </p>
 
-      <h2>4. DATA DISSEMINATION</h2>
-      <p>
-        MLTK Corporation does not sell your data. Your data is MLTK property. We share it solely
-        with internal security forces, automated algorithmic enforcers, and authorized tier-4
-        personnel to maintain operational harmony within the City of Everywhere.
-      </p>
+        <h2>4. DATA DISSEMINATION</h2>
+        <p>
+          MLTK Corporation does not sell your data. Your data is MLTK property. We share it solely
+          with internal security forces, automated algorithmic enforcers, and authorized tier-4
+          personnel to maintain operational harmony within the City of Everywhere.
+        </p>
 
-      <h2>5. SECURITY APPARATUS</h2>
-      <p>
-        Your data is secured by proprietary Quantum ICE protocols. Any attempt to encrypt,
-        obfuscate, or withhold mandatory telemetry will be classified as an act of cyber-sedition
-        and met with immediate physical quarantine measures.
-      </p>
+        <h2>5. SECURITY APPARATUS</h2>
+        <p>
+          Your data is secured by proprietary Quantum ICE protocols. Any attempt to encrypt,
+          obfuscate, or withhold mandatory telemetry will be classified as an act of cyber-sedition
+          and met with immediate physical quarantine measures.
+        </p>
 
-      <h2>6. YOUR "RIGHTS"</h2>
-      <p>
-        Citizens of the City of Everywhere possess the right to continued existence, contingent upon
-        consistent data output. Requests for data deletion are computationally impossible and
-        philosophically discouraged.
-      </p>
+        <h2>6. YOUR "RIGHTS"</h2>
+        <p>
+          Citizens of the City of Everywhere possess the right to continued existence, contingent
+          upon consistent data output. Requests for data deletion are computationally impossible and
+          philosophically discouraged.
+        </p>
 
-      <h2>7. AMENDMENTS</h2>
-      <p>
-        MLTK Corporation reserves the right to alter these terms retrospectively. Notification will
-        not be provided. Ignorance of the updated policy is not a valid defense during Tribunal
-        proceedings.
-      </p>
+        <h2>7. AMENDMENTS</h2>
+        <p>
+          MLTK Corporation reserves the right to alter these terms retrospectively. Notification
+          will not be provided. Ignorance of the updated policy is not a valid defense during
+          Tribunal proceedings.
+        </p>
 
-      <h2>8. CONTACT</h2>
-      <p>
-        Do not contact us regarding this policy. Our automated systems are already monitoring your
-        emotional response to reading this document. Have a productive cycle.
-      </p>
-    </div>
+        <h2>8. CONTACT</h2>
+        <p>
+          Do not contact us regarding this policy. Our automated systems are already monitoring your
+          emotional response to reading this document. Have a productive cycle.
+        </p>
+      </div>
+    </main>
+    <script>
+      // Add aria-labels to the headings so they aren't considered empty before the animation finishes typing them.
+      document.querySelectorAll('h2').forEach((h2) => {
+        if (!h2.hasAttribute('aria-label') && h2.textContent) {
+          h2.setAttribute('aria-label', h2.textContent);
+        }
+      });
+    </script>
     <script src="msdos_typing_effect.js"></script>
   </body>
 </html>
