@@ -20,7 +20,6 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
 
-
   // Controls setup
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -85,7 +84,6 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-
 const activeActions = {
   panUp: false,
   panDown: false,
@@ -94,23 +92,28 @@ const activeActions = {
   zoomIn: false,
   zoomOut: false,
   rotateLeft: false,
-  rotateRight: false
+  rotateRight: false,
 };
 
 let inactivityTimer = null;
 const INACTIVITY_DELAY = 3000; // 3 seconds
 
-
 function setupKeyboard() {
   const keyMap = {
-    'ArrowUp': 'panUp', 'KeyW': 'panUp',
-    'ArrowDown': 'panDown', 'KeyS': 'panDown',
-    'ArrowLeft': 'panLeft', 'KeyA': 'panLeft',
-    'ArrowRight': 'panRight', 'KeyD': 'panRight',
-    'KeyQ': 'rotateLeft',
-    'KeyE': 'rotateRight',
-    'Equal': 'zoomIn', 'NumpadAdd': 'zoomIn',
-    'Minus': 'zoomOut', 'NumpadSubtract': 'zoomOut'
+    ArrowUp: 'panUp',
+    KeyW: 'panUp',
+    ArrowDown: 'panDown',
+    KeyS: 'panDown',
+    ArrowLeft: 'panLeft',
+    KeyA: 'panLeft',
+    ArrowRight: 'panRight',
+    KeyD: 'panRight',
+    KeyQ: 'rotateLeft',
+    KeyE: 'rotateRight',
+    Equal: 'zoomIn',
+    NumpadAdd: 'zoomIn',
+    Minus: 'zoomOut',
+    NumpadSubtract: 'zoomOut',
   };
 
   document.addEventListener('keydown', (e) => {
@@ -167,7 +170,7 @@ function setupUI() {
     { id: 'btn-rot-left', action: 'rotateLeft' },
     { id: 'btn-rot-right', action: 'rotateRight' },
     { id: 'btn-zoom-in', action: 'zoomIn' },
-    { id: 'btn-zoom-out', action: 'zoomOut' }
+    { id: 'btn-zoom-out', action: 'zoomOut' },
   ];
 
   buttons.forEach(({ id, action }) => {
@@ -210,8 +213,6 @@ function updateCameraFromActions() {
   right.normalize();
   const forward = new THREE.Vector3().crossVectors(right, new THREE.Vector3(0, 1, 0)).normalize();
 
-
-
   const rotateSpeed = 0.03;
 
   if (activeActions.rotateLeft) {
@@ -246,22 +247,21 @@ function updateCameraFromActions() {
   }
 
   if (activeActions.zoomIn) {
-     const dist = camera.position.distanceTo(controls.target);
-     if (dist > controls.minDistance) {
-         camera.position.lerp(controls.target, 1 - zoomSpeed);
-     }
+    const dist = camera.position.distanceTo(controls.target);
+    if (dist > controls.minDistance) {
+      camera.position.lerp(controls.target, 1 - zoomSpeed);
+    }
   }
   if (activeActions.zoomOut) {
-      const dist = camera.position.distanceTo(controls.target);
-      if (dist < controls.maxDistance) {
-          const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
-          camera.position.add(dir.multiplyScalar(dist * (1 / zoomSpeed - 1)));
-      }
+    const dist = camera.position.distanceTo(controls.target);
+    if (dist < controls.maxDistance) {
+      const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+      camera.position.add(dir.multiplyScalar(dist * (1 / zoomSpeed - 1)));
+    }
   }
 }
 
 function animate() {
-
   requestAnimationFrame(animate);
   updateCameraFromActions();
   controls.update(); // required if controls.enableDamping or controls.autoRotate are set
