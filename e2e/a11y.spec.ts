@@ -12,7 +12,7 @@ const pages = [
   '/mltk-boot-sequence.html',
   '/mltk-surveillance-dashboard.html',
   '/secure-data-drop-page.html',
-  '/404.html'
+  '/404.html',
 ];
 
 test.describe('Accessibility Checks', () => {
@@ -27,34 +27,39 @@ test.describe('Accessibility Checks', () => {
       await page.waitForTimeout(1000);
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
-      accessibilityScanResults.violations.forEach(v => {
+      accessibilityScanResults.violations.forEach((v) => {
         allViolations.push({ url: pageUrl, ...v });
       });
 
-      totalRulesChecked += accessibilityScanResults.passes.length + accessibilityScanResults.violations.length + accessibilityScanResults.incomplete.length + accessibilityScanResults.inapplicable.length;
-      totalRulesPassed += accessibilityScanResults.passes.length + accessibilityScanResults.inapplicable.length; // We can count inapplicable as not failing
+      totalRulesChecked +=
+        accessibilityScanResults.passes.length +
+        accessibilityScanResults.violations.length +
+        accessibilityScanResults.incomplete.length +
+        accessibilityScanResults.inapplicable.length;
+      totalRulesPassed +=
+        accessibilityScanResults.passes.length + accessibilityScanResults.inapplicable.length; // We can count inapplicable as not failing
     });
   }
 
   test.afterAll(() => {
-     const score = ((totalRulesPassed / totalRulesChecked) * 100).toFixed(2);
-     let report = `# Accessibility Report\n\n`;
-     report += `**Overall Score:** ${score}%\n\n`;
-     report += `## Violations\n\n`;
-     if (allViolations.length === 0) {
-       report += `No violations found!\n`;
-     } else {
-       allViolations.forEach(v => {
-         report += `### ${v.id} (${v.impact}) at ${v.url}\n`;
-         report += `${v.description}\n`;
-         report += `Help: [${v.help}](${v.helpUrl})\n\n`;
-         v.nodes.forEach(node => {
-           report += `- \`${node.html}\`\n`;
-           report += `  - Target: ${node.target.join(', ')}\n`;
-           report += `  - Failure Summary: ${node.failureSummary}\n\n`;
-         });
-       });
-     }
-     fs.writeFileSync('a11y_report.md', report);
+    const score = ((totalRulesPassed / totalRulesChecked) * 100).toFixed(2);
+    let report = `# Accessibility Report\n\n`;
+    report += `**Overall Score:** ${score}%\n\n`;
+    report += `## Violations\n\n`;
+    if (allViolations.length === 0) {
+      report += `No violations found!\n`;
+    } else {
+      allViolations.forEach((v) => {
+        report += `### ${v.id} (${v.impact}) at ${v.url}\n`;
+        report += `${v.description}\n`;
+        report += `Help: [${v.help}](${v.helpUrl})\n\n`;
+        v.nodes.forEach((node) => {
+          report += `- \`${node.html}\`\n`;
+          report += `  - Target: ${node.target.join(', ')}\n`;
+          report += `  - Failure Summary: ${node.failureSummary}\n\n`;
+        });
+      });
+    }
+    fs.writeFileSync('a11y_report.md', report);
   });
 });
