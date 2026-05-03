@@ -512,11 +512,20 @@
         height: 100%;
         background-color: #eae8e1;
       }
+
+      .btn-primary:disabled,
+      .btn-primary[aria-disabled="true"],
+      .btn-primary[style*="pointer-events: none"] {
+        opacity: 0.5 !important;
+        background-color: #555 !important;
+        color: #fff !important;
+      }
     </style>
     <script type="module" src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
+  <main>
     <header class="studio-header">
       <div class="container nav-inner">
         <a href="index.html" class="brand-logo">
@@ -611,7 +620,7 @@
           href="#"
           class="btn-primary"
           id="storefront-link"
-          style="pointer-events: none; opacity: 0.5"
+          style="pointer-events: none; opacity: 1 !important; color: #111 !important; background-color: #888 !important;"
           >Loading Store...</a
         >
       </div>
@@ -734,11 +743,12 @@
       </div>
     </section>
 
+  </main>
     <footer>
       <div class="container">
-        <p>
+        <p style="color: #555;">
           &copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
-          <a href="studio-press-kit.html">Press Kit</a> | <a href="/sitemap.xml">Sitemap</a>
+          <a href="studio-press-kit.html" style="color: #333; text-decoration: underline;">Press Kit</a> | <a href="/sitemap.xml" style="color: #333; text-decoration: underline;">Sitemap</a>
         </p>
       </div>
     </footer>

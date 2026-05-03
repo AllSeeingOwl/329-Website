@@ -198,6 +198,7 @@
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
+  <main>
     <div class="header-bar">
       <h2>MLTK Corporation // Global Data Operations</h2>
       <p>CONFIDENTIALITY IS MANDATORY</p>
@@ -273,6 +274,15 @@
         emotional response to reading this document. Have a productive cycle.
       </p>
     </div>
+  </main>
+    <script>
+      // Add aria-labels to the headings so they aren't considered empty before the animation finishes typing them.
+      document.querySelectorAll('h2').forEach(h2 => {
+        if (!h2.hasAttribute('aria-label') && h2.textContent) {
+            h2.setAttribute('aria-label', h2.textContent);
+        }
+      });
+    </script>
     <script src="msdos_typing_effect.js"></script>
   </body>
 </html>
