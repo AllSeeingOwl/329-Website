@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'fs';
-import { Result } from 'axe-core';
+import { Result, NodeResult } from 'axe-core';
 
 const pages = [
   '/',
@@ -53,7 +53,7 @@ test.describe('Accessibility Checks', () => {
         report += `### ${v.id} (${v.impact}) at ${v.url}\n`;
         report += `${v.description}\n`;
         report += `Help: [${v.help}](${v.helpUrl})\n\n`;
-        v.nodes.forEach((node) => {
+        v.nodes.forEach((node: NodeResult) => {
           report += `- \`${node.html}\`\n`;
           report += `  - Target: ${node.target.join(', ')}\n`;
           report += `  - Failure Summary: ${node.failureSummary}\n\n`;
