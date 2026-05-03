@@ -20,6 +20,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
 
+
   // Controls setup
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -28,7 +29,11 @@ function init() {
   controls.minDistance = 10;
   controls.maxDistance = 200;
 
+  setupUI();
+  setupKeyboard();
+
   // Create grid helper (classic neon green)
+
   const gridHelper = new THREE.GridHelper(100, 50, 0x00ff00, 0x002200);
   scene.add(gridHelper);
 
@@ -80,8 +85,185 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+
+const activeActions = {
+  panUp: false,
+  panDown: false,
+  panLeft: false,
+  panRight: false,
+  zoomIn: false,
+  zoomOut: false,
+  rotateLeft: false,
+  rotateRight: false
+};
+
+let inactivityTimer = null;
+const INACTIVITY_DELAY = 3000; // 3 seconds
+
+
+function setupKeyboard() {
+  const keyMap = {
+    'ArrowUp': 'panUp', 'KeyW': 'panUp',
+    'ArrowDown': 'panDown', 'KeyS': 'panDown',
+    'ArrowLeft': 'panLeft', 'KeyA': 'panLeft',
+    'ArrowRight': 'panRight', 'KeyD': 'panRight',
+    'KeyQ': 'rotateLeft',
+    'KeyE': 'rotateRight',
+    'Equal': 'zoomIn', 'NumpadAdd': 'zoomIn',
+    'Minus': 'zoomOut', 'NumpadSubtract': 'zoomOut'
+  };
+
+  document.addEventListener('keydown', (e) => {
+    const action = keyMap[e.code];
+    if (action && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      activeActions[action] = true;
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    const action = keyMap[e.code];
+    if (action) {
+      activeActions[action] = false;
+    }
+  });
+}
+
+function setupUI() {
+  const isTouchDevice = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+  const uiControls = document.getElementById('ui-controls');
+
+  if (!isTouchDevice || !uiControls) return;
+
+  uiControls.style.display = 'flex';
+
+  const showUI = () => {
+    uiControls.classList.add('active');
+    uiControls.setAttribute('aria-hidden', 'false');
+    resetInactivityTimer();
+  };
+
+  const hideUI = () => {
+    uiControls.classList.remove('active');
+    uiControls.setAttribute('aria-hidden', 'true');
+  };
+
+  const resetInactivityTimer = () => {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(hideUI, INACTIVITY_DELAY);
+  };
+
+  // Initially show UI
+  showUI();
+
+  // Show UI on interaction
+  document.addEventListener('touchstart', showUI, { passive: true });
+  document.addEventListener('touchmove', resetInactivityTimer, { passive: true });
+
+  const buttons = [
+    { id: 'btn-up', action: 'panUp' },
+    { id: 'btn-down', action: 'panDown' },
+    { id: 'btn-left', action: 'panLeft' },
+    { id: 'btn-right', action: 'panRight' },
+    { id: 'btn-rot-left', action: 'rotateLeft' },
+    { id: 'btn-rot-right', action: 'rotateRight' },
+    { id: 'btn-zoom-in', action: 'zoomIn' },
+    { id: 'btn-zoom-out', action: 'zoomOut' }
+  ];
+
+  buttons.forEach(({ id, action }) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+
+    const startAction = (e) => {
+      e.preventDefault(); // Prevent default touch actions like scrolling
+      activeActions[action] = true;
+      resetInactivityTimer();
+    };
+
+    const stopAction = (e) => {
+      e.preventDefault();
+      activeActions[action] = false;
+      resetInactivityTimer();
+    };
+
+    btn.addEventListener('mousedown', startAction);
+    btn.addEventListener('mouseup', stopAction);
+    btn.addEventListener('mouseleave', stopAction);
+
+    btn.addEventListener('touchstart', startAction, { passive: false });
+    btn.addEventListener('touchend', stopAction, { passive: false });
+    btn.addEventListener('touchcancel', stopAction, { passive: false });
+  });
+}
+
+function updateCameraFromActions() {
+  const panSpeed = 0.5;
+  const zoomSpeed = 0.95;
+
+  // We need to move the camera and target based on camera's current local axes
+  const offset = new THREE.Vector3();
+  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+
+  // Flatten the vectors so panning is strictly horizontal/vertical relative to ground, not camera pitch
+  right.y = 0;
+  right.normalize();
+  const forward = new THREE.Vector3().crossVectors(right, new THREE.Vector3(0, 1, 0)).normalize();
+
+
+
+  const rotateSpeed = 0.03;
+
+  if (activeActions.rotateLeft) {
+    const axis = new THREE.Vector3(0, 1, 0);
+    camera.position.sub(controls.target);
+    camera.position.applyAxisAngle(axis, rotateSpeed);
+    camera.position.add(controls.target);
+  }
+  if (activeActions.rotateRight) {
+    const axis = new THREE.Vector3(0, 1, 0);
+    camera.position.sub(controls.target);
+    camera.position.applyAxisAngle(axis, -rotateSpeed);
+    camera.position.add(controls.target);
+  }
+
+  if (activeActions.panUp) {
+    offset.add(forward.clone().multiplyScalar(-panSpeed));
+  }
+  if (activeActions.panDown) {
+    offset.add(forward.clone().multiplyScalar(panSpeed));
+  }
+  if (activeActions.panLeft) {
+    offset.add(right.clone().multiplyScalar(-panSpeed));
+  }
+  if (activeActions.panRight) {
+    offset.add(right.clone().multiplyScalar(panSpeed));
+  }
+
+  if (offset.lengthSq() > 0) {
+    camera.position.add(offset);
+    controls.target.add(offset);
+  }
+
+  if (activeActions.zoomIn) {
+     const dist = camera.position.distanceTo(controls.target);
+     if (dist > controls.minDistance) {
+         camera.position.lerp(controls.target, 1 - zoomSpeed);
+     }
+  }
+  if (activeActions.zoomOut) {
+      const dist = camera.position.distanceTo(controls.target);
+      if (dist < controls.maxDistance) {
+          const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+          camera.position.add(dir.multiplyScalar(dist * (1 / zoomSpeed - 1)));
+      }
+  }
+}
+
 function animate() {
+
   requestAnimationFrame(animate);
+  updateCameraFromActions();
   controls.update(); // required if controls.enableDamping or controls.autoRotate are set
   renderer.render(scene, camera);
 }
