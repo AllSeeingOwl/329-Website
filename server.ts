@@ -120,30 +120,35 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-    for (const file of files) {
-      if (file.endsWith('.html')) {
+    const urlEntries = await Promise.all(
+      files.map(async (file) => {
+        if (!file.endsWith('.html')) return null;
+
         const filePath = path.join(publicDir, file);
         const fileContent = await fs.promises.readFile(filePath, 'utf8');
 
-        if (!fileContent.includes('<meta name="robots" content="noindex"')) {
-          xml += '  <url>\n';
-          xml += `    <loc>${baseUrl}/${file}</loc>\n`;
+        if (fileContent.includes('<meta name="robots" content="noindex"')) return null;
 
-          try {
-            const stats = await fs.promises.stat(filePath);
-            const lastMod = stats.mtime.toISOString().split('T')[0];
-            xml += `    <lastmod>${lastMod}</lastmod>\n`;
-          } catch (_e) {
-            const today = new Date().toISOString().split('T')[0];
-            xml += `    <lastmod>${today}</lastmod>\n`;
-          }
+        let entry = '  <url>\n';
+        entry += `    <loc>${baseUrl}/${file}</loc>\n`;
 
-          xml += '    <changefreq>monthly</changefreq>\n';
-          xml += '    <priority>0.8</priority>\n';
-          xml += '  </url>\n';
+        try {
+          const stats = await fs.promises.stat(filePath);
+          const lastMod = stats.mtime.toISOString().split('T')[0];
+          entry += `    <lastmod>${lastMod}</lastmod>\n`;
+        } catch (_e) {
+          const today = new Date().toISOString().split('T')[0];
+          entry += `    <lastmod>${today}</lastmod>\n`;
         }
-      }
-    }
+
+        entry += '    <changefreq>monthly</changefreq>\n';
+        entry += '    <priority>0.8</priority>\n';
+        entry += '  </url>\n';
+        return entry;
+      })
+    );
+
+    xml += urlEntries.filter((entry) => entry !== null).join('');
 
     xml += '</urlset>';
 
