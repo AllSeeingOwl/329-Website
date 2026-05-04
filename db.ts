@@ -143,7 +143,6 @@ const isKvAvailable = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API
 
 export async function initDb() {
   if (isKvAvailable) {
-    console.log('Upstash Redis KV detected. Ensuring default state exists...');
     const hasMaintenance = await kv.exists('config:maintenance');
     if (!hasMaintenance) {
       await kv.hset('config:maintenance', { global: 'false', studio: 'false', mltk: 'false' });
@@ -153,8 +152,6 @@ export async function initDb() {
     if (!hasDashboard) {
       await kv.set('config:dashboard', DEFAULT_DASHBOARD_CONFIG);
     }
-  } else {
-    console.log('No KV_REST_API_URL provided. Using in-memory store for admin configuration.');
   }
 }
 
