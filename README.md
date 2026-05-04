@@ -34,8 +34,13 @@ _(Note: If you experience timeouts during installation, use the `--prefer-offlin
 
 The local Express server (`server.ts`) relies on the following environment variables:
 
-- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. The server will exit if this is not set.
-- **`MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
+- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. Falls back to a default value if not set.
+- **`ADMIN_PASSWORD`**: Required for the `/api/admin/verify` endpoint. Defaults to 'admin' if not set.
+- **`MAINTENANCE_MODE`**: Set to `'true'` to enable global maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
+- **`STUDIO_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for studio pages, returning a 503 status code and serving `public/maintenance.html`.
+- **`MLTK_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for MLTK/ARG pages, returning a 503 status code and serving `public/maintenance.html`.
+- **`EMERGENCY_LOCKDOWN`**: Set to `'true'` to enable emergency lockdown, bypassing all routing and immediately returning a 503 status code for all endpoints.
+- **`STOREFRONT_URL`**: The URL for the physical storefront returned by `/api/config/storefront`. Defaults to '#' if not set.
 - **`KV_REST_API_URL`**: The REST API URL for the Upstash Redis database.
 - **`KV_REST_API_TOKEN`**: The authentication token for the Upstash Redis database.
 
