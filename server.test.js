@@ -200,4 +200,33 @@ describe('Server Tests', () => {
     expect(response.headers['content-type']).toContain('text/plain');
     expect(response.text).toContain('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
   });
+
+  it('should return 500 when getDashboardConfig fails', async () => {
+    // Set up admin password
+    process.env.ADMIN_PASSWORD = 'test_admin_password';
+
+    // Mock getDashboardConfig to throw an error
+    jest.doMock('./db', () => ({
+      ...jest.requireActual('./db'),
+      getDashboardConfig: jest.fn().mockRejectedValue(new Error('Database error')),
+    }));
+
+    app = require('./server');
+
+    // First, get an admin token
+    const authResponse = await request(app)
+      .post('/api/admin/verify')
+      .send({ password: 'test_admin_password' })
+      .expect(200);
+
+    const token = authResponse.body.token;
+
+    // Then, call the dashboard-config endpoint
+    const response = await request(app)
+      .get('/api/admin/dashboard-config')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(500);
+
+    expect(response.body).toEqual({ error: 'Failed to fetch dashboard config' });
+  });
 });
