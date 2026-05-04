@@ -2,12 +2,15 @@ name: Unused Code & Dependency Checker
 
 on:
   schedule:
-    - cron: '0 2 * * 1' # Run at 2 AM every Monday
+    - cron: '0 2 * * 4' # Run at 2 AM every Thursday
   workflow_dispatch:
 
 jobs:
   check-unused:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -27,4 +30,28 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check for unused dependencies and files
-        run: npx knip
+        id: knip
+        run: |
+          npx knip > knip-report.txt || true
+          if [ -s knip-report.txt ]; then
+            echo "has_unused=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_unused=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Format Report
+        if: steps.knip.outputs.has_unused == 'true'
+        run: |
+          echo "Knip found unused code/dependencies. See report below:" > issue-body.md
+          echo "" >> issue-body.md
+          echo "\`\`\`" >> issue-body.md
+          cat knip-report.txt >> issue-body.md
+          echo "\`\`\`" >> issue-body.md
+
+      - name: Create Issue From File
+        if: steps.knip.outputs.has_unused == 'true'
+        uses: peter-evans/create-issue-from-file@v6
+        with:
+          title: Unused Code and Dependency Report
+          content-filepath: issue-body.md
+          labels: report, automated issue

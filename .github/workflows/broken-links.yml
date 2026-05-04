@@ -2,7 +2,7 @@ name: Broken Link Checker
 
 on:
   schedule:
-    - cron: '0 5 * * 1' # Run at 5 AM every Monday
+    - cron: '0 5 * * 5' # Run at 5 AM every Friday
   workflow_dispatch:
 
 jobs:
