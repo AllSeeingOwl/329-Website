@@ -217,7 +217,7 @@ describe('MLTK Login Gate Tests', () => {
     console.error = originalConsoleError;
   });
 
-  describe('attemptApiVerification fallback logic', () => {
+  describe('attemptApiVerification error handling', () => {
     let originalConsoleError;
 
     beforeEach(() => {
@@ -229,36 +229,12 @@ describe('MLTK Login Gate Tests', () => {
       console.error = originalConsoleError;
     });
 
-    test('returns true when API fails but fallback is enabled and code is correct', async () => {
+    test('returns false when API fails', async () => {
       global.fetch.mockRejectedValueOnce(new Error('API failure'));
-      CONFIG.USE_MOCK_API_FALLBACK = true;
 
-      const result = await attemptApiVerification(CONFIG.MOCK_PASSWORD);
-      expect(result).toBe(true);
-      expect(console.error).toHaveBeenCalled();
-    });
-
-    test('returns false when API fails, fallback is enabled, but code is incorrect', async () => {
-      global.fetch.mockRejectedValueOnce(new Error('API failure'));
-      CONFIG.USE_MOCK_API_FALLBACK = true;
-
-      const result = await attemptApiVerification('WRONG-PASSWORD');
+      const result = await attemptApiVerification('SOME-CODE');
       expect(result).toBe(false);
       expect(console.error).toHaveBeenCalled();
-    });
-
-    test('returns false when API fails and fallback is disabled, even if code is correct', async () => {
-      global.fetch.mockRejectedValueOnce(new Error('API failure'));
-      const originalFallback = CONFIG.USE_MOCK_API_FALLBACK;
-      CONFIG.USE_MOCK_API_FALLBACK = false;
-
-      try {
-        const result = await attemptApiVerification(CONFIG.MOCK_PASSWORD);
-        expect(result).toBe(false);
-        expect(console.error).toHaveBeenCalled();
-      } finally {
-        CONFIG.USE_MOCK_API_FALLBACK = originalFallback;
-      }
     });
   });
 

@@ -1,12 +1,4 @@
-// -----------------------------------------------------------------------------
-// WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
-// The official password for this ARG gate is '[REDACTED]-XXXX'. (See Archive 1998-04-08)
-// Changing this will break the intended experience.
-// -----------------------------------------------------------------------------
-const CONFIG = {
-  USE_MOCK_API_FALLBACK: true,
-  MOCK_PASSWORD: ['0408', '1998', 'XXXX'].join('-'),
-};
+const CONFIG = {};
 
 let domCache = null;
 
@@ -87,10 +79,6 @@ async function attemptApiVerification(code) {
     return result.success;
   } catch (apiError) {
     console.error('Error verifying code via API:', apiError);
-    // Fallback for static GitHub Pages deployments where Express /api/verify fails
-    if (CONFIG.USE_MOCK_API_FALLBACK && code === CONFIG.MOCK_PASSWORD) {
-      return true;
-    }
     return false;
   }
 }
