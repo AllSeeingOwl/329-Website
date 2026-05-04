@@ -228,6 +228,8 @@
           width: 90%;
           padding: 20px;
         }
+      }
+
       /* CRT Overlay Effect */
       body::before {
         content: " ";
@@ -347,24 +349,53 @@
       </div>
     </div>
 
-    <!-- LAYER 2: Team Rabbit Vandalism -->
-    <div class="vandalism-layer" id="vandalism">
-      <!-- Merrick's massive spray paint -->
-      <div class="graffiti-main glitch-anim">WRONG<br />TURN,<br />POSER.</div>
-
-      <!-- Avery's label maker / digital tag -->
-      <div class="graffiti-sub">YOU ARE OFF THE MAP. NOTHING BUT GHOSTS OUT HERE.</div>
-
-      <!-- The Gang Tag -->
-      <div class="graffiti-tag">TEAM<br />RABBIT</div>
-    </div>
+    <!-- LAYER 2: Team Rabbit Vandalism (Injected via JS after 3.5s) -->
+    <div id="vandalism-root"></div>
 
     <script>
-      // Wait 3.5 seconds before Team Rabbit hacks the 404 page
-      setTimeout(() => {
-        const vandalismLayer = document.getElementById('vandalism');
-        vandalismLayer.classList.add('revealed');
-      }, 3500);
+      /**
+       * Team Rabbit 404 Vandalism Layer
+       * Dynamically injected after a delay to simulate a system breach
+       * and avoid the corporate typing effect.
+       */
+      document.addEventListener('DOMContentLoaded', () => {
+        const HACK_DELAY_MS = 3500;
+
+        setTimeout(() => {
+          const root = document.getElementById('vandalism-root');
+          const corpLayer = document.querySelector('.corporate-layer');
+
+          // 1. Momentary Glitch Effect on Corporate Layer
+          if (corpLayer) {
+            corpLayer.style.filter = 'invert(1) hue-rotate(90deg) blur(2px)';
+            corpLayer.style.transform = 'translate(-50%, -50%) scale(1.02) skew(5deg)';
+
+            setTimeout(() => {
+              corpLayer.style.filter = '';
+              corpLayer.style.transform = '';
+            }, 150);
+          }
+
+          // 2. Inject Vandalism Layer
+          // Content is stored in a template literal to keep it out of the initial DOM
+          // so the msdos_typing_effect doesn't clear or type it.
+          root.innerHTML = `
+            <div class="vandalism-layer revealed" id="vandalism">
+              <!-- Merrick's massive spray paint -->
+              <div class="graffiti-main glitch-anim">WRONG<br />TURN,<br />POSER.</div>
+
+              <!-- Avery's label maker / digital tag -->
+              <div class="graffiti-sub">YOU ARE OFF THE MAP. NOTHING BUT GHOSTS OUT HERE.</div>
+
+              <!-- The Gang Tag -->
+              <div class="graffiti-tag">TEAM<br />RABBIT</div>
+            </div>
+          `;
+
+          console.log('> SYSTEM BREACH DETECTED');
+          console.log('> SOURCE: TEAM_RABBIT_VANDALISM_PROTOCOL');
+        }, HACK_DELAY_MS);
+      });
     </script>
     <script src="msdos_typing_effect.js"></script>
   </body>
