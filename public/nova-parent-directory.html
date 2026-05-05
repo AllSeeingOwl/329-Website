@@ -4,13 +4,228 @@
     <meta name="robots" content="noindex" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NOVA Parent Directory</title>
+    <title>MLTK CITIZEN IDENTIFICATION CALIBRATION TOOL</title>
     <script type="module" src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
+    <style>
+      :root {
+        --border-color: #000;
+        --bg-color: #fff;
+        --text-color: #000;
+        --border-width: 4px;
+        --font-family: monospace;
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+      header {
+        border: var(--border-width) solid var(--border-color);
+        padding: 1rem;
+        margin-bottom: 2rem;
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 0;
+        text-transform: uppercase;
+      }
+      .calibration-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 600px;
+        border: var(--border-width) solid var(--border-color);
+        padding: 2rem;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+      select {
+        appearance: none;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        border: var(--border-width) solid var(--border-color);
+        padding: 1rem;
+        font-family: var(--font-family);
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        outline: none;
+        border-radius: 0;
+      }
+      select:focus-visible {
+        outline: 2px dashed var(--border-color);
+        outline-offset: 2px;
+      }
+      button {
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        border: var(--border-width) solid var(--border-color);
+        padding: 1.5rem;
+        font-family: var(--font-family);
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.1s;
+        border-radius: 0;
+      }
+      button:hover {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      button:focus-visible {
+        outline: 2px dashed var(--border-color);
+        outline-offset: 2px;
+      }
+      button:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        border-color: #666;
+      }
+
+      /* Modal Styles */
+      #success-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .modal-content {
+        background-color: var(--bg-color);
+        border: var(--border-width) solid var(--border-color);
+        padding: 3rem;
+        text-align: center;
+        max-width: 90%;
+        border-radius: 0;
+      }
+      .modal-content h2 {
+        margin-top: 0;
+        text-transform: uppercase;
+      }
+      .modal-content a {
+        display: inline-block;
+        margin-top: 2rem;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        padding: 1rem 2rem;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: var(--border-width) solid var(--text-color);
+      }
+      .modal-content a:hover {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      .modal-content a:focus-visible {
+        outline: 2px dashed var(--border-color);
+        outline-offset: 2px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Placeholder: NOVA Parent Directory</h1>
-    <p>This page is currently under construction.</p>
-    <a href="nova-classified-archive.html">Return to Archive</a>
+    <header>
+      <h1>MLTK CITIZEN IDENTIFICATION CALIBRATION TOOL</h1>
+    </header>
+
+    <div class="calibration-form">
+      <div class="form-group">
+        <label for="hair-select">Hair</label>
+        <select id="hair-select">
+          <option value="" disabled selected>Select Hair Option</option>
+          <option value="Blonde Bob">Blonde Bob</option>
+          <option value="Pompadour">Pompadour</option>
+          <option value="Powdered Wig">Powdered Wig</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="eyewear-select">Eyewear</label>
+        <select id="eyewear-select">
+          <option value="" disabled selected>Select Eyewear Option</option>
+          <option value="Cat-Eye Glasses">Cat-Eye Glasses</option>
+          <option value="Shutter Shades">Shutter Shades</option>
+          <option value="Mirrored Aviators">Mirrored Aviators</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="expression-select">Expression</label>
+        <select id="expression-select">
+          <option value="" disabled selected>Select Expression Option</option>
+          <option value="Spiked Knuckles">Spiked Knuckles</option>
+          <option value="Suspicious Milk Mustache">Suspicious Milk Mustache</option>
+          <option value="Sweating Scowl">Sweating Scowl</option>
+        </select>
+      </div>
+
+      <button id="verify-btn">[ VERIFY MAYOR ]</button>
+    </div>
+
+    <div id="success-modal">
+      <div class="modal-content">
+        <h2>Identity Verified</h2>
+        <p>Access Granted to Village of Kindly Database.</p>
+        <a href="/village-of-kindly-secret-file.html">Proceed to Village of Kindly Database</a>
+      </div>
+    </div>
+
+    <script>
+      let domCache = null;
+
+      function getDomCache() {
+        if (!domCache) {
+          domCache = {
+            hair: document.getElementById('hair-select'),
+            eyewear: document.getElementById('eyewear-select'),
+            expression: document.getElementById('expression-select'),
+            verifyBtn: document.getElementById('verify-btn'),
+            successModal: document.getElementById('success-modal')
+          };
+        }
+        return domCache;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const cache = getDomCache();
+
+        cache.verifyBtn.addEventListener('click', () => {
+          const hairVal = cache.hair.value;
+          const eyewearVal = cache.eyewear.value;
+          const expressionVal = cache.expression.value;
+
+          if (hairVal === "Blonde Bob" && eyewearVal === "Cat-Eye Glasses" && expressionVal === "Spiked Knuckles") {
+            cache.successModal.style.display = 'flex';
+          } else {
+            alert("ERROR: MAYORAL IDENTITY REJECTED BY MLTK.");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
