@@ -265,6 +265,105 @@
         }
       }
 
+      /* Manifesto - Napkin */
+      .manifesto-napkin {
+        background-color: #fdf5e6;
+        color: #333;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 30px;
+        margin: 40px auto;
+        border: 1px solid #dcdcdc;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        transform: rotate(-2deg);
+        position: relative;
+      }
+      .manifesto-napkin::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(139, 69, 19, 0.2) 0%, rgba(139, 69, 19, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      /* Quiz Container */
+      .quiz-container {
+        margin-top: 40px;
+        padding: 20px;
+        border: 1px solid var(--nova-blue);
+        background: rgba(0, 229, 255, 0.05);
+      }
+      .quiz-header {
+        font-size: 1.2rem;
+        border-bottom: 1px dashed var(--nova-blue);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      .quiz-question {
+        margin-bottom: 20px;
+      }
+      .quiz-question p {
+        margin: 0 0 10px 0;
+        font-weight: bold;
+      }
+      .quiz-options label {
+        display: block;
+        margin-bottom: 5px;
+        cursor: pointer;
+      }
+      .submit-btn {
+        background-color: var(--nova-blue);
+        color: var(--nova-dark);
+        border: none;
+        padding: 10px 20px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+      .submit-btn:hover {
+        background-color: #fff;
+      }
+      .submit-btn:focus-visible {
+        outline: 2px dashed #fff;
+        outline-offset: 2px;
+      }
+
+      /* Modals */
+      .result-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px;
+        z-index: 30;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+      }
+      #error-modal {
+        background: var(--alert-red);
+        color: #fff;
+        border: 4px solid #fff;
+      }
+      #success-modal {
+        background: var(--nova-dark);
+        color: var(--rabbit-green);
+        border: 4px solid var(--rabbit-green);
+      }
+      .secret-doc-placeholder {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px dashed var(--rabbit-green);
+        font-family: 'Courier New', Courier, monospace;
+        color: #fff;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         * {
           animation-duration: 0.01ms !important;
@@ -384,6 +483,66 @@
           yelling; it disrupts my cognitive retention.
         </div>
       </div>
+
+      <div class="manifesto-napkin">
+        <h3>The Bakery's D59 Manifesto</h3>
+        <p>
+          Bread is life. Control the yeast, control the people. They think they can limit our
+          ingredients, but the dough will rise. We strike at dawn.
+        </p>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">AI Immigration Test</div>
+        <form id="immigration-quiz">
+          <div class="quiz-question">
+            <p>
+              Q1: You observe a neighbour painting their fence a colour not approved by the MLTK
+              hex-code directory. Do you:
+            </p>
+            <div class="quiz-options">
+              <label
+                ><input type="radio" name="q1" value="A" /> A) Compliment their
+                individuality.</label
+              >
+              <label
+                ><input type="radio" name="q1" value="B" /> B) Report the anomaly to the nearest
+                drone.</label
+              >
+              <label><input type="radio" name="q1" value="C" /> C) Drink the paint.</label>
+            </div>
+          </div>
+          <div class="quiz-question">
+            <p>Q2: A 'Cat's Eye Marble' is presented to you. What is its primary function?</p>
+            <div class="quiz-options">
+              <label><input type="radio" name="q2" value="A" /> A) A child's plaything.</label>
+              <label
+                ><input type="radio" name="q2" value="B" /> B) Unsanctioned underground currency in
+                the Town of There.</label
+              >
+              <label><input type="radio" name="q2" value="C" /> C) A choking hazard.</label>
+            </div>
+          </div>
+          <button type="button" class="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modals for Quiz Results -->
+    <div id="error-modal" class="result-modal">
+      <h2>SYSTEM ERROR: ANOMALY DETECTED</h2>
+      <p>Your responses do not align with MLTK compliance standards.</p>
+      <button class="close-btn" onclick="closeModal('error-modal')">[X] CLOSE</button>
+    </div>
+
+    <div id="success-modal" class="result-modal">
+      <h2>ASSIMILATION APPROVED. ACCESS GRANTED.</h2>
+      <div class="secret-doc-placeholder">
+        [SECRET DOCUMENT PLACEHOLDER]<br />
+        Classification: CLASSIFIED<br />
+        Contents: TBD
+      </div>
+      <button class="close-btn" onclick="closeModal('success-modal')">[X] CLOSE</button>
     </div>
 
     <!-- Hidden Document Viewer Modal -->
@@ -438,6 +597,25 @@
       }
 
       timerAnimationId = requestAnimationFrame(updateTimer);
+
+      // -----------------------------------------
+      // 2. Quiz Logic
+      // -----------------------------------------
+      function submitQuiz() {
+        const form = document.getElementById('immigration-quiz');
+        const q1 = form.elements['q1']?.value;
+        const q2 = form.elements['q2']?.value;
+
+        if (q1 === 'B' && q2 === 'B') {
+          document.getElementById('success-modal').style.display = 'block';
+        } else {
+          document.getElementById('error-modal').style.display = 'block';
+        }
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+      }
     </script>
     <script src="nova_archive_utils.js"></script>
   </body>
