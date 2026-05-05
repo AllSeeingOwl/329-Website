@@ -197,18 +197,35 @@
 
       /* --- GLITCH ANIMATION --- */
       @keyframes glitch-anim {
-        0% { transform: translate(0) skew(0); filter: drop-shadow(0 0 0 red); }
-        20% { transform: translate(-10px, 5px) skew(-10deg); filter: drop-shadow(-5px 0 0 red); }
-        40% { transform: translate(10px, -5px) skew(10deg); filter: drop-shadow(5px 0 0 blue); }
-        60% { transform: translate(-5px, 10px) skew(-5deg); filter: drop-shadow(-5px 0 0 red); }
-        80% { transform: translate(5px, -10px) skew(5deg); filter: drop-shadow(5px 0 0 blue); }
-        100% { transform: translate(0) skew(0); filter: drop-shadow(0 0 0 red); }
+        0% {
+          transform: translate(0) skew(0);
+          filter: drop-shadow(0 0 0 red);
+        }
+        20% {
+          transform: translate(-10px, 5px) skew(-10deg);
+          filter: drop-shadow(-5px 0 0 red);
+        }
+        40% {
+          transform: translate(10px, -5px) skew(10deg);
+          filter: drop-shadow(5px 0 0 blue);
+        }
+        60% {
+          transform: translate(-5px, 10px) skew(-5deg);
+          filter: drop-shadow(-5px 0 0 red);
+        }
+        80% {
+          transform: translate(5px, -10px) skew(5deg);
+          filter: drop-shadow(5px 0 0 blue);
+        }
+        100% {
+          transform: translate(0) skew(0);
+          filter: drop-shadow(0 0 0 red);
+        }
       }
 
       .glitching {
-        animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
       }
-
     </style>
   </head>
   <body>
@@ -217,16 +234,21 @@
       <div class="tourism-header">Welcome to Everywhere</div>
       <div class="tourism-body">
         <p>A city of endless possibilities, polite society, and perfectly planned avenues.</p>
-        <p>We hope you enjoy your structured, safe, and completely predictable stay. Please remember to adhere to all municipal guidelines for your own comfort.</p>
+        <p>
+          We hope you enjoy your structured, safe, and completely predictable stay. Please remember
+          to adhere to all municipal guidelines for your own comfort.
+        </p>
       </div>
-      <div class="tourism-seal">Official<br/>Seal</div>
+      <div class="tourism-seal">Official<br />Seal</div>
     </div>
 
     <!-- LAYER 2: Team Rabbit Hacked Layer -->
     <div id="hackedLayer" class="hacked-layer">
       <div class="hacked-container">
         <div class="hacked-text">
-          Transmission intercepted by 3minsto9 Operations. That little brochure you’re holding? We hijacked it. We hid the truth in the margins. Drop your secure comms link below to receive the classified data packet.
+          Transmission intercepted by 3minsto9 Operations. That little brochure you’re holding? We
+          hijacked it. We hid the truth in the margins. Drop your secure comms link below to receive
+          the classified data packet.
         </div>
 
         <div class="terminal-box">
