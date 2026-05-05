@@ -77,7 +77,7 @@ function setupRadioScanner() {
           audioContainer.style.display = 'block';
           // Need to handle potential play() rejection due to lack of user interaction,
           // but slider input is typically a user interaction.
-          interceptAudio.play().catch(e => console.log('Audio playback prevented', e));
+          interceptAudio.play().catch((e) => console.log('Audio playback prevented', e));
         }
       }
 

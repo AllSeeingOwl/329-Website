@@ -224,8 +224,12 @@
       }
 
       @keyframes flash {
-        0% { background-color: #fff; }
-        100% { background-color: #111; }
+        0% {
+          background-color: #fff;
+        }
+        100% {
+          background-color: #111;
+        }
       }
 
       .anim-shake {
@@ -343,7 +347,7 @@
       <div class="audio-player-container" id="audio-container">
         <div class="track-name">TEAM RABBIT INTERCEPT</div>
         <audio id="intercept-audio" controls>
-          <source src="" type="audio/mpeg" id="audio-source">
+          <source src="" type="audio/mpeg" id="audio-source" />
           Your browser does not support the audio element.
         </audio>
       </div>
