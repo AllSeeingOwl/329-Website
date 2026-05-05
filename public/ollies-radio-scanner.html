@@ -176,6 +176,58 @@
         display: none;
       }
 
+      .audio-player-container {
+        display: none;
+        margin-top: 20px;
+        background-color: #000;
+        border: 2px solid #00ff00;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .track-name {
+        color: #00ff00;
+        font-family: 'VT323', monospace;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+
+      audio {
+        width: 100%;
+        outline: none;
+      }
+
+      .tacky-ad {
+        position: absolute;
+        bottom: 20px;
+        background-color: #ffff00;
+        color: #ff0000;
+        border: 4px dashed #ff0000;
+        padding: 15px 30px;
+        font-family: 'Anton', sans-serif;
+        font-size: 1.5rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        box-shadow: 5px 5px 0 #000;
+        transition: transform 0.1s;
+      }
+
+      .tacky-ad:hover,
+      .tacky-ad:focus-visible {
+        transform: scale(1.05);
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+      }
+
+      .page-flash {
+        animation: flash 0.5s ease-out;
+      }
+
+      @keyframes flash {
+        0% { background-color: #fff; }
+        100% { background-color: #111; }
+      }
+
       .anim-shake {
         animation: shake 0.5s infinite;
       }
@@ -287,7 +339,17 @@
       </div>
 
       <div class="transmission-box" id="transmission-output">[SCANNING FREQUENCIES...]</div>
+
+      <div class="audio-player-container" id="audio-container">
+        <div class="track-name">TEAM RABBIT INTERCEPT</div>
+        <audio id="intercept-audio" controls>
+          <source src="" type="audio/mpeg" id="audio-source">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
     </div>
+
+    <a href="#" class="tacky-ad">Timmy I. Timmykins' Emporium</a>
 
     <script src="radio_scanner_utils.js"></script>
     <script>
