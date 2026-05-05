@@ -4,30 +4,79 @@
     <meta name="robots" content="noindex" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SYSTEM OVERRIDE: INTERCEPTED TOURIST INTEL (RESTRICTED ACCESS)</title>
-    <!-- Importing exact fonts from the Unknown Master Font Sheet -->
+    <title>City of Everywhere Tourism Board</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=VT323&display=swap"
       rel="stylesheet"
     />
     <style>
+      /* --- GLOBAL BASE --- */
       body,
       html {
         margin: 0;
         padding: 0;
         width: 100%;
         min-height: 100vh;
-        background-color: #050505;
-        color: #00ff00;
-        font-family: 'VT323', monospace;
         overflow-x: hidden;
         box-sizing: border-box;
       }
 
-      /* Subtle CRT Scanline Overlay */
-      body::before {
+      /* --- TOURISM BOARD LAYER (PRE-GLITCH) --- */
+      .tourism-layer {
+        background-color: #f4f1ea;
+        color: #4a4a4a;
+        font-family: 'Roboto', sans-serif;
+        text-align: center;
+        padding: 60px 20px;
+        min-height: 100vh;
+        transition: opacity 0.1s;
+      }
+
+      .tourism-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #2c3e50;
+      }
+
+      .tourism-body {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .tourism-seal {
+        margin-top: 40px;
+        width: 150px;
+        height: 150px;
+        background-color: #dcd7c9;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #a8a396;
+        color: #7b7568;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.9rem;
+      }
+
+      /* --- HACKED LAYER (POST-GLITCH) --- */
+      .hacked-layer {
+        display: none;
+        background-color: #050505;
+        color: #ff003c;
+        font-family: 'VT323', monospace;
+        padding: 50px 20px;
+        min-height: 100vh;
+      }
+
+      /* CRT Scanlines for Hacked Layer overlay */
+      body.glitched::after {
         content: ' ';
         display: block;
         position: fixed;
@@ -43,150 +92,87 @@
             rgba(0, 255, 0, 0.02),
             rgba(0, 0, 255, 0.06)
           );
-        z-index: 2;
+        z-index: 999;
         background-size:
           100% 3px,
           3px 100%;
         pointer-events: none;
       }
 
-      .container {
+      .hacked-container {
         max-width: 800px;
         margin: 0 auto;
-        padding: 50px 20px;
         position: relative;
         z-index: 3;
       }
 
-      .header-title {
-        font-family: 'Anton', sans-serif;
-        color: #ff003c;
-        font-size: 2.5rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 30px;
-        border-bottom: 3px solid #ff003c;
-        padding-bottom: 10px;
-        text-shadow:
-          2px 2px 0px #000,
-          -2px -2px 0px #00ffff;
-        line-height: 1.1;
-      }
-
-      .body-text {
-        font-size: 1.4rem;
+      .hacked-text {
+        font-size: 1.8rem;
         line-height: 1.4;
-        margin-bottom: 30px;
-      }
-
-      .body-text p {
-        margin-bottom: 20px;
-      }
-
-      .highlight-red {
-        color: #ff003c;
-      }
-
-      /* Table Styles */
-      table {
-        width: 100%;
-        border-collapse: collapse;
         margin-bottom: 40px;
-        border: 2px solid #00ff00;
-        background: rgba(0, 255, 0, 0.05);
+        text-shadow: 2px 2px 0px rgba(255, 0, 0, 0.5);
       }
 
-      th,
-      td {
-        border: 1px solid #00ff00;
-        padding: 12px;
-        text-align: left;
-        font-size: 1.2rem;
-      }
-
-      th {
-        font-family: 'Anton', sans-serif;
-        font-size: 1.4rem;
-        color: #ff003c;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        background: rgba(255, 0, 60, 0.1);
-      }
-
-      ul {
-        margin: 0;
-        padding-left: 20px;
-        margin-bottom: 30px;
-      }
-
-      li {
-        font-size: 1.4rem;
-        line-height: 1.4;
-        margin-bottom: 10px;
-      }
-
-      /* Form Section */
-      .uplink-box {
-        border: 2px dashed #00ff00;
-        background: rgba(0, 255, 0, 0.05);
+      .terminal-box {
+        border: 2px dashed #ff003c;
+        background: rgba(255, 0, 60, 0.05);
         padding: 30px;
         margin: 40px 0;
-      }
-
-      .uplink-title {
-        font-family: 'Anton', sans-serif;
-        color: #00ff00;
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
       }
 
       .input-group {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 20px;
       }
 
       input[type='email'] {
         background: #000;
-        color: #00ff00;
-        border: 2px solid #00ff00;
+        color: #ff003c;
+        border: 2px solid #ff003c;
         font-family: 'VT323', monospace;
-        font-size: 1.5rem;
-        padding: 12px;
+        font-size: 1.8rem;
+        padding: 15px;
         width: 100%;
         box-sizing: border-box;
         outline: none;
+        text-transform: uppercase;
       }
 
-      input[type='email']:focus {
-        box-shadow: 0 0 10px #00ff00;
+      input[type='email']::placeholder {
+        color: #7a001d;
       }
 
-      /* explicit focus-visible state per memory */
-      button:focus-visible,
-      input:focus-visible {
-        outline: 2px solid #ff003c;
+      input[type='email']:focus,
+      input[type='email']:focus-visible {
+        box-shadow: 0 0 15px #ff003c;
+        border-color: #ff3366;
       }
 
       .btn-submit {
-        background: #000;
-        color: #00ff00;
-        border: 2px solid #00ff00;
+        background: #ff003c;
+        color: #000;
+        border: 2px solid #ff003c;
         font-family: 'VT323', monospace;
-        font-size: 1.5rem;
-        padding: 12px 24px;
+        font-size: 1.8rem;
+        padding: 15px 24px;
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.2s;
         width: 100%;
         box-sizing: border-box;
+        font-weight: bold;
       }
 
       .btn-submit:hover {
-        background: #00ff00;
-        color: #000;
-        box-shadow: 0 0 15px #00ff00;
+        background: #000;
+        color: #ff003c;
+        box-shadow: 0 0 15px #ff003c;
+      }
+
+      .btn-submit:focus-visible {
+        outline: 2px dashed #fff;
+        outline-offset: 4px;
       }
 
       .btn-submit:disabled {
@@ -197,341 +183,141 @@
         box-shadow: none;
       }
 
-      .message-box {
-        margin-top: 20px;
-        font-size: 1.4rem;
+      .success-message {
         display: none;
-      }
-
-      .message-success {
         color: #00ff00;
-        border: 1px dashed #00ff00;
-        padding: 10px;
-      }
-
-      .message-error {
-        color: #ff003c;
-        border: 1px dashed #ff003c;
-        padding: 10px;
-      }
-
-      .terminal-footer {
-        margin-top: 60px;
-        font-size: 1.1rem;
-        color: #00ff00;
-        border-top: 1px dashed #00ff00;
-        padding-top: 20px;
+        font-size: 2rem;
+        margin-top: 20px;
+        border: 2px solid #00ff00;
+        padding: 15px;
         text-align: center;
+        text-shadow: 0 0 5px #00ff00;
+        background: rgba(0, 255, 0, 0.1);
       }
 
-      @media (max-width: 600px) {
-        .container {
-          padding: 20px;
+      /* --- GLITCH ANIMATION --- */
+      @keyframes glitch-anim {
+        0% {
+          transform: translate(0) skew(0);
+          filter: drop-shadow(0 0 0 red);
         }
-        .header-title {
-          font-size: 1.8rem;
+        20% {
+          transform: translate(-10px, 5px) skew(-10deg);
+          filter: drop-shadow(-5px 0 0 red);
         }
-        .body-text,
-        li {
-          font-size: 1.2rem;
+        40% {
+          transform: translate(10px, -5px) skew(10deg);
+          filter: drop-shadow(5px 0 0 blue);
         }
-        th,
-        td {
-          font-size: 1rem;
-          padding: 8px;
+        60% {
+          transform: translate(-5px, 10px) skew(-5deg);
+          filter: drop-shadow(-5px 0 0 red);
         }
-        .uplink-box {
-          padding: 15px;
+        80% {
+          transform: translate(5px, -10px) skew(5deg);
+          filter: drop-shadow(5px 0 0 blue);
         }
-        .uplink-title {
-          font-size: 1.5rem;
+        100% {
+          transform: translate(0) skew(0);
+          filter: drop-shadow(0 0 0 red);
         }
-        .btn-submit,
-        input[type='email'] {
-          font-size: 1.2rem;
-          padding: 10px;
-        }
+      }
+
+      .glitching {
+        animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
       }
     </style>
-    <script type="module" src="/app.js"></script>
-    <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <div class="container">
-      <div class="header-title">SYSTEM OVERRIDE: INTERCEPTED TOURIST INTEL (RESTRICTED ACCESS)</div>
-
-      <div class="body-text">
+    <!-- LAYER 1: Tourism Board -->
+    <div id="tourismLayer" class="tourism-layer">
+      <div class="tourism-header">Welcome to Everywhere</div>
+      <div class="tourism-body">
+        <p>A city of endless possibilities, polite society, and perfectly planned avenues.</p>
         <p>
-          <strong>LISTEN UP, YOU ABSOLUTE TOURIST POSER</strong>
-        </p>
-        <p>
-          If you’re reading this, you’ve either got the technical savvy of a fossil or you’re some
-          wack square who can't handle a basic logic-lock. Team Rabbit has smuggled these decrypted
-          files out of the archive before the "City of Everywhere" suits could hit the delete key.
-          You’re lucky I’m even letting you look at this intel without charging a "stupidity tax."
-        </p>
-        <p>
-          Beatrix—that Dic... tionary who thinks he’s a refined scholar—is probably busy adjusting
-          his white tennis dress and crying over a library book right now. FAIL! I don’t do
-          lectures, I do results. These are the override codes for the Unknown Field Guide. Stop
-          no-selling the puzzles and keep it real. If you can’t handle this data with the answers in
-          front of you, just bounce now before things get sketchy. This is a high-velocity system
-          override, not a "mindless scrolling slab" for you to drool on.
+          We hope you enjoy your structured, safe, and completely predictable stay. Please remember
+          to adhere to all municipal guidelines for your own comfort.
         </p>
       </div>
+      <div class="tourism-seal">Official<br />Seal</div>
+    </div>
 
-      <hr style="border: 1px dashed #00ff00; margin: 40px 0" />
-
-      <div class="header-title" style="font-size: 1.8rem; border-bottom: none; margin-bottom: 10px">
-        Decrypted Override Codes (The Puzzle Solutions)
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>PUZZLE TAG</th>
-            <th>OVERRIDE KEY</th>
-            <th>SYSTEM LORE</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Codes of Origin</td>
-            <td>23rd April; 31st October; 1st April; 21st June; 15th November</td>
-            <td>
-              These are the "Birthdays" linked to Team Rabbit’s sensory traits. Beatrix (World Book
-              Day), Merrick/Jake (Halloween), Ollie (April Fool’s), The Twins (Summer Solstice), and
-              Avery (7-5-3 Day).
-            </td>
-          </tr>
-          <tr>
-            <td>Chemical Overrides</td>
-            <td>
-              Alley Cat Swill; Pavement Pounder; Graffito Grog; Broken Bottle Bramble; Riot Punch
-            </td>
-            <td>
-              These are the "Their There" cocktails prepared via "unconventional methods" like
-              rolling oil drums down alleys or pounding ingredients with pavement chunks. Properly
-              sanitised despite the mosh pit prep—we have hygiene standards, unlike you.
-            </td>
-          </tr>
-          <tr>
-            <td>Visual Poster Protocols</td>
-            <td>
-              Family Guy Death Pose; The Office (US); Leon the Professional; Final Fantasy VII
-            </td>
-            <td>
-              Faceless Protocol identifiers. Cena is the "Family Guy" slump wearing jorts and
-              armbands. Undisputed Era features Adam Cole with a "World's Best Boss" mug and Kyle
-              O'Reilly doing Dwight Schrute martial arts near a copier.
-            </td>
-          </tr>
-          <tr>
-            <td>Technical Identifiers</td>
-            <td>BlackBerry Bold 9900; Ace of Spades</td>
-            <td>
-              Hardware protocols. "The Babbage" (Beatrix’s piece of fossilised junk with the tactile
-              keyboard) and "The Space" card (the high-tech quantum bank card issued to the Ace of
-              Spades).
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <hr style="border: 1px dashed #00ff00; margin: 40px 0" />
-
-      <div class="header-title" style="font-size: 1.8rem; border-bottom: none; margin-bottom: 10px">
-        Asset Contributors (The Specialists):
-      </div>
-
-      <ul>
-        <li>
-          <strong>The Cover Art Operatives:</strong> Responsible for the primary visual "stamps"
-          used for the zine and field guide.
-        </li>
-        <li>
-          <strong>The Spread Specialists:</strong> Provided the intricate, multi-layered
-          "Double-page spreads" currently residing in the secure library.
-        </li>
-      </ul>
-
-      <hr style="border: 1px dashed #00ff00; margin: 40px 0" />
-
-      <div class="uplink-box">
-        <div class="uplink-title">Secure Data Packet Uplink</div>
-        <div class="body-text">
-          <p>
-            You want the full data dump? You want the "Wiki Library" remnants and the rest of the
-            intercepted "tourist documents"? Consider this a forced tactical handshake. Provide an
-            Uplink (email) right now or get rekt. Once you’re on the list, you’ll receive the Secure
-            Data Packet directly to your terminal.
-          </p>
-          <p>
-            Don't start a "social hysteria" crying fit about your data, either. We run on the
-            Duct-Tape App philosophy.
-          </p>
-          <p class="highlight-red">
-            "Mad Dog Warning #402: No data collection, no tracking, and zero hysteria. If you’re a
-            paid subscriber to the truth, you get the goods. If you’re looking for a 'mindless
-            scrolling slab' experience, go back to Everywhere. We keep the internet quiet, static,
-            and ethical. Pay the price or bounce."
-          </p>
+    <!-- LAYER 2: Team Rabbit Hacked Layer -->
+    <div id="hackedLayer" class="hacked-layer">
+      <div class="hacked-container">
+        <div class="hacked-text">
+          Transmission intercepted by 3minsto9 Operations. That little brochure you’re holding? We
+          hijacked it. We hid the truth in the margins. Drop your secure comms link below to receive
+          the classified data packet.
         </div>
 
-        <form id="uplinkForm" class="input-group">
-          <input
-            type="email"
-            id="emailInput"
-            placeholder="ENTER_UPLINK@TERMINAL.NET"
-            required
-            aria-label="Email address for uplink"
-            maxlength="254"
-          />
-          <button type="submit" id="submitBtn" class="btn-submit">ESTABLISH HANDSHAKE</button>
-        </form>
-
-        <div id="formMessage" class="message-box" role="alert" aria-live="polite"></div>
-      </div>
-
-      <hr style="border: 1px dashed #00ff00; margin: 40px 0" />
-
-      <div class="header-title" style="font-size: 1.8rem; border-bottom: none; margin-bottom: 10px">
-        System Logout & Tactical Insult
-      </div>
-
-      <div class="body-text">
-        <p>
-          You’re done here, tourist. You’ve got your codes, you’ve got your keys, and you’ve wasted
-          enough of my time. Check yourself before you wreck yourself and head back to the Town of
-          There before things get really sketchy and I decide to start a mosh pit on your face.
-        </p>
-        <p>
-          Tell Beatrix his "Refined Lexicon" is still grody to the max and his "cheerleader" persona
-          is a total heel turn fail. If he tries to consult "The Babbage" for a statistical
-          verification on that, tell him to shove it.
-        </p>
-      </div>
-
-      <div class="terminal-footer">
-        <p>Merrick "Mad Dog" Ampere [Team Rabbit Enforcer]</p>
+        <div class="terminal-box">
+          <form id="hackedForm" class="input-group">
+            <input
+              type="email"
+              id="commsLink"
+              placeholder="[ Enter Comms Link... ]"
+              required
+              aria-label="Secure Comms Link"
+            />
+            <button type="submit" id="submitBtn" class="btn-submit">BREACH THE MAINFRAME</button>
+          </form>
+          <div id="successMessage" class="success-message" role="alert" aria-live="assertive">
+            DATA PACKET DISPATCHED. WELCOME TO THE WAR.
+          </div>
+        </div>
       </div>
     </div>
 
     <script>
-      // Simulated frontend-only form with rate limiting via localStorage per memory
       document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('uplinkForm');
-        const emailInput = document.getElementById('emailInput');
+        const tourismLayer = document.getElementById('tourismLayer');
+        const hackedLayer = document.getElementById('hackedLayer');
+        const form = document.getElementById('hackedForm');
         const submitBtn = document.getElementById('submitBtn');
-        const messageBox = document.getElementById('formMessage');
+        const successMessage = document.getElementById('successMessage');
+        const emailInput = document.getElementById('commsLink');
 
-        const COOLDOWN_MS = 60000; // 60 seconds
+        // Trigger glitch sequence after 2 seconds
+        setTimeout(() => {
+          // Add glitch animation to tourism layer
+          tourismLayer.classList.add('glitching');
 
-        // Check initial rate limit state
-        function checkRateLimit() {
-          const lastSubmit = localStorage.getItem('systemOverrideUplinkTime');
-          if (lastSubmit) {
-            const timeElapsed = Date.now() - parseInt(lastSubmit, 10);
-            if (timeElapsed < COOLDOWN_MS) {
-              const secondsLeft = Math.ceil((COOLDOWN_MS - timeElapsed) / 1000);
-              disableForm(secondsLeft);
-              return true; // Is rate limited
+          // Flash effect
+          let flashCount = 0;
+          const flashInterval = setInterval(() => {
+            document.body.style.backgroundColor = flashCount % 2 === 0 ? '#ff003c' : '#000';
+            flashCount++;
+
+            if (flashCount > 5) {
+              clearInterval(flashInterval);
+              // Switch layers
+              document.body.style.backgroundColor = '#050505';
+              document.title = 'SYSTEM OVERRIDE';
+              tourismLayer.style.display = 'none';
+              hackedLayer.style.display = 'block';
+              document.body.classList.add('glitched'); // Adds CRT scanlines
             }
-          }
-          enableForm();
-          return false; // Not rate limited
-        }
+          }, 50);
+        }, 2000);
 
-        function disableForm(secondsLeft) {
-          submitBtn.disabled = true;
-          submitBtn.setAttribute('aria-disabled', 'true');
-          emailInput.disabled = true;
-
-          if (secondsLeft) {
-            submitBtn.textContent = 'COOLDOWN ACTIVE';
-            messageBox.style.display = 'block';
-            messageBox.className = 'message-box message-error';
-
-            // Escape HTML visually using createTextNode
-            messageBox.textContent = '';
-            messageBox.appendChild(
-              document.createTextNode(
-                `HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${secondsLeft}s.`
-              )
-            );
-
-            // Setup countdown
-            let remaining = secondsLeft;
-            const interval = setInterval(() => {
-              remaining--;
-              if (remaining <= 0) {
-                clearInterval(interval);
-                enableForm();
-                messageBox.style.display = 'none';
-              } else {
-                messageBox.textContent = '';
-                messageBox.appendChild(
-                  document.createTextNode(
-                    `HANDSHAKE REJECTED: COOLDOWN ACTIVE. RETRY IN ${remaining}s.`
-                  )
-                );
-              }
-            }, 1000);
-          }
-        }
-
-        function enableForm() {
-          submitBtn.disabled = false;
-          submitBtn.setAttribute('aria-disabled', 'false');
-          emailInput.disabled = false;
-          submitBtn.textContent = 'ESTABLISH HANDSHAKE';
-        }
-
-        checkRateLimit();
-
+        // Handle form submission
         form.addEventListener('submit', (e) => {
           e.preventDefault();
-
-          if (checkRateLimit()) return;
 
           const email = emailInput.value.trim();
           if (!email) return;
 
-          // Simulate processing
-          form.setAttribute('aria-busy', 'true');
+          // Disable form to prevent double-submits
           submitBtn.disabled = true;
-          submitBtn.setAttribute('aria-disabled', 'true');
+          emailInput.disabled = true;
           submitBtn.textContent = 'TRANSMITTING...';
 
+          // Simulate network delay
           setTimeout(() => {
-            form.removeAttribute('aria-busy');
-            // Set rate limit
-            localStorage.setItem('systemOverrideUplinkTime', Date.now().toString());
-
-            // Show success message (using text node to prevent XSS)
-            messageBox.style.display = 'block';
-            messageBox.className = 'message-box message-success';
-            messageBox.textContent = '';
-
-            // XSS mitigation for input rendering
-            const truncatedEmail = email.substring(0, 50); // Prevent massive payloads
-            messageBox.appendChild(
-              document.createTextNode(
-                `UPLINK SECURED FOR: ${truncatedEmail}. TRANSMISSION PENDING.`
-              )
-            );
-
-            // Reset form input
-            emailInput.value = '';
-
-            // Update button text to show success state before cooldown locks it
-            submitBtn.textContent = 'HANDSHAKE ESTABLISHED';
-
-            // Start cooldown UI after a delay to let the user see the success message
-            setTimeout(() => {
-              checkRateLimit();
-            }, 3000);
-          }, 1500);
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+          }, 1000);
         });
       });
     </script>
