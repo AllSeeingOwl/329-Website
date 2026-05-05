@@ -1,4 +1,5 @@
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!<>{}[]';
+const AUDIO_SOURCE_URL = ''; // Placeholder for .mp3 file URL
 
 // ⚡ Bolt: Prevent garbage collection pressure and layout jank during high-frequency
 // input events (e.g., slider dragging) by extracting the typed array allocation outside
@@ -34,8 +35,19 @@ function setupRadioScanner() {
   const display = document.getElementById('freq-display');
   const output = document.getElementById('transmission-output');
   const radioBody = document.getElementById('radio-body');
+  const audioContainer = document.getElementById('audio-container');
+  const interceptAudio = document.getElementById('intercept-audio');
+  const audioSource = document.getElementById('audio-source');
 
   if (!slider || !display || !output || !radioBody) return;
+
+  // Set the audio source
+  if (audioSource) {
+    audioSource.src = AUDIO_SOURCE_URL;
+    if (interceptAudio) {
+      interceptAudio.load();
+    }
+  }
 
   const decryptedMessage =
     "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
@@ -55,6 +67,20 @@ function setupRadioScanner() {
     }
 
     if (freq === '104.9') {
+      if (!radioBody.classList.contains('locked-in')) {
+        document.body.classList.remove('page-flash');
+        // trigger reflow
+        void document.body.offsetWidth;
+        document.body.classList.add('page-flash');
+
+        if (audioContainer && interceptAudio) {
+          audioContainer.style.display = 'block';
+          // Need to handle potential play() rejection due to lack of user interaction,
+          // but slider input is typically a user interaction.
+          interceptAudio.play().catch((e) => console.log('Audio playback prevented', e));
+        }
+      }
+
       radioBody.classList.add('locked-in');
       output.classList.remove('anim-shake');
 
@@ -102,6 +128,13 @@ function setupRadioScanner() {
     } else {
       radioBody.classList.remove('locked-in');
       output.classList.add('anim-shake');
+
+      if (audioContainer && interceptAudio) {
+        audioContainer.style.display = 'none';
+        interceptAudio.pause();
+        // Reset playback time when tuning away
+        interceptAudio.currentTime = 0;
+      }
 
       let distance = Math.abs(1049 - rawVal);
       let staticLength = Math.max(20, distance);
