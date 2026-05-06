@@ -8,6 +8,8 @@ import {
   updateMaintenanceConfig,
   getDashboardConfig,
   updateDashboardConfig,
+  updateAllDashboardConfig,
+  updateAllMaintenanceConfig,
 } from './db';
 
 const app = express();
@@ -299,6 +301,16 @@ app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, r
   }
 });
 
+app.post('/api/admin/dashboard-config/all', verifyAdminToken, async (req: Request, res: Response) => {
+  const { status } = req.body;
+  try {
+    await updateAllDashboardConfig(status);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update all dashboard configs' });
+  }
+});
+
 app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
   try {
     const config = await getMaintenanceConfig();
@@ -318,6 +330,16 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
     res.json({ success: true });
   } catch (e) {
     res.status(500).json({ error: 'Failed to update maintenance config' });
+  }
+});
+
+app.post('/api/admin/maintenance-config/all', verifyAdminToken, async (req: Request, res: Response) => {
+  const { value } = req.body;
+  try {
+    await updateAllMaintenanceConfig(value);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to update all maintenance configs' });
   }
 });
 

@@ -295,11 +295,13 @@
       <div id="admin-content">
         <div class="admin-panel" style="margin-left: 40px; margin-right: 40px">
           <h3 class="admin-panel-title">SYSTEM MAINTENANCE CONFIGURATION</h3>
+          <div id="master-maintenance-container" style="margin-bottom: 20px; border-bottom: 1px dotted #555; padding-bottom: 15px;"></div>
           <div class="admin-controls" id="maintenance-controls-container">
             <!-- Maintenance Toggles injected here -->
           </div>
 
           <h3 class="admin-panel-title" style="margin-top: 30px">NETWORK NODE CONFIGURATION</h3>
+          <div id="master-dashboard-container" style="margin-bottom: 20px; border-bottom: 1px dotted #555; padding-bottom: 15px;"></div>
           <div class="admin-controls" id="dashboard-controls-container">
             <!-- Dashboard Toggles injected here -->
           </div>
@@ -376,6 +378,28 @@
         const container = document.getElementById('maintenance-controls-container');
         container.innerHTML = '';
 
+        const masterContainer = document.getElementById('master-maintenance-container');
+        masterContainer.innerHTML = '';
+
+        // Master Maintenance Toggle
+        const isAllMaintOn = ['global', 'studio', 'mltk'].every(key => config[key] === 'true' || config[key] === true);
+        masterContainer.appendChild(
+          createToggle('MASTER MAINTENANCE', isAllMaintOn, async (e) => {
+            const isChecked = e.target.checked;
+            await fetch('/api/admin/maintenance-config/all', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`,
+              },
+              body: JSON.stringify({ value: isChecked }),
+            });
+            // Update individual switches visually
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = isChecked);
+          })
+        );
+
         const keys = [
           { key: 'global', label: 'Global Maintenance' },
           { key: 'studio', label: 'Studio Maintenance' },
@@ -401,6 +425,29 @@
       function renderDashboardPanel(config) {
         const container = document.getElementById('dashboard-controls-container');
         container.innerHTML = '';
+
+        const masterContainer = document.getElementById('master-dashboard-container');
+        masterContainer.innerHTML = '';
+
+        // Master Dashboard Toggle
+        const isAllDashOn = config.every(item => item.status === 'active');
+        masterContainer.appendChild(
+          createToggle('MASTER LOCKDOWN (ALL NODES)', isAllDashOn, async (e) => {
+            const isChecked = e.target.checked;
+            const newStatus = isChecked ? 'active' : 'offline';
+            await fetch('/api/admin/dashboard-config/all', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`,
+              },
+              body: JSON.stringify({ status: newStatus }),
+            });
+            // Update individual switches visually
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = isChecked);
+          })
+        );
 
         config.forEach((item) => {
           container.appendChild(
