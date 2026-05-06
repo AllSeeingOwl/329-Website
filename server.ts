@@ -301,15 +301,19 @@ app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, r
   }
 });
 
-app.post('/api/admin/dashboard-config/all', verifyAdminToken, async (req: Request, res: Response) => {
-  const { status } = req.body;
-  try {
-    await updateAllDashboardConfig(status);
-    res.json({ success: true });
-  } catch (e) {
-    res.status(500).json({ error: 'Failed to update all dashboard configs' });
+app.post(
+  '/api/admin/dashboard-config/all',
+  verifyAdminToken,
+  async (req: Request, res: Response) => {
+    const { status } = req.body;
+    try {
+      await updateAllDashboardConfig(status);
+      res.json({ success: true });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update all dashboard configs' });
+    }
   }
-});
+);
 
 app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
   try {
@@ -333,15 +337,19 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
   }
 });
 
-app.post('/api/admin/maintenance-config/all', verifyAdminToken, async (req: Request, res: Response) => {
-  const { value } = req.body;
-  try {
-    await updateAllMaintenanceConfig(value);
-    res.json({ success: true });
-  } catch (e) {
-    res.status(500).json({ error: 'Failed to update all maintenance configs' });
+app.post(
+  '/api/admin/maintenance-config/all',
+  verifyAdminToken,
+  async (req: Request, res: Response) => {
+    const { value } = req.body;
+    try {
+      await updateAllMaintenanceConfig(value);
+      res.json({ success: true });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update all maintenance configs' });
+    }
   }
-});
+);
 
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {
