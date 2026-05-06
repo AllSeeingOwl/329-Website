@@ -163,6 +163,34 @@ export async function initDb() {
   }
 }
 
+export async function updateAllDashboardConfig(status: string) {
+  if (isKvAvailable) {
+    const config = await getDashboardConfig();
+    config.forEach((item) => {
+      item.status = status;
+    });
+    await kv.set('config:dashboard', config);
+  } else {
+    inMemoryDashboardConfig.forEach((item) => {
+      item.status = status;
+    });
+  }
+}
+
+export async function updateAllMaintenanceConfig(value: boolean) {
+  if (isKvAvailable) {
+    await kv.hset('config:maintenance', {
+      global: String(value),
+      studio: String(value),
+      mltk: String(value),
+    });
+  } else {
+    inMemoryMaintenanceConfig.global = value;
+    inMemoryMaintenanceConfig.studio = value;
+    inMemoryMaintenanceConfig.mltk = value;
+  }
+}
+
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
   if (isKvAvailable) {
     const config = await kv.hgetall('config:maintenance');
