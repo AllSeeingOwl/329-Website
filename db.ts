@@ -23,6 +23,14 @@ export interface MaintenanceConfig {
 
 const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
+    id: 'PORTAL: VVI',
+    title: 'Virtue Village Index',
+    status: 'active',
+    link: 'mltk-virtue-village-index.html',
+    type: 'ENTER',
+    isDownload: false,
+  },
+  {
     id: 'DOC: 001-VVL',
     title: 'Virtue Village Layouts',
     status: 'offline',

@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLTK Classified: Virtue Village Index</title>
+    <meta name="robots" content="noindex" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        /* MLTK Aesthetic: Sterile 1950s beige meets 90s terminal */
+        background-color: #f5f5dc;
+        background-image: radial-gradient(#d7d7c1 1px, transparent 1px);
+        background-size: 20px 20px;
+        font-family: 'Share Tech Mono', monospace;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .mltk-terminal {
+        background-color: #0a0f14;
+        color: #00f3ff;
+        border: 4px solid #00f3ff;
+        box-shadow: 10px 10px 0px #000000;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scanlines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.2)
+        );
+        background-size: 100% 4px;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      .btn-letter {
+        transition: all 0.2s ease;
+      }
+      .btn-letter:hover,
+      .btn-letter.active,
+      .btn-letter:focus-visible {
+        background-color: #00f3ff;
+        color: #0a0f14;
+        outline: none;
+      }
+
+      .btn-letter:focus-visible {
+        box-shadow: 0 0 10px #00f3ff;
+      }
+
+      .glitch-text {
+        animation: glitch 1s linear infinite;
+      }
+
+      @keyframes glitch {
+        2%,
+        64% {
+          transform: translate(2px, 0) skew(0deg);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0) skew(0deg);
+        }
+        62% {
+          transform: translate(0, 0) skew(5deg);
+        }
+      }
+
+      /* Hide scrollbar for the letter nav */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .nav-link {
+        color: #0a0f14;
+        text-decoration: none;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 1.2rem;
+        margin-top: 20px;
+        padding: 5px 15px;
+        border: 2px solid #0a0f14;
+        transition: all 0.2s ease;
+        font-weight: bold;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        background-color: #0a0f14;
+        color: #f5f5dc;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body class="p-4 md:p-8">
+    <div class="mltk-terminal w-full max-w-5xl flex flex-col md:flex-row h-[85vh]">
+      <div class="scanlines"></div>
+
+      <!-- Left Sidebar: A-Z Navigation -->
+      <div
+        class="w-full md:w-24 border-b md:border-b-0 md:border-r-4 border-[#00f3ff] flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar z-20 bg-[#05080a]"
+      >
+        <div class="text-center p-2 border-b-2 border-[#00f3ff] text-xs opacity-70">INDEX</div>
+        <div id="letter-nav" class="flex flex-row md:flex-col">
+          <!-- Buttons injected via JS -->
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col z-20 relative p-6 md:p-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="border-b-2 border-[#00f3ff] pb-4 mb-6 flex justify-between items-end">
+          <div>
+            <h1 class="text-3xl md:text-5xl font-bold tracking-widest text-white">
+              FILE DIRECTORY: <span id="display-letter" class="text-[#00f3ff]">K</span>
+            </h1>
+            <p class="text-sm mt-1 opacity-70">
+              MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
+            </p>
+          </div>
+          <div class="hidden md:block text-right">
+            <p class="text-xs">SYS_STATUS: <span class="text-green-400">ONLINE</span></p>
+            <p class="text-xs">
+              ZONING: <span class="text-red-400 glitch-text">TETROMINO LOCK</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Data Card -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Left Column: Village Info -->
+          <div class="space-y-6">
+            <div>
+              <p class="text-xs text-gray-400 mb-1">VILLAGE DESIGNATION</p>
+              <h2
+                id="village-name"
+                class="text-3xl bg-[#00f3ff] text-[#0a0f14] inline-block px-3 py-1 font-bold"
+              >
+                The Village of Kindly
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border border-[#00f3ff] p-4 bg-[#0a0f14]">
+              <div>
+                <p class="text-xs text-gray-400">PUBLIC VIRTUE</p>
+                <p id="village-virtue" class="text-lg text-green-400">Kindness</p>
+              </div>
+              <div>
+                <p class="text-xs text-red-400 glitch-text">CLASSIFIED VICE</p>
+                <p id="village-vice" class="text-lg text-red-400">HOA Surveillance</p>
+              </div>
+              <div class="col-span-2 pt-2 border-t border-[#00f3ff]/30">
+                <p class="text-xs text-gray-400">ZONING ARCHITECTURE (TETROMINO)</p>
+                <p id="village-tetromino" class="text-xl text-fuchsia-400">L-Block Configuration</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Mayor Info -->
+          <div class="space-y-6">
+            <div>
+              <p class="text-xs text-gray-400 mb-1">DESIGNATED MAYOR</p>
+              <h3 id="mayor-name" class="text-2xl text-yellow-400">Mayor Karen</h3>
+            </div>
+
+            <div class="border border-[#00f3ff] p-4 bg-[#00f3ff]/10">
+              <p class="text-xs text-[#00f3ff] border-b border-[#00f3ff]/50 pb-2 mb-3">
+                BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
+              </p>
+              <ul class="space-y-3 text-sm">
+                <li class="flex items-start">
+                  <span class="opacity-50 mr-2">[HAIR]</span>
+                  <span id="mayor-hair" class="text-yellow-200">Blonde Bob</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="opacity-50 mr-2">[EYES]</span>
+                  <span id="mayor-eyes" class="text-yellow-200">Cat-Eye Glasses</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="opacity-50 mr-2">[EXPR]</span>
+                  <span id="mayor-expr" class="text-yellow-200">Spiked Knuckles</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Puzzlesmith Note / Lore -->
+            <div class="mt-4 p-3 border-l-4 border-red-500 bg-red-900/20 text-red-200 text-sm">
+              <p class="font-bold text-red-400 mb-1">>> TEAM RABBIT INTERCEPT <<</p>
+              <p id="village-notes">
+                If you are reading this, you cracked the Mayor Wheel. Watch your back in Kindly. The
+                Neighbourhood Watch isn't just watching; they're recording.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="mltk-surveillance-dashboard.html" class="nav-link">&lt;&lt; RETURN TO DASHBOARD</a>
+
+    <!-- The Standardised Script containing all 26 Villages -->
+    <script>
+      // THE VIRTUE VILLAGE MASTER DATABASE
+      const villageDatabase = {
+        A: {
+          name: 'The Village of Altruistically',
+          mayor: '[REDACTED]',
+          tetromino: 'I-Block',
+          virtue: 'Altruism',
+          vice: 'Martyrdom Complex',
+          hair: '[DATA EXPUNGED]',
+          eyes: '[DATA EXPUNGED]',
+          expression: '[DATA EXPUNGED]',
+          notes:
+            'Architecture is perfectly vertical. Avoid the central square during mandatory donation hours.',
+        },
+        B: {
+          name: 'The Village of [PENDING - B]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        C: {
+          name: 'The Village of [PENDING - C]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        D: {
+          name: 'The Village of [PENDING - D]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        E: {
+          name: 'The Village of [PENDING - E]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        F: {
+          name: 'The Village of [PENDING - F]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        G: {
+          name: 'The Village of [PENDING - G]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        H: {
+          name: 'The Village of [PENDING - H]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        I: {
+          name: 'The Village of [PENDING - I]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        J: {
+          name: 'The Village of [PENDING - J]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        K: {
+          name: 'The Village of Kindly',
+          mayor: 'Mayor Karen',
+          tetromino: 'L-Block',
+          virtue: 'Kindness',
+          vice: 'Weaponized Gossip / Surveillance',
+          hair: 'Blonde Bob',
+          eyes: 'Cat-Eye Glasses',
+          expression: 'Spiked Knuckles',
+          notes:
+            "If you are reading this, you cracked the Mayor Wheel. Watch your back in Kindly. The Neighbourhood Watch isn't just watching; they're recording.",
+        },
+        L: {
+          name: 'The Village of [PENDING - L]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        M: {
+          name: 'The Village of [PENDING - M]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        N: {
+          name: 'The Village of [PENDING - N]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        O: {
+          name: 'The Village of [PENDING - O]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        P: {
+          name: 'The Village of [PENDING - P]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        Q: {
+          name: 'The Village of [PENDING - Q]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        R: {
+          name: 'The Village of [PENDING - R]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        S: {
+          name: 'The Village of [PENDING - S]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        T: {
+          name: 'The Village of [PENDING - T]',
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        },
+        U: {
+          name: 'The Village of Unselfishly',
+          mayor: 'Mayor Ursula',
+          tetromino: 'O-Block',
+          virtue: 'Selflessness',
+          vice: 'Hoarding',
+          hair: 'Hairnet over a messy bun',
+          eyes: 'None (Averted gaze)',
+          expression: 'Suspiciously glaring out of the corner of her eye',
+          notes:
+            'Target Acquired. She is clutching an absurd pile of junk to her chest. Perfect place to hide contraband.',
+        },
+        V: {
+          name: 'The Village of Virtuously',
+          mayor: 'Mayor Victor',
+          tetromino: 'S-Block',
+          virtue: 'Purity',
+          vice: 'Vice / Bootlegging',
+          hair: 'Greaser-style Pompadour',
+          eyes: 'Plastic Shutter Shades',
+          expression: "Wiping a suspicious white 'milk' moustache",
+          notes:
+            "Look for him holding a brown paper bag shaped exactly like a bottle. The 'milk' isn't milk.",
+        },
+        W: {
+          name: 'The Village of Wholeheartedly',
+          mayor: 'Mayor Winston',
+          tetromino: 'T-Block',
+          virtue: 'Passion',
+          vice: 'Absolute Apathy',
+          hair: 'Only half a mustache (left side shaved)',
+          eyes: 'Monocle dangling loosely on a string',
+          expression: 'Mid-yawn, eyes half closed',
+          notes:
+            'Armed with a paint roller with no paint on it. A complete administrative dead-end.',
+        },
+        X: {
+          name: 'The Village of Xenodochially',
+          mayor: 'Mayor Xavier',
+          tetromino: 'Z-Block',
+          virtue: 'Hospitality',
+          vice: 'Rigged Games / Scams',
+          hair: "Striped carnival barker's straw hat",
+          eyes: 'Swirl-patterned Hypno-glasses',
+          expression: 'Exaggerated, car-salesman wink',
+          notes:
+            "Do not play the ring-toss. The rings are physically smaller than the bottles. It's a mathematical trap.",
+        },
+        Y: {
+          name: 'The Village of Yearningly',
+          mayor: 'Mayor Yvette',
+          tetromino: 'J-Block',
+          virtue: 'Aspiration',
+          vice: 'Theft / Counterfeiting',
+          hair: 'Cheap plastic wig (visible tape on forehead)',
+          eyes: "Fake 'Guccci' sunglasses (spelled wrong)",
+          expression: 'Shifty eyes looking at a price tag',
+          notes:
+            'Wearing a poorly painted leather jacket. Keep your hands on your wallet in Sector J.',
+        },
+        Z: {
+          name: 'The Village of Zealously',
+          mayor: 'Mayor Zachary',
+          tetromino: 'I-Block',
+          virtue: 'Enthusiasm',
+          vice: 'Green-wash / Exhaustion',
+          hair: 'Hair spray-painted neon green',
+          eyes: 'Heavy plastic safety goggles',
+          expression: 'Apathetic, exhausted sigh',
+          notes:
+            "Holding a bright green aerosol spray can. The 'environmental' initiatives are literally just painted green.",
+        },
+      };
+
+      // DOM Elements
+      const letterNav = document.getElementById('letter-nav');
+      const displayLetter = document.getElementById('display-letter');
+      const vName = document.getElementById('village-name');
+      const vVirtue = document.getElementById('village-virtue');
+      const vVice = document.getElementById('village-vice');
+      const vTetro = document.getElementById('village-tetromino');
+      const mName = document.getElementById('mayor-name');
+      const mHair = document.getElementById('mayor-hair');
+      const mEyes = document.getElementById('mayor-eyes');
+      const mExpr = document.getElementById('mayor-expr');
+      const vNotes = document.getElementById('village-notes');
+
+      // Generate A-Z Buttons
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+      alphabet.forEach((letter) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-letter flex-none md:w-full p-3 md:p-2 text-center border-r md:border-r-0 md:border-b border-[#00f3ff]/30 font-bold hover:bg-[#00f3ff] hover:text-[#0a0f14] ${letter === 'K' ? 'bg-[#00f3ff] text-[#0a0f14] active' : 'text-[#00f3ff]'}`;
+        btn.innerText = letter;
+        btn.onclick = () => loadVillage(letter, btn);
+        letterNav.appendChild(btn);
+      });
+
+      function loadVillage(letter, btnElement) {
+        // Update active state on buttons
+        document.querySelectorAll('.btn-letter').forEach((b) => {
+          b.classList.remove('bg-[#00f3ff]', 'text-[#0a0f14]', 'active');
+          b.classList.add('text-[#00f3ff]');
+        });
+        btnElement.classList.remove('text-[#00f3ff]');
+        btnElement.classList.add('bg-[#00f3ff]', 'text-[#0a0f14]', 'active');
+
+        // Load Data or Placeholder
+        const data = villageDatabase[letter] || {
+          name: `The Village of [PENDING - ${letter}]`,
+          mayor: 'IDENTITY UNKNOWN',
+          tetromino: 'CLASSIFIED',
+          virtue: 'PENDING',
+          vice: 'DATA CORRUPTED',
+          hair: '---',
+          eyes: '---',
+          expression: '---',
+          notes:
+            "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
+        };
+
+        // Animate glitch effect on load
+        document.body.classList.add('opacity-80');
+        setTimeout(() => document.body.classList.remove('opacity-80'), 150);
+
+        // Populate DOM
+        displayLetter.innerText = letter;
+        vName.innerText = data.name;
+        vVirtue.innerText = data.virtue;
+        vVice.innerText = data.vice;
+        vTetro.innerText = data.tetromino;
+        mName.innerText = data.mayor;
+        mHair.innerText = data.hair;
+        mEyes.innerText = data.eyes;
+        mExpr.innerText = data.expression;
+        vNotes.innerText = data.notes;
+      }
+    </script>
+  </body>
+</html>
