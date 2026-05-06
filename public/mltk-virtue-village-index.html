@@ -28,8 +28,8 @@
 
       .mltk-terminal {
         background-color: #0a0f14;
-        color: #00f3ff;
-        border: 4px solid #00f3ff;
+        color: #00ff00;
+        border: 4px solid #00ff00;
         box-shadow: 10px 10px 0px #000000;
         position: relative;
         overflow: hidden;
@@ -59,13 +59,13 @@
       .btn-letter:hover,
       .btn-letter.active,
       .btn-letter:focus-visible {
-        background-color: #00f3ff;
+        background-color: #00ff00;
         color: #0a0f14;
         outline: none;
       }
 
       .btn-letter:focus-visible {
-        box-shadow: 0 0 10px #00f3ff;
+        box-shadow: 0 0 10px #00ff00;
       }
 
       .glitch-text {
@@ -121,9 +121,9 @@
 
       <!-- Left Sidebar: A-Z Navigation -->
       <div
-        class="w-full md:w-24 border-b md:border-b-0 md:border-r-4 border-[#00f3ff] flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar z-20 bg-[#05080a]"
+        class="w-full md:w-24 border-b md:border-b-0 md:border-r-4 border-[#00ff00] flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar z-20 bg-[#05080a]"
       >
-        <div class="text-center p-2 border-b-2 border-[#00f3ff] text-xs opacity-70">INDEX</div>
+        <div class="text-center p-2 border-b-2 border-[#00ff00] text-xs opacity-70">INDEX</div>
         <div id="letter-nav" class="flex flex-row md:flex-col">
           <!-- Buttons injected via JS -->
         </div>
@@ -132,10 +132,10 @@
       <!-- Main Content Area -->
       <div class="flex-1 flex flex-col z-20 relative p-6 md:p-10 overflow-y-auto">
         <!-- Header -->
-        <div class="border-b-2 border-[#00f3ff] pb-4 mb-6 flex justify-between items-end">
+        <div class="border-b-2 border-[#00ff00] pb-4 mb-6 flex justify-between items-end">
           <div>
             <h1 class="text-3xl md:text-5xl font-bold tracking-widest text-white">
-              FILE DIRECTORY: <span id="display-letter" class="text-[#00f3ff]">K</span>
+              FILE DIRECTORY: <span id="display-letter" class="text-[#00ff00]">K</span>
             </h1>
             <p class="text-sm mt-1 opacity-70">
               MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
@@ -157,13 +157,13 @@
               <p class="text-xs text-gray-400 mb-1">VILLAGE DESIGNATION</p>
               <h2
                 id="village-name"
-                class="text-3xl bg-[#00f3ff] text-[#0a0f14] inline-block px-3 py-1 font-bold"
+                class="text-3xl bg-[#00ff00] text-[#0a0f14] inline-block px-3 py-1 font-bold"
               >
                 The Village of Kindly
               </h2>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 border border-[#00f3ff] p-4 bg-[#0a0f14]">
+            <div class="grid grid-cols-2 gap-4 border border-[#00ff00] p-4 bg-[#0a0f14]">
               <div>
                 <p class="text-xs text-gray-400">PUBLIC VIRTUE</p>
                 <p id="village-virtue" class="text-lg text-green-400">Kindness</p>
@@ -172,7 +172,7 @@
                 <p class="text-xs text-red-400 glitch-text">CLASSIFIED VICE</p>
                 <p id="village-vice" class="text-lg text-red-400">HOA Surveillance</p>
               </div>
-              <div class="col-span-2 pt-2 border-t border-[#00f3ff]/30">
+              <div class="col-span-2 pt-2 border-t border-[#00ff00]/30">
                 <p class="text-xs text-gray-400">ZONING ARCHITECTURE (TETROMINO)</p>
                 <p id="village-tetromino" class="text-xl text-fuchsia-400">L-Block Configuration</p>
               </div>
@@ -186,8 +186,8 @@
               <h3 id="mayor-name" class="text-2xl text-yellow-400">Mayor Karen</h3>
             </div>
 
-            <div class="border border-[#00f3ff] p-4 bg-[#00f3ff]/10">
-              <p class="text-xs text-[#00f3ff] border-b border-[#00f3ff]/50 pb-2 mb-3">
+            <div class="border border-[#00ff00] p-4 bg-[#00ff00]/10">
+              <p class="text-xs text-[#00ff00] border-b border-[#00ff00]/50 pb-2 mb-3">
                 BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
               </p>
               <ul class="space-y-3 text-sm">
@@ -557,7 +557,7 @@
 
       alphabet.forEach((letter) => {
         const btn = document.createElement('button');
-        btn.className = `btn-letter flex-none md:w-full p-3 md:p-2 text-center border-r md:border-r-0 md:border-b border-[#00f3ff]/30 font-bold hover:bg-[#00f3ff] hover:text-[#0a0f14] ${letter === 'K' ? 'bg-[#00f3ff] text-[#0a0f14] active' : 'text-[#00f3ff]'}`;
+        btn.className = `btn-letter flex-none md:w-full p-3 md:p-2 text-center border-r md:border-r-0 md:border-b border-[#00ff00]/30 font-bold hover:bg-[#00ff00] hover:text-[#0a0f14] ${letter === 'A' ? 'bg-[#00ff00] text-[#0a0f14] active' : 'text-[#00ff00]'}`;
         btn.innerText = letter;
         btn.onclick = () => loadVillage(letter, btn);
         letterNav.appendChild(btn);
@@ -566,11 +566,13 @@
       function loadVillage(letter, btnElement) {
         // Update active state on buttons
         document.querySelectorAll('.btn-letter').forEach((b) => {
-          b.classList.remove('bg-[#00f3ff]', 'text-[#0a0f14]', 'active');
-          b.classList.add('text-[#00f3ff]');
+          b.classList.remove('bg-[#00ff00]', 'text-[#0a0f14]', 'active');
+          b.classList.add('text-[#00ff00]');
         });
-        btnElement.classList.remove('text-[#00f3ff]');
-        btnElement.classList.add('bg-[#00f3ff]', 'text-[#0a0f14]', 'active');
+        if (btnElement) {
+          btnElement.classList.remove('text-[#00ff00]');
+          btnElement.classList.add('bg-[#00ff00]', 'text-[#0a0f14]', 'active');
+        }
 
         // Load Data or Placeholder
         const data = villageDatabase[letter] || {
@@ -602,6 +604,14 @@
         mExpr.innerText = data.expression;
         vNotes.innerText = data.notes;
       }
+
+      // Initialize the first village
+      window.onload = () => {
+        const firstBtn = document.querySelector('.btn-letter');
+        if (firstBtn) {
+          loadVillage('A', firstBtn);
+        }
+      };
     </script>
   </body>
 </html>
