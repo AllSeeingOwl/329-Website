@@ -357,16 +357,29 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
       }
     }
 
+    const { exec } = require('child_process');
+    const util = require('util');
+    const execPromise = util.promisify(exec);
+
     const getStatus = async (filenames: string[]) => {
       return Promise.all(
         filenames.map(async (filename) => {
           const filePath = path.join(publicDir, filename);
           try {
             const stats = await fs.promises.stat(filePath);
+            let lastModifiedDate = stats.mtime.toISOString();
+            try {
+              const { stdout } = await execPromise(`git log -1 --format="%cI" -- "${filePath}"`);
+              if (stdout.trim()) {
+                lastModifiedDate = stdout.trim();
+              }
+            } catch (gitErr) {
+              // fallback to stats.mtime
+            }
             return {
               filename,
               status: 'ONLINE',
-              lastModified: stats.mtime.toISOString(),
+              lastModified: lastModifiedDate,
             };
           } catch (err) {
             return {
