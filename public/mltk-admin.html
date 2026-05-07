@@ -322,26 +322,57 @@
           </div>
 
           <h3 class="admin-panel-title" style="margin-top: 30px">SYSTEM NODE STATUS TRACKER</h3>
-          <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin: 0; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; color: #00ff00;">LIVE CONNECTION ESTABLISHED.</p>
-            <button id="refresh-status-btn" class="reset-btn" style="margin-top: 0; font-size: 1rem;">REFRESH STATUS</button>
+          <div
+            style="
+              margin-bottom: 10px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <p
+              style="
+                margin: 0;
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 0.9rem;
+                color: #00ff00;
+              "
+            >
+              LIVE CONNECTION ESTABLISHED.
+            </p>
+            <button
+              id="refresh-status-btn"
+              class="reset-btn"
+              style="margin-top: 0; font-size: 1rem"
+            >
+              REFRESH STATUS
+            </button>
           </div>
 
-          <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 300px;">
-                <h4 style="color: #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 5px;">ARG PROTOCOL NODES</h4>
-                <div id="arg-status-container" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                    <!-- ARG statuses injected here -->
-                </div>
+          <div style="display: flex; gap: 20px; flex-wrap: wrap">
+            <div style="flex: 1; min-width: 300px">
+              <h4 style="color: #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 5px">
+                ARG PROTOCOL NODES
+              </h4>
+              <div
+                id="arg-status-container"
+                style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px"
+              >
+                <!-- ARG statuses injected here -->
+              </div>
             </div>
-            <div style="flex: 1; min-width: 300px;">
-                <h4 style="color: #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 5px;">MLTK INTRANET NODES</h4>
-                <div id="mltk-status-container" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                    <!-- MLTK statuses injected here -->
-                </div>
+            <div style="flex: 1; min-width: 300px">
+              <h4 style="color: #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 5px">
+                MLTK INTRANET NODES
+              </h4>
+              <div
+                id="mltk-status-container"
+                style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px"
+              >
+                <!-- MLTK statuses injected here -->
+              </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
@@ -397,68 +428,70 @@
         mltkContainer.innerHTML = '<span style="color:#555;">SCANNING...</span>';
 
         try {
-            const res = await fetch('/api/admin/page-status', {
-              headers: { Authorization: `Bearer ${adminToken}` },
-            });
-            const data = await res.json();
+          const res = await fetch('/api/admin/page-status', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          });
+          const data = await res.json();
 
-            renderStatusList(data.arg, argContainer);
-            renderStatusList(data.mltk, mltkContainer);
+          renderStatusList(data.arg, argContainer);
+          renderStatusList(data.mltk, mltkContainer);
         } catch (e) {
-            argContainer.innerHTML = '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
-            mltkContainer.innerHTML = '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
+          argContainer.innerHTML =
+            '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
+          mltkContainer.innerHTML =
+            '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
         }
       }
 
       function renderStatusList(pages, container) {
-          container.innerHTML = '';
-          pages.forEach(page => {
-              const div = document.createElement('div');
-              div.style.display = 'flex';
-              div.style.flexDirection = 'column';
-              div.style.backgroundColor = 'rgba(20, 20, 20, 0.8)';
-              div.style.border = '1px solid #333';
-              div.style.padding = '5px 10px';
+        container.innerHTML = '';
+        pages.forEach((page) => {
+          const div = document.createElement('div');
+          div.style.display = 'flex';
+          div.style.flexDirection = 'column';
+          div.style.backgroundColor = 'rgba(20, 20, 20, 0.8)';
+          div.style.border = '1px solid #333';
+          div.style.padding = '5px 10px';
 
-              const topRow = document.createElement('div');
-              topRow.style.display = 'flex';
-              topRow.style.justifyContent = 'space-between';
-              topRow.style.alignItems = 'center';
+          const topRow = document.createElement('div');
+          topRow.style.display = 'flex';
+          topRow.style.justifyContent = 'space-between';
+          topRow.style.alignItems = 'center';
 
-              const nameSpan = document.createElement('span');
-              nameSpan.style.fontFamily = "'Share Tech Mono', monospace";
-              nameSpan.textContent = page.filename;
+          const nameSpan = document.createElement('span');
+          nameSpan.style.fontFamily = "'Share Tech Mono', monospace";
+          nameSpan.textContent = page.filename;
 
-              const statusSpan = document.createElement('span');
-              statusSpan.style.fontWeight = 'bold';
-              if (page.status === 'ONLINE') {
-                  statusSpan.textContent = '[ONLINE]';
-                  statusSpan.style.color = '#00ff00';
-              } else {
-                  statusSpan.textContent = '[OFFLINE]';
-                  statusSpan.style.color = '#ff003c';
-              }
+          const statusSpan = document.createElement('span');
+          statusSpan.style.fontWeight = 'bold';
+          if (page.status === 'ONLINE') {
+            statusSpan.textContent = '[ONLINE]';
+            statusSpan.style.color = '#00ff00';
+          } else {
+            statusSpan.textContent = '[OFFLINE]';
+            statusSpan.style.color = '#ff003c';
+          }
 
-              topRow.appendChild(nameSpan);
-              topRow.appendChild(statusSpan);
-              div.appendChild(topRow);
+          topRow.appendChild(nameSpan);
+          topRow.appendChild(statusSpan);
+          div.appendChild(topRow);
 
-              const bottomRow = document.createElement('div');
-              bottomRow.style.fontSize = '0.8rem';
-              bottomRow.style.color = '#888';
-              bottomRow.style.marginTop = '4px';
-              bottomRow.style.fontFamily = "'Share Tech Mono', monospace";
+          const bottomRow = document.createElement('div');
+          bottomRow.style.fontSize = '0.8rem';
+          bottomRow.style.color = '#888';
+          bottomRow.style.marginTop = '4px';
+          bottomRow.style.fontFamily = "'Share Tech Mono', monospace";
 
-              if (page.lastModified) {
-                  const date = new Date(page.lastModified);
-                  bottomRow.textContent = `LAST MODIFIED: ${date.toISOString().replace('T', ' ').substring(0, 19)}Z`;
-              } else {
-                  bottomRow.textContent = 'LAST MODIFIED: N/A';
-              }
+          if (page.lastModified) {
+            const date = new Date(page.lastModified);
+            bottomRow.textContent = `LAST MODIFIED: ${date.toISOString().replace('T', ' ').substring(0, 19)}Z`;
+          } else {
+            bottomRow.textContent = 'LAST MODIFIED: N/A';
+          }
 
-              div.appendChild(bottomRow);
-              container.appendChild(div);
-          });
+          div.appendChild(bottomRow);
+          container.appendChild(div);
+        });
       }
 
       function createToggle(label, isChecked, onChange, link = null) {

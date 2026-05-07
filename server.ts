@@ -315,7 +315,6 @@ app.post(
   }
 );
 
-
 // Page status endpoint
 app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Response) => {
   try {
@@ -329,7 +328,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
         'nova-classified-archive.html',
         'nova-parent-directory.html',
         'velvet-rope-landing-page.html',
-        'system-override.html'
+        'system-override.html',
       ],
       mltk: [
         'mltk-3d-map.html',
@@ -342,8 +341,8 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
         'mltk-privacy-policy.html',
         'mltk-surveillance-dashboard.html',
         'mltk-timer.html',
-        'mltk-virtue-village-index.html'
-      ]
+        'mltk-virtue-village-index.html',
+      ],
     };
 
     const getStatus = async (filenames: string[]) => {
