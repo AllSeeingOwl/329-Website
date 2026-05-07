@@ -315,6 +315,67 @@ app.post(
   }
 );
 
+// Page status endpoint
+app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const publicDir = path.join(__dirname, 'public');
+
+    const pages = {
+      arg: [
+        'mltk-login-gate.html',
+        'secure-data-drop-page.html',
+        'ollies-radio-scanner.html',
+        'nova-classified-archive.html',
+        'nova-parent-directory.html',
+        'velvet-rope-landing-page.html',
+        'system-override.html',
+      ],
+      mltk: [
+        'mltk-3d-map.html',
+        'mltk-admin.html',
+        'mltk-boot-sequence.html',
+        'mltk-classified-document.html',
+        'mltk-customer-service.html',
+        'mltk-five-finger-wheel.html',
+        'mltk-login-gate.html',
+        'mltk-privacy-policy.html',
+        'mltk-surveillance-dashboard.html',
+        'mltk-timer.html',
+        'mltk-virtue-village-index.html',
+      ],
+    };
+
+    const getStatus = async (filenames: string[]) => {
+      return Promise.all(
+        filenames.map(async (filename) => {
+          const filePath = path.join(publicDir, filename);
+          try {
+            const stats = await fs.promises.stat(filePath);
+            return {
+              filename,
+              status: 'ONLINE',
+              lastModified: stats.mtime.toISOString(),
+            };
+          } catch (err) {
+            return {
+              filename,
+              status: 'OFFLINE',
+              lastModified: null,
+            };
+          }
+        })
+      );
+    };
+
+    const argStatus = await getStatus(pages.arg);
+    const mltkStatus = await getStatus(pages.mltk);
+
+    res.json({ arg: argStatus, mltk: mltkStatus });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch page status' });
+  }
+});
+
 app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
   try {
     const config = await getMaintenanceConfig();
