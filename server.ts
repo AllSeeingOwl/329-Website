@@ -344,7 +344,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
       'studio-puzzles-explained.html',
       'studio-team.html',
       'surface-home-page.html',
-      'releases.html'
+      'releases.html',
     ]);
 
     for (const file of htmlFiles) {
