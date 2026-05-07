@@ -149,6 +149,15 @@
         font-size: 1.1rem;
       }
 
+      .admin-control-label a {
+        color: #00ff00;
+        text-decoration: none;
+      }
+
+      .admin-control-label a:hover {
+        text-decoration: underline;
+      }
+
       /* Switch Styles */
       .switch {
         position: relative;
@@ -354,13 +363,22 @@
         renderDashboardPanel(dashboardConfig);
       }
 
-      function createToggle(label, isChecked, onChange) {
+      function createToggle(label, isChecked, onChange, link = null) {
         const controlItem = document.createElement('div');
         controlItem.className = 'admin-control-item';
 
         const labelEl = document.createElement('span');
         labelEl.className = 'admin-control-label';
-        labelEl.textContent = label;
+
+        if (link) {
+          const a = document.createElement('a');
+          a.href = link;
+          a.target = '_blank';
+          a.textContent = label;
+          labelEl.appendChild(a);
+        } else {
+          labelEl.textContent = label;
+        }
 
         const switchLabel = document.createElement('label');
         switchLabel.className = 'switch';
@@ -459,19 +477,24 @@
 
         config.forEach((item) => {
           container.appendChild(
-            createToggle(item.title, item.status === 'active', async (e) => {
-              await fetch('/api/admin/dashboard-config', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${adminToken}`,
-                },
-                body: JSON.stringify({
-                  id: item.id,
-                  status: e.target.checked ? 'active' : 'offline',
-                }),
-              });
-            })
+            createToggle(
+              item.title,
+              item.status === 'active',
+              async (e) => {
+                await fetch('/api/admin/dashboard-config', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminToken}`,
+                  },
+                  body: JSON.stringify({
+                    id: item.id,
+                    status: e.target.checked ? 'active' : 'offline',
+                  }),
+                });
+              },
+              item.link
+            )
           );
         });
       }
