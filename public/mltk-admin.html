@@ -477,20 +477,24 @@
 
         config.forEach((item) => {
           container.appendChild(
-            createToggle(item.title, item.status === 'active', async (e) => {
-
-              await fetch('/api/admin/dashboard-config', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${adminToken}`,
-                },
-                body: JSON.stringify({
-                  id: item.id,
-                  status: e.target.checked ? 'active' : 'offline',
-                }),
-              });
-            }, item.link)
+            createToggle(
+              item.title,
+              item.status === 'active',
+              async (e) => {
+                await fetch('/api/admin/dashboard-config', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminToken}`,
+                  },
+                  body: JSON.stringify({
+                    id: item.id,
+                    status: e.target.checked ? 'active' : 'offline',
+                  }),
+                });
+              },
+              item.link
+            )
           );
         });
       }
