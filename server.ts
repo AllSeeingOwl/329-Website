@@ -320,30 +320,42 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
   try {
     const publicDir = path.join(__dirname, 'public');
 
+    const allFiles = await fs.promises.readdir(publicDir);
+    const htmlFiles = allFiles.filter((file) => file.endsWith('.html'));
+
     const pages = {
-      arg: [
-        'mltk-login-gate.html',
-        'secure-data-drop-page.html',
-        'ollies-radio-scanner.html',
-        'nova-classified-archive.html',
-        'nova-parent-directory.html',
-        'velvet-rope-landing-page.html',
-        'system-override.html',
-      ],
-      mltk: [
-        'mltk-3d-map.html',
-        'mltk-admin.html',
-        'mltk-boot-sequence.html',
-        'mltk-classified-document.html',
-        'mltk-customer-service.html',
-        'mltk-five-finger-wheel.html',
-        'mltk-login-gate.html',
-        'mltk-privacy-policy.html',
-        'mltk-surveillance-dashboard.html',
-        'mltk-timer.html',
-        'mltk-virtue-village-index.html',
-      ],
+      arg: [] as string[],
+      mltk: [] as string[],
     };
+
+    // Files to explicitly ignore from admin tracking as they are public/studio files
+    const publicPages = new Set([
+      'index.html',
+      '404.html',
+      'in-universe-404-error.html',
+      'maintenance.html',
+      'business-privacy-policy.html',
+      'business-terms-of-service.html',
+      'developer-blog.html',
+      'studio-contact-us.html',
+      'studio-faq.html',
+      'studio-manifesto-page.html',
+      'studio-press-kit.html',
+      'studio-puzzles-explained.html',
+      'studio-team.html',
+      'surface-home-page.html',
+      'releases.html',
+    ]);
+
+    for (const file of htmlFiles) {
+      if (publicPages.has(file)) continue;
+
+      if (file.startsWith('mltk-')) {
+        pages.mltk.push(file);
+      } else {
+        pages.arg.push(file);
+      }
+    }
 
     const getStatus = async (filenames: string[]) => {
       return Promise.all(
