@@ -1,0 +1,9 @@
+exclude = [
+    "https://fonts\\.googleapis\\.com/.*",
+    "https://fonts\\.gstatic\\.com/.*",
+    "https://www\\.yourdomain\\.com/.*",
+    ".*placeholder\\.webp",
+    ".*placeholder\\.jpg",
+    ".*playwright-logo\\.svg",
+    ".*index-.*\\.css"
+]
