@@ -27,10 +27,10 @@
       }
 
       .mltk-terminal {
-        background-color: #0a0f14;
+        background-color: #000000;
         color: #00ffff;
-        border: 4px solid #00ffff;
-        box-shadow: 10px 10px 0px #000000;
+        border: 2px solid #00ffff;
+
         position: relative;
         overflow: hidden;
       }
@@ -116,104 +116,94 @@
     </style>
   </head>
   <body class="p-4 md:p-8">
-    <div class="mltk-terminal w-full max-w-5xl flex flex-col md:flex-row h-[85vh]">
+    <div class="mltk-terminal w-full max-w-5xl flex flex-col h-[90vh]">
       <div class="scanlines"></div>
 
-      <!-- Left Sidebar: A-Z Navigation -->
-      <div
-        class="w-full md:w-24 border-b md:border-b-0 md:border-r-4 border-[#00ffff] flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar z-20 bg-[#05080a]"
-      >
-        <div class="text-center p-2 border-b-2 border-[#00ffff] text-xs opacity-70">INDEX</div>
-        <div id="letter-nav" class="flex flex-row md:flex-col">
+      <!-- Header: INDEX A-Z Navigation -->
+      <div class="w-full flex border-b border-[#00ffff] bg-black z-20">
+        <div
+          class="text-center py-1 px-2 border-r border-[#00ffff] text-xs flex items-center bg-black text-[#00ffff]"
+        >
+          INDEX
+        </div>
+        <div id="letter-nav" class="flex flex-row overflow-x-auto no-scrollbar w-full">
           <!-- Buttons injected via JS -->
         </div>
       </div>
 
       <!-- Main Content Area -->
-      <div class="flex-1 flex flex-col z-20 relative p-6 md:p-10 overflow-y-auto">
+      <div class="flex-1 flex flex-col z-20 relative p-4 overflow-y-auto">
         <!-- Header -->
-        <div class="border-b-2 border-[#00ffff] pb-4 mb-6 flex justify-between items-end">
-          <div>
-            <h1 class="text-3xl md:text-5xl font-bold tracking-widest text-white">
-              FILE DIRECTORY: <span id="display-letter" class="text-[#00ffff]">K</span>
-            </h1>
-            <p class="text-sm mt-1 opacity-70">
-              MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
-            </p>
-          </div>
-          <div class="hidden md:block text-right">
-            <p class="text-xs">SYS_STATUS: <span class="text-green-400">ONLINE</span></p>
-            <p class="text-xs">
-              ZONING: <span class="text-red-400 glitch-text">TETROMINO LOCK</span>
-            </p>
+        <div class="pb-2 mb-2 flex justify-between items-start flex-col space-y-2">
+          <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-[#00ffff]">
+            FILE DIRECTORY: <span id="display-letter">A</span>
+          </h1>
+          <div class="text-sm space-y-2 opacity-70">
+            <p>MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE</p>
+            <p>SYS_STATUS: ONLINE</p>
+            <p>ZONING: TETROMINO LOCK</p>
           </div>
         </div>
 
-        <!-- Data Card -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Left Column: Village Info -->
-          <div class="space-y-6">
-            <div>
-              <p class="text-xs text-gray-400 mb-1">VILLAGE DESIGNATION</p>
-              <h2
-                id="village-name"
-                class="text-3xl bg-[#00ffff] text-[#0a0f14] inline-block px-3 py-1 font-bold"
-              >
-                The Village of Kindly
-              </h2>
-            </div>
+        <div class="flex flex-col space-y-4 w-full">
+          <!-- Village Designation -->
+          <div>
+            <p class="text-xs text-[#00ffff] mb-2 opacity-70">VILLAGE DESIGNATION</p>
+            <h2 id="village-name" class="text-2xl md:text-3xl font-bold text-[#00ffff]">
+              The Village of Altruistically
+            </h2>
+          </div>
 
-            <div class="grid grid-cols-2 gap-4 border border-[#00ffff] p-4 bg-[#0a0f14]">
-              <div>
-                <p class="text-xs text-gray-400">PUBLIC VIRTUE</p>
-                <p id="village-virtue" class="text-lg text-green-400">Kindness</p>
-              </div>
-              <div>
-                <p class="text-xs text-red-400 glitch-text">CLASSIFIED VICE</p>
-                <p id="village-vice" class="text-lg text-red-400">HOA Surveillance</p>
-              </div>
-              <div class="col-span-2 pt-2 border-t border-[#00ffff]/30">
-                <p class="text-xs text-gray-400">ZONING ARCHITECTURE (TETROMINO)</p>
-                <p id="village-tetromino" class="text-xl text-fuchsia-400">L-Block Configuration</p>
-              </div>
+          <!-- Virtue & Vice -->
+          <div class="flex flex-col space-y-4">
+            <div>
+              <p class="text-xs text-[#00ffff] mb-2 opacity-70">PUBLIC VIRTUE</p>
+              <p id="village-virtue" class="text-base text-[#00ffff]">Altruism</p>
+            </div>
+            <div>
+              <p class="text-xs text-[#00ffff] mb-2 opacity-70">CLASSIFIED VICE</p>
+              <p id="village-vice" class="text-base text-[#00ffff]">Martyrdom Complex</p>
+            </div>
+            <div>
+              <p class="text-xs text-[#00ffff] mb-2 opacity-70">ZONING ARCHITECTURE (TETROMINO)</p>
+              <p id="village-tetromino" class="text-base text-[#00ffff]">I-Block Configuration</p>
             </div>
           </div>
 
-          <!-- Right Column: Mayor Info -->
-          <div class="space-y-6">
-            <div>
-              <p class="text-xs text-gray-400 mb-1">DESIGNATED MAYOR</p>
-              <h3 id="mayor-name" class="text-2xl text-yellow-400">Mayor Karen</h3>
-            </div>
+          <!-- Mayor Info -->
+          <div>
+            <p class="text-xs text-[#00ffff] mb-2 opacity-70">DESIGNATED MAYOR</p>
+            <h3 id="mayor-name" class="text-lg text-[#00ffff]">[REDACTED]</h3>
+          </div>
 
-            <div class="border border-[#00ffff] p-4 bg-[#00ffff]/10">
-              <p class="text-xs text-[#00ffff] border-b border-[#00ffff]/50 pb-2 mb-3">
-                BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
-              </p>
-              <ul class="space-y-3 text-sm">
-                <li class="flex items-start">
-                  <span class="opacity-50 mr-2">[HAIR]</span>
-                  <span id="mayor-hair" class="text-yellow-200">Blonde Bob</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="opacity-50 mr-2">[EYES]</span>
-                  <span id="mayor-eyes" class="text-yellow-200">Cat-Eye Glasses</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="opacity-50 mr-2">[EXPR]</span>
-                  <span id="mayor-expr" class="text-yellow-200">Spiked Knuckles</span>
-                </li>
-              </ul>
-            </div>
+          <!-- Biometrics -->
+          <div>
+            <p class="text-xs text-[#00ffff] mb-2 opacity-70">
+              BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
+            </p>
+            <ul class="space-y-1 text-sm list-disc list-inside text-[#00ffff]">
+              <li>
+                <span class="mr-1">[HAIR]</span>
+                <span id="mayor-hair">[DATA EXPUNGED]</span>
+              </li>
+              <li>
+                <span class="mr-1">[EYES]</span>
+                <span id="mayor-eyes">[DATA EXPUNGED]</span>
+              </li>
+              <li>
+                <span class="mr-1">[EXPR]</span>
+                <span id="mayor-expr">[DATA EXPUNGED]</span>
+              </li>
+            </ul>
+          </div>
 
-            <!-- Puzzlesmith Note / Lore -->
-            <div class="mt-4 p-3 border-l-4 border-red-500 bg-red-900/20 text-red-200 text-sm">
-              <p class="font-bold text-red-400 mb-1">>> TEAM RABBIT INTERCEPT <<</p>
-              <p id="village-notes">
-                If you are reading this, you cracked the Mayor Wheel. Watch your back in Kindly. The
-                Neighbourhood Watch isn't just watching; they're recording.
-              </p>
-            </div>
+          <!-- Puzzlesmith Note / Lore -->
+          <div class="mt-2 pt-2 border-t-0">
+            <p class="text-[#00ffff] text-sm mb-2 opacity-70">>> TEAM RABBIT INTERCEPT <<</p>
+            <p id="village-notes" class="text-sm text-[#00ffff]">
+              Architecture is perfectly vertical. Avoid the central square during mandatory donation
+              hours.
+            </p>
           </div>
         </div>
       </div>
@@ -557,7 +547,7 @@
 
       alphabet.forEach((letter) => {
         const btn = document.createElement('button');
-        btn.className = `btn-letter flex-none md:w-full p-3 md:p-2 text-center border-r md:border-r-0 md:border-b border-[#00ffff]/30 font-bold hover:bg-[#00ffff] hover:text-[#0a0f14] ${letter === 'A' ? 'bg-[#00ffff] text-[#0a0f14] active' : 'text-[#00ffff]'}`;
+        btn.className = `btn-letter px-2 py-1 text-center border-r border-[#00ffff]/30 hover:bg-[#00ffff] hover:text-[#05080a] ${letter === 'A' ? 'bg-[#00ffff] text-[#05080a] active' : 'text-[#00ffff]'}`;
         btn.innerText = letter;
         btn.onclick = () => loadVillage(letter, btn);
         letterNav.appendChild(btn);
@@ -566,12 +556,12 @@
       function loadVillage(letter, btnElement) {
         // Update active state on buttons
         document.querySelectorAll('.btn-letter').forEach((b) => {
-          b.classList.remove('bg-[#00ffff]', 'text-[#0a0f14]', 'active');
+          b.classList.remove('bg-[#00ffff]', 'text-[#05080a]', 'active');
           b.classList.add('text-[#00ffff]');
         });
         if (btnElement) {
           btnElement.classList.remove('text-[#00ffff]');
-          btnElement.classList.add('bg-[#00ffff]', 'text-[#0a0f14]', 'active');
+          btnElement.classList.add('bg-[#00ffff]', 'text-[#05080a]', 'active');
         }
 
         // Load Data or Placeholder
