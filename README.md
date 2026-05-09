@@ -55,7 +55,7 @@ The local Express server (`server.ts`) relies on the following environment varia
 - **`pnpm test -- --coverage`**: Runs tests and generates a coverage report.
 - **`pnpm run test:e2e:playwright`**: Runs end-to-end tests using Playwright.
 - **`pnpm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
-- **`pnpm run build:vite`** / **`pnpm run build:webpack`**: Executes builds if needed.
+- **`pnpm run build:vite`**: Executes builds if needed.
 
 ## Testing & CI/CD
 

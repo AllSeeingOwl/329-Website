@@ -15,7 +15,7 @@ export interface DashboardConfig {
   isDownload: boolean;
 }
 
-export interface MaintenanceConfig {
+interface MaintenanceConfig {
   global: boolean;
   studio: boolean;
   mltk: boolean;
