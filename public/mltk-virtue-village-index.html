@@ -29,95 +29,135 @@
       }
     </style>
   </head>
-  <body class="w-full min-w-max flex flex-col items-center justify-center min-h-screen p-5 no-scrollbar">
-
+  <body
+    class="w-full min-w-max flex flex-col items-center justify-center min-h-screen p-5 no-scrollbar"
+  >
     <div class="bg-black pr-3 pb-3 mb-5 mt-5 shrink-0 min-w-[1000px]">
-        <div class="flex bg-[#090a0f] border-4 border-[#00ffff] w-[1000px] relative -top-3 -left-3 h-[800px] max-h-[90vh]">
-
-            <!-- Left Sidebar Index -->
-            <div class="w-[80px] border-r-4 border-[#00ffff] flex flex-col h-full shrink-0">
-                <div class="text-[#6b7a8c] text-center py-2.5 border-b border-[#00ffff] text-sm sticky top-0 bg-[#090a0f] z-10">INDEX</div>
-                <div id="letter-nav" class="flex flex-col flex-1 overflow-y-auto no-scrollbar">
-                    <!-- Buttons injected via JS -->
-                </div>
-            </div>
-
-            <!-- Right Main Content -->
-            <div class="flex-1 p-10 flex flex-col gap-[30px] overflow-y-auto no-scrollbar">
-
-                <div class="flex justify-between items-start border-b border-dashed border-[#00ffff]/30 pb-5 shrink-0">
-                    <div>
-                        <h1 class="text-white text-5xl tracking-[4px] mb-2.5 uppercase">FILE DIRECTORY: <span id="display-letter" class="text-[#00ffff]">A</span></h1>
-                        <div class="text-[#00ffff] text-sm tracking-[1px]">MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE</div>
-                    </div>
-                    <div class="text-right text-xs leading-[1.6]">
-                        <div><span class="text-[#00ffff] opacity-70">SYS_STATUS:</span> <span class="text-[#4ade80]">ONLINE</span></div>
-                        <div><span class="text-[#00ffff] opacity-70">ZONING:</span> <span class="text-[#00ffff]">TETROMINO LOCK</span></div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-5 grow">
-                    <!-- Left Column Content -->
-                    <div class="flex flex-col">
-                        <div class="text-[#6b7a8c] text-xs mb-2 uppercase">VILLAGE DESIGNATION</div>
-                        <div id="village-name" class="bg-[#00ffff] text-black inline-block py-2 px-4 text-[28px] font-bold self-start">
-                            The Village of Altruistically
-                        </div>
-
-                        <div class="border border-[#00ffff] p-5 mt-5 flex-1">
-                            <div class="grid grid-cols-2 gap-5 mb-5">
-                                <div>
-                                    <div class="text-[#6b7a8c] text-xs mb-2 uppercase">PUBLIC VIRTUE</div>
-                                    <div id="village-virtue" class="text-[#4ade80] text-[18px] mt-1.5">Altruism</div>
-                                </div>
-                                <div>
-                                    <div class="text-[#6b7a8c] text-xs mb-2 uppercase">CLASSIFIED VICE</div>
-                                    <div id="village-vice" class="text-[#f87171] text-[18px] mt-1.5">Martyrdom Complex</div>
-                                </div>
-                            </div>
-
-                            <div class="border-t border-white/20 my-5"></div>
-
-                            <div>
-                                <div class="text-[#6b7a8c] text-xs mb-2 uppercase">ZONING ARCHITECTURE (TETROMINO)</div>
-                                <div id="village-tetromino" class="text-[#f472b6] text-[18px] mt-1.5">I-Block Configuration</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column Content -->
-                    <div class="flex flex-col">
-                        <div class="text-[#6b7a8c] text-xs mb-2 uppercase">DESIGNATED MAYOR</div>
-                        <div id="mayor-name" class="text-[#f0c330] text-2xl">[REDACTED]</div>
-
-                        <div class="border border-[#00ffff] p-5 mt-[30px]">
-                            <div class="text-[#00ffff] text-sm mb-[15px] border-b border-[#00ffff]/30 pb-2.5 uppercase">BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)</div>
-                            <div class="mb-3 text-[15px]">
-                                <span class="text-[#00ffff] mr-2.5">[HAIR]</span> <span id="mayor-hair" class="text-[#fde047]">[DATA EXPUNGED]</span>
-                            </div>
-                            <div class="mb-3 text-[15px]">
-                                <span class="text-[#00ffff] mr-2.5">[EYES]</span> <span id="mayor-eyes" class="text-[#fde047]">[DATA EXPUNGED]</span>
-                            </div>
-                            <div class="mb-3 text-[15px]">
-                                <span class="text-[#00ffff] mr-2.5">[EXPR]</span> <span id="mayor-expr" class="text-[#fde047]">[DATA EXPUNGED]</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-[#f87171]/10 border-l-4 border-[#f87171] p-5 mt-5 flex-1">
-                            <div class="text-[#f87171] font-bold mb-2.5 uppercase">>> TEAM RABBIT INTERCEPT &lt;&lt;</div>
-                            <div id="village-notes" class="text-white text-sm leading-[1.6]">
-                                Architecture is perfectly vertical. Avoid the central square during mandatory donation hours.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+      <div
+        class="flex bg-[#090a0f] border-4 border-[#00ffff] w-[1000px] relative -top-3 -left-3 h-[800px] max-h-[90vh]"
+      >
+        <!-- Left Sidebar Index -->
+        <div class="w-[80px] border-r-4 border-[#00ffff] flex flex-col h-full shrink-0">
+          <div
+            class="text-[#6b7a8c] text-center py-2.5 border-b border-[#00ffff] text-sm sticky top-0 bg-[#090a0f] z-10"
+          >
+            INDEX
+          </div>
+          <div id="letter-nav" class="flex flex-col flex-1 overflow-y-auto no-scrollbar">
+            <!-- Buttons injected via JS -->
+          </div>
         </div>
+
+        <!-- Right Main Content -->
+        <div class="flex-1 p-10 flex flex-col gap-[30px] overflow-y-auto no-scrollbar">
+          <div
+            class="flex justify-between items-start border-b border-dashed border-[#00ffff]/30 pb-5 shrink-0"
+          >
+            <div>
+              <h1 class="text-white text-5xl tracking-[4px] mb-2.5 uppercase">
+                FILE DIRECTORY: <span id="display-letter" class="text-[#00ffff]">A</span>
+              </h1>
+              <div class="text-[#00ffff] text-sm tracking-[1px]">
+                MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
+              </div>
+            </div>
+            <div class="text-right text-xs leading-[1.6]">
+              <div>
+                <span class="text-[#00ffff] opacity-70">SYS_STATUS:</span>
+                <span class="text-[#4ade80]">ONLINE</span>
+              </div>
+              <div>
+                <span class="text-[#00ffff] opacity-70">ZONING:</span>
+                <span class="text-[#00ffff]">TETROMINO LOCK</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-5 grow">
+            <!-- Left Column Content -->
+            <div class="flex flex-col">
+              <div class="text-[#6b7a8c] text-xs mb-2 uppercase">VILLAGE DESIGNATION</div>
+              <div
+                id="village-name"
+                class="bg-[#00ffff] text-black inline-block py-2 px-4 text-[28px] font-bold self-start"
+              >
+                The Village of Altruistically
+              </div>
+
+              <div class="border border-[#00ffff] p-5 mt-5 flex-1">
+                <div class="grid grid-cols-2 gap-5 mb-5">
+                  <div>
+                    <div class="text-[#6b7a8c] text-xs mb-2 uppercase">PUBLIC VIRTUE</div>
+                    <div id="village-virtue" class="text-[#4ade80] text-[18px] mt-1.5">
+                      Altruism
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-[#6b7a8c] text-xs mb-2 uppercase">CLASSIFIED VICE</div>
+                    <div id="village-vice" class="text-[#f87171] text-[18px] mt-1.5">
+                      Martyrdom Complex
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border-t border-white/20 my-5"></div>
+
+                <div>
+                  <div class="text-[#6b7a8c] text-xs mb-2 uppercase">
+                    ZONING ARCHITECTURE (TETROMINO)
+                  </div>
+                  <div id="village-tetromino" class="text-[#f472b6] text-[18px] mt-1.5">
+                    I-Block Configuration
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column Content -->
+            <div class="flex flex-col">
+              <div class="text-[#6b7a8c] text-xs mb-2 uppercase">DESIGNATED MAYOR</div>
+              <div id="mayor-name" class="text-[#f0c330] text-2xl">[REDACTED]</div>
+
+              <div class="border border-[#00ffff] p-5 mt-[30px]">
+                <div
+                  class="text-[#00ffff] text-sm mb-[15px] border-b border-[#00ffff]/30 pb-2.5 uppercase"
+                >
+                  BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
+                </div>
+                <div class="mb-3 text-[15px]">
+                  <span class="text-[#00ffff] mr-2.5">[HAIR]</span>
+                  <span id="mayor-hair" class="text-[#fde047]">[DATA EXPUNGED]</span>
+                </div>
+                <div class="mb-3 text-[15px]">
+                  <span class="text-[#00ffff] mr-2.5">[EYES]</span>
+                  <span id="mayor-eyes" class="text-[#fde047]">[DATA EXPUNGED]</span>
+                </div>
+                <div class="mb-3 text-[15px]">
+                  <span class="text-[#00ffff] mr-2.5">[EXPR]</span>
+                  <span id="mayor-expr" class="text-[#fde047]">[DATA EXPUNGED]</span>
+                </div>
+              </div>
+
+              <div class="bg-[#f87171]/10 border-l-4 border-[#f87171] p-5 mt-5 flex-1">
+                <div class="text-[#f87171] font-bold mb-2.5 uppercase">
+                  >> TEAM RABBIT INTERCEPT &lt;&lt;
+                </div>
+                <div id="village-notes" class="text-white text-sm leading-[1.6]">
+                  Architecture is perfectly vertical. Avoid the central square during mandatory
+                  donation hours.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <a href="mltk-surveillance-dashboard.html" class="bg-transparent border-2 border-black py-2.5 px-5 text-base font-bold uppercase tracking-[1px] cursor-pointer hover:bg-black hover:text-[#f2f2e9] text-black inline-block shrink-0 no-underline text-center">
-        &lt;&lt; RETURN TO DASHBOARD
+    <a
+      href="mltk-surveillance-dashboard.html"
+      class="bg-transparent border-2 border-black py-2.5 px-5 text-base font-bold uppercase tracking-[1px] cursor-pointer hover:bg-black hover:text-[#f2f2e9] text-black inline-block shrink-0 no-underline text-center"
+    >
+      &lt;&lt; RETURN TO DASHBOARD
     </a>
 
     <!-- The Standardised Script containing all 26 Villages -->
@@ -456,7 +496,8 @@
 
       alphabet.forEach((letter) => {
         const btn = document.createElement('button');
-        btn.className = 'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none';
+        btn.className =
+          'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none';
 
         if (letter === 'A') {
           btn.classList.add('bg-[#00ffff]', 'text-black', 'font-bold', 'active-letter');
@@ -472,16 +513,18 @@
       function loadVillage(letter, btnElement) {
         // Update active state on buttons
         document.querySelectorAll('#letter-nav button').forEach((b) => {
-          b.className = 'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none text-[#00ffff] hover:bg-[#00ffff]/20';
+          b.className =
+            'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none text-[#00ffff] hover:bg-[#00ffff]/20';
         });
 
         if (btnElement) {
-          btnElement.className = 'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none bg-[#00ffff] text-black font-bold active-letter';
+          btnElement.className =
+            'w-full text-center py-3 border-b border-[#00ffff]/30 text-base cursor-pointer transition-colors focus:outline-none bg-[#00ffff] text-black font-bold active-letter';
         }
 
         // Load Data or Placeholder
         const data = villageDatabase[letter] || {
-          name: "The Village of [PENDING - " + letter + "]",
+          name: 'The Village of [PENDING - ' + letter + ']',
           mayor: 'IDENTITY UNKNOWN',
           tetromino: 'CLASSIFIED Configuration',
           virtue: 'PENDING',
