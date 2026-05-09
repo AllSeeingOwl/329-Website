@@ -369,7 +369,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
             const stats = await fs.promises.stat(filePath);
             let lastModifiedDate = stats.mtime.toISOString();
             try {
-              const { stdout } = await execPromise(`git log -1 --format="%cI" -- "${filePath}"`);
+              const { stdout } = await execPromise(`git log -1 --format="%cI" -- "${filename}"`, { cwd: publicDir });
               if (stdout.trim()) {
                 lastModifiedDate = stdout.trim();
               }
