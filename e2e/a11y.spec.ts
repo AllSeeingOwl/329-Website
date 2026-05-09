@@ -9,7 +9,6 @@ const pages = [
   '/surface-home-page.html',
   '/mltk-privacy-policy.html',
   '/mltk-admin.html',
-  '/mltk-boot-sequence.html',
   '/mltk-surveillance-dashboard.html',
   '/secure-data-drop-page.html',
   '/404.html',
