@@ -17,7 +17,7 @@ function getDomCache() {
 
 // Ensure tests can reset domCache
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports._resetDomCache = function () {
+  module.exports.clearDomCache = function () {
     domCache = null;
   };
 }

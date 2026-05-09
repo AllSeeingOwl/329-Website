@@ -32,8 +32,8 @@ describe('MLTK Login Gate Tests', () => {
             <div id="success-screen" style="display: none;"></div>
         `;
 
-    if (mltkUtils._resetDomCache) {
-      mltkUtils._resetDomCache();
+    if (mltkUtils.clearDomCache) {
+      mltkUtils.clearDomCache();
     }
 
     // Mock fetch
