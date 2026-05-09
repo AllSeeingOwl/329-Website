@@ -114,7 +114,9 @@
         border-bottom: 1px solid rgba(0, 255, 255, 0.3);
         font-size: 16px;
         cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
         width: 100%;
         background: transparent;
         border-left: none;
@@ -177,9 +179,16 @@
         line-height: 1.6;
       }
 
-      .status-online { color: var(--green); }
-      .status-zoning { color: var(--cyan); }
-      .label { color: var(--cyan); opacity: 0.7; }
+      .status-online {
+        color: var(--green);
+      }
+      .status-zoning {
+        color: var(--cyan);
+      }
+      .label {
+        color: var(--cyan);
+        opacity: 0.7;
+      }
 
       /* Info Grid */
       .info-grid {
@@ -230,9 +239,15 @@
         font-size: 18px;
         margin-top: 5px;
       }
-      .text-green { color: var(--green); }
-      .text-red { color: var(--red); }
-      .text-magenta { color: var(--magenta); }
+      .text-green {
+        color: var(--green);
+      }
+      .text-red {
+        color: var(--red);
+      }
+      .text-magenta {
+        color: var(--magenta);
+      }
 
       .divider {
         border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -309,95 +324,99 @@
     </style>
   </head>
   <body class="no-scrollbar">
-
     <div class="shadow-box">
-        <div class="terminal-window">
-
-            <!-- Left Sidebar Index -->
-            <div class="sidebar">
-                <div class="sidebar-header">INDEX</div>
-                <div id="letter-nav" class="letter-nav-container no-scrollbar">
-                    <!-- Buttons injected via JS -->
-                </div>
-            </div>
-
-            <!-- Right Main Content -->
-            <div class="main-content no-scrollbar">
-
-                <div class="header-top">
-                    <div class="title-area">
-                        <h1>FILE DIRECTORY: <span id="display-letter">A</span></h1>
-                        <div class="subtitle">MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE</div>
-                    </div>
-                    <div class="status-area">
-                        <div><span class="label">SYS_STATUS:</span> <span class="status-online">ONLINE</span></div>
-                        <div><span class="label">ZONING:</span> <span class="status-zoning">TETROMINO LOCK</span></div>
-                    </div>
-                </div>
-
-                <div class="info-grid">
-                    <!-- Left Column Content -->
-                    <div style="display: flex; flex-direction: column;">
-                        <div class="section-label">VILLAGE DESIGNATION</div>
-                        <div id="village-name" class="highlight-block">
-                            The Village of Altruistically
-                        </div>
-
-                        <div class="bordered-box" style="display: flex; flex-direction: column;">
-                            <div class="virtue-grid">
-                                <div>
-                                    <div class="section-label">PUBLIC VIRTUE</div>
-                                    <div id="village-virtue" class="virtue-value text-green">Altruism</div>
-                                </div>
-                                <div>
-                                    <div class="section-label">CLASSIFIED VICE</div>
-                                    <div id="village-vice" class="virtue-value text-red">Martyrdom Complex</div>
-                                </div>
-                            </div>
-
-                            <div class="divider"></div>
-
-                            <div>
-                                <div class="section-label">ZONING ARCHITECTURE (TETROMINO)</div>
-                                <div id="village-tetromino" class="virtue-value text-magenta">I-Block Configuration</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column Content -->
-                    <div style="display: flex; flex-direction: column;">
-                        <div class="section-label">DESIGNATED MAYOR</div>
-                        <div id="mayor-name" class="mayor-name">[REDACTED]</div>
-
-                        <div class="bordered-box" style="margin-top: 30px;">
-                            <div class="biometrics-title">BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)</div>
-                            <div class="bio-item">
-                                <span class="bio-label">[HAIR]</span> <span id="mayor-hair" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
-                            </div>
-                            <div class="bio-item">
-                                <span class="bio-label">[EYES]</span> <span id="mayor-eyes" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
-                            </div>
-                            <div class="bio-item">
-                                <span class="bio-label">[EXPR]</span> <span id="mayor-expr" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
-                            </div>
-                        </div>
-
-                        <div class="warning-box">
-                            <div class="warning-title">>> TEAM RABBIT INTERCEPT &lt;&lt;</div>
-                            <div id="village-notes" class="warning-text">
-                                Architecture is perfectly vertical. Avoid the central square during mandatory donation hours.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+      <div class="terminal-window">
+        <!-- Left Sidebar Index -->
+        <div class="sidebar">
+          <div class="sidebar-header">INDEX</div>
+          <div id="letter-nav" class="letter-nav-container no-scrollbar">
+            <!-- Buttons injected via JS -->
+          </div>
         </div>
+
+        <!-- Right Main Content -->
+        <div class="main-content no-scrollbar">
+          <div class="header-top">
+            <div class="title-area">
+              <h1>FILE DIRECTORY: <span id="display-letter">A</span></h1>
+              <div class="subtitle">
+                MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
+              </div>
+            </div>
+            <div class="status-area">
+              <div>
+                <span class="label">SYS_STATUS:</span> <span class="status-online">ONLINE</span>
+              </div>
+              <div>
+                <span class="label">ZONING:</span> <span class="status-zoning">TETROMINO LOCK</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <!-- Left Column Content -->
+            <div style="display: flex; flex-direction: column">
+              <div class="section-label">VILLAGE DESIGNATION</div>
+              <div id="village-name" class="highlight-block">The Village of Altruistically</div>
+
+              <div class="bordered-box" style="display: flex; flex-direction: column">
+                <div class="virtue-grid">
+                  <div>
+                    <div class="section-label">PUBLIC VIRTUE</div>
+                    <div id="village-virtue" class="virtue-value text-green">Altruism</div>
+                  </div>
+                  <div>
+                    <div class="section-label">CLASSIFIED VICE</div>
+                    <div id="village-vice" class="virtue-value text-red">Martyrdom Complex</div>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                  <div class="section-label">ZONING ARCHITECTURE (TETROMINO)</div>
+                  <div id="village-tetromino" class="virtue-value text-magenta">
+                    I-Block Configuration
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column Content -->
+            <div style="display: flex; flex-direction: column">
+              <div class="section-label">DESIGNATED MAYOR</div>
+              <div id="mayor-name" class="mayor-name">[REDACTED]</div>
+
+              <div class="bordered-box" style="margin-top: 30px">
+                <div class="biometrics-title">BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)</div>
+                <div class="bio-item">
+                  <span class="bio-label">[HAIR]</span>
+                  <span id="mayor-hair" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
+                </div>
+                <div class="bio-item">
+                  <span class="bio-label">[EYES]</span>
+                  <span id="mayor-eyes" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
+                </div>
+                <div class="bio-item">
+                  <span class="bio-label">[EXPR]</span>
+                  <span id="mayor-expr" class="bio-value bio-value-yellow">[DATA EXPUNGED]</span>
+                </div>
+              </div>
+
+              <div class="warning-box">
+                <div class="warning-title">>> TEAM RABBIT INTERCEPT &lt;&lt;</div>
+                <div id="village-notes" class="warning-text">
+                  Architecture is perfectly vertical. Avoid the central square during mandatory
+                  donation hours.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <a href="mltk-surveillance-dashboard.html" class="return-btn">
-        &lt;&lt; RETURN TO DASHBOARD
-    </a>
+    <a href="mltk-surveillance-dashboard.html" class="return-btn"> &lt;&lt; RETURN TO DASHBOARD </a>
 
     <!-- The Standardised Script containing all 26 Villages -->
     <script>
@@ -758,7 +777,7 @@
 
         // Load Data or Placeholder
         const data = villageDatabase[letter] || {
-          name: "The Village of [PENDING - " + letter + "]",
+          name: 'The Village of [PENDING - ' + letter + ']',
           mayor: 'IDENTITY UNKNOWN',
           tetromino: 'CLASSIFIED Configuration',
           virtue: 'PENDING',
