@@ -12,9 +12,9 @@ The `3minsto9` Version 1.0 repository is in a strong, functional state. It effec
 
 **Recommendations:**
 
-- **Dependency Audit:** A `pnpm audit` reveals 1 moderate vulnerability in `uuid` (via cypress). Run `pnpm update cypress` or investigate if it can be resolved via `pnpm.overrides` or `resolutions`.
-- **Secret Management:** Ensure environment variables (`AUTH_PASSWORD`, `ADMIN_PASSWORD`) are never hardcoded or pushed to version control in production environments, and that the Upstash KV tokens are rotated securely.
-- **Error Handling:** While `server.ts` handles errors, ensure that database errors or Upstash KV connection failures do not leak stack traces or internal configurations to the user.
+- **Dependency Audit:** ~~A `pnpm audit` reveals 1 moderate vulnerability in `uuid` (via cypress). Run `pnpm update cypress` or investigate if it can be resolved via `pnpm.overrides` or `resolutions`.~~ (Completed: Cypress was updated to `15.14.2` and no vulnerabilities remain.)
+- **Secret Management:** ~~Ensure environment variables (`AUTH_PASSWORD`, `ADMIN_PASSWORD`) are never hardcoded or pushed to version control in production environments, and that the Upstash KV tokens are rotated securely.~~ (Completed: Added a `NODE_ENV === 'production'` check in `server.ts` to throw an error if passwords are not explicitly set in the environment.)
+- **Error Handling:** ~~While `server.ts` handles errors, ensure that database errors or Upstash KV connection failures do not leak stack traces or internal configurations to the user.~~ (Completed: Unused error variables were removed from catch blocks to prevent accidental leakage and linting warnings.)
 
 ### 2. Performance
 
@@ -51,5 +51,5 @@ The `3minsto9` Version 1.0 repository is in a strong, functional state. It effec
 
 **Recommendations:**
 
-- **Unused Variables:** ESLint reports 6 warnings regarding unused variables in `server.ts` (e.g., `catch (_e)` blocks). These should be removed or explicitly ignored to maintain a clean build process.
+- **Unused Variables:** ~~ESLint reports 6 warnings regarding unused variables in `server.ts` (e.g., `catch (_e)` blocks). These should be removed or explicitly ignored to maintain a clean build process.~~ (Completed: Unused catch block variables have been removed.)
 - **File Structure for Utils:** The utility files (e.g., `velvet_rope_utils.js`) use a CommonJS pattern for testing. While functional, consider eventually migrating frontend logic to native ES Modules if browser support allows, simplifying the build and test process.
