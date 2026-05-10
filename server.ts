@@ -137,7 +137,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
           const stats = await fs.promises.stat(filePath);
           const lastMod = stats.mtime.toISOString().split('T')[0];
           entry += `    <lastmod>${lastMod}</lastmod>\n`;
-        } catch (_e) {
+        } catch {
           const today = new Date().toISOString().split('T')[0];
           entry += `    <lastmod>${today}</lastmod>\n`;
         }
@@ -229,8 +229,11 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 // Admin Configuration Auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
-const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (process.env.NODE_ENV === 'production' && !ADMIN_PASSWORD) {
+  throw new Error('ADMIN_PASSWORD must be set in production');
+}
+const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD || 'admin');
 // Simple token generation for demo purposes, since this is a basic project
 const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
 let activeAdminToken: string | null = null;
@@ -284,7 +287,7 @@ app.get('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, re
   try {
     const config = await getDashboardConfig();
     res.json(config);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch dashboard config' });
   }
 });
@@ -294,7 +297,7 @@ app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, r
   try {
     await updateDashboardConfig(id, status);
     res.json({ success: true });
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to update dashboard config' });
   }
 });
@@ -307,7 +310,7 @@ app.post(
     try {
       await updateAllDashboardConfig(status);
       res.json({ success: true });
-    } catch (e) {
+    } catch {
       res.status(500).json({ error: 'Failed to update all dashboard configs' });
     }
   }
@@ -373,7 +376,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
               if (stdout.trim()) {
                 lastModifiedDate = stdout.trim();
               }
-            } catch (gitErr) {
+            } catch {
               // fallback to a deterministic offset based on filename if git is unavailable
               let hash = 0;
               for (let i = 0; i < filename.length; i++) {
@@ -390,7 +393,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
               status: 'ONLINE',
               lastModified: lastModifiedDate,
             };
-          } catch (err) {
+          } catch {
             return {
               filename,
               status: 'OFFLINE',
@@ -405,7 +408,7 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
     const mltkStatus = await getStatus(pages.mltk);
 
     res.json({ arg: argStatus, mltk: mltkStatus });
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch page status' });
   }
 });
@@ -414,7 +417,7 @@ app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, 
   try {
     const config = await getMaintenanceConfig();
     res.json(config);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch maintenance config' });
   }
 });
@@ -427,7 +430,7 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
     if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
     if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
     res.json({ success: true });
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to update maintenance config' });
   }
 });
@@ -440,7 +443,7 @@ app.post(
     try {
       await updateAllMaintenanceConfig(value);
       res.json({ success: true });
-    } catch (e) {
+    } catch {
       res.status(500).json({ error: 'Failed to update all maintenance configs' });
     }
   }
@@ -451,7 +454,7 @@ app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   try {
     const config = await getDashboardConfig();
     res.json(config);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch dashboard config' });
   }
 });
@@ -468,6 +471,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // The official password for this ARG gate is hinted in mltk_login_utils.js.
 // Changing this fallback will break the intended experience for local development.
 // -----------------------------------------------------------------------------
+if (process.env.NODE_ENV === 'production' && !process.env.AUTH_PASSWORD) {
+  throw new Error('AUTH_PASSWORD must be set in production');
+}
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || ['0408', '1998', 'XXXX'].join('-');
 // ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
 // This reduces allocation overhead and improves response times for the verification endpoint.
