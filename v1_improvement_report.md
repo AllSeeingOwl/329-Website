@@ -22,9 +22,9 @@ The `3minsto9` Version 1.0 repository is in a strong, functional state. It effec
 
 **Recommendations:**
 
-- **DOM Caching:** Expand the lazy-initialization pattern (DOM caching) to all interactive elements across the application to prevent repeated `document.getElementById` or `querySelector` queries during events.
-- **Asset Optimization:** Ensure all placeholder images (e.g., in `store.html`) are appropriately compressed and utilize modern formats like WebP or AVIF by default, falling back to JPEG only when necessary.
-- **Sitemap Generation:** The sitemap generation endpoint (`/sitemap.xml`) dynamically reads the filesystem on every request. Consider caching the XML output and refreshing it periodically to avoid blocking the event loop on high-traffic days.
+- **DOM Caching:** ~~Expand the lazy-initialization pattern (DOM caching) to all interactive elements across the application to prevent repeated `document.getElementById` or `querySelector` queries during events.~~ (Completed: DOM caching implemented across interactive scripts.)
+- **Asset Optimization:** ~~Ensure all placeholder images (e.g., in `store.html`) are appropriately compressed and utilize modern formats like WebP or AVIF by default, falling back to JPEG only when necessary.~~ (Completed: Placeholder images updated to utilize AVIF by default. The `store.html` page has been removed from the repository.)
+- **Sitemap Generation:** ~~The sitemap generation endpoint (`/sitemap.xml`) dynamically reads the filesystem on every request. Consider caching the XML output and refreshing it periodically to avoid blocking the event loop on high-traffic days.~~ (Completed: In-memory caching logic added to the `/sitemap.xml` endpoint with a TTL of 1 hour.)
 
 ### 3. Accessibility (a11y)
 
