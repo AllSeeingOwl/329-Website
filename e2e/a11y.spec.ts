@@ -14,12 +14,12 @@ const pages = [
   '/404.html',
 ];
 
-test.describe('Accessibility Checks', () => {
-  const allViolations: (Result & { url: string })[] = [];
-  let totalRulesChecked = 0;
-  let totalRulesPassed = 0;
+const allViolations: (Result & { url: string })[] = [];
+let totalRulesChecked = 0;
+let totalRulesPassed = 0;
 
-  for (const pageUrl of pages) {
+test.describe('Accessibility Checks', () => {
+  pages.forEach((pageUrl) => {
     test(`Check ${pageUrl}`, async ({ page }) => {
       await page.goto(`http://localhost:3000${pageUrl}`);
       // Wait a bit to ensure typing effect finishes on those pages
@@ -38,7 +38,7 @@ test.describe('Accessibility Checks', () => {
       totalRulesPassed +=
         accessibilityScanResults.passes.length + accessibilityScanResults.inapplicable.length; // We can count inapplicable as not failing
     });
-  }
+  });
 
   test.afterAll(() => {
     const score = ((totalRulesPassed / totalRulesChecked) * 100).toFixed(2);
