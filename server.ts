@@ -536,8 +536,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
   console.error('Unhandled error:', err);
 
   // Handle specific standard HTTP errors correctly
