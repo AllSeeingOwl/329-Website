@@ -243,11 +243,18 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 // Admin Configuration Auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 if (process.env.NODE_ENV === 'production' && !ADMIN_PASSWORD) {
   throw new Error('ADMIN_PASSWORD must be set in production');
 }
-const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD || 'admin');
+if (!ADMIN_PASSWORD) {
+  ADMIN_PASSWORD = crypto.randomBytes(16).toString('hex');
+  console.log('--------------------------------------------------');
+  console.log('ADMIN_PASSWORD not set. Generated session password:');
+  console.log(ADMIN_PASSWORD);
+  console.log('--------------------------------------------------');
+}
+const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
 // Simple token generation for demo purposes, since this is a basic project
 const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
 let activeAdminToken: string | null = null;
