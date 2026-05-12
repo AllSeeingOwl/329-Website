@@ -169,6 +169,59 @@ describe('MLTK Login Gate Tests', () => {
     console.error = originalConsoleError;
   });
 
+  test('verifyCode API error - handles non-ok response and shows error UI', async () => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
+
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
+    });
+
+    const inputField = document.getElementById('serial-input');
+    inputField.value = 'ANY-CODE';
+
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
+
+    expect(console.error).toHaveBeenCalledWith(
+      'Error verifying code via API:',
+      expect.objectContaining({ message: 'API returned an error or is not available' })
+    );
+
+    const errorMsg = document.getElementById('error-msg');
+    expect(errorMsg.style.display).toBe('block');
+
+    console.error = originalConsoleError;
+  });
+
+  test('verifyCode JSON error - handles invalid JSON response and shows error UI', async () => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
+
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => {
+        throw new SyntaxError('Unexpected token');
+      },
+    });
+
+    const inputField = document.getElementById('serial-input');
+    inputField.value = 'ANY-CODE';
+
+    const event = { preventDefault: jest.fn() };
+    await verifyCode(event);
+
+    expect(console.error).toHaveBeenCalledWith(
+      'Error verifying code via API:',
+      expect.any(SyntaxError)
+    );
+
+    const errorMsg = document.getElementById('error-msg');
+    expect(errorMsg.style.display).toBe('block');
+
+    console.error = originalConsoleError;
+  });
+
   test('setupEventListeners and verifyCode handle missing DOM elements gracefully', async () => {
     // Clear DOM
     document.body.innerHTML = '';
