@@ -108,9 +108,18 @@ const mltkFiles = new Set([
   '/mltk-virtue-village-index.html',
 ]);
 
+// Sitemap caching
+let sitemapCache: { xml: string; timestamp: number } | null = null;
+const SITEMAP_CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
 // Sitemap Endpoints
 app.get('/sitemap.xml', async (req: Request, res: Response) => {
   try {
+    if (sitemapCache && Date.now() - sitemapCache.timestamp < SITEMAP_CACHE_TTL) {
+      res.header('Content-Type', 'application/xml');
+      return res.send(sitemapCache.xml);
+    }
+
     const publicDir = path.join(__dirname, 'public');
     const files = await fs.promises.readdir(publicDir);
 
@@ -152,6 +161,8 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
     xml += urlEntries.filter((entry) => entry !== null).join('');
 
     xml += '</urlset>';
+
+    sitemapCache = { xml, timestamp: Date.now() };
 
     res.header('Content-Type', 'application/xml');
     res.send(xml);
