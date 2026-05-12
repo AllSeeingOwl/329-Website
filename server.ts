@@ -127,8 +127,10 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
     const protocol = req.protocol || 'https';
     const baseUrl = `${protocol}://${host}`;
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    const xmlArr = [
+      '<?xml version="1.0" encoding="UTF-8"?>\n',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n',
+    ];
 
     const urlEntries = await Promise.all(
       files.map(async (file) => {
@@ -139,28 +141,29 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
 
         if (fileContent.includes('<meta name="robots" content="noindex"')) return null;
 
-        let entry = '  <url>\n';
-        entry += `    <loc>${baseUrl}/${file}</loc>\n`;
+        const entryArr = ['  <url>\n'];
+        entryArr.push(`    <loc>${baseUrl}/${file}</loc>\n`);
 
         try {
           const stats = await fs.promises.stat(filePath);
           const lastMod = stats.mtime.toISOString().split('T')[0];
-          entry += `    <lastmod>${lastMod}</lastmod>\n`;
+          entryArr.push(`    <lastmod>${lastMod}</lastmod>\n`);
         } catch {
           const today = new Date().toISOString().split('T')[0];
-          entry += `    <lastmod>${today}</lastmod>\n`;
+          entryArr.push(`    <lastmod>${today}</lastmod>\n`);
         }
 
-        entry += '    <changefreq>monthly</changefreq>\n';
-        entry += '    <priority>0.8</priority>\n';
-        entry += '  </url>\n';
-        return entry;
+        entryArr.push('    <changefreq>monthly</changefreq>\n');
+        entryArr.push('    <priority>0.8</priority>\n');
+        entryArr.push('  </url>\n');
+        return entryArr.join('');
       })
     );
 
-    xml += urlEntries.filter((entry) => entry !== null).join('');
+    xmlArr.push(urlEntries.filter((entry) => entry !== null).join(''));
+    xmlArr.push('</urlset>');
 
-    xml += '</urlset>';
+    const xml = xmlArr.join('');
 
     sitemapCache = { xml, timestamp: Date.now() };
 
