@@ -78,7 +78,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
       rateLimitMsg.setAttribute('role', 'alert');
       rateLimitMsg.setAttribute('aria-live', 'polite');
       rateLimitMsg.style.marginTop = '15px';
-      rateLimitMsg.style.color = '#ff003c';
+      rateLimitMsg.style.color = '#ff3366';
       rateLimitMsg.style.fontWeight = 'bold';
       rateLimitMsg.style.textAlign = 'center';
       rateLimitMsg.style.fontFamily = "'VT323', monospace";
@@ -110,7 +110,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
     // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows when updating text
     btn.textContent = 'LINK ESTABLISHED...';
     btn.style.backgroundColor = '#fff';
-    btn.style.color = '#ff003c';
+    btn.style.color = '#ff3366';
     btn.disabled = true;
     btn.setAttribute('aria-disabled', 'true');
   }
@@ -130,7 +130,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
 
   const customBox = document.createElement('div');
   customBox.style.cssText =
-    "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff003c; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
+    "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff3366; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
 
   const p = document.createElement('p');
   p.textContent = 'COMMUNICATION SECURED.';
@@ -138,7 +138,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   const closeBtn = document.createElement('button');
   closeBtn.textContent = 'CLOSE';
   closeBtn.style.cssText =
-    'background:#ff003c; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
+    'background:#ff3366; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
   closeBtn.onclick = function () {
     if (this.parentElement) {
       this.parentElement.remove();

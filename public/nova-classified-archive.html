@@ -16,7 +16,7 @@
       :root {
         --nova-blue: #00e5ff;
         --nova-dark: #00111a;
-        --alert-red: #ff003c;
+        --alert-red: #ff3366;
         --rabbit-green: #00ff00;
       }
 
@@ -372,6 +372,13 @@
           scroll-behavior: auto !important;
         }
       }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+      }
     </style>
     <script type="module" src="/app.js"></script>
     <link rel="manifest" href="/manifest.json" />
@@ -579,7 +586,7 @@
 
           if (timeLeft <= 10) {
             // Panic mode
-            timerDisplay.style.backgroundColor = '#ff003c';
+            timerDisplay.style.backgroundColor = '#ff3366';
             timerDisplay.style.color = '#fff';
             document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
           }

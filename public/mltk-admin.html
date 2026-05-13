@@ -179,7 +179,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ff003c;
+        background-color: #ff3366;
         transition: 0.3s;
         border: 1px solid #555;
       }
@@ -262,7 +262,7 @@
       }
 
       .error-msg {
-        color: #ff003c;
+        color: #ff3366;
         margin-bottom: 10px;
         display: none;
       }
@@ -280,6 +280,13 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
   </head>
@@ -461,9 +468,9 @@
           renderStatusList(data.mltk, mltkContainer);
         } catch (e) {
           argContainer.innerHTML =
-            '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
+            '<span style="color:#ff3366;">ERROR CONNECTING TO NODE INTERFACE</span>';
           mltkContainer.innerHTML =
-            '<span style="color:#ff003c;">ERROR CONNECTING TO NODE INTERFACE</span>';
+            '<span style="color:#ff3366;">ERROR CONNECTING TO NODE INTERFACE</span>';
         }
       }
 
@@ -493,7 +500,7 @@
             statusSpan.style.color = '#00ff00';
           } else {
             statusSpan.textContent = '[OFFLINE]';
-            statusSpan.style.color = '#ff003c';
+            statusSpan.style.color = '#ff3366';
           }
 
           topRow.appendChild(nameSpan);

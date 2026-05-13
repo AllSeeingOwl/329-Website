@@ -15,10 +15,10 @@
       :root {
         --studio-bg: #faf9f6;
         --studio-text: #111111;
-        --studio-accent: #ff003c;
+        --studio-accent: #ff3366;
         --mltk-bg: #050505;
         --mltk-text: #e0e0e0;
-        --mltk-accent: #ff003c;
+        --mltk-accent: #ff3366;
       }
 
       body,
@@ -219,7 +219,7 @@
       }
 
       .portal-card.studio-card.disabled .card-desc {
-        color: #767676; /* Higher contrast grey than the original 0.5 opacity of #555 */
+        color: #aaaaaa; /* Higher contrast grey than the original 0.5 opacity of #555 */
       }
 
       .portal-card.mltk-card.disabled .card-desc {
@@ -386,6 +386,13 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
     <script type="module" src="/app.js"></script>

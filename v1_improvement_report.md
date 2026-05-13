@@ -32,9 +32,9 @@ The `3minsto9` Version 1.0 repository is in a strong, functional state. It effec
 
 **Recommendations:**
 
-- **Disabled Form States:** Some form buttons are disabled via JS during submission but lack visual CSS `:disabled` states (e.g., `cursor: not-allowed`, lowered opacity). Add global `:disabled` pseudo-class styling for better visual feedback.
-- **Contrast Ratios:** Verify that the "hacker/terminal" themed pages (e.g., green on black) and retro styles maintain a contrast ratio of at least 4.5:1 for normal text, particularly in older or dimmer monitors.
-- **Focus Indicators:** Ensure that custom glitch animations have a clear `:focus-visible` outline to aid keyboard users without relying solely on mouse hover effects.
+- **Disabled Form States:** ~~Some form buttons are disabled via JS during submission but lack visual CSS `:disabled` states (e.g., `cursor: not-allowed`, lowered opacity). Add global `:disabled` pseudo-class styling for better visual feedback.~~ (Completed: Added global CSS rules to style all `:disabled` inputs, buttons, and `.btn` classes across the repository.)
+- **Contrast Ratios:** ~~Verify that the "hacker/terminal" themed pages (e.g., green on black) and retro styles maintain a contrast ratio of at least 4.5:1 for normal text, particularly in older or dimmer monitors.~~ (Completed: Replaced the #ff003c red with #ff3366 across all terminal pages to ensure a >4.5:1 ratio against #050505. Improved contrast of disabled button text colors against their backgrounds.)
+- **Focus Indicators:** ~~Ensure that custom glitch animations have a clear `:focus-visible` outline to aid keyboard users without relying solely on mouse hover effects.~~ (Completed: Added explicit `:focus-visible` states to glitch animations including `.glitch-anim`, `.screen-tear`, and `.glitching` elements.)
 
 ### 4. Testing & Coverage
 

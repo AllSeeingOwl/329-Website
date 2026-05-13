@@ -22,7 +22,7 @@ body {
 
 h1, h2, h3, h4, h5, .site-name, .product-name, .page-title {
     font-family: 'Anton', sans-serif !important;
-    color: #ff003c !important; 
+    color: #ff3366 !important;
     text-transform: uppercase !important;
     letter-spacing: 2px !important;
     text-shadow: 2px 2px 0px #000, -1px -1px 0px #00ffff !important;
@@ -37,9 +37,9 @@ a {
 }
 
 a:hover, .active a {
-    color: #ff003c !important;
-    border-bottom: 1px solid #ff003c !important;
-    text-shadow: 0 0 8px #ff003c !important;
+    color: #ff3366 !important;
+    border-bottom: 1px solid #ff3366 !important;
+    text-shadow: 0 0 8px #ff3366 !important;
 }
 
 a:focus-visible {
@@ -48,11 +48,11 @@ a:focus-visible {
 }
 
 button, .button, input[type="submit"], .add-to-cart {
-    background-color: #ff003c !important;
+    background-color: #ff3366 !important;
     color: #000 !important;
     font-family: 'Anton', sans-serif !important;
     font-size: 1.5rem !important;
-    border: 2px solid #ff003c !important;
+    border: 2px solid #ff3366 !important;
     padding: 12px 24px !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
@@ -65,13 +65,13 @@ button, .button, input[type="submit"], .add-to-cart {
 
 button:hover, .button:hover, input[type="submit"]:hover, .add-to-cart:hover {
     background-color: #000 !important;
-    color: #ff003c !important;
-    box-shadow: 0px 0px 15px #ff003c !important;
+    color: #ff3366 !important;
+    box-shadow: 0px 0px 15px #ff3366 !important;
     transform: translate(2px, 2px) !important;
 }
 
 button:focus-visible, .button:focus-visible, input[type="submit"]:focus-visible, .add-to-cart:focus-visible {
-    outline: 2px dashed #ff003c !important;
+    outline: 2px dashed #ff3366 !important;
     outline-offset: 4px !important;
 }
 
@@ -84,7 +84,7 @@ button:focus-visible, .button:focus-visible, input[type="submit"]:focus-visible,
 }
 
 .product-list-item:hover {
-    border: 1px solid #ff003c !important;
+    border: 1px solid #ff3366 !important;
 }
 
 .product-price {
@@ -101,7 +101,7 @@ input[type="text"], input[type="email"], textarea, select {
     background-color: #000 !important;
     color: #00ff00 !important;
     font-family: 'VT323', monospace !important;
-    border: 1px solid #ff003c !important;
+    border: 1px solid #ff3366 !important;
     border-radius: 0 !important;
     padding: 10px !important;
 }
