@@ -20,7 +20,7 @@ test('Dev Blog sidebar elements are spans and have correct styling', async ({ pa
       return { cursor: style.cursor, color: style.color };
     });
     expect(cursor).toBe('default');
-    expect(color).toBe('rgb(255, 0, 60)');
+    expect(color).toBe('rgb(255, 51, 102)');
   }
 
   // Check Categories spans
@@ -39,7 +39,7 @@ test('Dev Blog sidebar elements are spans and have correct styling', async ({ pa
       return { cursor: style.cursor, color: style.color };
     });
     expect(cursor).toBe('default');
-    expect(color).toBe('rgb(255, 0, 60)');
+    expect(color).toBe('rgb(255, 51, 102)');
   }
 });
 

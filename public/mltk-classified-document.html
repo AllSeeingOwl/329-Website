@@ -16,7 +16,7 @@
       :root {
         --bg-color: #1a1a1a;
         --text-white: #ffffff;
-        --text-red: #ff003c;
+        --text-red: #ff3366;
       }
       body,
       html {
@@ -179,7 +179,7 @@
         animation: link-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
       }
 
-      .redacted:focus {
+      .redacted:focus-visible {
         outline: 2px dashed var(--text-white);
         outline-offset: 4px;
       }
@@ -193,25 +193,25 @@
           transform: translate(-2px, 1px);
           text-shadow:
             2px 0 #00ffff,
-            -2px 0 #ff003c;
+            -2px 0 #ff3366;
         }
         40% {
           transform: translate(2px, -1px);
           text-shadow:
             -2px 0 #00ffff,
-            2px 0 #ff003c;
+            2px 0 #ff3366;
         }
         60% {
           transform: translate(-1px, 2px);
           text-shadow:
             2px 0 #00ffff,
-            -2px 0 #ff003c;
+            -2px 0 #ff3366;
         }
         80% {
           transform: translate(1px, -2px);
           text-shadow:
             -2px 0 #00ffff,
-            2px 0 #ff003c;
+            2px 0 #ff3366;
         }
         100% {
           transform: translate(0);
@@ -226,6 +226,13 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
     <script type="module" src="/app.js"></script>
@@ -286,7 +293,7 @@
 
           if (timeLeft <= 10) {
             // Panic mode
-            timerDisplay.style.backgroundColor = '#ff003c';
+            timerDisplay.style.backgroundColor = '#ff3366';
             timerDisplay.style.color = '#fff';
             document.body.style.boxShadow = 'inset 0 0 50px rgba(255, 0, 60, 0.5)';
           }

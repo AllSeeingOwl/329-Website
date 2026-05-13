@@ -114,8 +114,8 @@
 
       /* Offline Glow (Red) */
       .card.offline {
-        border-color: #ff003c;
-        color: #ff003c;
+        border-color: #ff3366;
+        color: #ff3366;
         box-shadow:
           0 0 15px rgba(255, 0, 60, 0.3),
           inset 0 0 10px rgba(255, 0, 60, 0.2);
@@ -154,7 +154,7 @@
         box-shadow:
           0 0 25px rgba(255, 0, 60, 0.6),
           inset 0 0 15px rgba(255, 0, 60, 0.4);
-        border-color: #ff003c;
+        border-color: #ff3366;
         background-color: rgba(255, 0, 60, 0.1);
       }
 
@@ -268,7 +268,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ff003c; /* Offline */
+        background-color: #ff3366; /* Offline */
         transition: 0.3s;
         border: 1px solid #555;
       }
@@ -339,6 +339,13 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
     <script type="module" src="/app.js"></script>

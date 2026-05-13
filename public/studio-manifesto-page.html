@@ -16,7 +16,7 @@
       :root {
         --bg-color: #faf9f6; /* Off-white */
         --text-color: #111111;
-        --accent-red: #ff003c;
+        --accent-red: #ff3366;
         --border-color: #e0e0e0;
       }
 
@@ -229,6 +229,13 @@
           opacity: 1;
           transform: none;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
 

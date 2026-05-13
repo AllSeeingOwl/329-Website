@@ -22,7 +22,7 @@ Help: [Elements must meet minimum color contrast ratio thresholds](https://deque
 - `<div class="card-status">[OFFLINE]</div>`
   - Target: .offline.card:nth-child(2) > .card-status
   - Failure Summary: Fix any of the following:
-    Element has insufficient color contrast of 4.02 (foreground color: #ff003c, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
+    Element has insufficient color contrast of 4.48 (foreground color: #ff3366, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
 
 - `<span class="card-id">DOC: 002-GD</span>`
   - Target: .offline.card:nth-child(3) > span
@@ -32,7 +32,7 @@ Help: [Elements must meet minimum color contrast ratio thresholds](https://deque
 - `<div class="card-status">[OFFLINE]</div>`
   - Target: .offline.card:nth-child(3) > .card-status
   - Failure Summary: Fix any of the following:
-    Element has insufficient color contrast of 4.02 (foreground color: #ff003c, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
+    Element has insufficient color contrast of 4.48 (foreground color: #ff3366, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
 
 - `<span class="card-id">ARCHIVE: NOVA</span>`
   - Target: a[href="nova-classified-archive.html"] > span
@@ -62,7 +62,7 @@ Help: [Elements must meet minimum color contrast ratio thresholds](https://deque
 - `<div class="card-status">[OFFLINE]</div>`
   - Target: .offline.card:nth-child(8) > .card-status
   - Failure Summary: Fix any of the following:
-    Element has insufficient color contrast of 4.02 (foreground color: #ff003c, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
+    Element has insufficient color contrast of 4.48 (foreground color: #ff3366, background color: #450c1a, font size: 14.4pt (19.2px), font weight: normal). Expected contrast ratio of 4.5:1
 
 - `<span class="card-id">PORTAL: RADIO</span>`
   - Target: a[href$="ollies-radio-scanner.html"] > span
@@ -117,7 +117,7 @@ Help: [Elements must meet minimum color contrast ratio thresholds](https://deque
 - `<a href="#" class="btn-store" id="storefront-link" style="pointer-events: none; opacity: 0.5">STOREFRONT OFFLINE</a>`
   - Target: #storefront-link
   - Failure Summary: Fix any of the following:
-    Element has insufficient color contrast of 1.86 (foreground color: #2b020c, background color: #880222, font size: 21.6pt (28.8px), font weight: normal). Expected contrast ratio of 3:1
+    Element has insufficient color contrast of 1.98 (foreground color: #2b0810, background color: #881c37, font size: 21.6pt (28.8px), font weight: normal). Expected contrast ratio of 3:1
 
 - `<p>End of Transmission. // 3M29 Operations.</p>`
   - Target: .terminal-footer > p

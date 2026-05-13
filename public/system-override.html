@@ -69,7 +69,7 @@
       .hacked-layer {
         display: none;
         background-color: #050505;
-        color: #ff003c;
+        color: #ff3366;
         font-family: 'VT323', monospace;
         padding: 50px 20px;
         min-height: 100vh;
@@ -114,7 +114,7 @@
       }
 
       .terminal-box {
-        border: 2px dashed #ff003c;
+        border: 2px dashed #ff3366;
         background: rgba(255, 0, 60, 0.05);
         padding: 30px;
         margin: 40px 0;
@@ -128,8 +128,8 @@
 
       input[type='email'] {
         background: #000;
-        color: #ff003c;
-        border: 2px solid #ff003c;
+        color: #ff3366;
+        border: 2px solid #ff3366;
         font-family: 'VT323', monospace;
         font-size: 1.8rem;
         padding: 15px;
@@ -145,14 +145,14 @@
 
       input[type='email']:focus,
       input[type='email']:focus-visible {
-        box-shadow: 0 0 15px #ff003c;
+        box-shadow: 0 0 15px #ff3366;
         border-color: #ff3366;
       }
 
       .btn-submit {
-        background: #ff003c;
+        background: #ff3366;
         color: #000;
-        border: 2px solid #ff003c;
+        border: 2px solid #ff3366;
         font-family: 'VT323', monospace;
         font-size: 1.8rem;
         padding: 15px 24px;
@@ -166,8 +166,8 @@
 
       .btn-submit:hover {
         background: #000;
-        color: #ff003c;
-        box-shadow: 0 0 15px #ff003c;
+        color: #ff3366;
+        box-shadow: 0 0 15px #ff3366;
       }
 
       .btn-submit:focus-visible {
@@ -175,9 +175,12 @@
         outline-offset: 4px;
       }
 
-      .btn-submit:disabled {
+      .btn-submit:disabled,
+      .btn-submit[aria-disabled='true'],
+      input:disabled,
+      button:disabled {
         background: #333;
-        color: #767676;
+        color: #aaaaaa;
         border-color: #555;
         cursor: not-allowed;
         box-shadow: none;
@@ -223,6 +226,10 @@
         }
       }
 
+      .glitching:focus-visible {
+        outline: 2px dashed #ff3366;
+        outline-offset: 4px;
+      }
       .glitching {
         animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
       }
@@ -286,7 +293,7 @@
           // Flash effect
           let flashCount = 0;
           const flashInterval = setInterval(() => {
-            document.body.style.backgroundColor = flashCount % 2 === 0 ? '#ff003c' : '#000';
+            document.body.style.backgroundColor = flashCount % 2 === 0 ? '#ff3366' : '#000';
             flashCount++;
 
             if (flashCount > 5) {

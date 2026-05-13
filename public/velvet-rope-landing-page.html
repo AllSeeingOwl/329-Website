@@ -48,6 +48,10 @@
         color: #555;
       }
 
+      .screen-tear:focus-visible {
+        outline: 2px dashed #fff;
+        outline-offset: 4px;
+      }
       .screen-tear {
         animation: glitch-anim 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
         background-color: #000 !important;
@@ -118,12 +122,12 @@
 
       .header-glitch {
         font-family: 'Anton', sans-serif;
-        color: #ff003c;
+        color: #ff3366;
         font-size: 2.5rem;
         letter-spacing: 2px;
         text-transform: uppercase;
         margin-bottom: 30px;
-        border-bottom: 3px solid #ff003c;
+        border-bottom: 3px solid #ff3366;
         padding-bottom: 10px;
         text-shadow:
           2px 2px 0px #000,
@@ -138,7 +142,7 @@
       }
 
       .highlight-red {
-        color: #ff003c;
+        color: #ff3366;
         font-weight: bold;
       }
       .highlight-white {
@@ -194,7 +198,7 @@
         left: 50%;
         transform: translate(-50%, -50%) rotate(-8deg);
         font-family: 'Anton', sans-serif;
-        color: #ff003c;
+        color: #ff3366;
         font-size: 3.5rem;
         line-height: 1;
         white-space: nowrap;
@@ -236,7 +240,7 @@
         width: calc(100% - 22px);
         max-width: 400px;
         background: #000;
-        border: 1px solid #ff003c;
+        border: 1px solid #ff3366;
         color: #00ff00;
         font-family: 'VT323', monospace;
         font-size: 1.3rem;
@@ -249,11 +253,11 @@
         color: #005500;
       }
       .terminal-form input[type='email']:focus {
-        box-shadow: 0 0 10px #ff003c;
+        box-shadow: 0 0 10px #ff3366;
       }
 
       .terminal-form button {
-        background: #ff003c;
+        background: #ff3366;
         color: #000;
         font-family: 'Anton', sans-serif;
         font-size: 1.5rem;
@@ -267,18 +271,20 @@
 
       .terminal-form button:hover {
         background: #fff;
-        color: #ff003c;
-        box-shadow: 0 0 15px #ff003c;
+        color: #ff3366;
+        box-shadow: 0 0 15px #ff3366;
       }
 
       .terminal-form button:focus-visible {
         outline: 2px dashed #fff;
         outline-offset: 4px;
         background: #fff;
-        color: #ff003c;
+        color: #ff3366;
       }
 
-      .terminal-form button:disabled {
+      .terminal-form button:disabled,
+      input:disabled,
+      .btn:disabled {
         cursor: not-allowed;
         opacity: 0.5;
         background: #333;

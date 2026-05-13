@@ -40,7 +40,7 @@ test.describe('Velvet Rope E2E', () => {
     // Verify button changes its style and text
     await expect(submitBtn).toHaveText('LINK ESTABLISHED...');
     await expect(submitBtn).toHaveCSS('background-color', 'rgb(255, 255, 255)'); // #fff
-    await expect(submitBtn).toHaveCSS('color', 'rgb(255, 0, 60)'); // #ff003c
+    await expect(submitBtn).toHaveCSS('color', 'rgb(255, 51, 102)'); // #ff003c
 
     // Verify the modal appears
     const modal = page.locator('text=COMMUNICATION SECURED.').locator('..');

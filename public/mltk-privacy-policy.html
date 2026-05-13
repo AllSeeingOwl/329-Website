@@ -158,25 +158,25 @@
           transform: translate(-2px, 1px);
           text-shadow:
             2px 0 #00ffff,
-            -2px 0 #ff003c;
+            -2px 0 #ff3366;
         }
         40% {
           transform: translate(2px, -1px);
           text-shadow:
             -2px 0 #00ffff,
-            2px 0 #ff003c;
+            2px 0 #ff3366;
         }
         60% {
           transform: translate(-1px, 2px);
           text-shadow:
             2px 0 #00ffff,
-            -2px 0 #ff003c;
+            -2px 0 #ff3366;
         }
         80% {
           transform: translate(1px, -2px);
           text-shadow:
             -2px 0 #00ffff,
-            2px 0 #ff003c;
+            2px 0 #ff3366;
         }
         100% {
           transform: translate(0);
@@ -191,6 +191,13 @@
           transition-duration: 0.01ms !important;
           scroll-behavior: auto !important;
         }
+      }
+
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     </style>
     <link rel="stylesheet" href="msdos_typing_effect.css" />

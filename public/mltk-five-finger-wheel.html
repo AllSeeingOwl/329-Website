@@ -76,7 +76,7 @@
         height: 0;
         border-left: 15px solid transparent;
         border-right: 15px solid transparent;
-        border-top: 30px solid #ff003c;
+        border-top: 30px solid #ff3366;
         z-index: 10;
         filter: drop-shadow(0 0 10px rgba(255, 0, 60, 0.8));
       }
@@ -187,7 +187,9 @@
         outline: none;
       }
 
-      button:disabled {
+      button:disabled,
+      input:disabled,
+      .btn:disabled {
         border-color: #555;
         color: #555;
         box-shadow: none;
@@ -254,7 +256,7 @@
         text-shadow: 0 0 8px rgba(255, 170, 0, 0.8);
       }
       .severity-critical {
-        color: #ff003c;
+        color: #ff3366;
         text-shadow: 0 0 8px rgba(255, 0, 60, 0.8);
       }
 
