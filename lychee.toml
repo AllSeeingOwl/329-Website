@@ -4,6 +4,7 @@ exclude = [
     "https://www\\.yourdomain\\.com/.*",
     ".*placeholder\\.webp",
     ".*placeholder\\.jpg",
+    ".*placeholder\\.avif",
     ".*playwright-logo\\.svg",
     ".*index-.*\\.css"
 ]
