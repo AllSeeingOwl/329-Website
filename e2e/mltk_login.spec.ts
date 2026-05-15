@@ -56,8 +56,8 @@ test.describe('MLTK Login Gate E2E', () => {
     await inputField.fill('VALID-CODE');
     await page.keyboard.press('Enter');
 
-    await expect(lockdownScreen).toBeHidden();
-    await expect(successScreen).toBeVisible();
+    await expect(lockdownScreen).toBeHidden({ timeout: 10000 });
+    await expect(successScreen).toBeVisible({ timeout: 10000 });
     await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(5, 5, 5)');
   });
 

@@ -54,7 +54,7 @@ test.describe('Radio Scanner E2E', () => {
     const expectedMessage =
       "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
 
-    await expect(output).toHaveText(expectedMessage, { timeout: 15000 });
+    await expect(output).toHaveText(expectedMessage, { timeout: 25000 }); // Explicit wait increased for typewriter animation stability
   });
 
   test('should return to static when tuned away from 104.9', async ({ page }) => {

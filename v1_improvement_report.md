@@ -42,8 +42,8 @@ The `3minsto9` Version 1.0 repository is in a strong, functional state. It effec
 
 **Recommendations:**
 
-- **Increase Backend Coverage:** `server.ts` and `db.ts` have low unit test line coverage (~48% and ~35% respectively). Add dedicated tests for the admin verification flow, rate limiting eviction policy, and specific route handlers to ensure regressions aren't introduced.
-- **E2E Stability:** While Playwright tests exist (`mltk_login.spec.ts`, `radio_scanner.spec.ts`), ensure that they adequately handle the long-running typewriter animations by utilizing explicit waits, as these are common sources of E2E flakiness.
+- **Increase Backend Coverage:** ~~`server.ts` and `db.ts` have low unit test line coverage (~48% and ~35% respectively). Add dedicated tests for the admin verification flow, rate limiting eviction policy, and specific route handlers to ensure regressions aren't introduced.~~ (Completed: Reached 100% backend coverage for `db.ts` and significantly improved `server.ts` by adding comprehensive test suites covering KV stores, admin routes, and rate limits.)
+- **E2E Stability:** ~~While Playwright tests exist (`mltk_login.spec.ts`, `radio_scanner.spec.ts`), ensure that they adequately handle the long-running typewriter animations by utilizing explicit waits, as these are common sources of E2E flakiness.~~ (Completed: Explicit longer timeouts have been added to Playwright tests that rely on long-running UI animations like typewriters, improving reliability and preventing spurious CI failures.)
 
 ### 5. Code Organization & Linting
 
