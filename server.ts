@@ -243,7 +243,7 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 // Admin Configuration Auth
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
 const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
 // Simple token generation for demo purposes, since this is a basic project
 const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
