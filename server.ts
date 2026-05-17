@@ -243,27 +243,19 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 // Admin Configuration Auth
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-if (!ADMIN_PASSWORD && process.env.NODE_ENV !== 'production') {
-  ADMIN_PASSWORD = crypto.randomBytes(16).toString('hex');
-  console.log('--------------------------------------------------');
-  console.log('ADMIN_PASSWORD not set. Generated session password:');
-  console.log(ADMIN_PASSWORD);
-  console.log('--------------------------------------------------');
-}
-const adminAuthBuffer = ADMIN_PASSWORD ? Buffer.from(ADMIN_PASSWORD) : null;
+let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
 // Simple token generation for demo purposes, since this is a basic project
 const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
 let activeAdminToken: string | null = null;
 
 app.post('/api/admin/verify', (req: Request, res: Response) => {
   if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
-    console.error('ADMIN_PASSWORD must be set in production');
-    return res.status(500).json({ error: 'Server configuration error' });
+    console.warn('WARNING: ADMIN_PASSWORD should be set in production. Using insecure fallback.');
   }
 
   const { password } = req.body;
-  if (typeof password === 'string' && adminAuthBuffer) {
+  if (typeof password === 'string') {
     const pwdBuffer = Buffer.from(password);
     if (
       pwdBuffer.length === adminAuthBuffer.length &&
@@ -510,8 +502,7 @@ const MAX_ATTEMPTS = 5;
 
 app.post('/api/verify', (req: Request, res: Response) => {
   if (process.env.NODE_ENV === 'production' && !process.env.AUTH_PASSWORD) {
-    console.error('AUTH_PASSWORD must be set in production');
-    return res.status(500).json({ error: 'Server configuration error' });
+    console.warn('WARNING: AUTH_PASSWORD should be set in production. Using insecure fallback.');
   }
 
   const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
