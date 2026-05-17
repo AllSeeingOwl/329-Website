@@ -244,28 +244,30 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 
 // Admin Configuration Auth
 let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-if (process.env.NODE_ENV === 'production' && !ADMIN_PASSWORD) {
-  throw new Error('ADMIN_PASSWORD must be set in production');
-}
-if (!ADMIN_PASSWORD) {
+if (!ADMIN_PASSWORD && process.env.NODE_ENV !== 'production') {
   ADMIN_PASSWORD = crypto.randomBytes(16).toString('hex');
   console.log('--------------------------------------------------');
   console.log('ADMIN_PASSWORD not set. Generated session password:');
   console.log(ADMIN_PASSWORD);
   console.log('--------------------------------------------------');
 }
-const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
+const adminAuthBuffer = ADMIN_PASSWORD ? Buffer.from(ADMIN_PASSWORD) : null;
 // Simple token generation for demo purposes, since this is a basic project
 const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
 let activeAdminToken: string | null = null;
 
 app.post('/api/admin/verify', (req: Request, res: Response) => {
+  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
+    console.error('ADMIN_PASSWORD must be set in production');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
   const { password } = req.body;
-  if (typeof password === 'string') {
+  if (typeof password === 'string' && adminAuthBuffer) {
     const pwdBuffer = Buffer.from(password);
     if (
       pwdBuffer.length === adminAuthBuffer.length &&
-      crypto.timingSafeEqual(new Uint8Array(pwdBuffer), new Uint8Array(adminAuthBuffer))
+      crypto.timingSafeEqual(new Uint8Array(pwdBuffer), new Uint8Array(adminAuthBuffer as Buffer))
     ) {
       activeAdminToken = generateAdminToken();
       res.json({ success: true, token: activeAdminToken });
@@ -492,9 +494,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // The official password for this ARG gate is hinted in mltk_login_utils.js.
 // Changing this fallback will break the intended experience for local development.
 // -----------------------------------------------------------------------------
-if (process.env.NODE_ENV === 'production' && !process.env.AUTH_PASSWORD) {
-  throw new Error('AUTH_PASSWORD must be set in production');
-}
+// The throw was moved inside the route to prevent top-level crashes on Vercel.
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || ['0408', '1998', 'XXXX'].join('-');
 // ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
 // This reduces allocation overhead and improves response times for the verification endpoint.
@@ -509,6 +509,11 @@ const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
 
 app.post('/api/verify', (req: Request, res: Response) => {
+  if (process.env.NODE_ENV === 'production' && !process.env.AUTH_PASSWORD) {
+    console.error('AUTH_PASSWORD must be set in production');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
   const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
   const record = rateLimitMap.get(ip) || { count: 0, firstAttempt: now };
