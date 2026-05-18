@@ -12,11 +12,15 @@ jobs:
       contents: write
       pull-requests: read
     steps:
-      - name: Delete merged branches
-        uses: phntxx/delete-merged-branch@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Delete merged and stale branches
+        uses: mmorenoregalado/action-branches-cleaner@v2.0.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_closed_pr: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base_branches: 'main'
+          days_old_threshold: '30'
 
   cleanup-stale-issues-prs:
     runs-on: ubuntu-latest
