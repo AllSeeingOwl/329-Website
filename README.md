@@ -18,7 +18,7 @@ The project relies on a Node.js Express backend (`server.ts`) that serves static
   - **JavaScript Utilities**: Extracted business logic and DOM interactions are stored as standard `.js` files within `public/`. They use a UMD-like pattern (`if (typeof module !== 'undefined' && module.exports)`) to allow execution in both the browser and Node.js environments.
 - **`server.ts`**: An Express server configured to serve static files from the `public/` directory.
 - **Persistent State**: The application utilizes Upstash Redis (`@upstash/redis`) for persistent storage (e.g., dashboard configuration) replacing previous SQLite/Vercel KV implementations. It includes an in-memory fallback for local development.
-- **Root Directory**: Contains configuration files (Vite, Webpack, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
+- **Root Directory**: Contains configuration files (Vite, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
 
 ## Development
 
@@ -35,7 +35,7 @@ _(Note: If you experience timeouts during installation, use the `--prefer-offlin
 The local Express server (`server.ts`) relies on the following environment variables:
 
 - **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. Falls back to a default value if not set.
-- **`ADMIN_PASSWORD`**: Required for the `/api/admin/verify` endpoint. Generated randomly if not set.
+- **`ADMIN_PASSWORD`**: Required for the `/api/admin/verify` endpoint. Falls back to 'admin' if not set.
 - **`MAINTENANCE_MODE`**: Set to `'true'` to enable global maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
 - **`STUDIO_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for studio pages, returning a 503 status code and serving `public/maintenance.html`.
 - **`MLTK_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for MLTK/ARG pages, returning a 503 status code and serving `public/maintenance.html`.
