@@ -137,18 +137,21 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
         if (!file.endsWith('.html')) return null;
 
         const filePath = path.join(publicDir, file);
-        const fileContent = await fs.promises.readFile(filePath, 'utf8');
+
+        const [fileContent, stats] = await Promise.all([
+          fs.promises.readFile(filePath, 'utf8'),
+          fs.promises.stat(filePath).catch(() => null),
+        ]);
 
         if (fileContent.includes('<meta name="robots" content="noindex"')) return null;
 
         const entryArr = ['  <url>\n'];
         entryArr.push(`    <loc>${baseUrl}/${file}</loc>\n`);
 
-        try {
-          const stats = await fs.promises.stat(filePath);
+        if (stats) {
           const lastMod = stats.mtime.toISOString().split('T')[0];
           entryArr.push(`    <lastmod>${lastMod}</lastmod>\n`);
-        } catch {
+        } else {
           const today = new Date().toISOString().split('T')[0];
           entryArr.push(`    <lastmod>${today}</lastmod>\n`);
         }
