@@ -373,50 +373,80 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
       }
     }
 
-    const { exec } = require('child_process');
     const util = require('util');
-    const execPromise = util.promisify(exec);
 
     const getStatus = async (filenames: string[]) => {
-      return Promise.all(
+      // Fetch file stats concurrently
+      const fileStatsMap = new Map<string, fs.Stats | null>();
+      await Promise.all(
         filenames.map(async (filename) => {
           const filePath = path.join(publicDir, filename);
           try {
             const stats = await fs.promises.stat(filePath);
-            let lastModifiedDate = stats.mtime.toISOString();
-            try {
-              const { stdout } = await execPromise(`git log -1 --format="%cI" -- "${filename}"`, {
-                cwd: publicDir,
-              });
-              if (stdout.trim()) {
-                lastModifiedDate = stdout.trim();
-              }
-            } catch {
-              // fallback to a deterministic offset based on filename if git is unavailable
-              let hash = 0;
-              for (let i = 0; i < filename.length; i++) {
-                hash = (hash << 5) - hash + filename.charCodeAt(i);
-                hash |= 0;
-              }
-              // Subtract up to ~365 days in milliseconds based on the hash to make them look distinct
-              const offsetMs = Math.abs(hash) % (1000 * 60 * 60 * 24 * 365);
-              const fallbackDate = new Date(stats.mtime.getTime() - offsetMs);
-              lastModifiedDate = fallbackDate.toISOString();
-            }
-            return {
-              filename,
-              status: 'ONLINE',
-              lastModified: lastModifiedDate,
-            };
+            fileStatsMap.set(filename, stats);
           } catch {
-            return {
-              filename,
-              status: 'OFFLINE',
-              lastModified: null,
-            };
+            fileStatsMap.set(filename, null);
           }
         })
       );
+
+      // Fetch git dates in a single batched command to eliminate N+1 spawn overhead
+      const gitDates: Record<string, string> = {};
+      if (filenames.length > 0) {
+        try {
+          const execFilePromise = util.promisify(require('child_process').execFile);
+          const args = ['log', '--format=COMMIT|%cI', '--name-only', '--relative', '--', ...filenames];
+          const { stdout } = await execFilePromise('git', args, { cwd: publicDir, maxBuffer: 1024 * 1024 * 10 });
+
+          let currentDate: string | null = null;
+          for (const line of stdout.split('\n')) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            if (trimmed.startsWith('COMMIT|')) {
+              currentDate = trimmed.substring('COMMIT|'.length);
+            } else if (currentDate && !gitDates[trimmed]) {
+              // Only store the first occurrence since `git log` outputs newest to oldest
+              gitDates[trimmed] = currentDate;
+            }
+          }
+        } catch {
+          // Fallback handled during filename iteration if git is unavailable
+        }
+      }
+
+      return filenames.map((filename) => {
+        const stats = fileStatsMap.get(filename);
+        if (!stats) {
+          return {
+            filename,
+            status: 'OFFLINE',
+            lastModified: null,
+          };
+        }
+
+        let lastModifiedDate: string;
+        if (gitDates[filename]) {
+          lastModifiedDate = gitDates[filename];
+        } else {
+          // fallback to a deterministic offset based on filename if git is unavailable
+          let hash = 0;
+          for (let i = 0; i < filename.length; i++) {
+            hash = (hash << 5) - hash + filename.charCodeAt(i);
+            hash |= 0;
+          }
+          // Subtract up to ~365 days in milliseconds based on the hash to make them look distinct
+          const offsetMs = Math.abs(hash) % (1000 * 60 * 60 * 24 * 365);
+          const fallbackDate = new Date(stats.mtime.getTime() - offsetMs);
+          lastModifiedDate = fallbackDate.toISOString();
+        }
+
+        return {
+          filename,
+          status: 'ONLINE',
+          lastModified: lastModifiedDate,
+        };
+      });
     };
 
     const argStatus = await getStatus(pages.arg);
