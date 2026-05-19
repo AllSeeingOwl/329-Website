@@ -1,0 +1,49 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start Server
+        run: |
+          pnpm exec ts-node server.ts &
+          npx wait-on http://localhost:3000
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@12.6.2
+        with:
+          urls: |
+            http://localhost:3000/
+          uploadArtifacts: false
+          temporaryPublicStorage: true
+        env:
+          PORT: 3000
+
+      - name: Upload Lighthouse Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-results
+          path: '.lighthouseci/'
+          retention-days: 7
