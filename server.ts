@@ -140,7 +140,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
 
         const [fileContent, stats] = await Promise.all([
           fs.promises.readFile(filePath, 'utf8'),
-          fs.promises.stat(filePath).catch(() => null)
+          fs.promises.stat(filePath).catch(() => null),
         ]);
 
         if (fileContent.includes('<meta name="robots" content="noindex"')) return null;
