@@ -24,8 +24,12 @@
     ]
   },
   "knip": {
-    "ignoreBinaries": ["wait-on"],
-    "ignore": ["public/msdos_typing_effect.js"]
+    "ignoreBinaries": [
+      "wait-on"
+    ],
+    "ignore": [
+      "public/msdos_typing_effect.js"
+    ]
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
