@@ -395,8 +395,18 @@ app.get('/api/admin/page-status', verifyAdminToken, async (req: Request, res: Re
       if (filenames.length > 0) {
         try {
           const execFilePromise = util.promisify(require('child_process').execFile);
-          const args = ['log', '--format=COMMIT|%cI', '--name-only', '--relative', '--', ...filenames];
-          const { stdout } = await execFilePromise('git', args, { cwd: publicDir, maxBuffer: 1024 * 1024 * 10 });
+          const args = [
+            'log',
+            '--format=COMMIT|%cI',
+            '--name-only',
+            '--relative',
+            '--',
+            ...filenames,
+          ];
+          const { stdout } = await execFilePromise('git', args, {
+            cwd: publicDir,
+            maxBuffer: 1024 * 1024 * 10,
+          });
 
           let currentDate: string | null = null;
           for (const line of stdout.split('\n')) {
