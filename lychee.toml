@@ -6,5 +6,6 @@ exclude = [
     ".*placeholder\\.jpg",
     ".*placeholder\\.avif",
     ".*playwright-logo\\.svg",
-    ".*index-.*\\.css"
+    ".*index-.*\\.css",
+    "https://discord\\.gg/.*"
 ]
