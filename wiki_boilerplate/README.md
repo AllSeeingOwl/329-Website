@@ -3,6 +3,7 @@
 **PLEASE DO NOT CONFUSE THIS WITH THE MAIN ARG EXPERIENCE REPOSITORY. ALL ARG, PUZZLE, AND MLTK-SPECIFIC CONTENT HAS BEEN INTENTIONALLY STRIPPED FROM THIS CODEBASE.**
 
 This directory contains only the core infrastructure:
+
 - Express server setup (`server.ts`)
 - Upstash Redis database connection (`db.ts`)
 - Testing infrastructure (Jest, Playwright)
