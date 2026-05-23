@@ -1,0 +1,75 @@
+{
+  "name": "3minsto9-arg",
+  "version": "1.0.0",
+  "description": "3minsto9 ARG web assets",
+  "scripts": {
+    "dev:server": "nodemon --exec ts-node server.ts",
+    "test": "jest --testPathIgnorePatterns=\"e2e\"",
+    "test:e2e:playwright": "playwright test",
+    "test:e2e:cypress": "cypress open",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "build:vite": "vite build",
+    "prepare": "husky",
+    "maintenance:toggle": "./scripts/toggle_vercel_env.sh"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "knip": {
+    "ignoreBinaries": [
+      "wait-on"
+    ],
+    "ignore": [
+      "public/msdos_typing_effect.js"
+    ]
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^18.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/parser": "^8.59.4",
+    "axe-core": "^4.11.3",
+    "cypress": "^15.15.0",
+    "eslint": "^10.4.0",
+    "eslint-plugin-jest": "^29.15.2",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "knip": "^6.14.1",
+    "lint-staged": "^16.4.0",
+    "nodemon": "^3.1.14",
+    "playwright": "^1.60.0",
+    "prettier": "^3.8.3",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^8.0.13"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.38.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
+    "express": "^5.2.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "cypress",
+      "unrs-resolver"
+    ]
+  }
+}
