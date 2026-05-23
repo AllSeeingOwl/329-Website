@@ -11,8 +11,8 @@
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "build:vite": "vite build",
-    "prepare": "husky",
-    "maintenance:toggle": "./scripts/toggle_vercel_env.sh"
+
+
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx}": [

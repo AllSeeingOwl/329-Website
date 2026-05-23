@@ -10,4 +10,6 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: ['node_modules/(?!@vercel/analytics)'],
+  testPathIgnorePatterns: ['<rootDir>/wiki_boilerplate/'],
+  modulePathIgnorePatterns: ['<rootDir>/wiki_boilerplate/'],
 };

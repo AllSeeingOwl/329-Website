@@ -36,7 +36,9 @@ export async function updateAllMaintenanceConfig(value: boolean) {
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
   if (isKvAvailable) {
     const config = await kv.hgetall('config:maintenance');
-    return (config as Record<string, string>) || { global: 'false' };
+    return (
+      (config as Record<string, string>) || { global: 'false' }
+    );
   }
   return {
     global: String(inMemoryMaintenanceConfig.global),

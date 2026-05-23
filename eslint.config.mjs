@@ -44,6 +44,7 @@ export default [
       'public/',
       '.github/workflows/*.yml',
       '.github/dependabot.yml',
+      'wiki_boilerplate/',
     ],
   },
 ];

@@ -28,7 +28,8 @@
       "wait-on"
     ],
     "ignore": [
-      "public/msdos_typing_effect.js"
+      "public/msdos_typing_effect.js",
+      "wiki_boilerplate/**"
     ]
   },
   "devDependencies": {

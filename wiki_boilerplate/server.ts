@@ -105,10 +105,7 @@ const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     const tokenBuffer = Buffer.from(token);
     if (tokenBuffer.length === adminAuthBuffer.length) {
-      const isValid = crypto.timingSafeEqual(
-        new Uint8Array(tokenBuffer),
-        new Uint8Array(adminAuthBuffer)
-      );
+      const isValid = crypto.timingSafeEqual(new Uint8Array(tokenBuffer), new Uint8Array(adminAuthBuffer));
       if (isValid) {
         next();
         return;
@@ -158,19 +155,15 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
   }
 });
 
-app.post(
-  '/api/admin/maintenance-config/all',
-  verifyAdminToken,
-  async (req: Request, res: Response) => {
-    const { value } = req.body;
-    try {
-      await updateAllMaintenanceConfig(value);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: 'Failed to update all maintenance configs' });
-    }
+app.post('/api/admin/maintenance-config/all', verifyAdminToken, async (req: Request, res: Response) => {
+  const { value } = req.body;
+  try {
+    await updateAllMaintenanceConfig(value);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all maintenance configs' });
   }
-);
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
