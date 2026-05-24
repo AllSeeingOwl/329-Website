@@ -71,6 +71,14 @@
     "onlyBuiltDependencies": [
       "cypress",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "qs": "^6.15.2",
+      "uuid": "^11.1.1"
+    }
+  },
+  "overrides": {
+    "qs": "^6.15.2",
+    "uuid": "^11.1.1"
   }
 }
