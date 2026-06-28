@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TERMINAL // UPLINK</title>
+    <link rel="icon" type="image/svg+xml" href="/mltk-favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --rabbit-red: #ff3366;
+        --bg-color: #050505;
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--rabbit-red);
+        font-family: 'Share Tech Mono', monospace;
+        margin: 0;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+      .terminal-container {
+        max-width: 800px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      h1 {
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--rabbit-red);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+      }
+      .log {
+        margin-bottom: 20px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+      .input-line {
+        display: flex;
+        align-items: center;
+      }
+      .prompt {
+        margin-right: 10px;
+      }
+      input {
+        background: transparent;
+        border: none;
+        color: var(--rabbit-red);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 16px;
+        outline: none;
+        flex-grow: 1;
+        text-transform: uppercase;
+      }
+      input:focus-visible {
+        outline: 1px dashed var(--rabbit-red);
+      }
+      .hidden {
+        display: none;
+      }
+      .glitch-anim {
+        animation: glitch 1s linear infinite;
+      }
+      @keyframes glitch {
+        2%,
+        64% {
+          transform: translate(2px, 0) skew(0deg);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0) skew(0deg);
+        }
+        62% {
+          transform: translate(0, 0) skew(5deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal-container">
+      <h1>_UPLINK ESTABLISHED</h1>
+      <div id="output" class="log" aria-live="polite">
+        CONNECTING TO SECURE RELAY... [OK] AWAITING PASSPHRASE...
+      </div>
+
+      <div class="input-line">
+        <span class="prompt">guest@rabbit_hole:~#</span>
+        <input
+          type="text"
+          id="terminal-input"
+          autofocus
+          aria-label="Terminal Input"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <div id="secret-message" class="hidden">
+        <br /><br />
+        <span class="glitch-anim">ACCESS GRANTED.</span><br />
+        >> WE ARE THE RABBITS IN THE MAINFRAME.<br />
+        >> THE CITY OF EVERYWHERE IS A CAGE.<br />
+        >> MLTK LIES.<br />
+        >> AWAIT FURTHER INSTRUCTIONS.
+      </div>
+    </div>
+
+    <script>
+      const input = document.getElementById('terminal-input');
+      const output = document.getElementById('output');
+      const secret = document.getElementById('secret-message');
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const val = input.value.trim().toUpperCase();
+
+          if (val === 'RABBIT' || val === 'TEAM RABBIT') {
+            output.innerHTML += `\n> ${val}\n`;
+            secret.classList.remove('hidden');
+            input.disabled = true;
+            localStorage.setItem('rabbit_hack_completed', 'true');
+          } else if (val) {
+            output.innerHTML += `\n> ${val}\nERROR: INVALID PASSPHRASE.\n`;
+            input.value = '';
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

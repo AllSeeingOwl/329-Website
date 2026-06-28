@@ -108,6 +108,8 @@ const mltkFiles = new Set([
   '/secure-data-drop-page.html',
   '/developer-blog.html',
   '/mltk-virtue-village-index.html',
+  '/team-rabbit-hack.html',
+  '/arg-progress-dashboard.html',
 ]);
 
 // Sitemap caching
