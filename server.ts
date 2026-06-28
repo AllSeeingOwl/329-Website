@@ -534,11 +534,13 @@ app.get('/api/admin/emails/export', verifyAdminToken, async (req: Request, res: 
     // Add dummy rows for template visibility as requested
     const dummyRows = [
       ['Jane Doe', 'dummy_studio@example.com', 'studio_newsletter', new Date().toISOString()],
-      ['Unknown', 'dummy_player@example.com', 'mltk_access', new Date().toISOString()]
+      ['Unknown', 'dummy_player@example.com', 'mltk_access', new Date().toISOString()],
     ];
 
-    const rows = [...dummyRows, ...emails.map(e => ['Unknown', e.email, e.source, e.timestamp])];
-    const csvContent = [header, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    const rows = [...dummyRows, ...emails.map((e) => ['Unknown', e.email, e.source, e.timestamp])];
+    const csvContent = [header, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(','))
+      .join('\n');
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="collected_emails.csv"');

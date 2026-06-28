@@ -122,7 +122,7 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
         await fetch('/api/emails/collect', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailInput.value, source: 'mltk_access' })
+          body: JSON.stringify({ email: emailInput.value, source: 'mltk_access' }),
         });
       } catch (err) {
         console.error('Failed to capture comms link', err);
