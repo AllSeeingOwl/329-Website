@@ -434,6 +434,35 @@
           console.log('> SYSTEM BREACH DETECTED');
           console.log('> SOURCE: TEAM_RABBIT_VANDALISM_PROTOCOL');
         }, HACK_DELAY_MS);
+
+        // Secret Keyboard Listener
+        let typed = '';
+        const secretCode = 'rabbit';
+        document.addEventListener('keydown', (e) => {
+          if (!e.key) return;
+          if (e.key.length === 1) {
+            typed += e.key.toLowerCase();
+          } else if (e.key === 'Backspace') {
+            typed = typed.slice(0, -1);
+          }
+
+          if (typed.length > secretCode.length) {
+            typed = typed.slice(typed.length - secretCode.length);
+          }
+
+          if (typed === secretCode) {
+            typed = '';
+            document.body.style.backgroundColor = '#ff3366';
+            document.querySelector('.corporate-layer').innerHTML = `
+              <div style="font-family:'Share Tech Mono', monospace; color:#050505; font-size: 24px; font-weight: bold; text-align: center; margin-top: 20%;">
+                <div class="glitch-anim" style="font-size: 48px;">ACCESS GRANTED</div><br/>
+                UPLINK ESTABLISHED. <a href="/team-rabbit-hack.html" style="color:#ffffff; text-decoration: underline;">PROCEED TO TERMINAL</a>
+              </div>
+            `;
+            const vLayer = document.getElementById('vandalism');
+            if (vLayer) vLayer.remove();
+          }
+        });
       });
     </script>
     <script src="msdos_typing_effect.js"></script>
