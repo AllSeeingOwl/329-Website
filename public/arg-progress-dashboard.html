@@ -7,7 +7,10 @@
     <link rel="icon" type="image/svg+xml" href="/mltk-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --mltk-green: #00ff00;
@@ -71,9 +74,15 @@
         animation: pulse 2s infinite;
       }
       @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
       .btn {
         display: inline-block;
@@ -106,22 +115,39 @@
         <!-- Injected via JS -->
       </ul>
 
-      <div style="text-align: center;">
+      <div style="text-align: center">
         <button class="btn" id="reset-btn">Purge Local Memory</button>
       </div>
 
       <div class="disclaimer">
-        Progress is saved locally on this terminal via localStorage. Clearing browser data will reset this terminal.
+        Progress is saved locally on this terminal via localStorage. Clearing browser data will
+        reset this terminal.
       </div>
     </div>
 
     <script>
       // Define the nodes in the ARG
       const argNodes = [
-        { id: 'node_mltk_login', name: 'MLTK Login Gate', check: () => localStorage.getItem('mltk_auth_success') === 'true' },
-        { id: 'node_velvet_rope', name: 'Velvet Rope Protocol', check: () => localStorage.getItem('velvet_rope_unlocked') === 'true' },
-        { id: 'node_radio_scanner', name: 'Radio Frequency Intercept (104.9)', check: () => localStorage.getItem('radio_intercepted') === 'true' },
-        { id: 'node_rabbit_hack', name: 'Team Rabbit Mainframe Hack', check: () => localStorage.getItem('rabbit_hack_completed') === 'true' },
+        {
+          id: 'node_mltk_login',
+          name: 'MLTK Login Gate',
+          check: () => localStorage.getItem('mltk_auth_success') === 'true',
+        },
+        {
+          id: 'node_velvet_rope',
+          name: 'Velvet Rope Protocol',
+          check: () => localStorage.getItem('velvet_rope_unlocked') === 'true',
+        },
+        {
+          id: 'node_radio_scanner',
+          name: 'Radio Frequency Intercept (104.9)',
+          check: () => localStorage.getItem('radio_intercepted') === 'true',
+        },
+        {
+          id: 'node_rabbit_hack',
+          name: 'Team Rabbit Mainframe Hack',
+          check: () => localStorage.getItem('rabbit_hack_completed') === 'true',
+        },
       ];
 
       // Since we just added the Team Rabbit Hack page, we need to update it to set the localStorage flag when completed.
@@ -131,7 +157,7 @@
         const list = document.getElementById('nodes');
         list.innerHTML = '';
 
-        argNodes.forEach(node => {
+        argNodes.forEach((node) => {
           const isUnlocked = node.check();
           let statusClass = 'status-locked';
           let statusText = '[ LOCKED ]';
@@ -152,7 +178,7 @@
       }
 
       document.getElementById('reset-btn').addEventListener('click', () => {
-        if (confirm("Are you sure you want to purge all local neural link data?")) {
+        if (confirm('Are you sure you want to purge all local neural link data?')) {
           localStorage.removeItem('mltk_auth_success');
           localStorage.removeItem('velvet_rope_unlocked');
           localStorage.removeItem('radio_intercepted');

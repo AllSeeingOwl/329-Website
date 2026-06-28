@@ -1,4 +1,4 @@
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   --bg-color: #111111;
   --text-color: #faf9f6;
   --border-color: #333333;
@@ -8,5 +8,7 @@
 
 /* Ensure transitions for smooth toggling */
 body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
