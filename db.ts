@@ -147,6 +147,33 @@ export async function initDb() {
   }
 }
 
+export interface CapturedEmail {
+  email: string;
+  source: string;
+  timestamp: string;
+}
+
+const inMemoryEmails: CapturedEmail[] = [];
+
+export async function saveEmail(email: string, source: string) {
+  const timestamp = new Date().toISOString();
+  const record: CapturedEmail = { email, source, timestamp };
+
+  if (isKvAvailable) {
+    await kv.lpush('emails:captured', JSON.stringify(record));
+  } else {
+    inMemoryEmails.push(record);
+  }
+}
+
+export async function getAllEmails(): Promise<CapturedEmail[]> {
+  if (isKvAvailable) {
+    const emails = await kv.lrange('emails:captured', 0, -1);
+    return emails.map((e) => (typeof e === 'string' ? JSON.parse(e) : e)) as CapturedEmail[];
+  }
+  return inMemoryEmails;
+}
+
 export async function updateAllDashboardConfig(status: string) {
   if (isKvAvailable) {
     const config = await getDashboardConfig();

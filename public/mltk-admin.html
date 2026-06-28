@@ -329,6 +329,13 @@
             <!-- Dashboard Toggles injected here -->
           </div>
 
+          <h3 class="admin-panel-title" style="margin-top: 30px">DATA & COMMS</h3>
+          <div style="margin-bottom: 20px; border-bottom: 1px dotted #555; padding-bottom: 15px">
+            <button id="download-emails-btn" class="reset-btn" style="margin-top: 0">
+              DOWNLOAD COLLECTED EMAILS (CSV)
+            </button>
+          </div>
+
           <h3 class="admin-panel-title" style="margin-top: 30px">SYSTEM NODE STATUS TRACKER</h3>
           <div
             style="
@@ -451,6 +458,30 @@
       }
 
       document.getElementById('refresh-status-btn').addEventListener('click', loadPageStatus);
+
+      document.getElementById('download-emails-btn').addEventListener('click', async () => {
+        try {
+          const res = await fetch('/api/admin/emails/export', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          });
+          if (res.ok) {
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'collected_emails.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          } else {
+            alert('Failed to download emails');
+          }
+        } catch (e) {
+          console.error(e);
+          alert('Network error while downloading emails');
+        }
+      });
 
       async function loadPageStatus() {
         const argContainer = document.getElementById('arg-status-container');
