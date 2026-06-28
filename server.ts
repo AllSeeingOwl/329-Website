@@ -10,6 +10,8 @@ import {
   updateDashboardConfig,
   updateAllDashboardConfig,
   updateAllMaintenanceConfig,
+  saveEmail,
+  getAllEmails,
 } from './db';
 
 const app = express();
@@ -506,6 +508,46 @@ app.post(
     }
   }
 );
+
+app.post('/api/emails/collect', async (req: Request, res: Response) => {
+  const { email, source } = req.body;
+  if (!email || !source) {
+    res.status(400).json({ error: 'Email and source are required' });
+    return;
+  }
+  try {
+    await saveEmail(email, source);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to save email:', error);
+    res.status(500).json({ error: 'Failed to save email' });
+  }
+});
+
+app.get('/api/admin/emails/export', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const emails = await getAllEmails();
+
+    // Create CSV content
+    const header = ['Name', 'Email', 'Source', 'Timestamp'];
+
+    // Add dummy rows for template visibility as requested
+    const dummyRows = [
+      ['Jane Doe', 'dummy_studio@example.com', 'studio_newsletter', new Date().toISOString()],
+      ['Unknown', 'dummy_player@example.com', 'mltk_access', new Date().toISOString()]
+    ];
+
+    const rows = [...dummyRows, ...emails.map(e => ['Unknown', e.email, e.source, e.timestamp])];
+    const csvContent = [header, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="collected_emails.csv"');
+    res.send(csvContent);
+  } catch (error) {
+    console.error('Failed to export emails:', error);
+    res.status(500).json({ error: 'Failed to export emails' });
+  }
+});
 
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {

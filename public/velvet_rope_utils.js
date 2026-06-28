@@ -115,6 +115,21 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
     btn.setAttribute('aria-disabled', 'true');
   }
 
+  if (e && e.target) {
+    const emailInput = e.target.querySelector('input[type="email"]');
+    if (emailInput && emailInput.value) {
+      try {
+        await fetch('/api/emails/collect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput.value, source: 'mltk_access' })
+        });
+      } catch (err) {
+        console.error('Failed to capture comms link', err);
+      }
+    }
+  }
+
   await sleep(800);
 
   if (CONFIG.SHOULD_REDIRECT) {

@@ -320,11 +320,19 @@
           emailInput.disabled = true;
           submitBtn.textContent = 'TRANSMITTING...';
 
-          // Simulate network delay
-          setTimeout(() => {
+          fetch('/api/emails/collect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source: 'mltk_access' })
+          }).then(() => {
             form.style.display = 'none';
             successMessage.style.display = 'block';
-          }, 1000);
+          }).catch(err => {
+            console.error('Submission error:', err);
+            submitBtn.disabled = false;
+            emailInput.disabled = false;
+            submitBtn.textContent = 'TRANSMIT SECURE LINK';
+          });
         });
       });
     </script>

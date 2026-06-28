@@ -864,7 +864,14 @@
           btn.setAttribute('aria-disabled', 'true');
           btn.textContent = 'SUBSCRIBING...';
 
-          setTimeout(() => {
+          const emailInput = this.querySelector('input[type=\'email\']');
+          const email = emailInput.value;
+
+          fetch('/api/emails/collect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source: 'studio_newsletter' })
+          }).then(() => {
             this.reset();
             this.style.display = 'none';
             this.setAttribute('aria-busy', 'false');
@@ -872,7 +879,15 @@
             btn.removeAttribute('aria-disabled');
             btn.textContent = 'Subscribe';
             successMsg.style.display = 'block';
-          }, 1000);
+          }).catch(err => {
+            console.error('Newsletter signup error', err);
+            btn.disabled = false;
+            btn.removeAttribute('aria-disabled');
+            btn.textContent = 'Subscribe';
+            rateLimitMsg.textContent = 'Network error. Please try again.';
+            rateLimitMsg.style.display = 'block';
+            localStorage.removeItem('lastNewsletterSubmission');
+          });
         "
       >
         <input
@@ -898,7 +913,7 @@
           text-align: center;
         "
       >
-        Email saved! (Developer Note: Connect this to Mailchimp/Flodesk)
+        Subscribed successfully!
       </div>
     </section>
 
