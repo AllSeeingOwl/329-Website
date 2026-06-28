@@ -7,10 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/mltk-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
     <style>
       :root {
         --rabbit-red: #ff3366;
@@ -70,45 +67,29 @@
         animation: glitch 1s linear infinite;
       }
       @keyframes glitch {
-        2%,
-        64% {
-          transform: translate(2px, 0) skew(0deg);
-        }
-        4%,
-        60% {
-          transform: translate(-2px, 0) skew(0deg);
-        }
-        62% {
-          transform: translate(0, 0) skew(5deg);
-        }
+        2%, 64% { transform: translate(2px,0) skew(0deg); }
+        4%, 60% { transform: translate(-2px,0) skew(0deg); }
+        62% { transform: translate(0,0) skew(5deg); }
       }
     </style>
   </head>
   <body>
     <div class="terminal-container">
       <h1>_UPLINK ESTABLISHED</h1>
-      <div id="output" class="log" aria-live="polite">
-        CONNECTING TO SECURE RELAY... [OK] AWAITING PASSPHRASE...
-      </div>
+      <div id="output" class="log" aria-live="polite">CONNECTING TO SECURE RELAY... [OK]
+AWAITING PASSPHRASE...</div>
 
       <div class="input-line">
         <span class="prompt">guest@rabbit_hole:~#</span>
-        <input
-          type="text"
-          id="terminal-input"
-          autofocus
-          aria-label="Terminal Input"
-          autocomplete="off"
-          spellcheck="false"
-        />
+        <input type="text" id="terminal-input" autofocus aria-label="Terminal Input" autocomplete="off" spellcheck="false" />
       </div>
 
       <div id="secret-message" class="hidden">
-        <br /><br />
-        <span class="glitch-anim">ACCESS GRANTED.</span><br />
-        >> WE ARE THE RABBITS IN THE MAINFRAME.<br />
-        >> THE CITY OF EVERYWHERE IS A CAGE.<br />
-        >> MLTK LIES.<br />
+        <br/><br/>
+        <span class="glitch-anim">ACCESS GRANTED.</span><br/>
+        >> WE ARE THE RABBITS IN THE MAINFRAME.<br/>
+        >> THE CITY OF EVERYWHERE IS A CAGE.<br/>
+        >> MLTK LIES.<br/>
         >> AWAIT FURTHER INSTRUCTIONS.
       </div>
     </div>
