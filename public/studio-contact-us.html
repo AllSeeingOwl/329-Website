@@ -550,22 +550,20 @@
         fetch('/api/emails/collect', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, source: 'studio_contact' }),
-        })
-          .then(() => {
-            form.style.display = 'none';
-            form.setAttribute('aria-busy', 'false');
-            successMsg.style.display = 'block';
-          })
-          .catch((err) => {
-            console.error('Contact form error', err);
-            btn.disabled = false;
-            btn.removeAttribute('aria-disabled');
-            btn.textContent = 'Send Message';
-            rateLimitMsg.textContent = 'Network error. Please try again.';
-            rateLimitMsg.style.display = 'block';
-            localStorage.removeItem('lastContactSubmission');
-          });
+          body: JSON.stringify({ email, source: 'studio_contact' })
+        }).then(() => {
+          form.style.display = 'none';
+          form.setAttribute('aria-busy', 'false');
+          successMsg.style.display = 'block';
+        }).catch(err => {
+          console.error('Contact form error', err);
+          btn.disabled = false;
+          btn.removeAttribute('aria-disabled');
+          btn.textContent = 'Send Message';
+          rateLimitMsg.textContent = 'Network error. Please try again.';
+          rateLimitMsg.style.display = 'block';
+          localStorage.removeItem('lastContactSubmission');
+        });
       }
     </script>
   </body>
