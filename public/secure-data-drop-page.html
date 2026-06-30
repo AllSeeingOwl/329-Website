@@ -132,8 +132,8 @@
       .btn-store {
         display: block;
         width: 100%;
-        background: #ffcce0;
-        color: #000000;
+        background: #ff3366;
+        color: #000;
         font-family: 'Anton', sans-serif;
         font-size: 1.8rem;
         padding: 15px;
@@ -157,7 +157,7 @@
       .terminal-footer {
         margin-top: 60px;
         font-size: 1.1rem;
-        color: #888888;
+        color: #555;
         border-top: 1px solid #333;
         padding-top: 20px;
         text-align: center;
@@ -214,8 +214,8 @@
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <main class="container">
-      <h1 class="header-glitch">COMMUNICATION SECURED.<br />YOU ARE NOW IN THE NETWORK.</h1>
+    <div class="container">
+      <div class="header-glitch">COMMUNICATION SECURED.<br />YOU ARE NOW IN THE NETWORK.</div>
 
       <div class="body-text">
         <p>
@@ -242,9 +242,12 @@
 
       <!-- The Upsell to Big Cartel -->
       <div class="upsell-box">
-        <h2 class="header-glitch" style="font-size: 2rem; border-bottom: none; margin-bottom: 10px">
+        <div
+          class="header-glitch"
+          style="font-size: 2rem; border-bottom: none; margin-bottom: 10px"
+        >
           WE NEED OPERATIONAL CAPITAL.
-        </h2>
+        </div>
         <div class="body-text">
           <p>
             Digital files are cute, but if you want to actually see the hidden layers clearly, you
@@ -268,7 +271,7 @@
       <div class="terminal-footer">
         <p>End of Transmission. // 3M29 Operations.</p>
       </div>
-    </main>
+    </div>
     <script>
       document.addEventListener('DOMContentLoaded', async () => {
         const storeLink = document.getElementById('storefront-link');
