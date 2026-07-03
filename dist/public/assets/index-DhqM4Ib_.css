@@ -1,0 +1,1 @@
+:root[data-theme=dark]{--bg-color:#111;--text-color:#faf9f6;--border-color:#333;--studio-bg:#111;--studio-text:#faf9f6}body{transition:background-color .3s,color .3s}
