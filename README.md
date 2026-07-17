@@ -79,6 +79,7 @@ The project is deployed and hosted on **Vercel**, accessible via the custom doma
 - The deployment utilizes the Node.js Express application (`server.ts`).
   - **Security**: The server enforces strict security headers including a Content-Security-Policy with `upgrade-insecure-requests` and `X-XSS-Protection`. It also implements a 100kb payload limit to prevent Denial-of-Service attacks.
   - **Proxy Configuration**: `app.set('trust proxy', 1)` is configured to correctly extract the client IP from the `X-Forwarded-For` header on Vercel deployments, preventing proxy IPs from triggering global rate limits.
+  - **CORS Policy**: Cross-Origin Resource Sharing (CORS) is enabled globally for all routes using the `cors` middleware. This policy allows future API endpoints to be securely consumed by external clients or subdomains without encountering browser `Same-Origin` restrictions.
 - The Express server uses `process.env.PORT` to allow Vercel to dynamically assign the port (falling back to 3000 locally).
 - Critical environment variables like `AUTH_PASSWORD`, `MAINTENANCE_MODE`, and the `KV_REST_API_*` variables must be configured in the Vercel project settings.
 - Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `surface-home-page.html`) to avoid 404 errors on subpaths.

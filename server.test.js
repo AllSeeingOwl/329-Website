@@ -201,6 +201,16 @@ describe('Server Tests', () => {
     expect(response.text).toContain('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
   });
 
+  it('should include CORS headers allowing cross-origin requests', async () => {
+    // Require the app
+    app = require('./server');
+
+    const response = await request(app).options('/api/verify').expect(204);
+
+    // Default cors() sets Access-Control-Allow-Origin to *
+    expect(response.headers['access-control-allow-origin']).toBe('*');
+  });
+
   it('should return 500 when getDashboardConfig fails', async () => {
     // Set up admin password
     process.env.ADMIN_PASSWORD = 'test_admin_password';
