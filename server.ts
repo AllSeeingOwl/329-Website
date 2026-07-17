@@ -1,5 +1,6 @@
 import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import path from 'path';
 import crypto from 'crypto';
 import {
@@ -16,6 +17,10 @@ import {
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Enable Cross-Origin Resource Sharing (CORS) for API expansion
+// Configured to allow all origins by default.
+app.use(cors());
 
 // 🛡️ Sentinel: Disable Express framework leakage
 app.disable('x-powered-by');
