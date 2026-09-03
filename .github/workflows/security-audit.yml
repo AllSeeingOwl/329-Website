@@ -20,4 +20,7 @@ jobs:
           node-version: '18'
 
       - name: Run npm audit
+        run: npm audit fix --legacy-peer-deps
+
+      - name: Verify no vulnerabilities remain
         run: npm audit --audit-level=moderate
