@@ -12,12 +12,15 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Run npm audit
+        run: npm audit fix --legacy-peer-deps
+
+      - name: Verify no vulnerabilities remain
         run: npm audit --audit-level=moderate
