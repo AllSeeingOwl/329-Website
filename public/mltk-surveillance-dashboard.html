@@ -399,21 +399,20 @@
         container.innerHTML = ''; // Clear current contents
 
         dashboardConfig.forEach((item) => {
-          const isOffline = item.status === 'offline';
-          const cardEl = isOffline ? document.createElement('div') : document.createElement('a');
+          if (item.status === 'offline') {
+            return; // Hide offline items from dashboard display while preserving configuration
+          }
 
-          cardEl.className = `card ${isOffline ? 'offline' : 'active'}`;
+          const cardEl = document.createElement('a');
+          cardEl.className = 'card active';
           cardEl.style.textDecoration = 'none';
           cardEl.style.outline = 'none';
           cardEl.style.display = 'flex';
-
-          if (!isOffline) {
-            cardEl.href = item.link;
-            cardEl.tabIndex = 0;
-            cardEl.role = 'link';
-            if (item.isDownload) {
-              cardEl.download = '';
-            }
+          cardEl.href = item.link;
+          cardEl.tabIndex = 0;
+          cardEl.role = 'link';
+          if (item.isDownload) {
+            cardEl.download = '';
           }
 
           const idEl = document.createElement('span');
@@ -426,7 +425,7 @@
 
           const statusEl = document.createElement('div');
           statusEl.className = 'card-status';
-          statusEl.textContent = isOffline ? '[OFFLINE]' : `[${item.type}]`;
+          statusEl.textContent = `[${item.type}]`;
 
           cardEl.appendChild(idEl);
           cardEl.appendChild(titleEl);
