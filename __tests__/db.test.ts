@@ -52,11 +52,20 @@ describe('db.ts tests', () => {
       dbModule = await import('../db');
     });
 
-    it('getDashboardConfig should return default inMemory config', async () => {
+    it('getDashboardConfig should return default inMemory config with active and locked items', async () => {
       const config = await dbModule.getDashboardConfig();
       (expect as any)(config).toBeDefined();
       (expect as any)(config.length).toBeGreaterThan(0);
       (expect as any)(config[0].id).toBe('PORTAL: VVI');
+      (expect as any)(config[0].status).toBe('locked');
+      (expect as any)(config[0].lockPrompt).toBe('ZONING CLEARANCE REQUIRED');
+
+      const radio = config.find((item: any) => item.id === 'PORTAL: RADIO');
+      (expect as any)(radio.status).toBe('locked');
+      (expect as any)(radio.lockPrompt).toBe('REQUIRES FREQUENCY OVERRIDE (104.9 FM)');
+
+      const drop = config.find((item: any) => item.id === 'PORTAL: DROP');
+      (expect as any)(drop.status).toBe('active');
     });
 
     it('updateDashboardConfig should update a specific item', async () => {
