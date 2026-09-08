@@ -99,9 +99,9 @@
         font-family: 'Share Tech Mono', monospace;
       }
 
-      /* Active Glow (Green) */
+      /* Active Glow (Green) - Layer A Corporate */
       .card.active {
-        border-color: #00ff00;
+        border: 2px solid #00ff00;
         color: #00ff00;
         box-shadow:
           0 0 15px rgba(0, 255, 0, 0.3),
@@ -115,7 +115,7 @@
 
       /* Locked Card Styles (Red/Amber) */
       .card.locked {
-        border-color: #ff3366;
+        border: 2px solid #ff3366;
         color: #ff3366;
         box-shadow:
           0 0 15px rgba(255, 51, 102, 0.3),
@@ -123,6 +123,55 @@
         text-shadow: 0 0 5px rgba(255, 51, 102, 0.8);
         cursor: not-allowed;
         opacity: 0.9;
+      }
+
+      /* Rogue / Layer B Cards (Team Rabbit Injections) */
+      .card.rogue {
+        border: 2px dashed #ff0055 !important;
+        background-color: rgba(30, 0, 15, 0.85) !important;
+        color: #ff3366 !important;
+        box-shadow:
+          0 0 18px rgba(255, 0, 85, 0.5),
+          inset 0 0 10px rgba(255, 0, 85, 0.3) !important;
+        text-shadow: 0 0 6px rgba(255, 0, 85, 0.8) !important;
+        transform: rotate(-1.5deg);
+        position: relative;
+      }
+
+      .card.rogue:nth-child(even) {
+        transform: rotate(1.8deg);
+      }
+
+      .card.rogue .card-id {
+        color: #ff6699 !important;
+        top: 22px;
+      }
+
+      .card.rogue:hover,
+      a.card.rogue:focus-visible {
+        transform: rotate(0deg) scale(1.03);
+        border-style: solid !important;
+        box-shadow:
+          0 0 25px rgba(255, 0, 85, 0.8),
+          inset 0 0 15px rgba(255, 0, 85, 0.5) !important;
+      }
+
+      .vandalism-tag {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #ff0055;
+        color: #000000;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.75rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 2px 4px;
+        text-align: center;
+        text-shadow: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       }
 
       .card.locked .card-id {
@@ -505,8 +554,11 @@
           titleEl.className = 'card-title';
           titleEl.textContent = item.title;
 
+          const isRogueItem =
+            item.isRogue || item.id === 'PORTAL: RADIO' || item.id === 'PORTAL: DROP';
+
           if (item.status === 'locked') {
-            cardEl.className = 'card locked';
+            cardEl.className = isRogueItem ? 'card locked rogue' : 'card locked';
             cardEl.href = '#';
             cardEl.setAttribute('aria-disabled', 'true');
             cardEl.role = 'button';
@@ -537,7 +589,7 @@
               showLockBanner(item.title, item.lockPrompt || 'ACCESS DENIED');
             });
           } else {
-            cardEl.className = 'card active';
+            cardEl.className = isRogueItem ? 'card active rogue' : 'card active';
             cardEl.href = item.link;
             cardEl.role = 'link';
             if (item.isDownload) {
@@ -551,6 +603,16 @@
             cardEl.appendChild(idEl);
             cardEl.appendChild(titleEl);
             cardEl.appendChild(statusEl);
+          }
+
+          if (isRogueItem) {
+            const tagEl = document.createElement('div');
+            tagEl.className = 'vandalism-tag';
+            tagEl.textContent =
+              item.id === 'PORTAL: RADIO'
+                ? '[BACKDOOR EXPLOIT: OLLIE_V0.9]'
+                : '[BACKDOOR EXPLOIT: TEAM_RABBIT]';
+            cardEl.appendChild(tagEl);
           }
 
           container.appendChild(cardEl);
