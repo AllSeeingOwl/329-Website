@@ -14,6 +14,7 @@ export interface DashboardConfig {
   type: string;
   isDownload: boolean;
   lockPrompt?: string;
+  isRogue?: boolean;
 }
 
 interface MaintenanceConfig {
@@ -101,6 +102,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
     type: 'ENTER',
     isDownload: false,
     lockPrompt: 'REQUIRES FREQUENCY OVERRIDE (104.9 FM)',
+    isRogue: true,
   },
   {
     id: 'PORTAL: DROP',
@@ -109,6 +111,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
     link: 'secure-data-drop-page.html',
     type: 'ENTER',
     isDownload: false,
+    isRogue: true,
   },
   {
     id: 'DOC: 003-SGM',

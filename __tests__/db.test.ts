@@ -63,9 +63,11 @@ describe('db.ts tests', () => {
       const radio = config.find((item: any) => item.id === 'PORTAL: RADIO');
       (expect as any)(radio.status).toBe('locked');
       (expect as any)(radio.lockPrompt).toBe('REQUIRES FREQUENCY OVERRIDE (104.9 FM)');
+      (expect as any)(radio.isRogue).toBe(true);
 
       const drop = config.find((item: any) => item.id === 'PORTAL: DROP');
       (expect as any)(drop.status).toBe('active');
+      (expect as any)(drop.isRogue).toBe(true);
     });
 
     it('updateDashboardConfig should update a specific item', async () => {
