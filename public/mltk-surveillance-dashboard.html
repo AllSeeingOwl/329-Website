@@ -452,6 +452,21 @@
       <h1>MLTK Global Surveillance</h1>
       <h2>Authorized Personnel Only // Tracker Network v4.2</h2>
       <div
+        id="phase-badge-container"
+        style="
+          margin-top: 10px;
+          display: inline-block;
+          border: 1px solid #00ff00;
+          padding: 4px 12px;
+          background: rgba(0, 255, 0, 0.1);
+          color: #00ff00;
+          font-size: 1.2rem;
+          letter-spacing: 1px;
+        "
+      >
+        ACTIVE RELEASE: LOADING PHASE...
+      </div>
+      <div
         style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap"
       >
         <a
@@ -463,6 +478,16 @@
             font-size: 1.2rem;
           "
           >&lt;&lt; RETURN TO LOGIN</a
+        >
+        <a
+          href="arg-progress-dashboard.html"
+          style="
+            color: #00ff00;
+            text-decoration: underline;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+          "
+          >[ ARG PROGRESS ]</a
         >
         <a
           href="mltk-admin.html"
@@ -506,9 +531,26 @@
       // Function to fetch config from the backend
       async function fetchDashboardConfig() {
         try {
-          const response = await fetch('/api/dashboard-config');
-          if (response.ok) {
-            dashboardConfig = await response.json();
+          const [dashRes, phasesRes] = await Promise.all([
+            fetch('/api/dashboard-config'),
+            fetch('/api/phases'),
+          ]);
+
+          if (dashRes.ok) {
+            const data = await dashRes.json();
+            dashboardConfig = Array.isArray(data) ? data : data.config || [];
+
+            if (phasesRes.ok) {
+              const phasesData = await phasesRes.json();
+              const activePhase = phasesData.phases.find(
+                (p) => p.id === phasesData.activePhaseId
+              );
+              const badgeEl = document.getElementById('phase-badge-container');
+              if (badgeEl && activePhase) {
+                badgeEl.textContent = `ACTIVE RELEASE: ${activePhase.name.toUpperCase()}`;
+              }
+            }
+
             renderDashboard();
           } else {
             console.error('Failed to fetch dashboard config');

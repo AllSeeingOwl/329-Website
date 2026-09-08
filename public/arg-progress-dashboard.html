@@ -112,11 +112,17 @@
     <div class="dashboard-container">
       <h1>Neural Link Progress</h1>
 
+      <div id="phase-status-banner" style="border: 1px dashed var(--mltk-green); padding: 12px; margin-bottom: 20px; text-align: center; background: rgba(0, 255, 0, 0.05);">
+        <div style="font-size: 14px; color: #888; text-transform: uppercase;">Global Surveillance Network Phase</div>
+        <div id="active-phase-title" style="font-size: 20px; font-weight: bold; margin-top: 4px;">FETCHING PHASE DATA...</div>
+      </div>
+
       <ul class="node-list" id="nodes">
         <!-- Injected via JS -->
       </ul>
 
-      <div style="text-align: center">
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="mltk-surveillance-dashboard.html" class="btn" style="margin-right: 10px;">Surveillance Dashboard</a>
         <button class="btn" id="reset-btn">Purge Local Memory</button>
       </div>
 
@@ -127,32 +133,54 @@
     </div>
 
     <script>
-      // Define the nodes in the ARG
+      // Define the nodes in the ARG with phase tier associations
       const argNodes = [
         {
           id: 'node_mltk_login',
-          name: 'MLTK Login Gate',
+          name: 'MLTK Login Gate (Phase 1 Password: 0408-1998-XXXX)',
           check: () => localStorage.getItem('mltk_auth_success') === 'true',
         },
         {
           id: 'node_velvet_rope',
-          name: 'Velvet Rope Protocol',
+          name: 'Velvet Rope Protocol (Phase 1 Data Drop)',
           check: () => localStorage.getItem('velvet_rope_unlocked') === 'true',
         },
         {
           id: 'node_radio_scanner',
-          name: 'Radio Frequency Intercept (104.9)',
+          name: "Ollie's Radio Scanner (Phase 1.5 Frequency: 104.9 FM)",
           check: () => localStorage.getItem('radio_intercepted') === 'true',
         },
         {
+          id: 'node_nova_archive',
+          name: 'NOVA Classified Archive (Phase 1.5 Memo)',
+          check: () => localStorage.getItem('nova_archive_unlocked') === 'true',
+        },
+        {
+          id: 'node_five_finger',
+          name: 'Five Finger Selection Wheel (Phase 2 Usher Handbook)',
+          check: () => localStorage.getItem('five_finger_unlocked') === 'true',
+        },
+        {
           id: 'node_rabbit_hack',
-          name: 'Team Rabbit Mainframe Hack',
+          name: 'Team Rabbit Mainframe Hack (Backdoor Exploit)',
           check: () => localStorage.getItem('rabbit_hack_completed') === 'true',
         },
       ];
 
-      // Since we just added the Team Rabbit Hack page, we need to update it to set the localStorage flag when completed.
-      // We will do that in the next step, but for now we set up the dashboard to look for it.
+      async function fetchPhaseInfo() {
+        try {
+          const res = await fetch('/api/phases');
+          if (res.ok) {
+            const data = await res.json();
+            const activePhase = data.phases.find((p) => p.id === data.activePhaseId);
+            if (activePhase) {
+              document.getElementById('active-phase-title').textContent = activePhase.name.toUpperCase();
+            }
+          }
+        } catch (e) {
+          console.error('Error fetching phase info:', e);
+        }
+      }
 
       function renderNodes() {
         const list = document.getElementById('nodes');
@@ -183,11 +211,14 @@
           localStorage.removeItem('mltk_auth_success');
           localStorage.removeItem('velvet_rope_unlocked');
           localStorage.removeItem('radio_intercepted');
+          localStorage.removeItem('nova_archive_unlocked');
+          localStorage.removeItem('five_finger_unlocked');
           localStorage.removeItem('rabbit_hack_completed');
           renderNodes();
         }
       });
 
+      fetchPhaseInfo();
       renderNodes();
     </script>
     <script type="module" src="/app.js"></script>
