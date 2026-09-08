@@ -13,6 +13,7 @@ export interface DashboardConfig {
   link: string;
   type: string;
   isDownload: boolean;
+  lockPrompt?: string;
 }
 
 interface MaintenanceConfig {
@@ -25,42 +26,47 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'PORTAL: VVI',
     title: 'Virtue Village Index',
-    status: 'active',
+    status: 'locked',
     link: 'mltk-virtue-village-index.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'ZONING CLEARANCE REQUIRED',
   },
   {
     id: 'DOC: 001-VVL',
     title: 'Virtue Village Layouts',
-    status: 'offline',
+    status: 'locked',
     link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
     type: 'DOWNLOAD',
     isDownload: true,
+    lockPrompt: 'PHYSICAL ZINE CLEARANCE REQUIRED',
   },
   {
     id: 'DOC: 002-GD',
     title: 'Gretchen Dossier',
-    status: 'offline',
+    status: 'locked',
     link: 'GRETCHEN_DOSSIER.txt',
     type: 'DOWNLOAD',
     isDownload: true,
+    lockPrompt: 'PHYSICAL ZINE CLEARANCE REQUIRED',
   },
   {
     id: 'ARCHIVE: NOVA',
     title: 'NOVA Classified Archive',
-    status: 'active',
+    status: 'locked',
     link: 'nova-classified-archive.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'ARCHIVE KEY DECRYPTION REQUIRED',
   },
   {
     id: 'PORTAL: CS',
     title: 'Customer Service Portal',
-    status: 'active',
+    status: 'locked',
     link: 'mltk-customer-service.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'LEVEL-2 CLEARANCE REQUIRED',
   },
   {
     id: 'DOC: TETROMINO',
@@ -81,18 +87,20 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'ARCHIVE: PARENT',
     title: 'NOVA Parent Directory',
-    status: 'offline',
+    status: 'locked',
     link: 'nova-parent-directory.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'ROOT DIRECTORY RESTRICTED',
   },
   {
     id: 'PORTAL: RADIO',
     title: 'Ollies Radio Scanner',
-    status: 'active',
+    status: 'locked',
     link: 'ollies-radio-scanner.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'REQUIRES FREQUENCY OVERRIDE (104.9 FM)',
   },
   {
     id: 'PORTAL: DROP',
@@ -105,26 +113,29 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'DOC: 003-SGM',
     title: 'Seedless Grapes Motel Blueprints',
-    status: 'offline',
+    status: 'locked',
     link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     type: 'DOWNLOAD',
     isDownload: true,
+    lockPrompt: 'PHYSICAL ZINE CLEARANCE REQUIRED',
   },
   {
     id: 'DOC: 004-UP',
     title: 'Uncut Puzzle',
-    status: 'offline',
+    status: 'locked',
     link: 'UNCUT_PUZZLE.pdf',
     type: 'DOWNLOAD',
     isDownload: true,
+    lockPrompt: 'PHYSICAL ZINE CLEARANCE REQUIRED',
   },
   {
     id: 'PORTAL: 5F-WHEEL',
     title: 'Five Finger Selection Wheel',
-    status: 'active',
+    status: 'locked',
     link: 'mltk-five-finger-wheel.html',
     type: 'ENTER',
     isDownload: false,
+    lockPrompt: 'TIER-4 CLEARANCE REQUIRED',
   },
 ];
 

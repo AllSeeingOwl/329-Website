@@ -659,7 +659,7 @@
         masterContainer.appendChild(
           createToggle('MASTER LOCKDOWN (ALL NODES)', isAllDashOn, async (e) => {
             const isChecked = e.target.checked;
-            const newStatus = isChecked ? 'active' : 'offline';
+            const newStatus = isChecked ? 'active' : 'locked';
             await fetch('/api/admin/dashboard-config/all', {
               method: 'POST',
               headers: {
@@ -688,7 +688,7 @@
                   },
                   body: JSON.stringify({
                     id: item.id,
-                    status: e.target.checked ? 'active' : 'offline',
+                    status: e.target.checked ? 'active' : 'locked',
                   }),
                 });
               },

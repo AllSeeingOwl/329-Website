@@ -113,18 +113,63 @@
         color: #00aa00;
       }
 
-      /* Offline Glow (Red) */
-      .card.offline {
+      /* Locked Card Styles (Red/Amber) */
+      .card.locked {
         border-color: #ff3366;
         color: #ff3366;
         box-shadow:
-          0 0 15px rgba(255, 0, 60, 0.3),
-          inset 0 0 10px rgba(255, 0, 60, 0.2);
-        text-shadow: 0 0 5px rgba(255, 0, 60, 0.8);
+          0 0 15px rgba(255, 51, 102, 0.3),
+          inset 0 0 10px rgba(255, 51, 102, 0.2);
+        text-shadow: 0 0 5px rgba(255, 51, 102, 0.8);
+        cursor: not-allowed;
+        opacity: 0.9;
       }
 
-      .card.offline .card-id {
+      .card.locked .card-id {
         color: #aa0028;
+      }
+
+      .card-lock-icon {
+        font-size: 1.4rem;
+        margin-bottom: 4px;
+      }
+
+      .card-lock-prompt {
+        font-size: 0.85rem;
+        color: #ffcc00;
+        text-shadow: 0 0 5px rgba(255, 204, 0, 0.7);
+        margin-top: 6px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 4px;
+        border: 1px dashed #ffcc00;
+        background-color: rgba(255, 204, 0, 0.1);
+        word-break: break-word;
+      }
+
+      .shake {
+        animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+
+      @keyframes shake {
+        10%,
+        90% {
+          transform: translate3d(-1px, 0, 0);
+        }
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
+        }
       }
 
       /* Static/Noise Overlay */
@@ -151,12 +196,12 @@
         border-color: #00ff00;
         background-color: rgba(0, 255, 0, 0.1);
       }
-      a.card.offline:focus-visible {
+      a.card.locked:focus-visible {
         box-shadow:
-          0 0 25px rgba(255, 0, 60, 0.6),
-          inset 0 0 15px rgba(255, 0, 60, 0.4);
+          0 0 25px rgba(255, 51, 102, 0.6),
+          inset 0 0 15px rgba(255, 51, 102, 0.4);
         border-color: #ff3366;
-        background-color: rgba(255, 0, 60, 0.1);
+        background-color: rgba(255, 51, 102, 0.1);
       }
 
       /* CRT Overlay Effect */
@@ -371,6 +416,25 @@
       </div>
     </header>
 
+    <div
+      id="lock-banner"
+      role="alert"
+      aria-live="assertive"
+      style="
+        display: none;
+        max-width: 1200px;
+        margin: 0 auto 20px auto;
+        padding: 12px 20px;
+        border: 2px solid #ff3366;
+        background: rgba(40, 0, 0, 0.9);
+        color: #ff3366;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+      "
+    ></div>
+
     <div class="dashboard" id="dashboard-container">
       <!-- Cards will be dynamically injected here via JS -->
     </div>
@@ -393,6 +457,18 @@
         }
       }
 
+      function showLockBanner(title, prompt) {
+        const banner = document.getElementById('lock-banner');
+        if (banner) {
+          banner.textContent = `🔒 ACCESS DENIED // ${title.toUpperCase()}: ${prompt}`;
+          banner.style.display = 'block';
+          if (banner._timer) clearTimeout(banner._timer);
+          banner._timer = setTimeout(() => {
+            banner.style.display = 'none';
+          }, 4000);
+        }
+      }
+
       // Function to render the dashboard based on the configuration
       function renderDashboard() {
         const container = document.getElementById('dashboard-container');
@@ -400,20 +476,14 @@
 
         dashboardConfig.forEach((item) => {
           if (item.status === 'offline') {
-            return; // Hide offline items from dashboard display while preserving configuration
+            return; // Hide offline items if any remain
           }
 
           const cardEl = document.createElement('a');
-          cardEl.className = 'card active';
           cardEl.style.textDecoration = 'none';
           cardEl.style.outline = 'none';
           cardEl.style.display = 'flex';
-          cardEl.href = item.link;
           cardEl.tabIndex = 0;
-          cardEl.role = 'link';
-          if (item.isDownload) {
-            cardEl.download = '';
-          }
 
           const idEl = document.createElement('span');
           idEl.className = 'card-id';
@@ -423,13 +493,53 @@
           titleEl.className = 'card-title';
           titleEl.textContent = item.title;
 
-          const statusEl = document.createElement('div');
-          statusEl.className = 'card-status';
-          statusEl.textContent = `[${item.type}]`;
+          if (item.status === 'locked') {
+            cardEl.className = 'card locked';
+            cardEl.href = '#';
+            cardEl.setAttribute('aria-disabled', 'true');
+            cardEl.role = 'button';
 
-          cardEl.appendChild(idEl);
-          cardEl.appendChild(titleEl);
-          cardEl.appendChild(statusEl);
+            const lockIconEl = document.createElement('div');
+            lockIconEl.className = 'card-lock-icon';
+            lockIconEl.textContent = '🔒';
+
+            const statusEl = document.createElement('div');
+            statusEl.className = 'card-status';
+            statusEl.textContent = '[LOCKED]';
+
+            const promptEl = document.createElement('div');
+            promptEl.className = 'card-lock-prompt';
+            promptEl.textContent = item.lockPrompt || 'ACCESS DENIED';
+
+            cardEl.appendChild(idEl);
+            cardEl.appendChild(lockIconEl);
+            cardEl.appendChild(titleEl);
+            cardEl.appendChild(statusEl);
+            cardEl.appendChild(promptEl);
+
+            cardEl.addEventListener('click', (e) => {
+              e.preventDefault();
+              cardEl.classList.remove('shake');
+              void cardEl.offsetWidth; // Trigger reflow
+              cardEl.classList.add('shake');
+              showLockBanner(item.title, item.lockPrompt || 'ACCESS DENIED');
+            });
+          } else {
+            cardEl.className = 'card active';
+            cardEl.href = item.link;
+            cardEl.role = 'link';
+            if (item.isDownload) {
+              cardEl.download = '';
+            }
+
+            const statusEl = document.createElement('div');
+            statusEl.className = 'card-status';
+            statusEl.textContent = `[${item.type}]`;
+
+            cardEl.appendChild(idEl);
+            cardEl.appendChild(titleEl);
+            cardEl.appendChild(statusEl);
+          }
 
           container.appendChild(cardEl);
         });
