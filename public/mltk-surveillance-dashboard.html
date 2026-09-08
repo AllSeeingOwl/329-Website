@@ -542,9 +542,7 @@
 
             if (phasesRes.ok) {
               const phasesData = await phasesRes.json();
-              const activePhase = phasesData.phases.find(
-                (p) => p.id === phasesData.activePhaseId
-              );
+              const activePhase = phasesData.phases.find((p) => p.id === phasesData.activePhaseId);
               const badgeEl = document.getElementById('phase-badge-container');
               if (badgeEl && activePhase) {
                 badgeEl.textContent = `ACTIVE RELEASE: ${activePhase.name.toUpperCase()}`;

@@ -65,8 +65,7 @@ export const MLTK_PHASES: ReleasePhase[] = [
       'nova-classified-archive.html',
       'nova-parent-directory.html',
     ],
-    narrativeReason:
-      'Rewards subscribers with audio clips from Four Corners Radio ("Over-Oops").',
+    narrativeReason: 'Rewards subscribers with audio clips from Four Corners Radio ("Over-Oops").',
   },
   {
     id: 'phase1_5_email2',
