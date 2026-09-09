@@ -1,0 +1,67 @@
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-and-deploy:
+    name: Test and Deploy to Fly.io
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js runtime environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm package manager
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies with frozen lockfile
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint static analysis
+        run: pnpm run lint
+
+      - name: Run TypeScript type checking
+        run: pnpm run typecheck
+
+      - name: Run automated unit and integration tests
+        run: pnpm test
+
+      - name: Setup Flyctl CLI
+        uses: superfly/flyctl-actions@1.3
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy application to Fly.io
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Verify application health check
+        run: |
+          echo "Waiting 10 seconds for initial health check stabilization..."
+          sleep 10
+          echo "Executing health check request against production endpoint..."
+          curl --fail --retry 5 --retry-delay 5 --retry-connrefused https://allseeingowl-329-website.fly.dev/health
+          echo -e "\nHealth check successfully verified!"
+
+      - name: Log deployment success status
+        if: success()
+        run: |
+          echo "Deployment to Fly.io for app 'allseeingowl-329-website' completed successfully."
+
+      - name: Log deployment failure status
+        if: failure()
+        run: |
+          echo "::error::Deployment to Fly.io failed! Please check step logs for failure details."
