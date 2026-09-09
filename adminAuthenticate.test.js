@@ -92,9 +92,7 @@ describe('POST /api/admin/authenticate', () => {
   it('clears failed attempts counter on successful login', async () => {
     // 4 failed attempts
     for (let i = 0; i < 4; i++) {
-      await request(app)
-        .post('/api/admin/authenticate')
-        .send({ password: 'wrong-password' });
+      await request(app).post('/api/admin/authenticate').send({ password: 'wrong-password' });
     }
 
     // Successful attempt

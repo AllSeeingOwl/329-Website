@@ -1,9 +1,5 @@
 import { Router, Request, Response } from 'express';
-import {
-  verifyPassword,
-  createAdminSession,
-  logAuthAttempt,
-} from '../middleware/adminAuth';
+import { verifyPassword, createAdminSession, logAuthAttempt } from '../middleware/adminAuth';
 
 const router = Router();
 
