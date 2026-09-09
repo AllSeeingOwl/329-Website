@@ -117,9 +117,7 @@
         font-size: 0.95rem;
         cursor: pointer;
         text-transform: uppercase;
-        transition:
-          background-color 0.15s,
-          color 0.15s;
+        transition: background-color 0.15s, color 0.15s;
         display: inline-block;
       }
 
@@ -314,7 +312,9 @@
             autocomplete="current-password"
           />
         </div>
-        <button type="submit" id="auth-btn" style="width: 100%">[ AUTHENTICATE TERMINAL ]</button>
+        <button type="submit" id="auth-btn" style="width: 100%">
+          [ AUTHENTICATE TERMINAL ]
+        </button>
       </form>
       <div id="login-status" class="status-message"></div>
     </div>
@@ -576,9 +576,7 @@
 
             if (!res.ok) {
               const errMsg =
-                (data && data.message) ||
-                (data && data.error) ||
-                'API Request Failed (' + res.status + ')';
+                (data && data.message) || (data && data.error) || 'API Request Failed (' + res.status + ')';
               throw new Error(errMsg);
             }
 
@@ -823,65 +821,69 @@
         });
 
         // Export Emails CSV
-        document.getElementById('export-emails-btn').addEventListener('click', async function () {
-          const btn = this;
-          btn.disabled = true;
-          btn.textContent = 'EXPORTING...';
+        document
+          .getElementById('export-emails-btn')
+          .addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'EXPORTING...';
 
-          try {
-            const res = await fetch('/api/admin/emails/export');
-            if (res.status === 401) {
-              handleLogout();
-              return;
+            try {
+              const res = await fetch('/api/admin/emails/export');
+              if (res.status === 401) {
+                handleLogout();
+                return;
+              }
+              if (!res.ok) throw new Error('Export CSV failed');
+
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'collected_emails.csv';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              a.remove();
+              showMessage('EMAIL DATA EXPORTED TO CSV SUCCESSFULLY');
+              fetchAuditLogs();
+            } catch (err) {
+              showMessage('FAILED TO EXPORT CSV: ' + err.message, true);
+            } finally {
+              btn.disabled = false;
+              btn.textContent = '[ EXPORT EMAILS (CSV) ]';
             }
-            if (!res.ok) throw new Error('Export CSV failed');
-
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'collected_emails.csv';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-            showMessage('EMAIL DATA EXPORTED TO CSV SUCCESSFULLY');
-            fetchAuditLogs();
-          } catch (err) {
-            showMessage('FAILED TO EXPORT CSV: ' + err.message, true);
-          } finally {
-            btn.disabled = false;
-            btn.textContent = '[ EXPORT EMAILS (CSV) ]';
-          }
-        });
+          });
 
         // Clear Emails
-        document.getElementById('clear-emails-btn').addEventListener('click', async function () {
-          if (
-            !confirm(
-              'WARNING: DESTRUCTIVE ACTION\nAre you sure you want to permanently clear ALL collected email records?'
-            )
-          ) {
-            return;
-          }
+        document
+          .getElementById('clear-emails-btn')
+          .addEventListener('click', async function () {
+            if (
+              !confirm(
+                'WARNING: DESTRUCTIVE ACTION\nAre you sure you want to permanently clear ALL collected email records?'
+              )
+            ) {
+              return;
+            }
 
-          const res = await apiFetch(
-            '/api/admin/emails/clear',
-            {
-              method: 'POST',
-              body: JSON.stringify({ confirm: true, adminUser: 'admin' }),
-            },
-            this,
-            'CLEARING...'
-          );
+            const res = await apiFetch(
+              '/api/admin/emails/clear',
+              {
+                method: 'POST',
+                body: JSON.stringify({ confirm: true, adminUser: 'admin' }),
+              },
+              this,
+              'CLEARING...'
+            );
 
-          if (res && res.success) {
-            showMessage('EMAIL DATA CLEARED SUCCESSFULLY (' + res.clearedCount + ' RECS)');
-            fetchEmailStats();
-            fetchEmailsList();
-            fetchAuditLogs();
-          }
-        });
+            if (res && res.success) {
+              showMessage('EMAIL DATA CLEARED SUCCESSFULLY (' + res.clearedCount + ' RECS)');
+              fetchEmailStats();
+              fetchEmailsList();
+              fetchAuditLogs();
+            }
+          });
 
         // -------------------------------------------------------------
         // 3. SYSTEM CONFIGURATION
@@ -904,60 +906,70 @@
           }
         }
 
-        document.getElementById('config-form').addEventListener('submit', async function (e) {
-          e.preventDefault();
-          const btn = document.getElementById('save-config-btn');
+        document
+          .getElementById('config-form')
+          .addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('save-config-btn');
 
-          const payload = {
-            maintenanceMode: document.getElementById('cfg-maintenance').checked,
-            publicSiteEnabled: document.getElementById('cfg-public').checked,
-            adminPanelEnabled: document.getElementById('cfg-admin').checked,
-            allowEmailCollection: document.getElementById('cfg-email-col').checked,
-            emailNotificationEnabled: document.getElementById('cfg-email-notify').checked,
-            maxConcurrentSessions: parseInt(document.getElementById('cfg-max-sessions').value, 10),
-            sessionTimeout: parseInt(document.getElementById('cfg-session-timeout').value, 10),
-            adminUser: 'admin',
-          };
+            const payload = {
+              maintenanceMode: document.getElementById('cfg-maintenance').checked,
+              publicSiteEnabled: document.getElementById('cfg-public').checked,
+              adminPanelEnabled: document.getElementById('cfg-admin').checked,
+              allowEmailCollection: document.getElementById('cfg-email-col').checked,
+              emailNotificationEnabled: document.getElementById('cfg-email-notify').checked,
+              maxConcurrentSessions: parseInt(
+                document.getElementById('cfg-max-sessions').value,
+                10
+              ),
+              sessionTimeout: parseInt(
+                document.getElementById('cfg-session-timeout').value,
+                10
+              ),
+              adminUser: 'admin',
+            };
 
-          const res = await apiFetch(
-            '/api/admin/config',
-            {
-              method: 'PUT',
-              body: JSON.stringify(payload),
-            },
-            btn,
-            'SAVING...'
-          );
+            const res = await apiFetch(
+              '/api/admin/config',
+              {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+              },
+              btn,
+              'SAVING...'
+            );
 
-          if (res && res.success) {
-            showMessage('SYSTEM CONFIGURATION SAVED SUCCESSFULLY');
-            if (payload.sessionTimeout) {
-              startSessionTimer(payload.sessionTimeout);
+            if (res && res.success) {
+              showMessage('SYSTEM CONFIGURATION SAVED SUCCESSFULLY');
+              if (payload.sessionTimeout) {
+                startSessionTimer(payload.sessionTimeout);
+              }
+              fetchAuditLogs();
             }
-            fetchAuditLogs();
-          }
-        });
+          });
 
         // Quick Maintenance Mode Toggle
-        document.getElementById('toggle-maint-btn').addEventListener('click', async function () {
-          const res = await apiFetch(
-            '/api/admin/maintenance/toggle',
-            {
-              method: 'POST',
-              body: JSON.stringify({ adminUser: 'admin' }),
-            },
-            this,
-            'TOGGLING...'
-          );
-
-          if (res && res.success) {
-            showMessage(
-              'MAINTENANCE MODE IS NOW ' + (res.maintenanceMode ? 'ENABLED' : 'DISABLED')
+        document
+          .getElementById('toggle-maint-btn')
+          .addEventListener('click', async function () {
+            const res = await apiFetch(
+              '/api/admin/maintenance/toggle',
+              {
+                method: 'POST',
+                body: JSON.stringify({ adminUser: 'admin' }),
+              },
+              this,
+              'TOGGLING...'
             );
-            fetchSystemConfig();
-            fetchAuditLogs();
-          }
-        });
+
+            if (res && res.success) {
+              showMessage(
+                'MAINTENANCE MODE IS NOW ' + (res.maintenanceMode ? 'ENABLED' : 'DISABLED')
+              );
+              fetchSystemConfig();
+              fetchAuditLogs();
+            }
+          });
 
         // -------------------------------------------------------------
         // 4. AUDIT LOGS
@@ -979,7 +991,9 @@
             const tr = document.createElement('tr');
 
             const tdTime = document.createElement('td');
-            tdTime.textContent = log.timestamp ? new Date(log.timestamp).toLocaleString() : 'N/A';
+            tdTime.textContent = log.timestamp
+              ? new Date(log.timestamp).toLocaleString()
+              : 'N/A';
 
             const tdUser = document.createElement('td');
             tdUser.textContent = log.adminUser || 'admin';

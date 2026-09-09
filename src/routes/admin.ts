@@ -955,7 +955,15 @@ router.get('/audit-logs', adminAuth, async (_req: Request, res: Response): Promi
         const rawLogs = await redis.lrange('admin:audit_logs', 0, 19);
         if (rawLogs && rawLogs.length > 0) {
           logs = rawLogs.map((item) =>
-            typeof item === 'string' ? JSON.parse(item) : (item as any)
+            typeof item === 'string'
+              ? JSON.parse(item)
+              : (item as {
+                  timestamp: string;
+                  adminUser: string;
+                  action: string;
+                  phaseId: string;
+                  details: Record<string, unknown>;
+                })
           );
         }
       } catch (err) {
