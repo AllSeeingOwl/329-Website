@@ -15,7 +15,99 @@ export interface DashboardConfig {
   isDownload: boolean;
   lockPrompt?: string;
   isRogue?: boolean;
+  phaseId?: string;
 }
+
+export interface ReleasePhase {
+  id: string;
+  name: string;
+  description: string;
+  activeModules: string[];
+  heldBackModules: string[];
+  narrativeReason: string;
+}
+
+export const MLTK_PHASES: ReleasePhase[] = [
+  {
+    id: 'phase1',
+    name: 'Phase 1: Zine Launch',
+    description: 'Password: 0408-1998-XXXX',
+    activeModules: [
+      'secure-data-drop-page.html',
+      'mltk-classified-document.html',
+      'UNCUT_PUZZLE.pdf',
+      'VIRTUE_VILLAGE_LAYOUTS.pdf',
+      'GRETCHEN_DOSSIER.txt',
+    ],
+    heldBackModules: [
+      'ollies-radio-scanner.html',
+      'mltk-five-finger-wheel.html',
+      'nova-classified-archive.html',
+      'nova-parent-directory.html',
+    ],
+    narrativeReason:
+      'Focuses 100% of reader attention on downloading the lead magnets and joining the mailing list.',
+  },
+  {
+    id: 'phase1_5_email1',
+    name: 'Phase 1.5: Email Drip #1',
+    description: 'Sent via automated MailerLite',
+    activeModules: [
+      'secure-data-drop-page.html',
+      'mltk-classified-document.html',
+      'UNCUT_PUZZLE.pdf',
+      'VIRTUE_VILLAGE_LAYOUTS.pdf',
+      'GRETCHEN_DOSSIER.txt',
+      'ollies-radio-scanner.html',
+    ],
+    heldBackModules: [
+      'mltk-five-finger-wheel.html',
+      'nova-classified-archive.html',
+      'nova-parent-directory.html',
+    ],
+    narrativeReason: 'Rewards subscribers with audio clips from Four Corners Radio ("Over-Oops").',
+  },
+  {
+    id: 'phase1_5_email2',
+    name: 'Phase 1.5: Email Drip #2',
+    description: 'Classified memo from Avery',
+    activeModules: [
+      'secure-data-drop-page.html',
+      'mltk-classified-document.html',
+      'UNCUT_PUZZLE.pdf',
+      'VIRTUE_VILLAGE_LAYOUTS.pdf',
+      'GRETCHEN_DOSSIER.txt',
+      'ollies-radio-scanner.html',
+      'nova-classified-archive.html',
+      'nova-parent-directory.html',
+    ],
+    heldBackModules: ['mltk-five-finger-wheel.html'],
+    narrativeReason:
+      'Engages solvers with interactive trivia while introducing the corporate horrors of MLTK.',
+  },
+  {
+    id: 'phase2',
+    name: "Phase 2: Usher's Handbook Pre-Launch",
+    description: 'Deploys high-stakes disciplinary wheel',
+    activeModules: [
+      'secure-data-drop-page.html',
+      'mltk-classified-document.html',
+      'UNCUT_PUZZLE.pdf',
+      'VIRTUE_VILLAGE_LAYOUTS.pdf',
+      'GRETCHEN_DOSSIER.txt',
+      'ollies-radio-scanner.html',
+      'nova-classified-archive.html',
+      'nova-parent-directory.html',
+      'mltk-five-finger-wheel.html',
+      'mltk-virtue-village-index.html',
+      'mltk-customer-service.html',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
+    ],
+    heldBackModules: [],
+    narrativeReason:
+      'Deploys the high-stakes disciplinary wheel right when readers are preparing for physical gamebook mechanics.',
+  },
+];
 
 interface MaintenanceConfig {
   global: boolean;
@@ -144,6 +236,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
 
 const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
+let inMemoryActivePhase = 'phase1';
 
 const isKvAvailable = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN;
 
@@ -158,7 +251,46 @@ export async function initDb() {
     if (!hasDashboard) {
       await kv.set('config:dashboard', DEFAULT_DASHBOARD_CONFIG);
     }
+
+    const hasPhase = await kv.exists('config:active_phase');
+    if (!hasPhase) {
+      await kv.set('config:active_phase', 'phase1');
+    }
   }
+}
+
+export async function getActivePhase(): Promise<string> {
+  if (isKvAvailable) {
+    const phase = await kv.get<string>('config:active_phase');
+    return phase || 'phase1';
+  }
+  return inMemoryActivePhase;
+}
+
+export async function setActivePhase(phaseId: string): Promise<boolean> {
+  const phase = MLTK_PHASES.find((p) => p.id === phaseId);
+  if (!phase) return false;
+
+  if (isKvAvailable) {
+    await kv.set('config:active_phase', phaseId);
+  } else {
+    inMemoryActivePhase = phaseId;
+  }
+
+  // Update status of dashboard config items according to the selected phase
+  const dashboard = await getDashboardConfig();
+  dashboard.forEach((item) => {
+    if (phase.activeModules.includes(item.link)) {
+      item.status = 'active';
+    } else if (phase.heldBackModules.includes(item.link)) {
+      item.status = 'locked';
+    }
+  });
+
+  if (isKvAvailable) {
+    await kv.set('config:dashboard', dashboard);
+  }
+  return true;
 }
 
 export interface CapturedEmail {

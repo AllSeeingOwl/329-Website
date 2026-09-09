@@ -13,6 +13,9 @@ import {
   updateAllMaintenanceConfig,
   saveEmail,
   getAllEmails,
+  getActivePhase,
+  setActivePhase,
+  MLTK_PHASES,
 } from './db';
 
 const app = express();
@@ -421,11 +424,58 @@ app.get('/api/admin/emails/export', verifyAdminToken, async (req: Request, res: 
   }
 });
 
+// Phase / Tier release endpoints
+app.get('/api/phases', async (req: Request, res: Response) => {
+  try {
+    const activePhaseId = await getActivePhase();
+    res.json({
+      activePhaseId,
+      phases: MLTK_PHASES,
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch phases' });
+  }
+});
+
+app.get('/api/admin/phases', verifyAdminToken, async (req: Request, res: Response) => {
+  try {
+    const activePhaseId = await getActivePhase();
+    res.json({
+      activePhaseId,
+      phases: MLTK_PHASES,
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch phase configuration' });
+  }
+});
+
+app.post('/api/admin/phases/set', verifyAdminToken, async (req: Request, res: Response) => {
+  const { phaseId } = req.body;
+  if (!phaseId) {
+    res.status(400).json({ error: 'phaseId is required' });
+    return;
+  }
+  try {
+    const success = await setActivePhase(phaseId);
+    if (success) {
+      res.json({ success: true, activePhaseId: phaseId });
+    } else {
+      res.status(400).json({ error: 'Invalid phaseId' });
+    }
+  } catch {
+    res.status(500).json({ error: 'Failed to set active phase' });
+  }
+});
+
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   try {
     const config = await getDashboardConfig();
-    res.json(config);
+    const activePhaseId = await getActivePhase();
+    res.json({
+      activePhaseId,
+      config,
+    });
   } catch {
     res.status(500).json({ error: 'Failed to fetch dashboard config' });
   }

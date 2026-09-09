@@ -428,6 +428,18 @@
 
       <div id="admin-content">
         <div class="admin-panel">
+          <h3 class="admin-panel-title">PHASE / TIER RELEASE MANAGEMENT</h3>
+          <p style="color: #888; margin-bottom: 15px">
+            Select an active narrative phase to automatically align module unlocks and held back
+            statuses across all terminals.
+          </p>
+          <div
+            id="phases-container"
+            style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px"
+          >
+            <!-- Phases injected here -->
+          </div>
+
           <h3 class="admin-panel-title">SYSTEM MAINTENANCE CONFIGURATION</h3>
           <div
             id="master-maintenance-container"
@@ -489,20 +501,103 @@
       });
 
       async function loadAdminData() {
-        const [dashRes, maintRes] = await Promise.all([
+        const [dashRes, maintRes, phasesRes] = await Promise.all([
           fetch('/api/admin/dashboard-config', {
             headers: { Authorization: `Bearer ${adminToken}` },
           }),
           fetch('/api/admin/maintenance-config', {
             headers: { Authorization: `Bearer ${adminToken}` },
           }),
+          fetch('/api/admin/phases', {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }),
         ]);
 
         const dashboardConfig = await dashRes.json();
         const maintenanceConfig = await maintRes.json();
+        const phasesData = await phasesRes.json();
 
+        renderPhasesPanel(phasesData);
         renderMaintenancePanel(maintenanceConfig);
         renderDashboardPanel(dashboardConfig);
+      }
+
+      function renderPhasesPanel({ activePhaseId, phases }) {
+        const container = document.getElementById('phases-container');
+        container.innerHTML = '';
+
+        phases.forEach((phase) => {
+          const card = document.createElement('div');
+          card.style.cssText = `
+            border: 1px solid ${phase.id === activePhaseId ? '#00ff00' : '#333'};
+            background-color: ${phase.id === activePhaseId ? 'rgba(0, 255, 0, 0.05)' : 'rgba(20, 20, 20, 0.85)'};
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+          `;
+
+          const info = document.createElement('div');
+          info.style.flex = '1';
+
+          const title = document.createElement('div');
+          title.style.fontSize = '1.3rem';
+          title.style.fontWeight = 'bold';
+          title.textContent = `${phase.name} ${phase.id === activePhaseId ? '[ CURRENTLY ACTIVE ]' : ''}`;
+          if (phase.id === activePhaseId) title.style.color = '#00ff00';
+
+          const desc = document.createElement('div');
+          desc.style.color = '#aaa';
+          desc.style.fontSize = '1rem';
+          desc.textContent = `${phase.description} | Reason: ${phase.narrativeReason}`;
+
+          const activeList = document.createElement('div');
+          activeList.style.fontSize = '0.95rem';
+          activeList.style.marginTop = '6px';
+          activeList.innerHTML = `<strong style="color:#00ff00;">Active Modules:</strong> ${phase.activeModules.join(', ')}`;
+
+          const heldList = document.createElement('div');
+          heldList.style.fontSize = '0.95rem';
+          heldList.style.marginTop = '2px';
+          heldList.innerHTML = `<strong style="color:#ff3366;">Held Back:</strong> ${phase.heldBackModules.length ? phase.heldBackModules.join(', ') : 'None'}`;
+
+          info.appendChild(title);
+          info.appendChild(desc);
+          info.appendChild(activeList);
+          info.appendChild(heldList);
+
+          const btnContainer = document.createElement('div');
+          const btn = document.createElement('button');
+          btn.className = 'reset-btn';
+          btn.style.marginTop = '0';
+          btn.textContent = phase.id === activePhaseId ? 'ACTIVE PHASE' : 'DEPLOY PHASE';
+          btn.disabled = phase.id === activePhaseId;
+
+          btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btn.textContent = 'DEPLOYING...';
+            const res = await fetch('/api/admin/phases/set', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`,
+              },
+              body: JSON.stringify({ phaseId: phase.id }),
+            });
+            if (res.ok) {
+              await loadAdminData();
+            } else {
+              alert('Failed to update phase');
+            }
+          });
+
+          btnContainer.appendChild(btn);
+          card.appendChild(info);
+          card.appendChild(btnContainer);
+          container.appendChild(card);
+        });
       }
 
       document.getElementById('download-emails-btn').addEventListener('click', async () => {
