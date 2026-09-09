@@ -281,19 +281,15 @@ app.post('/api/admin/dashboard-config', adminAuth, async (req: Request, res: Res
   }
 });
 
-app.post(
-  '/api/admin/dashboard-config/all',
-  adminAuth,
-  async (req: Request, res: Response) => {
-    const { status } = req.body;
-    try {
-      await updateAllDashboardConfig(status);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: 'Failed to update all dashboard configs' });
-    }
+app.post('/api/admin/dashboard-config/all', adminAuth, async (req: Request, res: Response) => {
+  const { status } = req.body;
+  try {
+    await updateAllDashboardConfig(status);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all dashboard configs' });
   }
-);
+});
 
 app.get('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
   try {
@@ -317,19 +313,15 @@ app.post('/api/admin/maintenance-config', adminAuth, async (req: Request, res: R
   }
 });
 
-app.post(
-  '/api/admin/maintenance-config/all',
-  adminAuth,
-  async (req: Request, res: Response) => {
-    const { value } = req.body;
-    try {
-      await updateAllMaintenanceConfig(value);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: 'Failed to update all maintenance configs' });
-    }
+app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, res: Response) => {
+  const { value } = req.body;
+  try {
+    await updateAllMaintenanceConfig(value);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all maintenance configs' });
   }
-);
+});
 
 app.post('/api/emails/collect', async (req: Request, res: Response) => {
   const { email, source } = req.body;

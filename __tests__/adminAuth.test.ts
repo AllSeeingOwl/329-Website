@@ -311,7 +311,9 @@ describe('adminAuth Middleware & Utilities', () => {
       logAuthAttempt('TEST_ACTION', true, '127.0.0.1', 'Details here');
 
       (expect as any)(consoleSpy).toHaveBeenCalledWith(
-        (expect as any).stringMatching(/\[AUDIT TRAIL\] \[.*\] Admin Auth TEST_ACTION \[SUCCESS\] IP: 127\.0\.0\.1 - Details here/)
+        (expect as any).stringMatching(
+          /\[AUDIT TRAIL\] \[.*\] Admin Auth TEST_ACTION \[SUCCESS\] IP: 127\.0\.0\.1 - Details here/
+        )
       );
 
       consoleSpy.mockRestore();

@@ -39,7 +39,9 @@ export const logAuthAttempt = (
   const timestamp = new Date().toISOString();
   const status = success ? 'SUCCESS' : 'FAILED';
   const detailMsg = details ? ` - ${details}` : '';
-  console.log(`[AUDIT TRAIL] [${timestamp}] Admin Auth ${action} [${status}] IP: ${ip}${detailMsg}`);
+  console.log(
+    `[AUDIT TRAIL] [${timestamp}] Admin Auth ${action} [${status}] IP: ${ip}${detailMsg}`
+  );
 };
 
 /**
@@ -204,7 +206,9 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
   const session = await createAdminSession(ip);
 
   if (!session) {
-    res.status(500).json({ success: false, error: 'Failed to create session due to storage error' });
+    res
+      .status(500)
+      .json({ success: false, error: 'Failed to create session due to storage error' });
     return;
   }
 
