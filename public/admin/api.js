@@ -111,7 +111,9 @@
       fetchOptions.headers['X-Admin-Session'] = token;
     }
 
-    logDebug(`[API Request] ${fetchOptions.method || 'GET'} ${url} (Attempt ${retryCount + 1}/${maxRetries + 1})`);
+    logDebug(
+      `[API Request] ${fetchOptions.method || 'GET'} ${url} (Attempt ${retryCount + 1}/${maxRetries + 1})`
+    );
 
     try {
       const response = await fetch(url, fetchOptions);
@@ -158,7 +160,9 @@
 
         // Retry on 5xx Server Errors up to maxRetries
         if (statusCode >= 500 && retryCount < maxRetries) {
-          logDebug(`[API Retry] Server error ${statusCode}. Retrying in ${Math.pow(2, retryCount) * 200}ms...`);
+          logDebug(
+            `[API Retry] Server error ${statusCode}. Retrying in ${Math.pow(2, retryCount) * 200}ms...`
+          );
           await new Promise((resolve) => setTimeout(resolve, Math.pow(2, retryCount) * 200));
           return apiRequest(url, options, retryCount + 1, maxRetries);
         }
@@ -172,7 +176,10 @@
       let data;
       if (contentType.includes('application/json')) {
         data = await response.json();
-      } else if (contentType.includes('text/csv') || contentType.includes('application/octet-stream')) {
+      } else if (
+        contentType.includes('text/csv') ||
+        contentType.includes('application/octet-stream')
+      ) {
         data = await response.blob();
       } else {
         data = await response.text();
@@ -185,7 +192,9 @@
 
       // Retry on network/fetch failure up to maxRetries
       if (retryCount < maxRetries) {
-        logDebug(`[API Retry] Network failure. Retrying attempt ${retryCount + 1} of ${maxRetries}...`);
+        logDebug(
+          `[API Retry] Network failure. Retrying attempt ${retryCount + 1} of ${maxRetries}...`
+        );
         await new Promise((resolve) => setTimeout(resolve, Math.pow(2, retryCount) * 200));
         return apiRequest(url, options, retryCount + 1, maxRetries);
       }
@@ -263,19 +272,21 @@
   function logoutAdmin() {
     return apiRequest('/api/admin/logout', {
       method: 'POST',
-    }).then((res) => {
-      authenticated = false;
-      clearSessionCookie();
-      stopAutoRefresh();
-      clearQueue('Logged out');
-      return res;
-    }).catch((err) => {
-      authenticated = false;
-      clearSessionCookie();
-      stopAutoRefresh();
-      clearQueue('Logged out');
-      return { success: true, message: 'Logged out locally' };
-    });
+    })
+      .then((res) => {
+        authenticated = false;
+        clearSessionCookie();
+        stopAutoRefresh();
+        clearQueue('Logged out');
+        return res;
+      })
+      .catch((err) => {
+        authenticated = false;
+        clearSessionCookie();
+        stopAutoRefresh();
+        clearQueue('Logged out');
+        return { success: true, message: 'Logged out locally' };
+      });
   }
 
   /**
@@ -467,7 +478,9 @@
   function startAutoRefresh(callbacks = {}, phasesIntervalMs = 30000, emailsIntervalMs = 60000) {
     stopAutoRefresh();
 
-    logDebug(`Starting auto-refresh timers (Phases: ${phasesIntervalMs}ms, Emails: ${emailsIntervalMs}ms)`);
+    logDebug(
+      `Starting auto-refresh timers (Phases: ${phasesIntervalMs}ms, Emails: ${emailsIntervalMs}ms)`
+    );
 
     phasesRefreshInterval = setInterval(() => {
       if (!isAuthenticated()) return;

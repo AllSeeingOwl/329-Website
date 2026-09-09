@@ -35,10 +35,13 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await promise;
     expect(data).toEqual(mockResponse);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/authenticate', expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ password: 'adminpass' }),
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/authenticate',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ password: 'adminpass' }),
+      })
+    );
     expect(AdminAPI.isAuthenticated()).toBe(true);
   });
 
@@ -61,9 +64,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.getPhases();
     expect(data).toEqual(mockPhases);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/phases', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/phases',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('activatePhase calls POST /api/admin/phases/activate', async () => {
@@ -77,10 +83,13 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.activatePhase('phase-1');
     expect(data).toEqual(mockRes);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/phases/activate', expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ phaseId: 'phase-1', adminUser: 'admin' }),
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/phases/activate',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ phaseId: 'phase-1', adminUser: 'admin' }),
+      })
+    );
   });
 
   test('deactivatePhase calls DELETE /api/admin/phases/:phaseId/deactivate', async () => {
@@ -94,9 +103,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.deactivatePhase('phase-1');
     expect(data).toEqual(mockRes);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/phases/phase-1/deactivate', expect.objectContaining({
-      method: 'DELETE',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/phases/phase-1/deactivate',
+      expect.objectContaining({
+        method: 'DELETE',
+      })
+    );
   });
 
   test('getEmails calls GET /api/admin/emails', async () => {
@@ -110,9 +122,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.getEmails();
     expect(data).toEqual(mockEmails);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/emails', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/emails',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('exportEmailsCSV calls GET /api/admin/emails/export', async () => {
@@ -129,9 +144,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.exportEmailsCSV();
     expect(data).toEqual(mockBlob);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/emails/export', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/emails/export',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('clearEmails calls POST /api/admin/emails/clear', async () => {
@@ -145,9 +163,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.clearEmails(true);
     expect(data).toEqual(mockRes);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/emails/clear?confirm=true', expect.objectContaining({
-      method: 'POST',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/emails/clear?confirm=true',
+      expect.objectContaining({
+        method: 'POST',
+      })
+    );
   });
 
   test('clearEmails rejects when not confirmed', async () => {
@@ -169,9 +190,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.getEmailStats();
     expect(data).toEqual(mockStats);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/emails/stats', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/emails/stats',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('getConfig calls GET /api/admin/config', async () => {
@@ -185,9 +209,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.getConfig();
     expect(data).toEqual(mockConfig);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/config', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/config',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('updateConfig calls PUT /api/admin/config', async () => {
@@ -202,10 +229,13 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.updateConfig(newCfg);
     expect(data).toEqual(mockRes);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/config', expect.objectContaining({
-      method: 'PUT',
-      body: JSON.stringify({ ...newCfg, adminUser: 'admin' }),
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/config',
+      expect.objectContaining({
+        method: 'PUT',
+        body: JSON.stringify({ ...newCfg, adminUser: 'admin' }),
+      })
+    );
   });
 
   test('toggleMaintenanceMode calls POST /api/admin/maintenance/toggle', async () => {
@@ -219,10 +249,13 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.toggleMaintenanceMode(true);
     expect(data).toEqual(mockRes);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/maintenance/toggle', expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ enabled: true, adminUser: 'admin' }),
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/maintenance/toggle',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ enabled: true, adminUser: 'admin' }),
+      })
+    );
   });
 
   test('getAuditLog calls /api/admin/audit-logs', async () => {
@@ -236,9 +269,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
 
     const data = await AdminAPI.getAuditLog();
     expect(data).toEqual(mockLogs);
-    expect(global.fetch).toHaveBeenCalledWith('/api/admin/audit-logs', expect.objectContaining({
-      method: 'GET',
-    }));
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/admin/audit-logs',
+      expect.objectContaining({
+        method: 'GET',
+      })
+    );
   });
 
   test('retries on 500 error up to 3 times before returning standardized error', async () => {
@@ -279,7 +315,8 @@ describe('Admin API Module (public/admin/api.js)', () => {
     expect(AdminAPI.getQueuedOperationsCount()).toBe(1);
 
     // 2. Re-authenticate
-    global.fetch = jest.fn()
+    global.fetch = jest
+      .fn()
       .mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -305,13 +342,12 @@ describe('Admin API Module (public/admin/api.js)', () => {
     const onPhases = jest.fn();
     const onEmails = jest.fn();
 
-    global.fetch = jest.fn()
-      .mockResolvedValue({
-        ok: true,
-        status: 200,
-        headers: { get: () => 'application/json' },
-        json: async () => ({ success: true }),
-      });
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ success: true }),
+    });
 
     // Set authenticated state via cookie
     document.cookie = 'admin_session=testtoken; path=/;';
