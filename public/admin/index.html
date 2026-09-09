@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>NEURAL LINK // ADMIN TERMINAL</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 20px;
+        line-height: 1.4;
+      }
+
+      a {
+        color: #00ff00;
+        text-decoration: underline;
+      }
+
+      a:hover {
+        background-color: #00ff00;
+        color: #000000;
+      }
+
+      header {
+        border-bottom: 1px dotted #00ff00;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      .subtitle {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .section-box {
+        border: 1px dotted #00ff00;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #000000;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-bottom: 1px dotted #00ff00;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .login-container {
+        max-width: 450px;
+        margin: 60px auto;
+        border: 1px dotted #00ff00;
+        padding: 25px;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      input[type='password'],
+      input[type='text'],
+      input[type='number'] {
+        width: 100%;
+        background-color: #000000;
+        color: #00ff00;
+        border: 1px dotted #00ff00;
+        padding: 8px 12px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      input[type='password']:focus,
+      input[type='text']:focus,
+      input[type='number']:focus {
+        background-color: #001100;
+        border-style: solid;
+      }
+
+      button,
+      .btn {
+        background-color: #000000;
+        color: #00ff00;
+        border: 1px dotted #00ff00;
+        padding: 8px 16px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: background-color 0.15s, color 0.15s;
+        display: inline-block;
+      }
+
+      button:hover:not(:disabled),
+      .btn:hover:not(:disabled) {
+        background-color: #00ff00;
+        color: #000000;
+      }
+
+      button:disabled,
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        border-color: #005500;
+        color: #005500;
+      }
+
+      .danger-btn {
+        border-color: #ff3366;
+        color: #ff3366;
+      }
+
+      .danger-btn:hover:not(:disabled) {
+        background-color: #ff3366;
+        color: #000000;
+      }
+
+      .status-message {
+        margin-top: 10px;
+        padding: 8px;
+        border: 1px dotted #00ff00;
+        display: none;
+        word-break: break-word;
+      }
+
+      .status-error {
+        border-color: #ff3366;
+        color: #ff3366;
+      }
+
+      .status-success {
+        border-color: #00ff00;
+        color: #00ff00;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      @media (max-width: 768px) {
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .session-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .phase-card {
+        border: 1px dotted #00ff00;
+        padding: 12px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .phase-card.active-phase {
+        background-color: #001500;
+        border-style: solid;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border: 1px dotted #00ff00;
+        font-size: 0.8rem;
+        margin-left: 8px;
+      }
+
+      .badge-active {
+        background-color: #00ff00;
+        color: #000000;
+      }
+
+      .badge-inactive {
+        border-color: #555;
+        color: #888;
+      }
+
+      .stats-box {
+        border: 1px dotted #00ff00;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .stats-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 0.85rem;
+      }
+
+      th,
+      td {
+        border: 1px dotted #00ff00;
+        padding: 6px 10px;
+        text-align: left;
+        word-break: break-all;
+      }
+
+      th {
+        background-color: #001100;
+        text-transform: uppercase;
+      }
+
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px dotted #004400;
+      }
+
+      .toggle-row:last-child {
+        border-bottom: none;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        margin-left: 8px;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
+
+      #admin-dashboard {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>NEURAL LINK // SYSTEM ADMIN CONSOLE</h1>
+      <div class="subtitle">CLR-SEC LEVEL 5 ACCESS REQUIRED // RETRO-TERMINAL INTERFACE</div>
+    </header>
+
+    <!-- LOGIN PANEL -->
+    <div id="login-panel" class="login-container">
+      <div class="section-title">AUTHENTICATION REQUIRED</div>
+      <p style="margin-bottom: 15px; font-size: 0.85rem">
+        ENTER SYSTEM ADMIN ACCESS PASSWORD TO ESTABLISH SECURE SESSION.
+      </p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="admin-password">PASSWORD:</label>
+          <input
+            type="password"
+            id="admin-password"
+            placeholder="••••••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        <button type="submit" id="auth-btn" style="width: 100%">
+          [ AUTHENTICATE TERMINAL ]
+        </button>
+      </form>
+      <div id="login-status" class="status-message"></div>
+    </div>
+
+    <!-- MAIN ADMIN DASHBOARD -->
+    <div id="admin-dashboard">
+      <!-- SESSION INFO BAR -->
+      <div class="section-box">
+        <div class="session-bar">
+          <div>
+            <strong>LOGGED IN AS:</strong> <span id="session-user">ADMIN_OPERATOR</span> |
+            <strong>SESSION STATUS:</strong> <span style="color: #00ff00">ACTIVE</span> |
+            <strong>TIMEOUT IN:</strong> <span id="session-countdown">15:00</span>
+          </div>
+          <div>
+            <button id="logout-btn" class="danger-btn">[ TERMINATE SESSION / LOGOUT ]</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GLOBAL FEEDBACK BANNER -->
+      <div id="global-status" class="status-message"></div>
+
+      <!-- PHASE / TIER MANAGEMENT -->
+      <div class="section-box">
+        <div class="section-title">
+          <span>PHASE / TIER MANAGEMENT</span>
+          <button id="refresh-phases-btn" style="font-size: 0.8rem; padding: 2px 8px">
+            REFRESH
+          </button>
+        </div>
+        <p style="margin-bottom: 15px; font-size: 0.85rem">
+          CONTROL NARRATIVE RELEASE PHASES AND UNLOCK TERMINAL CONTENT TIERS SYSTEM-WIDE.
+        </p>
+        <div id="phases-list">
+          <div style="text-align: center; padding: 20px" class="loading-spinner">
+            FETCHING PHASE CONFIGURATION...
+          </div>
+        </div>
+      </div>
+
+      <!-- EMAIL COLLECTION STATS & EXPORT -->
+      <div class="section-box">
+        <div class="section-title">
+          <span>EMAIL COLLECTION & METRICS</span>
+          <button id="refresh-emails-btn" style="font-size: 0.8rem; padding: 2px 8px">
+            REFRESH
+          </button>
+        </div>
+        <div class="grid-3" style="margin-bottom: 15px">
+          <div class="stats-box">
+            <div>TOTAL CAPTURED</div>
+            <div id="email-stat-total" class="stats-value">0</div>
+          </div>
+          <div class="stats-box">
+            <div>PENDING STATUS</div>
+            <div id="email-stat-pending" class="stats-value">0</div>
+          </div>
+          <div class="stats-box">
+            <div>VERIFIED STATUS</div>
+            <div id="email-stat-verified" class="stats-value">0</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px">
+          <button id="export-emails-btn">[ EXPORT EMAILS (CSV) ]</button>
+          <button id="clear-emails-btn" class="danger-btn">[ CLEAR ALL EMAIL DATA ]</button>
+        </div>
+        <div style="overflow-x: auto; max-height: 250px">
+          <table id="emails-table">
+            <thead>
+              <tr>
+                <th>EMAIL ADDRESS</th>
+                <th>COLLECTED AT</th>
+                <th>SOURCE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="emails-table-body">
+              <tr>
+                <td colspan="4" style="text-align: center">NO EMAIL DATA LOADED</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SYSTEM CONFIGURATION PANEL -->
+      <div class="section-box">
+        <div class="section-title">SYSTEM CONFIGURATION PANEL</div>
+        <form id="config-form">
+          <div class="grid-2" style="margin-bottom: 15px">
+            <div>
+              <div class="toggle-row">
+                <label for="cfg-maintenance">MAINTENANCE MODE:</label>
+                <input type="checkbox" id="cfg-maintenance" />
+              </div>
+              <div class="toggle-row">
+                <label for="cfg-public">PUBLIC SITE ENABLED:</label>
+                <input type="checkbox" id="cfg-public" />
+              </div>
+              <div class="toggle-row">
+                <label for="cfg-admin">ADMIN PANEL ENABLED:</label>
+                <input type="checkbox" id="cfg-admin" />
+              </div>
+            </div>
+            <div>
+              <div class="toggle-row">
+                <label for="cfg-email-col">ALLOW EMAIL COLLECTION:</label>
+                <input type="checkbox" id="cfg-email-col" />
+              </div>
+              <div class="toggle-row">
+                <label for="cfg-email-notify">EMAIL NOTIFICATIONS:</label>
+                <input type="checkbox" id="cfg-email-notify" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 15px">
+            <div class="form-group">
+              <label for="cfg-max-sessions">MAX CONCURRENT SESSIONS:</label>
+              <input type="number" id="cfg-max-sessions" min="1" max="100" required />
+            </div>
+            <div class="form-group">
+              <label for="cfg-session-timeout">SESSION TIMEOUT (MINUTES):</label>
+              <input type="number" id="cfg-session-timeout" min="1" max="1440" required />
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center">
+            <button type="submit" id="save-config-btn">[ SAVE CONFIGURATION ]</button>
+            <button type="button" id="toggle-maint-btn">[ QUICK TOGGLE MAINTENANCE ]</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- AUDIT LOG VIEWER -->
+      <div class="section-box">
+        <div class="section-title">
+          <span>AUDIT LOG VIEWER (LAST 20 ACTIONS)</span>
+          <button id="refresh-audit-btn" style="font-size: 0.8rem; padding: 2px 8px">
+            REFRESH
+          </button>
+        </div>
+        <div style="overflow-x: auto; max-height: 300px">
+          <table>
+            <thead>
+              <tr>
+                <th>TIMESTAMP</th>
+                <th>ADMIN USER</th>
+                <th>ACTION</th>
+                <th>TARGET ID</th>
+                <th>DETAILS</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center">NO AUDIT LOGS LOADED</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+      (function () {
+        let sessionTimer = null;
+        let sessionRemainingSeconds = 15 * 60; // Default 15 mins
+
+        // DOM elements
+        const loginPanel = document.getElementById('login-panel');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const loginForm = document.getElementById('login-form');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const authBtn = document.getElementById('auth-btn');
+        const loginStatus = document.getElementById('login-status');
+        const logoutBtn = document.getElementById('logout-btn');
+        const sessionCountdown = document.getElementById('session-countdown');
+        const globalStatus = document.getElementById('global-status');
+
+        // Show feedback message in global banner or specified container
+        function showMessage(msg, isError = false, targetEl = globalStatus) {
+          if (!targetEl) return;
+          targetEl.textContent = msg;
+          targetEl.className = 'status-message ' + (isError ? 'status-error' : 'status-success');
+          targetEl.style.display = 'block';
+
+          if (targetEl === globalStatus) {
+            setTimeout(() => {
+              targetEl.style.display = 'none';
+            }, 6000);
+          }
+        }
+
+        function clearMessage(targetEl = globalStatus) {
+          if (targetEl) {
+            targetEl.style.display = 'none';
+            targetEl.textContent = '';
+          }
+        }
+
+        // Timer countdown for session timeout
+        function startSessionTimer(timeoutMinutes = 15) {
+          if (sessionTimer) clearInterval(sessionTimer);
+          sessionRemainingSeconds = timeoutMinutes * 60;
+
+          function updateDisplay() {
+            const mins = Math.floor(sessionRemainingSeconds / 60);
+            const secs = sessionRemainingSeconds % 60;
+            sessionCountdown.textContent =
+              String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+            if (sessionRemainingSeconds <= 0) {
+              clearInterval(sessionTimer);
+              showMessage('SESSION EXPIRED. AUTOMATIC LOGOUT TRIGGERED.', true);
+              handleLogout();
+            } else {
+              sessionRemainingSeconds--;
+            }
+          }
+
+          updateDisplay();
+          sessionTimer = setInterval(updateDisplay, 1000);
+        }
+
+        // Generic API fetch wrapper with error handling & loading state
+        async function apiFetch(url, options = {}, btn = null, loadingText = 'PROCESSING...') {
+          let originalBtnText = '';
+          if (btn) {
+            btn.disabled = true;
+            originalBtnText = btn.textContent;
+            btn.textContent = loadingText;
+          }
+
+          try {
+            const res = await fetch(url, {
+              ...options,
+              headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {}),
+              },
+            });
+
+            if (res.status === 401) {
+              // Session invalid or expired
+              showMessage('UNAUTHORIZED OR SESSION EXPIRED. PLEASE LOG IN AGAIN.', true);
+              handleLogout();
+              return null;
+            }
+
+            const contentType = res.headers.get('content-type') || '';
+            let data;
+            if (contentType.includes('application/json')) {
+              data = await res.json();
+            } else {
+              data = await res.text();
+            }
+
+            if (!res.ok) {
+              const errMsg =
+                (data && data.message) || (data && data.error) || 'API Request Failed (' + res.status + ')';
+              throw new Error(errMsg);
+            }
+
+            return data;
+          } catch (err) {
+            console.error('API Error:', url, err);
+            showMessage(err.message || 'NETWORK ERROR ENCOUNTERED', true);
+            return null;
+          } finally {
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = originalBtnText;
+            }
+          }
+        }
+
+        // Authenticate form submission
+        loginForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          clearMessage(loginStatus);
+          const pwd = adminPasswordInput.value;
+
+          const data = await apiFetch(
+            '/api/admin/authenticate',
+            {
+              method: 'POST',
+              body: JSON.stringify({ password: pwd }),
+            },
+            authBtn,
+            'AUTHENTICATING...'
+          );
+
+          if (data && data.success) {
+            loginPanel.style.display = 'none';
+            adminDashboard.style.display = 'block';
+            adminPasswordInput.value = '';
+            clearMessage(loginStatus);
+            startSessionTimer(15);
+            loadDashboardData();
+          } else if (data) {
+            showMessage(data.message || 'AUTHENTICATION FAILED', true, loginStatus);
+          }
+        });
+
+        // Logout handler
+        async function handleLogout() {
+          if (sessionTimer) clearInterval(sessionTimer);
+          await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
+          adminDashboard.style.display = 'none';
+          loginPanel.style.display = 'block';
+          clearMessage(globalStatus);
+        }
+
+        logoutBtn.addEventListener('click', handleLogout);
+
+        // Load all dashboard sections
+        async function loadDashboardData() {
+          await Promise.all([
+            fetchPhases(),
+            fetchEmailStats(),
+            fetchEmailsList(),
+            fetchSystemConfig(),
+            fetchAuditLogs(),
+          ]);
+        }
+
+        // -------------------------------------------------------------
+        // 1. PHASES / TIERS
+        // -------------------------------------------------------------
+        async function fetchPhases() {
+          const data = await apiFetch('/api/admin/phases');
+          if (!data || !data.success) return;
+
+          const phasesList = document.getElementById('phases-list');
+          phasesList.innerHTML = '';
+
+          const activePhaseId = data.activePhaseId;
+
+          data.phases.forEach(function (phase) {
+            const card = document.createElement('div');
+            card.className =
+              'phase-card ' + (phase.active || phase.id === activePhaseId ? 'active-phase' : '');
+
+            const isCurrentlyActive = phase.active || phase.id === activePhaseId;
+
+            const infoDiv = document.createElement('div');
+            infoDiv.style.flex = '1';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.style.fontWeight = 'bold';
+            titleDiv.style.fontSize = '1.05rem';
+            titleDiv.textContent = phase.name + ' (TIER ' + phase.tier + ')';
+
+            if (isCurrentlyActive) {
+              const activeBadge = document.createElement('span');
+              activeBadge.className = 'badge badge-active';
+              activeBadge.textContent = 'ACTIVE';
+              titleDiv.appendChild(activeBadge);
+            } else {
+              const inactiveBadge = document.createElement('span');
+              inactiveBadge.className = 'badge badge-inactive';
+              inactiveBadge.textContent = 'LOCKED';
+              titleDiv.appendChild(inactiveBadge);
+            }
+
+            const detailsDiv = document.createElement('div');
+            detailsDiv.style.fontSize = '0.8rem';
+            detailsDiv.style.marginTop = '4px';
+            detailsDiv.style.opacity = '0.85';
+
+            let relContentStr = 'None';
+            if (phase.relatedContent && phase.relatedContent.length > 0) {
+              relContentStr = phase.relatedContent.join(', ');
+            }
+            detailsDiv.textContent =
+              'ID: ' +
+              phase.id +
+              ' | CONTENT: ' +
+              relContentStr +
+              ' | ACTIVATED: ' +
+              (phase.activatedAt ? new Date(phase.activatedAt).toLocaleString() : 'NEVER');
+
+            infoDiv.appendChild(titleDiv);
+            infoDiv.appendChild(detailsDiv);
+
+            const actionDiv = document.createElement('div');
+
+            if (!isCurrentlyActive) {
+              const actBtn = document.createElement('button');
+              actBtn.textContent = '[ ACTIVATE PHASE ]';
+              actBtn.addEventListener('click', async function () {
+                const res = await apiFetch(
+                  '/api/admin/phases/activate',
+                  {
+                    method: 'POST',
+                    body: JSON.stringify({ phaseId: phase.id, adminUser: 'admin' }),
+                  },
+                  actBtn,
+                  'ACTIVATING...'
+                );
+                if (res && res.success) {
+                  showMessage('PHASE ' + phase.id + ' ACTIVATED SUCCESSFULLY');
+                  fetchPhases();
+                  fetchAuditLogs();
+                }
+              });
+              actionDiv.appendChild(actBtn);
+            } else {
+              const deactBtn = document.createElement('button');
+              deactBtn.className = 'danger-btn';
+              deactBtn.textContent = '[ DEACTIVATE PHASE ]';
+              deactBtn.addEventListener('click', async function () {
+                if (
+                  !confirm(
+                    'CONFIRM DEACTIVATION:\nAre you sure you want to deactivate phase ' +
+                      phase.id +
+                      '? This will lock associated content.'
+                  )
+                ) {
+                  return;
+                }
+
+                const res = await apiFetch(
+                  '/api/admin/phases/' + encodeURIComponent(phase.id) + '/deactivate',
+                  {
+                    method: 'DELETE',
+                    body: JSON.stringify({ adminUser: 'admin' }),
+                  },
+                  deactBtn,
+                  'DEACTIVATING...'
+                );
+                if (res && res.success) {
+                  showMessage('PHASE ' + phase.id + ' DEACTIVATED');
+                  fetchPhases();
+                  fetchAuditLogs();
+                }
+              });
+              actionDiv.appendChild(deactBtn);
+            }
+
+            card.appendChild(infoDiv);
+            card.appendChild(actionDiv);
+            phasesList.appendChild(card);
+          });
+        }
+
+        document.getElementById('refresh-phases-btn').addEventListener('click', fetchPhases);
+
+        // -------------------------------------------------------------
+        // 2. EMAIL METRICS & DATA
+        // -------------------------------------------------------------
+        async function fetchEmailStats() {
+          const data = await apiFetch('/api/admin/emails/stats');
+          if (!data || !data.success) return;
+
+          document.getElementById('email-stat-total').textContent = data.total || 0;
+          document.getElementById('email-stat-pending').textContent =
+            (data.byStatus && data.byStatus.pending) || 0;
+          document.getElementById('email-stat-verified').textContent =
+            (data.byStatus && data.byStatus.verified) || 0;
+        }
+
+        async function fetchEmailsList() {
+          const data = await apiFetch('/api/admin/emails');
+          if (!data || !data.success) return;
+
+          const tbody = document.getElementById('emails-table-body');
+          tbody.innerHTML = '';
+
+          if (!data.emails || data.emails.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="4" style="text-align: center">NO EMAILS CAPTURED YET</td></tr>';
+            return;
+          }
+
+          data.emails.forEach(function (e) {
+            const tr = document.createElement('tr');
+
+            const tdEmail = document.createElement('td');
+            tdEmail.textContent = e.email || 'N/A';
+
+            const tdTime = document.createElement('td');
+            tdTime.textContent = e.collectedAt ? new Date(e.collectedAt).toLocaleString() : 'N/A';
+
+            const tdSource = document.createElement('td');
+            tdSource.textContent = e.source || e.phase || 'N/A';
+
+            const tdStatus = document.createElement('td');
+            tdStatus.textContent = (e.status || 'pending').toUpperCase();
+
+            tr.appendChild(tdEmail);
+            tr.appendChild(tdTime);
+            tr.appendChild(tdSource);
+            tr.appendChild(tdStatus);
+            tbody.appendChild(tr);
+          });
+        }
+
+        document.getElementById('refresh-emails-btn').addEventListener('click', function () {
+          fetchEmailStats();
+          fetchEmailsList();
+        });
+
+        // Export Emails CSV
+        document
+          .getElementById('export-emails-btn')
+          .addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'EXPORTING...';
+
+            try {
+              const res = await fetch('/api/admin/emails/export');
+              if (res.status === 401) {
+                handleLogout();
+                return;
+              }
+              if (!res.ok) throw new Error('Export CSV failed');
+
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'collected_emails.csv';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              a.remove();
+              showMessage('EMAIL DATA EXPORTED TO CSV SUCCESSFULLY');
+              fetchAuditLogs();
+            } catch (err) {
+              showMessage('FAILED TO EXPORT CSV: ' + err.message, true);
+            } finally {
+              btn.disabled = false;
+              btn.textContent = '[ EXPORT EMAILS (CSV) ]';
+            }
+          });
+
+        // Clear Emails
+        document
+          .getElementById('clear-emails-btn')
+          .addEventListener('click', async function () {
+            if (
+              !confirm(
+                'WARNING: DESTRUCTIVE ACTION\nAre you sure you want to permanently clear ALL collected email records?'
+              )
+            ) {
+              return;
+            }
+
+            const res = await apiFetch(
+              '/api/admin/emails/clear',
+              {
+                method: 'POST',
+                body: JSON.stringify({ confirm: true, adminUser: 'admin' }),
+              },
+              this,
+              'CLEARING...'
+            );
+
+            if (res && res.success) {
+              showMessage('EMAIL DATA CLEARED SUCCESSFULLY (' + res.clearedCount + ' RECS)');
+              fetchEmailStats();
+              fetchEmailsList();
+              fetchAuditLogs();
+            }
+          });
+
+        // -------------------------------------------------------------
+        // 3. SYSTEM CONFIGURATION
+        // -------------------------------------------------------------
+        async function fetchSystemConfig() {
+          const data = await apiFetch('/api/admin/config');
+          if (!data || !data.success || !data.config) return;
+
+          const cfg = data.config;
+          document.getElementById('cfg-maintenance').checked = !!cfg.maintenanceMode;
+          document.getElementById('cfg-public').checked = !!cfg.publicSiteEnabled;
+          document.getElementById('cfg-admin').checked = !!cfg.adminPanelEnabled;
+          document.getElementById('cfg-email-col').checked = !!cfg.allowEmailCollection;
+          document.getElementById('cfg-email-notify').checked = !!cfg.emailNotificationEnabled;
+          document.getElementById('cfg-max-sessions').value = cfg.maxConcurrentSessions || 10;
+          document.getElementById('cfg-session-timeout').value = cfg.sessionTimeout || 15;
+
+          if (cfg.sessionTimeout) {
+            startSessionTimer(cfg.sessionTimeout);
+          }
+        }
+
+        document
+          .getElementById('config-form')
+          .addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('save-config-btn');
+
+            const payload = {
+              maintenanceMode: document.getElementById('cfg-maintenance').checked,
+              publicSiteEnabled: document.getElementById('cfg-public').checked,
+              adminPanelEnabled: document.getElementById('cfg-admin').checked,
+              allowEmailCollection: document.getElementById('cfg-email-col').checked,
+              emailNotificationEnabled: document.getElementById('cfg-email-notify').checked,
+              maxConcurrentSessions: parseInt(
+                document.getElementById('cfg-max-sessions').value,
+                10
+              ),
+              sessionTimeout: parseInt(
+                document.getElementById('cfg-session-timeout').value,
+                10
+              ),
+              adminUser: 'admin',
+            };
+
+            const res = await apiFetch(
+              '/api/admin/config',
+              {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+              },
+              btn,
+              'SAVING...'
+            );
+
+            if (res && res.success) {
+              showMessage('SYSTEM CONFIGURATION SAVED SUCCESSFULLY');
+              if (payload.sessionTimeout) {
+                startSessionTimer(payload.sessionTimeout);
+              }
+              fetchAuditLogs();
+            }
+          });
+
+        // Quick Maintenance Mode Toggle
+        document
+          .getElementById('toggle-maint-btn')
+          .addEventListener('click', async function () {
+            const res = await apiFetch(
+              '/api/admin/maintenance/toggle',
+              {
+                method: 'POST',
+                body: JSON.stringify({ adminUser: 'admin' }),
+              },
+              this,
+              'TOGGLING...'
+            );
+
+            if (res && res.success) {
+              showMessage(
+                'MAINTENANCE MODE IS NOW ' + (res.maintenanceMode ? 'ENABLED' : 'DISABLED')
+              );
+              fetchSystemConfig();
+              fetchAuditLogs();
+            }
+          });
+
+        // -------------------------------------------------------------
+        // 4. AUDIT LOGS
+        // -------------------------------------------------------------
+        async function fetchAuditLogs() {
+          const data = await apiFetch('/api/admin/audit-logs');
+          if (!data || !data.success) return;
+
+          const tbody = document.getElementById('audit-table-body');
+          tbody.innerHTML = '';
+
+          if (!data.logs || data.logs.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" style="text-align: center">NO RECENT AUDIT LOGS FOUND</td></tr>';
+            return;
+          }
+
+          data.logs.forEach(function (log) {
+            const tr = document.createElement('tr');
+
+            const tdTime = document.createElement('td');
+            tdTime.textContent = log.timestamp
+              ? new Date(log.timestamp).toLocaleString()
+              : 'N/A';
+
+            const tdUser = document.createElement('td');
+            tdUser.textContent = log.adminUser || 'admin';
+
+            const tdAction = document.createElement('td');
+            tdAction.textContent = log.action || 'N/A';
+
+            const tdTarget = document.createElement('td');
+            tdTarget.textContent = log.phaseId || 'N/A';
+
+            const tdDetails = document.createElement('td');
+            tdDetails.textContent = log.details ? JSON.stringify(log.details) : '{}';
+
+            tr.appendChild(tdTime);
+            tr.appendChild(tdUser);
+            tr.appendChild(tdAction);
+            tr.appendChild(tdTarget);
+            tr.appendChild(tdDetails);
+            tbody.appendChild(tr);
+          });
+        }
+
+        document.getElementById('refresh-audit-btn').addEventListener('click', fetchAuditLogs);
+      })();
+    </script>
+  </body>
+</html>

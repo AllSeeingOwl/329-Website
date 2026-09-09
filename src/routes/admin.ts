@@ -126,6 +126,13 @@ let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
 }));
 
 let inMemoryConfigStore: SystemConfig = { ...DEFAULT_SYSTEM_CONFIG };
+let inMemoryAuditLogs: Array<{
+  timestamp: string;
+  adminUser: string;
+  action: string;
+  phaseId: string;
+  details: Record<string, unknown>;
+}> = [];
 
 export const resetInMemPhases = (): void => {
   inMemoryPhasesStore = DEFAULT_PHASES.map((p) => ({
@@ -211,9 +218,15 @@ export const logPhaseChange = async (
     details
   );
 
+  inMemoryAuditLogs.unshift(logEntry);
+  if (inMemoryAuditLogs.length > 100) {
+    inMemoryAuditLogs = inMemoryAuditLogs.slice(0, 100);
+  }
+
   if (isRedisAvailable()) {
     try {
       await redis.lpush('admin:audit_logs', JSON.stringify(logEntry));
+      await redis.ltrim('admin:audit_logs', 0, 99);
     } catch (err) {
       console.error('Failed to log audit action to Redis:', err);
     }
@@ -922,5 +935,59 @@ router.post(
     }
   }
 );
+
+/**
+ * GET /api/admin/audit-logs
+ * Returns the last 20 audit log entries.
+ */
+router.get('/audit-logs', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    let logs: Array<{
+      timestamp: string;
+      adminUser: string;
+      action: string;
+      phaseId: string;
+      details: Record<string, unknown>;
+    }> = [];
+
+    if (isRedisAvailable()) {
+      try {
+        const rawLogs = await redis.lrange('admin:audit_logs', 0, 19);
+        if (rawLogs && rawLogs.length > 0) {
+          logs = rawLogs.map((item) =>
+            typeof item === 'string' ? JSON.parse(item) : (item as any)
+          );
+        }
+      } catch (err) {
+        console.error('Failed to fetch audit logs from Redis:', err);
+      }
+    }
+
+    if (logs.length === 0) {
+      logs = inMemoryAuditLogs.slice(0, 20);
+    }
+
+    res.json({
+      success: true,
+      count: logs.length,
+      logs,
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/audit-logs:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch audit logs' });
+  }
+});
+
+/**
+ * POST /api/admin/logout
+ * Logs out the admin user and clears the session cookie.
+ */
+router.post('/logout', async (_req: Request, res: Response): Promise<void> => {
+  res.clearCookie('admin_session', { path: '/' });
+  res.json({
+    success: true,
+    message: 'Logged out successfully',
+  });
+});
 
 export default router;
