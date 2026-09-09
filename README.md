@@ -74,6 +74,8 @@ The repository includes an ARG-specific GitHub Project management setup to track
 
 ## Deployment
 
+### Vercel Deployment
+
 The project is deployed and hosted on **Vercel**, accessible via the custom domain `3minsto9.co.uk` and Vercel-provided subdomains (e.g., `329-website.vercel.app`).
 
 - The deployment utilizes the Node.js Express application (`server.ts`).
@@ -83,3 +85,40 @@ The project is deployed and hosted on **Vercel**, accessible via the custom doma
 - The Express server uses `process.env.PORT` to allow Vercel to dynamically assign the port (falling back to 3000 locally).
 - Critical environment variables like `AUTH_PASSWORD`, `MAINTENANCE_MODE`, and the `KV_REST_API_*` variables must be configured in the Vercel project settings.
 - Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `surface-home-page.html`) to avoid 404 errors on subpaths.
+
+### Railway.app Deployment
+
+The application is configured for seamless deployment on **Railway.app** using standard Node.js buildpacks.
+
+#### Key Deployment Files
+- **`Procfile`**: Specifies the process command (`web: node dist/server.js`).
+- **`package.json`**: Includes the `build` script (`tsc && vite build && cp -r public/* dist/public/`) to compile TypeScript and bundle frontend assets into `dist/`.
+- **`.railwayignore`**: Excludes test scripts, documentation, and local configuration files from build contexts.
+- **`vercel.json`**: Maintained for Vercel deployment compatibility; ignored by Railway.
+
+#### Required Environment Variables
+Configure the following environment variables in the Railway project settings under **Variables**:
+
+| Variable | Description | Default / Example |
+|---|---|---|
+| `NODE_ENV` | Environment mode | `production` |
+| `PORT` | Dynamic HTTP port | Managed by Railway (defaults to 3000) |
+| `ADMIN_PASSWORD` | Password for admin portal access (`/api/admin`) | Secure random string |
+| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | Upstash Redis REST URL | `https://your-redis-instance.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | Upstash Redis REST Auth Token | `your_upstash_token_here` |
+| `AUTH_PASSWORD` | Optional ARG gate access verification code | `0408-1998-XXXX` |
+
+#### Step-by-Step Railway Deployment Instructions
+1. **Push Changes**: Ensure your latest changes containing `Procfile`, `package.json`, and `.railwayignore` are pushed to your GitHub repository.
+2. **Create New Project on Railway**:
+   - Log in to [Railway.app](https://railway.app/).
+   - Click **New Project** and select **Deploy from GitHub repo**.
+   - Choose the `329-Website` repository.
+3. **Configure Environment Variables**:
+   - Go to your service settings in the Railway Dashboard.
+   - Select the **Variables** tab and add the required environment variables (`ADMIN_PASSWORD`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `NODE_ENV=production`).
+4. **Deploy Service**:
+   - Railway will automatically detect Node.js, execute `npm run build` (compiling TypeScript to `dist/` and bundling frontend assets), and start the application using `Procfile` (`web: node dist/server.js`).
+5. **Generate Public Domain**:
+   - In Railway, navigate to **Settings** -> **Networking** -> **Generate Domain** (or add a custom domain).
+   - Test your deployment by accessing the generated URL.
