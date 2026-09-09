@@ -5,6 +5,7 @@ import adminAuth, {
   logAuthAttempt,
 } from '../middleware/adminAuth';
 import { Redis } from '@upstash/redis';
+import { getAllEmails, clearAllEmails } from '../../db';
 
 const router = Router();
 
@@ -141,7 +142,7 @@ export const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
 export const logPhaseChange = async (
   adminUser: string,
   action: string,
-  phaseId: string,
+  targetId: string,
   details: Record<string, unknown> = {}
 ): Promise<void> => {
   const timestamp = new Date().toISOString();
@@ -149,11 +150,11 @@ export const logPhaseChange = async (
     timestamp,
     adminUser,
     action,
-    phaseId,
+    phaseId: targetId,
     details,
   };
   console.log(
-    `[AUDIT TRAIL] [${timestamp}] Admin '${adminUser}' ${action} on phase '${phaseId}'`,
+    `[AUDIT TRAIL] [${timestamp}] Admin '${adminUser}' ${action} on '${targetId}'`,
     details
   );
 
@@ -161,7 +162,7 @@ export const logPhaseChange = async (
     try {
       await redis.lpush('admin:audit_logs', JSON.stringify(logEntry));
     } catch (err) {
-      console.error('Failed to log phase change to Redis:', err);
+      console.error('Failed to log audit action to Redis:', err);
     }
   }
 };
@@ -546,5 +547,152 @@ router.delete(
     }
   }
 );
+
+/**
+ * GET /api/admin/emails
+ * Returns all collected emails with metadata (timestamp, source, phase, status).
+ */
+router.get('/emails', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const rawEmails = await getAllEmails();
+    const phases = await getPhasesFromStore();
+    const activePhase = phases.find((p) => p.active);
+    const activePhaseId = activePhase ? activePhase.id : 'unknown';
+
+    const emails = rawEmails.map((e) => ({
+      email: e.email,
+      collectedAt: e.timestamp,
+      source: e.source,
+      phase: activePhaseId,
+      status: e.status || 'pending',
+    }));
+
+    res.json({
+      success: true,
+      count: emails.length,
+      emails,
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/emails:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch collected emails' });
+  }
+});
+
+/**
+ * GET /api/admin/emails/export
+ * Returns CSV file download of all emails.
+ */
+router.get('/emails/export', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const rawEmails = await getAllEmails();
+    const phases = await getPhasesFromStore();
+    const activePhase = phases.find((p) => p.active);
+    const activePhaseId = activePhase ? activePhase.id : 'unknown';
+
+    const header = ['Email', 'Collected At', 'Source Phase', 'Status'];
+    const rows = rawEmails.map((e) => [
+      e.email,
+      e.timestamp,
+      e.source || activePhaseId,
+      e.status || 'pending',
+    ]);
+
+    const csvContent = [header, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const adminUser = (req.headers['x-admin-user'] as string) || 'admin';
+    await logPhaseChange(adminUser, 'EXPORT_EMAILS', 'emails', {
+      count: rawEmails.length,
+    });
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="collected_emails.csv"');
+    res.status(200).send(csvContent);
+  } catch (error) {
+    console.error('Error in GET /api/admin/emails/export:', error);
+    res.status(500).json({ success: false, message: 'Failed to export emails CSV' });
+  }
+});
+
+/**
+ * POST /api/admin/emails/clear
+ * Clears all email data (requires confirm parameter, e.g. ?confirm=true or { confirm: true }).
+ */
+router.post('/emails/clear', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const confirmQuery = req.query.confirm === 'true' || req.query.confirm === '1';
+    const confirmBody = req.body && (req.body.confirm === true || req.body.confirm === 'true');
+
+    if (!confirmQuery && !confirmBody) {
+      res.status(400).json({
+        success: false,
+        message: 'Confirmation parameter required (e.g. ?confirm=true or { "confirm": true })',
+      });
+      return;
+    }
+
+    const previousEmails = await getAllEmails();
+    const count = previousEmails.length;
+
+    await clearAllEmails();
+
+    const adminUser =
+      (req.body && req.body.adminUser) || (req.headers['x-admin-user'] as string) || 'admin';
+    await logPhaseChange(adminUser, 'CLEAR_EMAILS', 'emails', {
+      clearedCount: count,
+    });
+
+    res.json({
+      success: true,
+      message: `Successfully cleared ${count} email record(s).`,
+      clearedCount: count,
+    });
+  } catch (error) {
+    console.error('Error in POST /api/admin/emails/clear:', error);
+    res.status(500).json({ success: false, message: 'Failed to clear email data' });
+  }
+});
+
+/**
+ * GET /api/admin/emails/stats
+ * Returns email collection statistics (total, by phase/source, by date).
+ */
+router.get('/emails/stats', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const rawEmails = await getAllEmails();
+
+    const bySource: Record<string, number> = {};
+    const byDate: Record<string, number> = {};
+    const byStatus: Record<string, number> = {
+      pending: 0,
+      verified: 0,
+      bounced: 0,
+    };
+
+    rawEmails.forEach((e) => {
+      const sourceKey = e.source || 'unknown';
+      bySource[sourceKey] = (bySource[sourceKey] || 0) + 1;
+
+      const dateKey = e.timestamp ? e.timestamp.split('T')[0] : 'unknown';
+      byDate[dateKey] = (byDate[dateKey] || 0) + 1;
+
+      const statusKey = e.status || 'pending';
+      byStatus[statusKey] = (byStatus[statusKey] || 0) + 1;
+    });
+
+    res.json({
+      success: true,
+      total: rawEmails.length,
+      byPhase: bySource,
+      bySource,
+      byDate,
+      byStatus,
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/emails/stats:', error);
+    res.status(500).json({ success: false, message: 'Failed to calculate email stats' });
+  }
+});
 
 export default router;
