@@ -56,6 +56,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
+// 🏥 Health check endpoint for Fly.io monitoring and load balancers
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Maintenance Mode Configuration
 let MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
 let STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
