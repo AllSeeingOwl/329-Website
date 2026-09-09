@@ -292,18 +292,18 @@ Please provide:
 
 ## Quick Reference: Key Differences from Railway
 
-| Feature | Railway (Trial) | Fly.io (Free) |
-|---------|-----------------|---------------|
-| Free tier duration | Trial only (~7 days) | Unlimited |
-| Always-on | ✅ Yes | ✅ Yes |
-| Cold starts | None | None |
-| RAM allocation | Varies | 256MB (free tier) |
-| Monthly egress limit | Unlimited in trial | 160GB |
-| Docker support | ✅ Yes | ✅ Yes |
-| Redis support | Via add-ons | Via Upstash (free) |
-| Scaling | ✅ Paid | ✅ Free (3 VMs) |
-| Custom domain | ✅ Yes | ✅ Yes |
-| GitHub integration | ✅ Yes | ✅ Yes |
+| Feature              | Railway (Trial)      | Fly.io (Free)      |
+| -------------------- | -------------------- | ------------------ |
+| Free tier duration   | Trial only (~7 days) | Unlimited          |
+| Always-on            | ✅ Yes               | ✅ Yes             |
+| Cold starts          | None                 | None               |
+| RAM allocation       | Varies               | 256MB (free tier)  |
+| Monthly egress limit | Unlimited in trial   | 160GB              |
+| Docker support       | ✅ Yes               | ✅ Yes             |
+| Redis support        | Via add-ons          | Via Upstash (free) |
+| Scaling              | ✅ Paid              | ✅ Free (3 VMs)    |
+| Custom domain        | ✅ Yes               | ✅ Yes             |
+| GitHub integration   | ✅ Yes               | ✅ Yes             |
 
 ---
 
