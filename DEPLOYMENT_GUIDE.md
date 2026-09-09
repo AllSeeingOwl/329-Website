@@ -22,34 +22,37 @@ Before initiating the migration to Railway, verify and complete all requirements
 
 Gather all production secrets and configurations:
 
-| Variable Name | Description | Example / Recommended Value |
-| --- | --- | --- |
-| `NODE_ENV` | Mode for Express execution | `production` |
-| `PORT` | HTTP port assigned dynamically | Handled automatically by Railway (defaults to `3000`) |
-| `ADMIN_PASSWORD` | Password required for `/api/admin/authenticate` | *Strong random secret* |
-| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST API endpoint URL | `https://your-upstash-redis-url.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST auth token | `your_upstash_redis_rest_token_here` |
-| `KV_REST_API_URL` | Alias for Upstash Redis URL (backward compatibility) | Same as `UPSTASH_REDIS_REST_URL` |
-| `KV_REST_API_TOKEN` | Alias for Upstash Redis token (backward compatibility) | Same as `UPSTASH_REDIS_REST_TOKEN` |
-| `AUTH_PASSWORD` | Access gate password for ARG verification (`/api/verify`) | `0408-1998-XXXX` |
-| `MAINTENANCE_MODE` | Global maintenance flag (`true` / `false`) | `false` |
-| `STUDIO_MAINTENANCE_MODE` | Studio maintenance flag (`true` / `false`) | `false` |
-| `MLTK_MAINTENANCE_MODE` | MLTK/ARG maintenance flag (`true` / `false`) | `false` |
-| `EMERGENCY_LOCKDOWN` | Global emergency lockdown flag (`true` / `false`) | `false` |
-| `STOREFRONT_URL` | Storefront external link | `https://store.3minsto9.co.uk` |
+| Variable Name              | Description                                               | Example / Recommended Value                           |
+| -------------------------- | --------------------------------------------------------- | ----------------------------------------------------- |
+| `NODE_ENV`                 | Mode for Express execution                                | `production`                                          |
+| `PORT`                     | HTTP port assigned dynamically                            | Handled automatically by Railway (defaults to `3000`) |
+| `ADMIN_PASSWORD`           | Password required for `/api/admin/authenticate`           | _Strong random secret_                                |
+| `UPSTASH_REDIS_REST_URL`   | Upstash Redis REST API endpoint URL                       | `https://your-upstash-redis-url.upstash.io`           |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST auth token                             | `your_upstash_redis_rest_token_here`                  |
+| `KV_REST_API_URL`          | Alias for Upstash Redis URL (backward compatibility)      | Same as `UPSTASH_REDIS_REST_URL`                      |
+| `KV_REST_API_TOKEN`        | Alias for Upstash Redis token (backward compatibility)    | Same as `UPSTASH_REDIS_REST_TOKEN`                    |
+| `AUTH_PASSWORD`            | Access gate password for ARG verification (`/api/verify`) | `0408-1998-XXXX`                                      |
+| `MAINTENANCE_MODE`         | Global maintenance flag (`true` / `false`)                | `false`                                               |
+| `STUDIO_MAINTENANCE_MODE`  | Studio maintenance flag (`true` / `false`)                | `false`                                               |
+| `MLTK_MAINTENANCE_MODE`    | MLTK/ARG maintenance flag (`true` / `false`)              | `false`                                               |
+| `EMERGENCY_LOCKDOWN`       | Global emergency lockdown flag (`true` / `false`)         | `false`                                               |
+| `STOREFRONT_URL`           | Storefront external link                                  | `https://store.3minsto9.co.uk`                        |
 
 ### Local Testing Steps
 
 Validate the build and server execution locally before triggering a Railway build:
 
 1. **Clean Installation & Build**:
+
    ```bash
    pnpm install
    pnpm run build
    ```
-   *Verify that TypeScript compiles without errors (`tsc`) and Vite bundles assets into `dist/`.*
+
+   _Verify that TypeScript compiles without errors (`tsc`) and Vite bundles assets into `dist/`._
 
 2. **Run Production Server Locally**:
+
    ```bash
    NODE_ENV=production ADMIN_PASSWORD=test_admin_pass PORT=3000 node dist/server.js
    ```
@@ -120,6 +123,7 @@ Follow these step-by-step instructions to create and launch the project on Railw
 ### Deploying from Main Branch
 
 Railway automatically uses the project's repository configuration:
+
 - **Build Phase**: Railway runs the `build` script in `package.json`: `tsc && vite build && cp -r public/* dist/public/`.
 - **Start Phase**: Railway reads `Procfile` (`web: node dist/server.js`) and launches the Node process.
 
@@ -145,28 +149,35 @@ You can monitor the deployment status in the **Deployments** tab of your Railway
 Perform the following verification suite after Railway completes deployment to ensure everything is running smoothly.
 
 ### 1. Test Public Website
+
 - Visit your Railway public domain (e.g., `https://your-app.up.railway.app/`).
 - Verify the main homepage (`/public/index.html` / surface home page) loads correctly with CSS styles and scripts intact.
 - Verify ARG pages load correctly (e.g., `/secure-data-drop-page.html`).
 
 ### 2. Test Admin Login Endpoint
+
 Execute an HTTP request to verify the authentication endpoint:
+
 ```bash
 curl -i -X POST https://your-app.up.railway.app/api/admin/authenticate \
   -H "Content-Type: application/json" \
   -d '{"password": "YOUR_CONFIGURED_ADMIN_PASSWORD"}'
 ```
+
 **Expected Outcome**:
+
 - Status: `200 OK`
 - Header: `Set-Cookie: admin_session=...; HttpOnly; Secure; SameSite=Strict`
 - Response Body: `{"success": true, "message": "Authenticated"}`
 
 ### 3. Test Admin Dashboard
+
 1. Open browser navigation to `https://your-app.up.railway.app/admin/index.html`.
 2. Enter the admin password configured in `ADMIN_PASSWORD`.
 3. Confirm access to phase management, system configuration, email collections, and audit trail tabs.
 
 ### 4. Test Email Export
+
 1. Authenticate in the admin dashboard.
 2. Click **Export Emails CSV** or run:
    ```bash
@@ -176,6 +187,7 @@ curl -i -X POST https://your-app.up.railway.app/api/admin/authenticate \
 3. Confirm that a `collected_emails.csv` file downloads with HTTP header `Content-Type: text/csv`.
 
 ### 5. Check Redis Connection
+
 1. Access the maintenance endpoint via admin credentials:
    ```bash
    curl -s -H "X-Admin-Password: YOUR_CONFIGURED_ADMIN_PASSWORD" \
@@ -253,18 +265,22 @@ If critical issues arise during or after migration, follow these steps to revert
 ## 7. Troubleshooting Common Issues
 
 ### Issue 1: Server fails to start on Railway (`Error: EADDRINUSE` or Port Binding Failure)
+
 - **Cause**: Hardcoding port `3000` instead of respecting Railway's dynamic `process.env.PORT`.
 - **Solution**: Ensure `server.ts` uses `process.env.PORT || 3000` (already configured in codebase).
 
 ### Issue 2: Static assets / HTML pages return 404
+
 - **Cause**: Assets were not copied to the `dist/` directory during build.
 - **Solution**: Verify `package.json` contains `"build": "tsc && vite build && cp -r public/* dist/public/"`.
 
 ### Issue 3: Rate limiting triggers unexpectedly for all users
+
 - **Cause**: Express missing `app.set('trust proxy', 1)`, causing all requests behind Railway's reverse proxy to share the proxy's IP address.
 - **Solution**: Verify `trust proxy` setting is present in `server.ts`.
 
 ### Issue 4: Upstash Redis connection error or falling back to in-memory store
+
 - **Cause**: Missing or incorrectly named environment variables (`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_URL` / `KV_REST_API_TOKEN`).
 - **Solution**: Confirm environment variables are set correctly in Railway service settings and restart deployment.
 
