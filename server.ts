@@ -258,7 +258,57 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
-import adminRouter from './src/routes/admin';
+import adminRouter, { getConfigFromStore } from './src/routes/admin';
+
+// Maintenance Middleware
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  // Normalize path by stripping query strings and lowercasing encoded spaces if any
+  // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
+  let reqPath: string;
+  try {
+    reqPath = decodeURIComponent(req.path);
+  } catch {
+    res.status(400).json({ error: 'Bad Request: Malformed URI' });
+    return;
+  }
+
+  // Exempt admin routes from maintenance mode so admins can always configure or login
+  if (reqPath.startsWith('/api/admin')) {
+    next();
+    return;
+  }
+
+  try {
+    const sysConfig = await getConfigFromStore();
+    if (sysConfig.maintenanceMode || !sysConfig.publicSiteEnabled) {
+      res.status(503).sendFile(MAINTENANCE_PATH);
+      return;
+    }
+  } catch (err) {
+    console.error('Error fetching system configuration in maintenance middleware:', err);
+  }
+
+  // Global Maintenance Mode applies to everything except static assets if we want,
+  // but originally it was fully blocking everything. Keeping the original behavior:
+  if (MAINTENANCE_MODE) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  // Check specific maintenance modes for HTML pages.
+  // We only block specific paths to allow CSS/JS to pass through freely.
+  if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  next();
+});
 
 app.use('/api/admin', adminRouter);
 
