@@ -91,24 +91,27 @@ The project is deployed and hosted on **Vercel**, accessible via the custom doma
 The application is configured for seamless deployment on **Railway.app** using standard Node.js buildpacks.
 
 #### Key Deployment Files
+
 - **`Procfile`**: Specifies the process command (`web: node dist/server.js`).
 - **`package.json`**: Includes the `build` script (`tsc && vite build && cp -r public/* dist/public/`) to compile TypeScript and bundle frontend assets into `dist/`.
 - **`.railwayignore`**: Excludes test scripts, documentation, and local configuration files from build contexts.
 - **`vercel.json`**: Maintained for Vercel deployment compatibility; ignored by Railway.
 
 #### Required Environment Variables
+
 Configure the following environment variables in the Railway project settings under **Variables**:
 
-| Variable | Description | Default / Example |
-|---|---|---|
-| `NODE_ENV` | Environment mode | `production` |
-| `PORT` | Dynamic HTTP port | Managed by Railway (defaults to 3000) |
-| `ADMIN_PASSWORD` | Password for admin portal access (`/api/admin`) | Secure random string |
-| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | Upstash Redis REST URL | `https://your-redis-instance.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | Upstash Redis REST Auth Token | `your_upstash_token_here` |
-| `AUTH_PASSWORD` | Optional ARG gate access verification code | `0408-1998-XXXX` |
+| Variable                                          | Description                                     | Default / Example                        |
+| ------------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
+| `NODE_ENV`                                        | Environment mode                                | `production`                             |
+| `PORT`                                            | Dynamic HTTP port                               | Managed by Railway (defaults to 3000)    |
+| `ADMIN_PASSWORD`                                  | Password for admin portal access (`/api/admin`) | Secure random string                     |
+| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL`     | Upstash Redis REST URL                          | `https://your-redis-instance.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | Upstash Redis REST Auth Token                   | `your_upstash_token_here`                |
+| `AUTH_PASSWORD`                                   | Optional ARG gate access verification code      | `0408-1998-XXXX`                         |
 
 #### Step-by-Step Railway Deployment Instructions
+
 1. **Push Changes**: Ensure your latest changes containing `Procfile`, `package.json`, and `.railwayignore` are pushed to your GitHub repository.
 2. **Create New Project on Railway**:
    - Log in to [Railway.app](https://railway.app/).
