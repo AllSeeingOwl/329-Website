@@ -258,6 +258,9 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
+import adminRouter from './src/routes/admin';
+
+app.use('/api/admin', adminRouter);
 
 app.post('/api/admin/verify', handleAdminLogin);
 
