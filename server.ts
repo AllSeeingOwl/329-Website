@@ -257,63 +257,12 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
   });
 });
 
-// Admin Configuration Auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
-const adminAuthBuffer = Buffer.from(ADMIN_PASSWORD);
-// Simple token generation for demo purposes, since this is a basic project
-const generateAdminToken = () => crypto.randomBytes(16).toString('hex');
-let activeAdminToken: string | null = null;
+import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
 
-app.post('/api/admin/verify', (req: Request, res: Response) => {
-  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
-    console.warn('WARNING: ADMIN_PASSWORD should be set in production. Using insecure fallback.');
-  }
-
-  const { password } = req.body;
-  if (typeof password === 'string') {
-    const pwdBuffer = Buffer.from(password);
-    if (
-      pwdBuffer.length === adminAuthBuffer.length &&
-      crypto.timingSafeEqual(new Uint8Array(pwdBuffer), new Uint8Array(adminAuthBuffer as Buffer))
-    ) {
-      activeAdminToken = generateAdminToken();
-      res.json({ success: true, token: activeAdminToken });
-      return;
-    }
-  }
-  res.status(401).json({ success: false, error: 'Unauthorized' });
-});
-
-const verifyAdminToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-
-    if (activeAdminToken !== null) {
-      const tokenBuffer = Buffer.from(token);
-      const activeTokenBuffer = Buffer.from(activeAdminToken);
-
-      if (tokenBuffer.length === activeTokenBuffer.length) {
-        if (
-          crypto.timingSafeEqual(new Uint8Array(tokenBuffer), new Uint8Array(activeTokenBuffer))
-        ) {
-          next();
-          return;
-        }
-      } else {
-        // 🛡️ Sentinel: Prevent token length leakage via timing attacks by performing a dummy comparison.
-        crypto.timingSafeEqual(
-          new Uint8Array(activeTokenBuffer),
-          new Uint8Array(activeTokenBuffer)
-        );
-      }
-    }
-  }
-  res.status(401).json({ error: 'Unauthorized' });
-};
+app.post('/api/admin/verify', handleAdminLogin);
 
 // Admin API routes
-app.get('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
+app.get('/api/admin/dashboard-config', adminAuth, async (req: Request, res: Response) => {
   try {
     const config = await getDashboardConfig();
     res.json(config);
@@ -322,7 +271,7 @@ app.get('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, re
   }
 });
 
-app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, res: Response) => {
+app.post('/api/admin/dashboard-config', adminAuth, async (req: Request, res: Response) => {
   const { id, status } = req.body;
   try {
     await updateDashboardConfig(id, status);
@@ -332,21 +281,17 @@ app.post('/api/admin/dashboard-config', verifyAdminToken, async (req: Request, r
   }
 });
 
-app.post(
-  '/api/admin/dashboard-config/all',
-  verifyAdminToken,
-  async (req: Request, res: Response) => {
-    const { status } = req.body;
-    try {
-      await updateAllDashboardConfig(status);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: 'Failed to update all dashboard configs' });
-    }
+app.post('/api/admin/dashboard-config/all', adminAuth, async (req: Request, res: Response) => {
+  const { status } = req.body;
+  try {
+    await updateAllDashboardConfig(status);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all dashboard configs' });
   }
-);
+});
 
-app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+app.get('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
   try {
     const config = await getMaintenanceConfig();
     res.json(config);
@@ -355,7 +300,7 @@ app.get('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, 
   }
 });
 
-app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request, res: Response) => {
+app.post('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
   const { key, value } = req.body;
   try {
     await updateMaintenanceConfig(key, value);
@@ -368,19 +313,15 @@ app.post('/api/admin/maintenance-config', verifyAdminToken, async (req: Request,
   }
 });
 
-app.post(
-  '/api/admin/maintenance-config/all',
-  verifyAdminToken,
-  async (req: Request, res: Response) => {
-    const { value } = req.body;
-    try {
-      await updateAllMaintenanceConfig(value);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: 'Failed to update all maintenance configs' });
-    }
+app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, res: Response) => {
+  const { value } = req.body;
+  try {
+    await updateAllMaintenanceConfig(value);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all maintenance configs' });
   }
-);
+});
 
 app.post('/api/emails/collect', async (req: Request, res: Response) => {
   const { email, source } = req.body;
@@ -397,7 +338,7 @@ app.post('/api/emails/collect', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/api/admin/emails/export', verifyAdminToken, async (req: Request, res: Response) => {
+app.get('/api/admin/emails/export', adminAuth, async (req: Request, res: Response) => {
   try {
     const emails = await getAllEmails();
 
@@ -437,7 +378,7 @@ app.get('/api/phases', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/api/admin/phases', verifyAdminToken, async (req: Request, res: Response) => {
+app.get('/api/admin/phases', adminAuth, async (req: Request, res: Response) => {
   try {
     const activePhaseId = await getActivePhase();
     res.json({
@@ -449,7 +390,7 @@ app.get('/api/admin/phases', verifyAdminToken, async (req: Request, res: Respons
   }
 });
 
-app.post('/api/admin/phases/set', verifyAdminToken, async (req: Request, res: Response) => {
+app.post('/api/admin/phases/set', adminAuth, async (req: Request, res: Response) => {
   const { phaseId } = req.body;
   if (!phaseId) {
     res.status(400).json({ error: 'phaseId is required' });
