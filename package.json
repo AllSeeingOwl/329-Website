@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "build": "tsc && vite build && cp -r public/* dist/public/",
     "build:vite": "vite build",
     "prepare": "husky",
     "maintenance:toggle": "./scripts/toggle_vercel_env.sh"
