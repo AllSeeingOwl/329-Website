@@ -37,6 +37,26 @@ export interface DeactivatePhaseRequestBody {
   adminUser?: string;
 }
 
+export interface SystemConfig {
+  maintenanceMode: boolean;
+  publicSiteEnabled: boolean;
+  adminPanelEnabled: boolean;
+  allowEmailCollection: boolean;
+  emailNotificationEnabled: boolean;
+  maxConcurrentSessions: number;
+  sessionTimeout: number; // minutes
+}
+
+export const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
+  maintenanceMode: false,
+  publicSiteEnabled: true,
+  adminPanelEnabled: true,
+  allowEmailCollection: true,
+  emailNotificationEnabled: true,
+  maxConcurrentSessions: 10,
+  sessionTimeout: 15,
+};
+
 export const DEFAULT_PHASES: Phase[] = [
   {
     id: 'phase-1-zine-launch',
@@ -105,11 +125,44 @@ let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   relatedContent: [...p.relatedContent],
 }));
 
+let inMemoryConfigStore: SystemConfig = { ...DEFAULT_SYSTEM_CONFIG };
+
 export const resetInMemPhases = (): void => {
   inMemoryPhasesStore = DEFAULT_PHASES.map((p) => ({
     ...p,
     relatedContent: [...p.relatedContent],
   }));
+};
+
+export const resetInMemConfig = (): void => {
+  inMemoryConfigStore = { ...DEFAULT_SYSTEM_CONFIG };
+};
+
+export const getConfigFromStore = async (): Promise<SystemConfig> => {
+  if (isRedisAvailable()) {
+    try {
+      const stored = await redis.get<SystemConfig | string>('config:system');
+      if (stored) {
+        const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
+        inMemoryConfigStore = { ...DEFAULT_SYSTEM_CONFIG, ...parsed };
+        return inMemoryConfigStore;
+      }
+    } catch (err) {
+      console.error('Failed to fetch system config from Redis:', err);
+    }
+  }
+  return inMemoryConfigStore;
+};
+
+export const saveConfigToStore = async (config: SystemConfig): Promise<void> => {
+  inMemoryConfigStore = { ...config };
+  if (isRedisAvailable()) {
+    try {
+      await redis.set('config:system', JSON.stringify(config));
+    } catch (err) {
+      console.error('Failed to save system config to Redis:', err);
+    }
+  }
 };
 
 export const getPhasesFromStore = async (): Promise<Phase[]> => {
@@ -694,5 +747,180 @@ router.get('/emails/stats', adminAuth, async (_req: Request, res: Response): Pro
     res.status(500).json({ success: false, message: 'Failed to calculate email stats' });
   }
 });
+
+/**
+ * Validate SystemConfig object for PUT updates.
+ */
+export const validateSystemConfig = (body: unknown): { isValid: boolean; error?: string } => {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return { isValid: false, error: 'Configuration must be an object' };
+  }
+
+  const reqObj = body as Record<string, unknown>;
+  const requiredBooleanKeys: (keyof SystemConfig)[] = [
+    'maintenanceMode',
+    'publicSiteEnabled',
+    'adminPanelEnabled',
+    'allowEmailCollection',
+    'emailNotificationEnabled',
+  ];
+
+  for (const key of requiredBooleanKeys) {
+    if (typeof reqObj[key] !== 'boolean') {
+      return { isValid: false, error: `'${key}' must be a boolean` };
+    }
+  }
+
+  if (
+    typeof reqObj.maxConcurrentSessions !== 'number' ||
+    !Number.isInteger(reqObj.maxConcurrentSessions) ||
+    reqObj.maxConcurrentSessions <= 0
+  ) {
+    return {
+      isValid: false,
+      error: "'maxConcurrentSessions' must be a positive integer",
+    };
+  }
+
+  if (
+    typeof reqObj.sessionTimeout !== 'number' ||
+    !Number.isInteger(reqObj.sessionTimeout) ||
+    reqObj.sessionTimeout <= 0
+  ) {
+    return {
+      isValid: false,
+      error: "'sessionTimeout' must be a positive integer (minutes)",
+    };
+  }
+
+  return { isValid: true };
+};
+
+/**
+ * GET /api/admin/config
+ * Returns current sanitized system configuration.
+ */
+router.get('/config', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const config = await getConfigFromStore();
+    res.json({
+      success: true,
+      config,
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/config:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch system config' });
+  }
+});
+
+/**
+ * PUT /api/admin/config
+ * Updates system configuration (requires full valid config object).
+ */
+router.put('/config', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const validation = validateSystemConfig(req.body);
+    if (!validation.isValid) {
+      res.status(400).json({
+        success: false,
+        message: `Invalid configuration: ${validation.error}`,
+      });
+      return;
+    }
+
+    const newConfig: SystemConfig = {
+      maintenanceMode: req.body.maintenanceMode,
+      publicSiteEnabled: req.body.publicSiteEnabled,
+      adminPanelEnabled: req.body.adminPanelEnabled,
+      allowEmailCollection: req.body.allowEmailCollection,
+      emailNotificationEnabled: req.body.emailNotificationEnabled,
+      maxConcurrentSessions: req.body.maxConcurrentSessions,
+      sessionTimeout: req.body.sessionTimeout,
+    };
+
+    const adminUser =
+      (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
+      (req.headers['x-admin-user'] as string) ||
+      'admin';
+
+    await saveConfigToStore(newConfig);
+    await logPhaseChange(adminUser, 'UPDATE_SYSTEM_CONFIG', 'system_config', { config: newConfig });
+
+    res.json({
+      success: true,
+      message: 'System configuration updated successfully',
+      config: newConfig,
+    });
+  } catch (error) {
+    console.error('Error in PUT /api/admin/config:', error);
+    res.status(500).json({ success: false, message: 'Failed to update system config' });
+  }
+});
+
+/**
+ * GET /api/admin/maintenance
+ * Returns system health status and maintenance mode status.
+ */
+router.get('/maintenance', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const config = await getConfigFromStore();
+    const redisStatus = isRedisAvailable() ? 'connected' : 'fallback (in-memory)';
+
+    res.json({
+      success: true,
+      status: 'healthy',
+      maintenanceMode: config.maintenanceMode,
+      publicSiteEnabled: config.publicSiteEnabled,
+      adminPanelEnabled: config.adminPanelEnabled,
+      storageBackend: redisStatus,
+      uptimeSeconds: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/maintenance:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch maintenance health status' });
+  }
+});
+
+/**
+ * POST /api/admin/maintenance/toggle
+ * Enable or disable maintenance mode.
+ */
+router.post(
+  '/maintenance/toggle',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const currentConfig = await getConfigFromStore();
+      const nextState =
+        typeof req.body?.enabled === 'boolean' ? req.body.enabled : !currentConfig.maintenanceMode;
+
+      const updatedConfig: SystemConfig = {
+        ...currentConfig,
+        maintenanceMode: nextState,
+      };
+
+      const adminUser =
+        (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
+        (req.headers['x-admin-user'] as string) ||
+        'admin';
+
+      await saveConfigToStore(updatedConfig);
+      await logPhaseChange(adminUser, 'TOGGLE_MAINTENANCE', 'system_config', {
+        maintenanceMode: nextState,
+      });
+
+      res.json({
+        success: true,
+        message: `Maintenance mode ${nextState ? 'enabled' : 'disabled'} successfully`,
+        maintenanceMode: nextState,
+        config: updatedConfig,
+      });
+    } catch (error) {
+      console.error('Error in POST /api/admin/maintenance/toggle:', error);
+      res.status(500).json({ success: false, message: 'Failed to toggle maintenance mode' });
+    }
+  }
+);
 
 export default router;
