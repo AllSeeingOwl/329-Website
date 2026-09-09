@@ -34,6 +34,14 @@ describe('Server Tests', () => {
     console.error = originalConsoleError;
   });
 
+  it('should return status ok on /health endpoint', async () => {
+    app = require('./server');
+
+    const response = await request(app).get('/health').expect(200);
+
+    expect(response.body).toEqual({ status: 'ok' });
+  });
+
   it('should return { success: true } when provided with correct AUTH_PASSWORD', async () => {
     // Set up environment with AUTH_PASSWORD
     process.env.AUTH_PASSWORD = 'test_password_123';
