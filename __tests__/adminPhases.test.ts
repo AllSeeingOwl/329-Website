@@ -59,9 +59,7 @@ describe('Admin Phase & Tier Management API Endpoints', () => {
     });
 
     it('returns 401 Unauthorized for DELETE /api/admin/phases/:phaseId/deactivate without auth header', async () => {
-      const response = await request(app).delete(
-        '/api/admin/phases/phase-1-5-email-1/deactivate'
-      );
+      const response = await request(app).delete('/api/admin/phases/phase-1-5-email-1/deactivate');
       (expect as any)(response.status).toBe(401);
     });
   });
@@ -104,9 +102,7 @@ describe('Admin Phase & Tier Management API Endpoints', () => {
       const getRes = await request(app)
         .get('/api/admin/phases')
         .set('Authorization', `Bearer ${authToken}`);
-      const activated = getRes.body.phases.find(
-        (p: any) => p.id === 'phase-1-5-email-1'
-      );
+      const activated = getRes.body.phases.find((p: any) => p.id === 'phase-1-5-email-1');
       (expect as any)(activated.active).toBe(true);
     });
 
@@ -195,9 +191,7 @@ describe('Admin Phase & Tier Management API Endpoints', () => {
       const getRes = await request(app)
         .get('/api/admin/phases')
         .set('Authorization', `Bearer ${authToken}`);
-      const deactivated = getRes.body.phases.find(
-        (p: any) => p.id === 'phase-1-zine-launch'
-      );
+      const deactivated = getRes.body.phases.find((p: any) => p.id === 'phase-1-zine-launch');
       (expect as any)(deactivated.active).toBe(false);
     });
 

@@ -152,7 +152,10 @@ export const logPhaseChange = async (
     phaseId,
     details,
   };
-  console.log(`[AUDIT TRAIL] [${timestamp}] Admin '${adminUser}' ${action} on phase '${phaseId}'`, details);
+  console.log(
+    `[AUDIT TRAIL] [${timestamp}] Admin '${adminUser}' ${action} on phase '${phaseId}'`,
+    details
+  );
 
   if (isRedisAvailable()) {
     try {
@@ -405,8 +408,8 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
     const phaseIdParam = Array.isArray(req.params.phaseId)
       ? req.params.phaseId[0]
       : req.params.phaseId;
-    const { name, tier, active, relatedContent, lastModifiedBy, adminUser } =
-      (req.body || {}) as UpdatePhaseRequestBody;
+    const { name, tier, active, relatedContent, lastModifiedBy, adminUser } = (req.body ||
+      {}) as UpdatePhaseRequestBody;
 
     const phases = await getPhasesFromStore();
     const targetIndex = phases.findIndex((p) => p.id === phaseIdParam);
@@ -446,8 +449,7 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
 
     if (
       relatedContent !== undefined &&
-      (!Array.isArray(relatedContent) ||
-        !relatedContent.every((item) => typeof item === 'string'))
+      (!Array.isArray(relatedContent) || !relatedContent.every((item) => typeof item === 'string'))
     ) {
       res.status(400).json({
         success: false,
@@ -477,8 +479,7 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
       name: name !== undefined ? name.trim() : currentPhase.name,
       tier: tier !== undefined ? tier : currentPhase.tier,
       active: active !== undefined ? active : currentPhase.active,
-      relatedContent:
-        relatedContent !== undefined ? relatedContent : currentPhase.relatedContent,
+      relatedContent: relatedContent !== undefined ? relatedContent : currentPhase.relatedContent,
       activatedAt: newActivatedAt,
       lastModifiedBy: user,
     };
@@ -523,8 +524,7 @@ router.delete(
         return;
       }
 
-      const user =
-        typeof adminUser === 'string' && adminUser.trim() ? adminUser.trim() : 'admin';
+      const user = typeof adminUser === 'string' && adminUser.trim() ? adminUser.trim() : 'admin';
 
       phases[targetIndex] = {
         ...phases[targetIndex],
