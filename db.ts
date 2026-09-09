@@ -297,13 +297,18 @@ export interface CapturedEmail {
   email: string;
   source: string;
   timestamp: string;
+  status?: 'pending' | 'verified' | 'bounced';
 }
 
-const inMemoryEmails: CapturedEmail[] = [];
+let inMemoryEmails: CapturedEmail[] = [];
 
-export async function saveEmail(email: string, source: string) {
+export async function saveEmail(
+  email: string,
+  source: string,
+  status: 'pending' | 'verified' | 'bounced' = 'pending'
+) {
   const timestamp = new Date().toISOString();
-  const record: CapturedEmail = { email, source, timestamp };
+  const record: CapturedEmail = { email, source, timestamp, status };
 
   if (isKvAvailable) {
     await kv.lpush('emails:captured', JSON.stringify(record));
@@ -315,9 +320,25 @@ export async function saveEmail(email: string, source: string) {
 export async function getAllEmails(): Promise<CapturedEmail[]> {
   if (isKvAvailable) {
     const emails = await kv.lrange('emails:captured', 0, -1);
-    return emails.map((e) => (typeof e === 'string' ? JSON.parse(e) : e)) as CapturedEmail[];
+    return emails.map((e) => {
+      const parsed = typeof e === 'string' ? JSON.parse(e) : e;
+      return {
+        ...parsed,
+        status: parsed.status || 'pending',
+      };
+    }) as CapturedEmail[];
   }
-  return inMemoryEmails;
+  return inMemoryEmails.map((e) => ({
+    ...e,
+    status: e.status || 'pending',
+  }));
+}
+
+export async function clearAllEmails(): Promise<void> {
+  if (isKvAvailable) {
+    await kv.del('emails:captured');
+  }
+  inMemoryEmails = [];
 }
 
 export async function updateAllDashboardConfig(status: string) {
