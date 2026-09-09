@@ -12,7 +12,6 @@ import {
   updateAllDashboardConfig,
   updateAllMaintenanceConfig,
   saveEmail,
-  getAllEmails,
   getActivePhase,
   setActivePhase,
   MLTK_PHASES,
