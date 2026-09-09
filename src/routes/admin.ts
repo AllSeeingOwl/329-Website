@@ -886,39 +886,41 @@ router.get('/maintenance', adminAuth, async (_req: Request, res: Response): Prom
  * POST /api/admin/maintenance/toggle
  * Enable or disable maintenance mode.
  */
-router.post('/maintenance/toggle', adminAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const currentConfig = await getConfigFromStore();
-    const nextState =
-      typeof req.body?.enabled === 'boolean'
-        ? req.body.enabled
-        : !currentConfig.maintenanceMode;
+router.post(
+  '/maintenance/toggle',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const currentConfig = await getConfigFromStore();
+      const nextState =
+        typeof req.body?.enabled === 'boolean' ? req.body.enabled : !currentConfig.maintenanceMode;
 
-    const updatedConfig: SystemConfig = {
-      ...currentConfig,
-      maintenanceMode: nextState,
-    };
+      const updatedConfig: SystemConfig = {
+        ...currentConfig,
+        maintenanceMode: nextState,
+      };
 
-    const adminUser =
-      (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
-      (req.headers['x-admin-user'] as string) ||
-      'admin';
+      const adminUser =
+        (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
+        (req.headers['x-admin-user'] as string) ||
+        'admin';
 
-    await saveConfigToStore(updatedConfig);
-    await logPhaseChange(adminUser, 'TOGGLE_MAINTENANCE', 'system_config', {
-      maintenanceMode: nextState,
-    });
+      await saveConfigToStore(updatedConfig);
+      await logPhaseChange(adminUser, 'TOGGLE_MAINTENANCE', 'system_config', {
+        maintenanceMode: nextState,
+      });
 
-    res.json({
-      success: true,
-      message: `Maintenance mode ${nextState ? 'enabled' : 'disabled'} successfully`,
-      maintenanceMode: nextState,
-      config: updatedConfig,
-    });
-  } catch (error) {
-    console.error('Error in POST /api/admin/maintenance/toggle:', error);
-    res.status(500).json({ success: false, message: 'Failed to toggle maintenance mode' });
+      res.json({
+        success: true,
+        message: `Maintenance mode ${nextState ? 'enabled' : 'disabled'} successfully`,
+        maintenanceMode: nextState,
+        config: updatedConfig,
+      });
+    } catch (error) {
+      console.error('Error in POST /api/admin/maintenance/toggle:', error);
+      res.status(500).json({ success: false, message: 'Failed to toggle maintenance mode' });
+    }
   }
-});
+);
 
 export default router;
