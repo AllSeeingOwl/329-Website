@@ -302,7 +302,11 @@ export interface CapturedEmail {
 
 let inMemoryEmails: CapturedEmail[] = [];
 
-export async function saveEmail(email: string, source: string, status: 'pending' | 'verified' | 'bounced' = 'pending') {
+export async function saveEmail(
+  email: string,
+  source: string,
+  status: 'pending' | 'verified' | 'bounced' = 'pending'
+) {
   const timestamp = new Date().toISOString();
   const record: CapturedEmail = { email, source, timestamp, status };
 

@@ -37,9 +37,7 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
     });
 
     it('should return empty list when no emails exist', async () => {
-      const res = await request(app)
-        .get('/api/admin/emails')
-        .set('Cookie', sessionCookie);
+      const res = await request(app).get('/api/admin/emails').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
@@ -51,9 +49,7 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
       await saveEmail('user1@example.com', 'studio_newsletter', 'verified');
       await saveEmail('user2@example.com', 'mltk_access', 'pending');
 
-      const res = await request(app)
-        .get('/api/admin/emails')
-        .set('Cookie', sessionCookie);
+      const res = await request(app).get('/api/admin/emails').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
@@ -80,13 +76,13 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
     it('should export CSV with headers: Email, Collected At, Source Phase, Status', async () => {
       await saveEmail('csv_user@example.com', 'test_source', 'verified');
 
-      const res = await request(app)
-        .get('/api/admin/emails/export')
-        .set('Cookie', sessionCookie);
+      const res = await request(app).get('/api/admin/emails/export').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.headers['content-type']).toContain('text/csv');
-      (expect as any)(res.headers['content-disposition']).toContain('attachment; filename="collected_emails.csv"');
+      (expect as any)(res.headers['content-disposition']).toContain(
+        'attachment; filename="collected_emails.csv"'
+      );
 
       const csvLines = res.text.trim().split('\n');
       (expect as any)(csvLines[0]).toBe('"Email","Collected At","Source Phase","Status"');
@@ -105,9 +101,7 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
     it('should reject clear request without confirmation parameter', async () => {
       await saveEmail('toclear@example.com', 'studio_newsletter');
 
-      const res = await request(app)
-        .post('/api/admin/emails/clear')
-        .set('Cookie', sessionCookie);
+      const res = await request(app).post('/api/admin/emails/clear').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(400);
       (expect as any)(res.body.success).toBe(false);
@@ -162,9 +156,7 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
       await saveEmail('stat2@example.com', 'studio_newsletter', 'pending');
       await saveEmail('stat3@example.com', 'mltk_access', 'bounced');
 
-      const res = await request(app)
-        .get('/api/admin/emails/stats')
-        .set('Cookie', sessionCookie);
+      const res = await request(app).get('/api/admin/emails/stats').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
