@@ -10,16 +10,15 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies required for build)
-# Use --no-frozen-lockfile and --ignore-scripts to skip problematic build scripts
-# We'll allow them selectively after
+# Skip scripts initially to avoid build failures
 RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
 # Copy application source code
 COPY . .
 
-# Approve builds for the packages that need them
-# This allows @parcel/watcher, cypress, and unrs-resolver to run their build scripts
-RUN pnpm install --recursive --filter root --build-from-source
+# Now rebuild to allow native modules to compile
+# This runs the build scripts that were skipped above
+RUN pnpm install --no-save
 
 # Build TypeScript and Vite frontend assets
 # Note: The script is "build:vite" in package.json, not "build"
