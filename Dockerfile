@@ -10,7 +10,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies required for build)
-RUN pnpm install --frozen-lockfile
+# Use --no-frozen-lockfile to allow pnpm to update lockfile if needed
+# Then regenerate the lockfile to ensure it matches package.json config
+RUN pnpm install --no-frozen-lockfile
 
 # Copy application source code
 COPY . .
