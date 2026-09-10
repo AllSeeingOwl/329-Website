@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for 329-website on 2026-09-09T22:40:38Z
+# fly.toml app configuration file generated for 329-website on 2026-09-10T02:00:48Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = '329-website'
-primary_region = 'ams'
+primary_region = 'lhr'
 
 [build]
 
@@ -13,7 +13,7 @@ primary_region = 'ams'
   PORT = '3000'
 
 [http_service]
-  internal_port = 8080
+  internal_port = 3000
   force_https = true
   auto_stop_machines = 'off'
   auto_start_machines = true
