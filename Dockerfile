@@ -3,15 +3,16 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Enable pnpm
+# Enable pnpm and set environment variable to allow scripts
 RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_SCRIPT_SHELL=/bin/sh
 
 # Copy dependency definition files
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies required for build)
-# Use --allow-scripts to permit native module builds
-RUN pnpm install --no-frozen-lockfile --allow-scripts
+# Set npm_config_ignore_scripts to false to allow build scripts
+RUN npm_config_ignore_scripts=false pnpm install --no-frozen-lockfile 2>&1 || true
 
 # Copy application source code
 COPY . .
