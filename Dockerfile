@@ -10,15 +10,10 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies required for build)
-# Skip scripts initially to avoid build failures
-RUN pnpm install --no-frozen-lockfile --ignore-scripts
+RUN pnpm install --no-frozen-lockfile
 
 # Copy application source code
 COPY . .
-
-# Now rebuild to allow native modules to compile
-# This runs the build scripts that were skipped above
-RUN pnpm install --no-save
 
 # Build TypeScript and Vite frontend assets
 # Note: The script is "build:vite" in package.json, not "build"
