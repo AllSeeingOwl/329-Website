@@ -3,26 +3,24 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Enable pnpm and set environment variable to allow scripts
+# Enable pnpm and set environment variable
 RUN corepack enable && corepack prepare pnpm@latest --activate
 ENV PNPM_SCRIPT_SHELL=/bin/sh
 
 # Copy dependency definition files
 COPY package.json pnpm-lock.yaml ./
 
-# Install all dependencies (including devDependencies required for build)
-# Set npm_config_ignore_scripts to false to allow build scripts
-RUN npm_config_ignore_scripts=false pnpm install --no-frozen-lockfile 2>&1 || true
+# Install all dependencies (including devDependencies required for build), ignoring scripts like husky
+RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
 # Copy application source code
 COPY . .
 
-# Build TypeScript and Vite frontend assets
-# Note: The script is "build:vite" in package.json, not "build"
-RUN pnpm run build:vite
+# Build TypeScript server code and Vite frontend assets into dist/
+RUN pnpm run build
 
-# Prune dev dependencies for production image optimization
-RUN pnpm prune --prod
+# Prune dev dependencies for production image optimization, ignoring scripts
+RUN pnpm prune --prod --ignore-scripts
 
 # Stage 2: Production runner stage
 FROM node:20-alpine AS runner
