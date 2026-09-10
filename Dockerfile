@@ -18,7 +18,8 @@ RUN pnpm install --no-frozen-lockfile
 COPY . .
 
 # Build TypeScript and Vite frontend assets
-RUN pnpm run build
+# Note: The script is "build:vite" in package.json, not "build"
+RUN pnpm run build:vite
 
 # Prune dev dependencies for production image optimization
 RUN pnpm prune --prod
