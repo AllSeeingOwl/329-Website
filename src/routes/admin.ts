@@ -9,7 +9,7 @@ import { getAllEmails, clearAllEmails } from '../../db';
 
 const router = Router();
 
-export interface Phase {
+interface Phase {
   id: string;
   name: string;
   tier: number;
@@ -19,12 +19,12 @@ export interface Phase {
   lastModifiedBy?: string;
 }
 
-export interface ActivatePhaseRequestBody {
+interface ActivatePhaseRequestBody {
   phaseId?: string;
   adminUser?: string;
 }
 
-export interface UpdatePhaseRequestBody {
+interface UpdatePhaseRequestBody {
   name?: string;
   tier?: number;
   active?: boolean;
@@ -33,7 +33,7 @@ export interface UpdatePhaseRequestBody {
   adminUser?: string;
 }
 
-export interface DeactivatePhaseRequestBody {
+interface DeactivatePhaseRequestBody {
   adminUser?: string;
 }
 
@@ -47,7 +47,7 @@ export interface SystemConfig {
   sessionTimeout: number; // minutes
 }
 
-export const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
+const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
   maintenanceMode: false,
   publicSiteEnabled: true,
   adminPanelEnabled: true,
@@ -57,7 +57,7 @@ export const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
   sessionTimeout: 15,
 };
 
-export const DEFAULT_PHASES: Phase[] = [
+const DEFAULT_PHASES: Phase[] = [
   {
     id: 'phase-1-zine-launch',
     name: 'Phase 1: Zine Launch',
@@ -161,7 +161,7 @@ export const getConfigFromStore = async (): Promise<SystemConfig> => {
   return inMemoryConfigStore;
 };
 
-export const saveConfigToStore = async (config: SystemConfig): Promise<void> => {
+const saveConfigToStore = async (config: SystemConfig): Promise<void> => {
   inMemoryConfigStore = { ...config };
   if (isRedisAvailable()) {
     try {
@@ -172,7 +172,7 @@ export const saveConfigToStore = async (config: SystemConfig): Promise<void> => 
   }
 };
 
-export const getPhasesFromStore = async (): Promise<Phase[]> => {
+const getPhasesFromStore = async (): Promise<Phase[]> => {
   if (isRedisAvailable()) {
     try {
       const stored = await redis.get<Phase[] | string>('config:phases');
@@ -188,7 +188,7 @@ export const getPhasesFromStore = async (): Promise<Phase[]> => {
   return inMemoryPhasesStore;
 };
 
-export const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
+const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
   inMemoryPhasesStore = phases;
   if (isRedisAvailable()) {
     try {
@@ -199,7 +199,7 @@ export const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
   }
 };
 
-export const logPhaseChange = async (
+const logPhaseChange = async (
   adminUser: string,
   action: string,
   targetId: string,
@@ -237,21 +237,21 @@ export const logPhaseChange = async (
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_FAILED_ATTEMPTS = 5;
 
-export interface AuthRequestBody {
+interface AuthRequestBody {
   password?: string;
 }
 
-export interface AuthSuccessResponse {
+interface AuthSuccessResponse {
   success: true;
   message: string;
 }
 
-export interface AuthErrorResponse {
+interface AuthErrorResponse {
   success: false;
   message: string;
 }
 
-export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
+type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
 
 interface FailedAttemptRecord {
   count: number;
@@ -271,7 +271,7 @@ const getClientIp = (req: Request): string => {
 /**
  * Checks if the IP is currently rate-limited due to excessive failed attempts.
  */
-export const isRateLimited = (ip: string, now: number = Date.now()): boolean => {
+const isRateLimited = (ip: string, now: number = Date.now()): boolean => {
   const record = failedAttemptsMap.get(ip);
   if (!record) return false;
 
@@ -287,7 +287,7 @@ export const isRateLimited = (ip: string, now: number = Date.now()): boolean => 
 /**
  * Records a failed authentication attempt for an IP.
  */
-export const recordFailedAttempt = (ip: string, now: number = Date.now()): void => {
+const recordFailedAttempt = (ip: string, now: number = Date.now()): void => {
   // Evict oldest entry if map exceeds safe size (e.g., 1000 IPs) to prevent memory leak
   if (failedAttemptsMap.size >= 1000 && !failedAttemptsMap.has(ip)) {
     const oldestKey = failedAttemptsMap.keys().next().value;
@@ -312,7 +312,7 @@ export const recordFailedAttempt = (ip: string, now: number = Date.now()): void 
 /**
  * Clears failed attempts on successful authentication.
  */
-export const clearFailedAttempts = (ip: string): void => {
+const clearFailedAttempts = (ip: string): void => {
   failedAttemptsMap.delete(ip);
 };
 
@@ -764,7 +764,7 @@ router.get('/emails/stats', adminAuth, async (_req: Request, res: Response): Pro
 /**
  * Validate SystemConfig object for PUT updates.
  */
-export const validateSystemConfig = (body: unknown): { isValid: boolean; error?: string } => {
+const validateSystemConfig = (body: unknown): { isValid: boolean; error?: string } => {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return { isValid: false, error: 'Configuration must be an object' };
   }
