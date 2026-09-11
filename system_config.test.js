@@ -10,9 +10,9 @@ describe('System Configuration & Maintenance Endpoints Tests', () => {
     jest.resetModules();
     process.env.ADMIN_PASSWORD = 'admin_test_password';
 
-    const adminRouteModule = require('./src/routes/admin');
-    if (adminRouteModule.resetInMemConfig) {
-      adminRouteModule.resetInMemConfig();
+    const { resetInMemConfig } = require('./src/routes/admin');
+    if (resetInMemConfig) {
+      resetInMemConfig();
     }
 
     app = require('./server');
