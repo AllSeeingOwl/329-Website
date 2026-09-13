@@ -1,10 +1,7 @@
-import { Redis } from '@upstash/redis';
+import { createRedisClient, isRedisConfigured } from './src/redis';
 
-// Initialize Upstash Redis client with the environment variables provided by the Vercel KV integration
-const kv = new Redis({
-  url: process.env.KV_REST_API_URL || '',
-  token: process.env.KV_REST_API_TOKEN || '',
-});
+// Initialize Upstash Redis client with standardized resolution helper
+const kv = createRedisClient();
 
 export interface DashboardConfig {
   id: string;
@@ -238,10 +235,10 @@ const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
 let inMemoryActivePhase = 'phase1';
 
-const isKvAvailable = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN;
+const isKvAvailable = (): boolean => isRedisConfigured();
 
 export async function initDb() {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const hasMaintenance = await kv.exists('config:maintenance');
     if (!hasMaintenance) {
       await kv.hset('config:maintenance', { global: 'false', studio: 'false', mltk: 'false' });
@@ -260,7 +257,7 @@ export async function initDb() {
 }
 
 export async function getActivePhase(): Promise<string> {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const phase = await kv.get<string>('config:active_phase');
     return phase || 'phase1';
   }
@@ -271,7 +268,7 @@ export async function setActivePhase(phaseId: string): Promise<boolean> {
   const phase = MLTK_PHASES.find((p) => p.id === phaseId);
   if (!phase) return false;
 
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.set('config:active_phase', phaseId);
   } else {
     inMemoryActivePhase = phaseId;
@@ -287,7 +284,7 @@ export async function setActivePhase(phaseId: string): Promise<boolean> {
     }
   });
 
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.set('config:dashboard', dashboard);
   }
   return true;
@@ -310,7 +307,7 @@ export async function saveEmail(
   const timestamp = new Date().toISOString();
   const record: CapturedEmail = { email, source, timestamp, status };
 
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.lpush('emails:captured', JSON.stringify(record));
   } else {
     inMemoryEmails.push(record);
@@ -318,7 +315,7 @@ export async function saveEmail(
 }
 
 export async function getAllEmails(): Promise<CapturedEmail[]> {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const emails = await kv.lrange('emails:captured', 0, -1);
     return emails.map((e) => {
       const parsed = typeof e === 'string' ? JSON.parse(e) : e;
@@ -335,14 +332,14 @@ export async function getAllEmails(): Promise<CapturedEmail[]> {
 }
 
 export async function clearAllEmails(): Promise<void> {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.del('emails:captured');
   }
   inMemoryEmails = [];
 }
 
 export async function updateAllDashboardConfig(status: string) {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const config = await getDashboardConfig();
     config.forEach((item) => {
       item.status = status;
@@ -356,7 +353,7 @@ export async function updateAllDashboardConfig(status: string) {
 }
 
 export async function updateAllMaintenanceConfig(value: boolean) {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.hset('config:maintenance', {
       global: String(value),
       studio: String(value),
@@ -370,7 +367,7 @@ export async function updateAllMaintenanceConfig(value: boolean) {
 }
 
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const config = await kv.hgetall('config:maintenance');
     return (
       (config as Record<string, string>) || { global: 'false', studio: 'false', mltk: 'false' }
@@ -384,7 +381,7 @@ export async function getMaintenanceConfig(): Promise<Record<string, string>> {
 }
 
 export async function updateMaintenanceConfig(key: string, value: boolean) {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     await kv.hset('config:maintenance', { [key]: String(value) });
   } else {
     if (key === 'global') inMemoryMaintenanceConfig.global = value;
@@ -394,7 +391,7 @@ export async function updateMaintenanceConfig(key: string, value: boolean) {
 }
 
 export async function getDashboardConfig(): Promise<DashboardConfig[]> {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const config = await kv.get<DashboardConfig[]>('config:dashboard');
     return config || DEFAULT_DASHBOARD_CONFIG;
   }
@@ -402,7 +399,7 @@ export async function getDashboardConfig(): Promise<DashboardConfig[]> {
 }
 
 export async function updateDashboardConfig(id: string, status: string) {
-  if (isKvAvailable) {
+  if (isKvAvailable()) {
     const config = await getDashboardConfig();
     const item = config.find((d) => d.id === id);
     if (item) {

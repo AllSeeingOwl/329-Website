@@ -1,9 +1,15 @@
 {
   "name": "3minsto9-arg",
   "version": "1.1.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
   "description": "3minsto9 ARG web assets",
   "scripts": {
+    "dev": "nodemon --exec ts-node server.ts",
     "dev:server": "nodemon --exec ts-node server.ts",
+    "start": "node dist/server.js",
     "test": "jest --testPathIgnorePatterns=\"e2e\"",
     "test:e2e:playwright": "playwright test",
     "test:e2e:cypress": "cypress open",
@@ -13,7 +19,7 @@
     "build": "tsc && vite build && cp -r public/* dist/public/",
     "build:vite": "vite build",
     "prepare": "husky",
-    "maintenance:toggle": "./scripts/toggle_vercel_env.sh"
+    "verify:prod": "./scripts/verify-production.sh"
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx}": [

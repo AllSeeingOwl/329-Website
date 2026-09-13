@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
 
-// Declare mock functions before jest.mock uses them via variable hoisting (or inside jest.mock factory)
+// Declare mock functions before jest.mock uses them
 const mockSet = jest.fn();
 const mockGet = jest.fn();
 const mockDel = jest.fn();
@@ -29,7 +29,7 @@ import adminAuth, {
   logAuthAttempt,
 } from '../src/middleware/adminAuth';
 
-describe('adminAuth Middleware & Utilities', () => {
+describe('adminAuth Middleware & Security Checks', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -38,13 +38,14 @@ describe('adminAuth Middleware & Utilities', () => {
     process.env.KV_REST_API_URL = 'https://test-kv.upstash.io';
     process.env.KV_REST_API_TOKEN = 'test-token';
     process.env.ADMIN_PASSWORD = 'test-secret-password';
+    process.env.NODE_ENV = 'test';
   });
 
   afterAll(() => {
     process.env = originalEnv;
   });
 
-  describe('verifyPassword', () => {
+  describe('verifyPassword & Production Safeguards', () => {
     it('returns true when correct password is provided', () => {
       (expect as any)(verifyPassword('test-secret-password')).toBe(true);
     });
@@ -59,10 +60,20 @@ describe('adminAuth Middleware & Utilities', () => {
       (expect as any)(verifyPassword(undefined)).toBe(false);
     });
 
-    it('falls back to "admin" if ADMIN_PASSWORD environment variable is empty', () => {
+    it('falls back to "admin" when NODE_ENV != production and ADMIN_PASSWORD is empty', () => {
+      process.env.NODE_ENV = 'development';
       delete process.env.ADMIN_PASSWORD;
       (expect as any)(verifyPassword('admin')).toBe(true);
       (expect as any)(verifyPassword('wrong')).toBe(false);
+    });
+
+    it('throws error when NODE_ENV === production and ADMIN_PASSWORD is not configured', () => {
+      process.env.NODE_ENV = 'production';
+      delete process.env.ADMIN_PASSWORD;
+
+      (expect as any)(() => verifyPassword('admin')).toThrow(
+        /ADMIN_PASSWORD environment variable must be configured in production/
+      );
     });
   });
 
@@ -153,7 +164,7 @@ describe('adminAuth Middleware & Utilities', () => {
     });
 
     it('returns false and deletes token if session in Redis is expired', async () => {
-      const expiresAt = new Date(Date.now() - 1000 * 60).toISOString(); // 1 min ago
+      const expiresAt = new Date(Date.now() - 1000 * 60).toISOString();
       const mockSession = JSON.stringify({
         token: 'expired-token',
         createdAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
@@ -207,7 +218,7 @@ describe('adminAuth Middleware & Utilities', () => {
       });
     });
 
-    it('returns 401 on invalid password', async () => {
+    it('returns 401 on invalid password without revealing credential matching details', async () => {
       const req = {
         ip: '192.168.1.1',
         body: { password: 'wrong-password' },
@@ -224,6 +235,29 @@ describe('adminAuth Middleware & Utilities', () => {
       (expect as any)(res.json).toHaveBeenCalledWith({
         success: false,
         error: 'Unauthorized',
+      });
+    });
+
+    it('returns 500 in production when ADMIN_PASSWORD is missing', async () => {
+      process.env.NODE_ENV = 'production';
+      delete process.env.ADMIN_PASSWORD;
+
+      const req = {
+        ip: '192.168.1.1',
+        body: { password: 'some-password' },
+      } as unknown as Request;
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      await handleAdminLogin(req, res);
+
+      (expect as any)(res.status).toHaveBeenCalledWith(500);
+      (expect as any)(res.json).toHaveBeenCalledWith({
+        success: false,
+        error: 'Server configuration error: ADMIN_PASSWORD not configured',
       });
     });
   });

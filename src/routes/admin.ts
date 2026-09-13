@@ -4,7 +4,7 @@ import adminAuth, {
   createAdminSession,
   logAuthAttempt,
 } from '../middleware/adminAuth';
-import { Redis } from '@upstash/redis';
+import { createRedisClient, isRedisConfigured } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
 
 const router = Router();
@@ -107,18 +107,10 @@ const DEFAULT_PHASES: Phase[] = [
   },
 ];
 
-// Upstash Redis client initialization for Phase storage
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
+// Initialize Upstash Redis client with standardized resolution helper
+const redis = createRedisClient();
 
-const isRedisAvailable = (): boolean => {
-  return !!(
-    (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) ||
-    (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
-  );
-};
+const isRedisAvailable = (): boolean => isRedisConfigured();
 
 let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   ...p,
@@ -348,8 +340,19 @@ router.post(
 
     const { password } = req.body || {};
 
-    // Validate password against ADMIN_PASSWORD env var
-    const isValid = verifyPassword(password);
+    let isValid: boolean;
+    try {
+      isValid = verifyPassword(password);
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
+        res.status(500).json({
+          success: false,
+          message: 'Server configuration error: ADMIN_PASSWORD not configured',
+        });
+        return;
+      }
+      throw err;
+    }
 
     if (!isValid) {
       recordFailedAttempt(ip, now);

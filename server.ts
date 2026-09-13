@@ -27,7 +27,7 @@ app.use(cors());
 // 🛡️ Sentinel: Disable Express framework leakage
 app.disable('x-powered-by');
 
-// 🛡️ Sentinel: Trust proxy to ensure correct IP extraction (e.g. req.ip) when deployed behind Vercel.
+// 🛡️ Sentinel: Trust proxy to ensure correct IP extraction (e.g. req.ip) when deployed behind reverse proxies.
 // Without this, the rate limiter would see the proxy's IP for all requests, causing a global DoS block.
 app.set('trust proxy', 1);
 
@@ -56,7 +56,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// 🏥 Health check endpoint for Fly.io monitoring and load balancers
+// 🏥 Health check endpoint for monitoring, load balancers, and Render health checks
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
 });
@@ -94,8 +94,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // ⚡ Bolt: Pre-calculate static asset paths to avoid redundant path logic and allocations.
-const MAINTENANCE_PATH = path.join(__dirname, 'public', 'maintenance.html');
-const NOT_FOUND_PATH = path.join(__dirname, 'public', '404.html');
+// Ensures static files are located correctly whether running TS directly or compiled in dist/
+const publicDir = fs.existsSync(path.join(__dirname, 'public'))
+  ? path.join(__dirname, 'public')
+  : path.join(__dirname, '..', 'public');
+
+const MAINTENANCE_PATH = path.join(publicDir, 'maintenance.html');
+const NOT_FOUND_PATH = path.join(publicDir, '404.html');
 
 // Lists of files belonging to each portal
 const studioFiles = new Set([
@@ -136,7 +141,6 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       return res.send(sitemapCache.xml);
     }
 
-    const publicDir = path.join(__dirname, 'public');
     const files = await fs.promises.readdir(publicDir);
 
     const host = req.get('host') || 'localhost:3000';
@@ -457,18 +461,7 @@ app.get('/api/config/storefront', (req: Request, res: Response) => {
   res.json({ url });
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-// -----------------------------------------------------------------------------
-// WARNING: DO NOT CHANGE THIS PASSWORD WITHOUT EXPLICIT PERMISSION FROM THE USER.
-// The official password for this ARG gate is hinted in mltk_login_utils.js.
-// Changing this fallback will break the intended experience for local development.
-// -----------------------------------------------------------------------------
-// The throw was moved inside the route to prevent top-level crashes on Vercel.
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || ['0408', '1998', 'XXXX'].join('-');
-// ⚡ Bolt: Cache auth buffer to prevent recreation on every verification request
-// This reduces allocation overhead and improves response times for the verification endpoint.
-const authBuffer = Buffer.from(AUTH_PASSWORD);
+app.use(express.static(publicDir));
 
 interface RateLimitRecord {
   count: number;
@@ -478,10 +471,30 @@ const rateLimitMap = new Map<string, RateLimitRecord>();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
 
-app.post('/api/verify', (req: Request, res: Response) => {
-  if (process.env.NODE_ENV === 'production' && !process.env.AUTH_PASSWORD) {
-    console.warn('WARNING: AUTH_PASSWORD should be set in production. Using insecure fallback.');
+const getEffectiveAuthPassword = (): string => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const envAuthPassword = process.env.AUTH_PASSWORD;
+
+  if (isProduction && (!envAuthPassword || !envAuthPassword.trim())) {
+    throw new Error('Production verification error: AUTH_PASSWORD environment variable must be configured in production.');
   }
+
+  return envAuthPassword || ['0408', '1998', 'XXXX'].join('-');
+};
+
+app.post('/api/verify', (req: Request, res: Response) => {
+  let effectiveAuthPassword: string;
+  try {
+    effectiveAuthPassword = getEffectiveAuthPassword();
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('AUTH_PASSWORD')) {
+      res.status(500).json({ success: false, error: 'Server configuration error: AUTH_PASSWORD not configured' });
+      return;
+    }
+    throw err;
+  }
+
+  const authBuffer = Buffer.from(effectiveAuthPassword);
 
   const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
@@ -545,8 +558,9 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
 });
 
 if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+  const host = '0.0.0.0';
+  app.listen(Number(port), host, () => {
+    console.log(`Server listening on ${host}:${port}`);
   });
 }
 
