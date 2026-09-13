@@ -54,7 +54,9 @@ export const verifyPassword = (password: unknown): boolean => {
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (isProduction && (!adminPassword || !adminPassword.trim())) {
-    throw new Error('Production authentication error: ADMIN_PASSWORD environment variable must be configured in production.');
+    throw new Error(
+      'Production authentication error: ADMIN_PASSWORD environment variable must be configured in production.'
+    );
   }
 
   const effectivePassword = adminPassword || 'admin';
@@ -200,9 +202,15 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
   const now = Date.now();
 
   const record = rateLimitMap.get(ip);
-  if (record && now - record.firstAttempt <= RATE_LIMIT_WINDOW_MS && record.count >= MAX_FAILED_ATTEMPTS) {
+  if (
+    record &&
+    now - record.firstAttempt <= RATE_LIMIT_WINDOW_MS &&
+    record.count >= MAX_FAILED_ATTEMPTS
+  ) {
     logAuthAttempt('LOGIN', false, ip, 'Rate limit exceeded');
-    res.status(429).json({ success: false, error: 'Too many failed login attempts. Please try again later.' });
+    res
+      .status(429)
+      .json({ success: false, error: 'Too many failed login attempts. Please try again later.' });
     return;
   }
 
@@ -213,7 +221,10 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
     isValid = verifyPassword(password);
   } catch (err) {
     if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
-      res.status(500).json({ success: false, error: 'Server configuration error: ADMIN_PASSWORD not configured' });
+      res.status(500).json({
+        success: false,
+        error: 'Server configuration error: ADMIN_PASSWORD not configured',
+      });
       return;
     }
     throw err;

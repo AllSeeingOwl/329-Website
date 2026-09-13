@@ -78,6 +78,7 @@ The repository includes an ARG-specific GitHub Project management setup to track
 The project is configured for deployment as a **Render Web Service**.
 
 ### 1. Render Service Overview
+
 - **Service Type**: Render Web Service
 - **Runtime**: Node.js (v22+)
 - **Build Command**: `pnpm install && pnpm run build`
@@ -86,20 +87,21 @@ The project is configured for deployment as a **Render Web Service**.
 
 ### 2. Required Environment Variables
 
-| Variable Name | Type | Description |
-| :--- | :--- | :--- |
-| `NODE_ENV` | Non-Secret | Set to `production` |
-| `MAINTENANCE_MODE` | Non-Secret | Set to `false` |
-| `STUDIO_MAINTENANCE_MODE` | Non-Secret | Set to `false` |
-| `MLTK_MAINTENANCE_MODE` | Non-Secret | Set to `false` |
-| `EMERGENCY_LOCKDOWN` | Non-Secret | Set to `false` |
-| `ADMIN_PASSWORD` | **Secret** | Cryptographically strong password for `/api/admin` |
-| `AUTH_PASSWORD` | **Secret** | Verification code for ARG gate (`0408-1998-XXXX`) |
-| `UPSTASH_REDIS_REST_URL` | **Secret** | Upstash Redis REST API URL |
-| `UPSTASH_REDIS_REST_TOKEN` | **Secret** | Upstash Redis REST Auth Token |
-| `STOREFRONT_URL` | **Secret** | Storefront destination link (optional) |
+| Variable Name              | Type       | Description                                        |
+| :------------------------- | :--------- | :------------------------------------------------- |
+| `NODE_ENV`                 | Non-Secret | Set to `production`                                |
+| `MAINTENANCE_MODE`         | Non-Secret | Set to `false`                                     |
+| `STUDIO_MAINTENANCE_MODE`  | Non-Secret | Set to `false`                                     |
+| `MLTK_MAINTENANCE_MODE`    | Non-Secret | Set to `false`                                     |
+| `EMERGENCY_LOCKDOWN`       | Non-Secret | Set to `false`                                     |
+| `ADMIN_PASSWORD`           | **Secret** | Cryptographically strong password for `/api/admin` |
+| `AUTH_PASSWORD`            | **Secret** | Verification code for ARG gate (`0408-1998-XXXX`)  |
+| `UPSTASH_REDIS_REST_URL`   | **Secret** | Upstash Redis REST API URL                         |
+| `UPSTASH_REDIS_REST_TOKEN` | **Secret** | Upstash Redis REST Auth Token                      |
+| `STOREFRONT_URL`           | **Secret** | Storefront destination link (optional)             |
 
 ### 3. Connecting GitHub & Deploying
+
 1. Log in to your [Render Dashboard](https://dashboard.render.com/).
 2. Click **New +** -> **Blueprint**.
 3. Connect your GitHub repository (`329-Website`).
@@ -108,12 +110,14 @@ The project is configured for deployment as a **Render Web Service**.
 6. Click **Apply** to trigger your initial build and deployment.
 
 ### 4. Configuring Custom Domain
+
 1. In the Render Dashboard, navigate to your Web Service -> **Settings** -> **Custom Domains**.
 2. Click **Add Custom Domain** and enter `3minsto9.co.uk` (or your domain).
 3. Update your DNS provider with the CNAME/A records provided by Render.
 4. Render will automatically issue and renew TLS/SSL certificates via Let's Encrypt.
 
 ### 5. Verifying Deployment
+
 Run the following checks against your live Render service URL:
 
 ```bash
@@ -128,6 +132,7 @@ curl -i https://your-service.onrender.com/api/maintenance-status
 ```
 
 ### 6. Activating Maintenance Mode Safely
+
 Maintenance mode can be toggled without requiring application redeployments:
 
 - **Option A (Admin API)**: Authenticate to the admin dashboard and send a `POST /api/admin/maintenance/toggle` request.

@@ -476,7 +476,9 @@ const getEffectiveAuthPassword = (): string => {
   const envAuthPassword = process.env.AUTH_PASSWORD;
 
   if (isProduction && (!envAuthPassword || !envAuthPassword.trim())) {
-    throw new Error('Production verification error: AUTH_PASSWORD environment variable must be configured in production.');
+    throw new Error(
+      'Production verification error: AUTH_PASSWORD environment variable must be configured in production.'
+    );
   }
 
   return envAuthPassword || ['0408', '1998', 'XXXX'].join('-');
@@ -488,7 +490,10 @@ app.post('/api/verify', (req: Request, res: Response) => {
     effectiveAuthPassword = getEffectiveAuthPassword();
   } catch (err) {
     if (err instanceof Error && err.message.includes('AUTH_PASSWORD')) {
-      res.status(500).json({ success: false, error: 'Server configuration error: AUTH_PASSWORD not configured' });
+      res.status(500).json({
+        success: false,
+        error: 'Server configuration error: AUTH_PASSWORD not configured',
+      });
       return;
     }
     throw err;

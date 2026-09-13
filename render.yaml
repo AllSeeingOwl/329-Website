@@ -12,13 +12,13 @@ services:
       - key: NODE_ENV
         value: production
       - key: MAINTENANCE_MODE
-        value: "false"
+        value: 'false'
       - key: STUDIO_MAINTENANCE_MODE
-        value: "false"
+        value: 'false'
       - key: MLTK_MAINTENANCE_MODE
-        value: "false"
+        value: 'false'
       - key: EMERGENCY_LOCKDOWN
-        value: "false"
+        value: 'false'
       - key: ADMIN_PASSWORD
         sync: false
       - key: AUTH_PASSWORD
