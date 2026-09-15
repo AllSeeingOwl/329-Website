@@ -6,3 +6,4 @@ screenshots/
 server_out.log
 server.log
 dist/
+a11y_report.md
