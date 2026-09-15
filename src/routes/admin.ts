@@ -5,6 +5,7 @@ import adminAuth, {
   logAuthAttempt,
 } from '../middleware/adminAuth';
 import { createRedisClient, isRedisConfigured } from '../redis';
+import { redis, isRedisAvailable } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
 
 const router = Router();

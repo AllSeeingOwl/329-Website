@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { createRedisClient, isRedisConfigured } from '../redis';
+import { redis, isRedisAvailable } from '../redis';
 
 // 15 minutes in seconds
 const SESSION_TTL_SECONDS = 15 * 60;
