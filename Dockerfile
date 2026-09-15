@@ -8,7 +8,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 ENV PNPM_SCRIPT_SHELL=/bin/sh
 
 # Copy dependency definition files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .npmrc* pnpm-workspace.yaml* ./
 
 # Install all dependencies (including devDependencies required for build), ignoring scripts like husky
 RUN pnpm install --no-frozen-lockfile --ignore-scripts
