@@ -25,9 +25,7 @@ export const createRedisClient = (): Redis => {
     process.env.KV_REST_API_URL ||
     'https://placeholder.upstash.io';
   const token =
-    process.env.UPSTASH_REDIS_REST_TOKEN ||
-    process.env.KV_REST_API_TOKEN ||
-    'placeholder-token';
+    process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || 'placeholder-token';
 
   return new Redis({ url, token });
 };
