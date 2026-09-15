@@ -4,7 +4,6 @@ import adminAuth, {
   createAdminSession,
   logAuthAttempt,
 } from '../middleware/adminAuth';
-import { createRedisClient, isRedisConfigured } from '../redis';
 import { redis, isRedisAvailable } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
 
@@ -107,11 +106,6 @@ const DEFAULT_PHASES: Phase[] = [
     lastModifiedBy: 'system',
   },
 ];
-
-// Initialize Upstash Redis client with standardized resolution helper
-const redis = createRedisClient();
-
-const isRedisAvailable = (): boolean => isRedisConfigured();
 
 let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   ...p,

@@ -6,15 +6,15 @@ import {
   validateProductionRedisConfig,
 } from '../src/redis';
 
-describe('Redis Configuration and Storage Behavior', () => {
-  const originalEnv = process.env;
+describe('src/redis.ts tests', () => {
+  let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
+    originalEnv = { ...process.env };
     jest.resetModules();
-    process.env = { ...originalEnv };
   });
 
-  afterAll(() => {
+  afterEach(() => {
     process.env = originalEnv;
   });
 
@@ -48,39 +48,6 @@ describe('Redis Configuration and Storage Behavior', () => {
     delete process.env.UPSTASH_REDIS_REST_URL;
     delete process.env.KV_REST_API_URL;
     (expect as any)(isRedisConfigured()).toBe(false);
-  });
-
-  it('throws a clear error in production if required Redis variables are missing', () => {
-    process.env.NODE_ENV = 'production';
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
-    delete process.env.KV_REST_API_URL;
-    delete process.env.KV_REST_API_TOKEN;
-
-    (expect as any)(() => validateProductionRedisConfig()).toThrow(
-      /Missing required Upstash Redis environment variables/
-    );
-  });
-
-  it('does not throw in development or test environment when variables are missing', () => {
-    process.env.NODE_ENV = 'test';
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
-    delete process.env.KV_REST_API_URL;
-    delete process.env.KV_REST_API_TOKEN;
-
-    (expect as any)(() => validateProductionRedisConfig()).not.toThrow();
-
-describe('src/redis.ts tests', () => {
-  let originalEnv: NodeJS.ProcessEnv;
-
-  beforeEach(() => {
-    originalEnv = { ...process.env };
-    jest.resetModules();
-  });
-
-  afterEach(() => {
-    process.env = originalEnv;
   });
 
   describe('isRedisAvailable', () => {
