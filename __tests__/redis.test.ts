@@ -57,9 +57,7 @@ describe('src/redis.ts tests', () => {
 
       (expect as any)(() => validateProductionRedisConfig()).not.toThrow();
       (expect as any)(consoleSpy).toHaveBeenCalledWith(
-        (expect as any).stringMatching(
-          /WARNING: Missing required Upstash Redis environment variables/
-        )
+        (expect as any).stringMatching(/WARNING: Missing required Upstash Redis environment variables/)
       );
       consoleSpy.mockRestore();
     });
@@ -115,9 +113,7 @@ describe('src/redis.ts tests', () => {
       const { redis } = await import('../src/redis');
       (expect as any)(redis).toBeDefined();
       (expect as any)(consoleSpy).toHaveBeenCalledWith(
-        (expect as any).stringMatching(
-          /WARNING: Missing required Upstash Redis environment variables/
-        )
+        (expect as any).stringMatching(/WARNING: Missing required Upstash Redis environment variables/)
       );
       consoleSpy.mockRestore();
     });
