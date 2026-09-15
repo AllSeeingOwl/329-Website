@@ -1,22 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { Redis } from '@upstash/redis';
+import { redis, isRedisAvailable } from '../redis';
 
 // 15 minutes in seconds
 const SESSION_TTL_SECONDS = 15 * 60;
-
-// Initialize Upstash Redis client with KV environment variables or fallback
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
-
-const isRedisAvailable = (): boolean => {
-  return !!(
-    (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) ||
-    (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
-  );
-};
 
 export interface AdminSession {
   token: string;

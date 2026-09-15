@@ -4,7 +4,7 @@ import adminAuth, {
   createAdminSession,
   logAuthAttempt,
 } from '../middleware/adminAuth';
-import { Redis } from '@upstash/redis';
+import { redis, isRedisAvailable } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
 
 const router = Router();
@@ -107,18 +107,6 @@ const DEFAULT_PHASES: Phase[] = [
   },
 ];
 
-// Upstash Redis client initialization for Phase storage
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
-
-const isRedisAvailable = (): boolean => {
-  return !!(
-    (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) ||
-    (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
-  );
-};
 
 let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   ...p,
