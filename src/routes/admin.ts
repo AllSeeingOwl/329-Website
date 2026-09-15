@@ -107,7 +107,6 @@ const DEFAULT_PHASES: Phase[] = [
   },
 ];
 
-
 let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   ...p,
   relatedContent: [...p.relatedContent],
