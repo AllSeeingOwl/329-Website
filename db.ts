@@ -1,7 +1,3 @@
-import { createRedisClient, isRedisConfigured } from './src/redis';
-
-// Initialize Upstash Redis client with standardized resolution helper
-const kv = createRedisClient();
 import { redis as kv, isRedisAvailable } from './src/redis';
 
 export interface DashboardConfig {
@@ -236,12 +232,10 @@ const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
 let inMemoryActivePhase = 'phase1';
 
-const isKvAvailable = (): boolean => isRedisConfigured();
+const isKvAvailable = (): boolean => isRedisAvailable();
 
 export async function initDb() {
   if (isKvAvailable()) {
-export async function initDb() {
-  if (isRedisAvailable()) {
     const hasMaintenance = await kv.exists('config:maintenance');
     if (!hasMaintenance) {
       await kv.hset('config:maintenance', { global: 'false', studio: 'false', mltk: 'false' });
@@ -261,7 +255,6 @@ export async function initDb() {
 
 export async function getActivePhase(): Promise<string> {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const phase = await kv.get<string>('config:active_phase');
     return phase || 'phase1';
   }
@@ -273,7 +266,6 @@ export async function setActivePhase(phaseId: string): Promise<boolean> {
   if (!phase) return false;
 
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.set('config:active_phase', phaseId);
   } else {
     inMemoryActivePhase = phaseId;
@@ -290,7 +282,6 @@ export async function setActivePhase(phaseId: string): Promise<boolean> {
   });
 
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.set('config:dashboard', dashboard);
   }
   return true;
@@ -314,7 +305,6 @@ export async function saveEmail(
   const record: CapturedEmail = { email, source, timestamp, status };
 
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.lpush('emails:captured', JSON.stringify(record));
   } else {
     inMemoryEmails.push(record);
@@ -323,7 +313,6 @@ export async function saveEmail(
 
 export async function getAllEmails(): Promise<CapturedEmail[]> {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const emails = await kv.lrange('emails:captured', 0, -1);
     return emails.map((e) => {
       const parsed = typeof e === 'string' ? JSON.parse(e) : e;
@@ -341,7 +330,6 @@ export async function getAllEmails(): Promise<CapturedEmail[]> {
 
 export async function clearAllEmails(): Promise<void> {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.del('emails:captured');
   }
   inMemoryEmails = [];
@@ -349,7 +337,6 @@ export async function clearAllEmails(): Promise<void> {
 
 export async function updateAllDashboardConfig(status: string) {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const config = await getDashboardConfig();
     config.forEach((item) => {
       item.status = status;
@@ -364,7 +351,6 @@ export async function updateAllDashboardConfig(status: string) {
 
 export async function updateAllMaintenanceConfig(value: boolean) {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.hset('config:maintenance', {
       global: String(value),
       studio: String(value),
@@ -379,7 +365,6 @@ export async function updateAllMaintenanceConfig(value: boolean) {
 
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const config = await kv.hgetall('config:maintenance');
     return (
       (config as Record<string, string>) || { global: 'false', studio: 'false', mltk: 'false' }
@@ -394,7 +379,6 @@ export async function getMaintenanceConfig(): Promise<Record<string, string>> {
 
 export async function updateMaintenanceConfig(key: string, value: boolean) {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     await kv.hset('config:maintenance', { [key]: String(value) });
   } else {
     if (key === 'global') inMemoryMaintenanceConfig.global = value;
@@ -405,7 +389,6 @@ export async function updateMaintenanceConfig(key: string, value: boolean) {
 
 export async function getDashboardConfig(): Promise<DashboardConfig[]> {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const config = await kv.get<DashboardConfig[]>('config:dashboard');
     return config || DEFAULT_DASHBOARD_CONFIG;
   }
@@ -414,7 +397,6 @@ export async function getDashboardConfig(): Promise<DashboardConfig[]> {
 
 export async function updateDashboardConfig(id: string, status: string) {
   if (isKvAvailable()) {
-  if (isRedisAvailable()) {
     const config = await getDashboardConfig();
     const item = config.find((d) => d.id === id);
     if (item) {
