@@ -57,6 +57,7 @@ The Express server (`server.ts`) relies on the following environment variables:
 - **`pnpm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
 - **`pnpm run build`**: Compiles TypeScript and builds Vite frontend assets into `dist/`.
 - **`pnpm start`**: Runs the compiled production server from `dist/server.js`.
+- **`pnpm run verify:prod`**: Runs the local production verification script (`./scripts/verify-production.sh`) to test build artifacts, server startup, health endpoints, static assets, and secret enforcement.
 
 ## Testing & CI/CD
 

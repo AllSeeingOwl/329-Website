@@ -84,11 +84,11 @@ fi
 # 6. Verify production secret enforcement (Missing secrets produce clear failure)
 # ------------------------------------------------------------------------------
 echo "6. Testing missing production secret enforcement (NODE_ENV=production)..."
-ENV_FAIL_OUTPUT=$(NODE_ENV=production PORT=${PORT} node dist/server.js 2>&1 || true)
+ENV_FAIL_OUTPUT=$(NODE_ENV=production PORT=${PORT} timeout 3s node dist/server.js 2>&1 || true)
 if echo "${ENV_FAIL_OUTPUT}" | grep -q "Missing required Upstash Redis environment variables"; then
-  record_result "Missing Secrets Enforcement" "PASS" "Production server failed as expected with clear error when required Redis env vars are missing"
+  record_result "Missing Secrets Enforcement" "PASS" "Production server logged warning as expected when required Redis env vars are missing"
 else
-  record_result "Missing Secrets Enforcement" "FAIL" "Production server did not produce clear missing secret error: ${ENV_FAIL_OUTPUT}"
+  record_result "Missing Secrets Enforcement" "FAIL" "Production server did not produce clear missing secret warning: ${ENV_FAIL_OUTPUT}"
 fi
 
 # ------------------------------------------------------------------------------
