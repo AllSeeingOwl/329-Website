@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
+import { createRedisClient, isRedisConfigured } from '../redis';
 import { redis, isRedisAvailable } from '../redis';
 
 // 15 minutes in seconds
 const SESSION_TTL_SECONDS = 15 * 60;
+
+// Initialize Upstash Redis client with standardized resolution helper
+const redis = createRedisClient();
+
+const isRedisAvailable = (): boolean => isRedisConfigured();
 
 export interface AdminSession {
   token: string;
@@ -44,10 +50,20 @@ export const generateSessionToken = (): string => {
  */
 export const verifyPassword = (password: unknown): boolean => {
   if (typeof password !== 'string') return false;
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin';
+
+  const isProduction = process.env.NODE_ENV === 'production';
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (isProduction && (!adminPassword || !adminPassword.trim())) {
+    throw new Error(
+      'Production authentication error: ADMIN_PASSWORD environment variable must be configured in production.'
+    );
+  }
+
+  const effectivePassword = adminPassword || 'admin';
 
   const pwdBuffer = Buffer.from(password);
-  const adminPwdBuffer = Buffer.from(adminPassword);
+  const adminPwdBuffer = Buffer.from(effectivePassword);
 
   if (pwdBuffer.length !== adminPwdBuffer.length) {
     // Perform dummy comparison to mitigate timing attacks
@@ -174,20 +190,60 @@ export const validateAdminSession = async (
 /**
  * Handles admin login verification and session creation.
  */
+interface RateLimitRecord {
+  count: number;
+  firstAttempt: number;
+}
+const rateLimitMap = new Map<string, RateLimitRecord>();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const MAX_FAILED_ATTEMPTS = 5;
+
 export const handleAdminLogin = async (req: Request, res: Response): Promise<void> => {
   const ip = req.ip || req.socket.remoteAddress || 'unknown';
-  const { password } = req.body || {};
+  const now = Date.now();
 
-  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
-    console.warn('WARNING: ADMIN_PASSWORD should be set in production. Using fallback.');
+  const record = rateLimitMap.get(ip);
+  if (
+    record &&
+    now - record.firstAttempt <= RATE_LIMIT_WINDOW_MS &&
+    record.count >= MAX_FAILED_ATTEMPTS
+  ) {
+    logAuthAttempt('LOGIN', false, ip, 'Rate limit exceeded');
+    res
+      .status(429)
+      .json({ success: false, error: 'Too many failed login attempts. Please try again later.' });
+    return;
   }
 
-  const isValid = verifyPassword(password);
+  const { password } = req.body || {};
+
+  let isValid: boolean;
+  try {
+    isValid = verifyPassword(password);
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
+      res.status(500).json({
+        success: false,
+        error: 'Server configuration error: ADMIN_PASSWORD not configured',
+      });
+      return;
+    }
+    throw err;
+  }
   if (!isValid) {
+    const currentRecord = rateLimitMap.get(ip);
+    if (!currentRecord || now - currentRecord.firstAttempt > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.set(ip, { count: 1, firstAttempt: now });
+    } else {
+      currentRecord.count += 1;
+      rateLimitMap.set(ip, currentRecord);
+    }
     logAuthAttempt('LOGIN', false, ip, 'Invalid password');
     res.status(401).json({ success: false, error: 'Unauthorized' });
     return;
   }
+
+  rateLimitMap.delete(ip);
 
   logAuthAttempt('LOGIN', true, ip, 'Password verified');
   const session = await createAdminSession(ip);

@@ -32,22 +32,22 @@ _(Note: If you experience timeouts during installation, use the `--prefer-offlin
 
 ### Environment Variables
 
-The local Express server (`server.ts`) relies on the following environment variables:
+The Express server (`server.ts`) relies on the following environment variables:
 
-- **`AUTH_PASSWORD`**: Required for the `/api/verify` endpoint. Falls back to a default value if not set.
-- **`ADMIN_PASSWORD`**: Required for the `/api/admin/verify` endpoint. Falls back to 'admin' if not set.
-- **`MAINTENANCE_MODE`**: Set to `'true'` to enable global maintenance mode, which intercepts all requests, returning a 503 status code and serving `public/maintenance.html`.
-- **`STUDIO_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for studio pages, returning a 503 status code and serving `public/maintenance.html`.
-- **`MLTK_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for MLTK/ARG pages, returning a 503 status code and serving `public/maintenance.html`.
-- **`EMERGENCY_LOCKDOWN`**: Set to `'true'` to enable emergency lockdown, bypassing all routing and immediately returning a 503 status code for all endpoints.
-- **`STOREFRONT_URL`**: The URL for the physical storefront returned by `/api/config/storefront`. Defaults to '#' if not set.
-- **`KV_REST_API_URL`**: The REST API URL for the Upstash Redis database.
-- **`KV_REST_API_TOKEN`**: The authentication token for the Upstash Redis database.
+- **`UPSTASH_REDIS_REST_URL`**: REST URL for the Upstash Redis database (required in production, Secret).
+- **`UPSTASH_REDIS_REST_TOKEN`**: Authentication token for the Upstash Redis database (required in production, Secret).
+- **`ADMIN_PASSWORD`**: Password required for admin panel access (`/api/admin/verify`). Required in production (Secret).
+- **`AUTH_PASSWORD`**: Access gate verification password (`/api/verify`). Required in production (Secret).
+- **`STOREFRONT_URL`**: Optional external storefront link (Secret).
+- **`PORT`**: HTTP port assigned by host environment (defaults to 3000 locally).
+- **`MAINTENANCE_MODE`**: Set to `'true'` to enable global maintenance mode.
+- **`STUDIO_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for studio pages.
+- **`MLTK_MAINTENANCE_MODE`**: Set to `'true'` to enable maintenance mode specifically for MLTK/ARG pages.
+- **`EMERGENCY_LOCKDOWN`**: Set to `'true'` to enable emergency lockdown.
 
 ### Available Scripts
 
-- **`pnpm run dev:server`**: Starts the local development backend server using `nodemon`.
-- **`pnpm run maintenance:toggle`**: Executes script to toggle the Vercel maintenance mode environment variable.
+- **`pnpm run dev`**: Starts the local development backend server using `nodemon`.
 - **`pnpm run lint`**: Runs ESLint to check for code quality.
 - **`pnpm run format`**: Runs Prettier to format code.
 - **`pnpm run typecheck`**: Runs TypeScript type checking.
@@ -55,7 +55,8 @@ The local Express server (`server.ts`) relies on the following environment varia
 - **`pnpm test -- --coverage`**: Runs tests and generates a coverage report.
 - **`pnpm run test:e2e:playwright`**: Runs end-to-end tests using Playwright.
 - **`pnpm run test:e2e:cypress`**: Opens Cypress for end-to-end testing.
-- **`pnpm run build:vite`**: Executes builds if needed.
+- **`pnpm run build`**: Compiles TypeScript and builds Vite frontend assets into `dist/`.
+- **`pnpm start`**: Runs the compiled production server from `dist/server.js`.
 
 ## Testing & CI/CD
 
@@ -72,56 +73,67 @@ The repository includes an ARG-specific GitHub Project management setup to track
 - **Issue Templates**: Found in `.github/ISSUE_TEMPLATE/` (`bug_report.md`, `feature_request.md`, `arg_task.md`).
 - **PR Template**: Located at `.github/pull_request_template.md`.
 
-## Deployment
+## Render Deployment Guide
 
-### Vercel Deployment
+The project is configured for deployment as a **Render Web Service**.
 
-The project is deployed and hosted on **Vercel**, accessible via the custom domain `3minsto9.co.uk` and Vercel-provided subdomains (e.g., `329-website.vercel.app`).
+### 1. Render Service Overview
 
-- The deployment utilizes the Node.js Express application (`server.ts`).
-  - **Security**: The server enforces strict security headers including a Content-Security-Policy with `upgrade-insecure-requests` and `X-XSS-Protection`. It also implements a 100kb payload limit to prevent Denial-of-Service attacks.
-  - **Proxy Configuration**: `app.set('trust proxy', 1)` is configured to correctly extract the client IP from the `X-Forwarded-For` header on Vercel deployments, preventing proxy IPs from triggering global rate limits.
-  - **CORS Policy**: Cross-Origin Resource Sharing (CORS) is enabled globally for all routes using the `cors` middleware. This policy allows future API endpoints to be securely consumed by external clients or subdomains without encountering browser `Same-Origin` restrictions.
-- The Express server uses `process.env.PORT` to allow Vercel to dynamically assign the port (falling back to 3000 locally).
-- Critical environment variables like `AUTH_PASSWORD`, `MAINTENANCE_MODE`, and the `KV_REST_API_*` variables must be configured in the Vercel project settings.
-- Internal navigation links within the `.html` files utilize URL-encoded relative paths (e.g., `surface-home-page.html`) to avoid 404 errors on subpaths.
+- **Service Type**: Render Web Service
+- **Runtime**: Node.js (v22+)
+- **Build Command**: `pnpm install && pnpm run build`
+- **Start Command**: `pnpm start` (`node dist/server.js`)
+- **Health Check Path**: `/health`
 
-### Railway.app Deployment
+### 2. Required Environment Variables
 
-The application is configured for seamless deployment on **Railway.app** using standard Node.js buildpacks.
+| Variable Name              | Type       | Description                                        |
+| :------------------------- | :--------- | :------------------------------------------------- |
+| `NODE_ENV`                 | Non-Secret | Set to `production`                                |
+| `MAINTENANCE_MODE`         | Non-Secret | Set to `false`                                     |
+| `STUDIO_MAINTENANCE_MODE`  | Non-Secret | Set to `false`                                     |
+| `MLTK_MAINTENANCE_MODE`    | Non-Secret | Set to `false`                                     |
+| `EMERGENCY_LOCKDOWN`       | Non-Secret | Set to `false`                                     |
+| `ADMIN_PASSWORD`           | **Secret** | Cryptographically strong password for `/api/admin` |
+| `AUTH_PASSWORD`            | **Secret** | Verification code for ARG gate (`0408-1998-XXXX`)  |
+| `UPSTASH_REDIS_REST_URL`   | **Secret** | Upstash Redis REST API URL                         |
+| `UPSTASH_REDIS_REST_TOKEN` | **Secret** | Upstash Redis REST Auth Token                      |
+| `STOREFRONT_URL`           | **Secret** | Storefront destination link (optional)             |
 
-#### Key Deployment Files
+### 3. Connecting GitHub & Deploying
 
-- **`Procfile`**: Specifies the process command (`web: node dist/server.js`).
-- **`package.json`**: Includes the `build` script (`tsc && vite build && cp -r public/* dist/public/`) to compile TypeScript and bundle frontend assets into `dist/`.
-- **`.railwayignore`**: Excludes test scripts, documentation, and local configuration files from build contexts.
-- **`vercel.json`**: Maintained for Vercel deployment compatibility; ignored by Railway.
+1. Log in to your [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** -> **Blueprint**.
+3. Connect your GitHub repository (`329-Website`).
+4. Render will detect `render.yaml` and configure the Web Service automatically.
+5. In the Render Dashboard, fill in the required secret environment variables (`ADMIN_PASSWORD`, `AUTH_PASSWORD`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`).
+6. Click **Apply** to trigger your initial build and deployment.
 
-#### Required Environment Variables
+### 4. Configuring Custom Domain
 
-Configure the following environment variables in the Railway project settings under **Variables**:
+1. In the Render Dashboard, navigate to your Web Service -> **Settings** -> **Custom Domains**.
+2. Click **Add Custom Domain** and enter `3minsto9.co.uk` (or your domain).
+3. Update your DNS provider with the CNAME/A records provided by Render.
+4. Render will automatically issue and renew TLS/SSL certificates via Let's Encrypt.
 
-| Variable                                          | Description                                     | Default / Example                        |
-| ------------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
-| `NODE_ENV`                                        | Environment mode                                | `production`                             |
-| `PORT`                                            | Dynamic HTTP port                               | Managed by Railway (defaults to 3000)    |
-| `ADMIN_PASSWORD`                                  | Password for admin portal access (`/api/admin`) | Secure random string                     |
-| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL`     | Upstash Redis REST URL                          | `https://your-redis-instance.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | Upstash Redis REST Auth Token                   | `your_upstash_token_here`                |
-| `AUTH_PASSWORD`                                   | Optional ARG gate access verification code      | `0408-1998-XXXX`                         |
+### 5. Verifying Deployment
 
-#### Step-by-Step Railway Deployment Instructions
+Run the following checks against your live Render service URL:
 
-1. **Push Changes**: Ensure your latest changes containing `Procfile`, `package.json`, and `.railwayignore` are pushed to your GitHub repository.
-2. **Create New Project on Railway**:
-   - Log in to [Railway.app](https://railway.app/).
-   - Click **New Project** and select **Deploy from GitHub repo**.
-   - Choose the `329-Website` repository.
-3. **Configure Environment Variables**:
-   - Go to your service settings in the Railway Dashboard.
-   - Select the **Variables** tab and add the required environment variables (`ADMIN_PASSWORD`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `NODE_ENV=production`).
-4. **Deploy Service**:
-   - Railway will automatically detect Node.js, execute `npm run build` (compiling TypeScript to `dist/` and bundling frontend assets), and start the application using `Procfile` (`web: node dist/server.js`).
-5. **Generate Public Domain**:
-   - In Railway, navigate to **Settings** -> **Networking** -> **Generate Domain** (or add a custom domain).
-   - Test your deployment by accessing the generated URL.
+```bash
+# 1. Health check
+curl -i https://your-service.onrender.com/health
+
+# 2. Homepage render
+curl -i https://your-service.onrender.com/
+
+# 3. Dynamic maintenance status API
+curl -i https://your-service.onrender.com/api/maintenance-status
+```
+
+### 6. Activating Maintenance Mode Safely
+
+Maintenance mode can be toggled without requiring application redeployments:
+
+- **Option A (Admin API)**: Authenticate to the admin dashboard and send a `POST /api/admin/maintenance/toggle` request.
+- **Option B (Render Dashboard)**: Update `MAINTENANCE_MODE=true` in Render's Environment Variables panel.
