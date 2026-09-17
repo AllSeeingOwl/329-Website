@@ -213,6 +213,7 @@ describe('adminAuth Middleware & Security Checks', () => {
 
       (expect as any)(res.json).toHaveBeenCalledWith({
         success: true,
+        message: 'Authenticated',
         token: (expect as any).any(String),
         expiresAt: (expect as any).any(String),
       });
@@ -234,6 +235,7 @@ describe('adminAuth Middleware & Security Checks', () => {
       (expect as any)(res.status).toHaveBeenCalledWith(401);
       (expect as any)(res.json).toHaveBeenCalledWith({
         success: false,
+        message: 'Invalid password',
         error: 'Unauthorized',
       });
     });
@@ -257,6 +259,7 @@ describe('adminAuth Middleware & Security Checks', () => {
       (expect as any)(res.status).toHaveBeenCalledWith(500);
       (expect as any)(res.json).toHaveBeenCalledWith({
         success: false,
+        message: 'Server configuration error: ADMIN_PASSWORD not configured',
         error: 'Server configuration error: ADMIN_PASSWORD not configured',
       });
     });

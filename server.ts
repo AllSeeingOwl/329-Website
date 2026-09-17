@@ -84,12 +84,42 @@ initDb()
   });
 
 // 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
-// Placed at the very top of the stack to bypass all routing, file serving, and parsing.
-app.use((req: Request, res: Response, next: NextFunction) => {
-  if (EMERGENCY_LOCKDOWN) {
-    res.status(503).type('text/plain').send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+// Placed at the top of the stack to bypass non-admin routing and static serving when active.
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  let reqPath: string;
+  try {
+    reqPath = decodeURIComponent(req.path);
+  } catch {
+    res.status(400).json({ error: 'Bad Request: Malformed URI' });
     return;
   }
+
+  // Always exempt admin routes so administrators can log in and toggle emergency lockdown
+  if (reqPath.startsWith('/api/admin')) {
+    next();
+    return;
+  }
+
+  try {
+    const sysConfig = await getConfigFromStore();
+    if (sysConfig.emergencyLockdown || EMERGENCY_LOCKDOWN) {
+      res
+        .status(503)
+        .type('text/plain')
+        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+      return;
+    }
+  } catch (err) {
+    console.error('Error checking system lockdown configuration:', err);
+    if (EMERGENCY_LOCKDOWN) {
+      res
+        .status(503)
+        .type('text/plain')
+        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+      return;
+    }
+  }
+
   next();
 });
 
@@ -266,7 +296,7 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 });
 
 import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
-import adminRouter, { getConfigFromStore } from './src/routes/admin';
+import adminRouter, { getConfigFromStore, getAnnouncementsFromStore } from './src/routes/admin';
 
 // Maintenance Middleware
 app.use(async (req: Request, res: Response, next: NextFunction) => {
@@ -459,6 +489,22 @@ app.get('/api/dashboard-config', async (req: Request, res: Response) => {
 app.get('/api/config/storefront', (req: Request, res: Response) => {
   const url = process.env.STOREFRONT_URL || '#';
   res.json({ url });
+});
+
+// Public endpoint to retrieve active and scheduled ARG announcements
+app.get('/api/announcements', async (req: Request, res: Response) => {
+  try {
+    const announcements = await getAnnouncementsFromStore();
+    const now = new Date().toISOString();
+    const activeAnnouncements = announcements.filter((a) => {
+      if (!a.active) return false;
+      if (a.scheduledAt && a.scheduledAt > now) return false;
+      return true;
+    });
+    res.json({ success: true, announcements: activeAnnouncements });
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch announcements' });
+  }
 });
 
 app.use(express.static(publicDir));
