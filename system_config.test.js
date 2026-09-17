@@ -54,6 +54,7 @@ describe('System Configuration & Maintenance Endpoints Tests', () => {
       emailNotificationEnabled: true,
       maxConcurrentSessions: 10,
       sessionTimeout: 15,
+      emergencyLockdown: false,
     });
   });
 
@@ -95,6 +96,7 @@ describe('System Configuration & Maintenance Endpoints Tests', () => {
       emailNotificationEnabled: false,
       maxConcurrentSessions: 20,
       sessionTimeout: 30,
+      emergencyLockdown: false,
     };
 
     const updateRes = await request(app)

@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import adminAuth, {
-  verifyPassword,
-  createAdminSession,
-  logAuthAttempt,
+  handleAdminLogin,
+  extractSessionToken,
+  destroyAdminSession,
 } from '../middleware/adminAuth';
 import { redis, isRedisAvailable } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
@@ -45,6 +45,7 @@ export interface SystemConfig {
   emailNotificationEnabled: boolean;
   maxConcurrentSessions: number;
   sessionTimeout: number; // minutes
+  emergencyLockdown: boolean;
 }
 
 const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
@@ -55,6 +56,59 @@ const DEFAULT_SYSTEM_CONFIG: SystemConfig = {
   emailNotificationEnabled: true,
   maxConcurrentSessions: 10,
   sessionTimeout: 15,
+  emergencyLockdown: false,
+};
+
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  active: boolean;
+  scheduledAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  author?: string;
+}
+
+let inMemoryAnnouncementsStore: Announcement[] = [
+  {
+    id: 'announcement-init-1',
+    title: 'NEURAL LINK NETWORK ACTIVE',
+    content: 'All surveillance nodes online. MLTK Phase 1 operational.',
+    active: true,
+    scheduledAt: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    author: 'SYSTEM',
+  },
+];
+
+export const getAnnouncementsFromStore = async (): Promise<Announcement[]> => {
+  if (isRedisAvailable()) {
+    try {
+      const stored = await redis.get<Announcement[] | string>('arg:announcements');
+      if (stored) {
+        const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
+    } catch (err) {
+      console.error('Error reading announcements from Redis:', err);
+    }
+  }
+  return [...inMemoryAnnouncementsStore];
+};
+
+export const saveAnnouncementsToStore = async (announcements: Announcement[]): Promise<void> => {
+  inMemoryAnnouncementsStore = announcements;
+  if (isRedisAvailable()) {
+    try {
+      await redis.set('arg:announcements', JSON.stringify(announcements));
+    } catch (err) {
+      console.error('Error saving announcements to Redis:', err);
+    }
+  }
 };
 
 const DEFAULT_PHASES: Phase[] = [
@@ -186,6 +240,20 @@ const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
   }
 };
 
+/**
+ * Helper to extract admin user identifier from body or headers.
+ */
+const getAdminUser = (req: Request): string => {
+  if (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) {
+    return req.body.adminUser.trim();
+  }
+  const headerUser = req.headers['x-admin-user'];
+  if (typeof headerUser === 'string' && headerUser.trim()) {
+    return headerUser.trim();
+  }
+  return 'admin';
+};
+
 const logPhaseChange = async (
   adminUser: string,
   action: string,
@@ -220,178 +288,11 @@ const logPhaseChange = async (
   }
 };
 
-// Rate limiting configuration for failed attempts
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_FAILED_ATTEMPTS = 5;
-
-interface AuthRequestBody {
-  password?: string;
-}
-
-interface AuthSuccessResponse {
-  success: true;
-  message: string;
-}
-
-interface AuthErrorResponse {
-  success: false;
-  message: string;
-}
-
-type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
-
-interface FailedAttemptRecord {
-  count: number;
-  firstFailedAttempt: number;
-}
-
-// In-memory rate limiting map for failed login attempts by IP
-const failedAttemptsMap = new Map<string, FailedAttemptRecord>();
-
-/**
- * Helper to get client IP address.
- */
-const getClientIp = (req: Request): string => {
-  return req.ip || req.socket.remoteAddress || 'unknown';
-};
-
-/**
- * Checks if the IP is currently rate-limited due to excessive failed attempts.
- */
-const isRateLimited = (ip: string, now: number = Date.now()): boolean => {
-  const record = failedAttemptsMap.get(ip);
-  if (!record) return false;
-
-  // If window has passed, reset record
-  if (now - record.firstFailedAttempt > RATE_LIMIT_WINDOW_MS) {
-    failedAttemptsMap.delete(ip);
-    return false;
-  }
-
-  return record.count >= MAX_FAILED_ATTEMPTS;
-};
-
-/**
- * Records a failed authentication attempt for an IP.
- */
-const recordFailedAttempt = (ip: string, now: number = Date.now()): void => {
-  // Evict oldest entry if map exceeds safe size (e.g., 1000 IPs) to prevent memory leak
-  if (failedAttemptsMap.size >= 1000 && !failedAttemptsMap.has(ip)) {
-    const oldestKey = failedAttemptsMap.keys().next().value;
-    if (oldestKey !== undefined) {
-      failedAttemptsMap.delete(oldestKey);
-    }
-  }
-
-  const record = failedAttemptsMap.get(ip);
-
-  if (!record || now - record.firstFailedAttempt > RATE_LIMIT_WINDOW_MS) {
-    failedAttemptsMap.set(ip, {
-      count: 1,
-      firstFailedAttempt: now,
-    });
-  } else {
-    record.count += 1;
-    failedAttemptsMap.set(ip, record);
-  }
-};
-
-/**
- * Clears failed attempts on successful authentication.
- */
-const clearFailedAttempts = (ip: string): void => {
-  failedAttemptsMap.delete(ip);
-};
-
-/**
- * Helper to reset the entire rate limit map (useful for unit tests).
- */
-export const resetRateLimitMap = (): void => {
-  failedAttemptsMap.clear();
-};
-
 /**
  * POST /api/admin/authenticate
- * Hidden admin authentication endpoint.
+ * Canonical admin authentication endpoint.
  */
-router.post(
-  '/authenticate',
-  async (
-    req: Request<Record<string, string>, AuthResponse, AuthRequestBody>,
-    res: Response<AuthResponse>
-  ): Promise<void> => {
-    const ip = getClientIp(req);
-    const now = Date.now();
-
-    // Check rate limit for failed attempts
-    if (isRateLimited(ip, now)) {
-      logAuthAttempt('AUTHENTICATE', false, ip, 'Rate limit exceeded');
-      res.status(429).json({
-        success: false,
-        message: 'Too many failed login attempts. Please try again later.',
-      });
-      return;
-    }
-
-    const { password } = req.body || {};
-
-    let isValid: boolean;
-    try {
-      isValid = verifyPassword(password);
-    } catch (err) {
-      if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
-        res.status(500).json({
-          success: false,
-          message: 'Server configuration error: ADMIN_PASSWORD not configured',
-        });
-        return;
-      }
-      throw err;
-    }
-
-    if (!isValid) {
-      recordFailedAttempt(ip, now);
-      logAuthAttempt('AUTHENTICATE', false, ip, 'Invalid password');
-      res.status(401).json({
-        success: false,
-        message: 'Invalid password',
-      });
-      return;
-    }
-
-    // Password valid -> Clear failed attempts tracking
-    clearFailedAttempts(ip);
-
-    // Create session in Upstash Redis
-    const session = await createAdminSession(ip);
-
-    if (!session) {
-      logAuthAttempt('AUTHENTICATE', false, ip, 'Session creation failed');
-      res.status(500).json({
-        success: false,
-        message: 'Failed to create session',
-      });
-      return;
-    }
-
-    logAuthAttempt('AUTHENTICATE', true, ip, 'Admin authenticated successfully');
-
-    // Set secure httpOnly cookie with session token
-    const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('admin_session', session.token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 minutes in ms
-      path: '/',
-    });
-
-    res.json({
-      success: true,
-      message: 'Authenticated',
-    });
-  }
-);
+router.post('/authenticate', handleAdminLogin);
 
 /**
  * GET /api/admin/phases
@@ -768,12 +669,16 @@ const validateSystemConfig = (body: unknown): { isValid: boolean; error?: string
   }
 
   const reqObj = body as Record<string, unknown>;
+  if (typeof reqObj.emergencyLockdown !== 'boolean') {
+    reqObj.emergencyLockdown = false;
+  }
   const requiredBooleanKeys: (keyof SystemConfig)[] = [
     'maintenanceMode',
     'publicSiteEnabled',
     'adminPanelEnabled',
     'allowEmailCollection',
     'emailNotificationEnabled',
+    'emergencyLockdown',
   ];
 
   for (const key of requiredBooleanKeys) {
@@ -847,12 +752,10 @@ router.put('/config', adminAuth, async (req: Request, res: Response): Promise<vo
       emailNotificationEnabled: req.body.emailNotificationEnabled,
       maxConcurrentSessions: req.body.maxConcurrentSessions,
       sessionTimeout: req.body.sessionTimeout,
+      emergencyLockdown: req.body.emergencyLockdown,
     };
 
-    const adminUser =
-      (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
-      (req.headers['x-admin-user'] as string) ||
-      'admin';
+    const adminUser = getAdminUser(req);
 
     await saveConfigToStore(newConfig);
     await logPhaseChange(adminUser, 'UPDATE_SYSTEM_CONFIG', 'system_config', { config: newConfig });
@@ -985,10 +888,269 @@ router.get('/audit-logs', adminAuth, async (_req: Request, res: Response): Promi
 });
 
 /**
+ * Validate Announcement request body.
+ */
+const validateAnnouncementBody = (body: unknown): { isValid: boolean; error?: string } => {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return { isValid: false, error: 'Request body must be an object' };
+  }
+  const obj = body as Record<string, unknown>;
+  if (typeof obj.title !== 'string' || !obj.title.trim()) {
+    return { isValid: false, error: "'title' is required and must be a non-empty string" };
+  }
+  if (typeof obj.content !== 'string' || !obj.content.trim()) {
+    return { isValid: false, error: "'content' is required and must be a non-empty string" };
+  }
+  if (obj.active !== undefined && typeof obj.active !== 'boolean') {
+    return { isValid: false, error: "'active' must be a boolean" };
+  }
+  if (
+    obj.scheduledAt !== null &&
+    obj.scheduledAt !== undefined &&
+    typeof obj.scheduledAt !== 'string'
+  ) {
+    return { isValid: false, error: "'scheduledAt' must be an ISO date string or null" };
+  }
+  return { isValid: true };
+};
+
+/**
+ * GET /api/admin/announcements
+ * Returns all ARG announcements.
+ */
+router.get('/announcements', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const announcements = await getAnnouncementsFromStore();
+    res.json({
+      success: true,
+      announcements,
+    });
+  } catch (error) {
+    console.error('Error in GET /api/admin/announcements:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch announcements' });
+  }
+});
+
+/**
+ * POST /api/admin/announcements
+ * Creates a new ARG narrative announcement.
+ */
+router.post('/announcements', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const validation = validateAnnouncementBody(req.body);
+    if (!validation.isValid) {
+      res.status(400).json({ success: false, message: validation.error });
+      return;
+    }
+
+    const announcements = await getAnnouncementsFromStore();
+    const now = new Date().toISOString();
+    const adminUser = getAdminUser(req);
+
+    const newAnnouncement: Announcement = {
+      id: `announcement-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      title: req.body.title.trim(),
+      content: req.body.content.trim(),
+      active: typeof req.body.active === 'boolean' ? req.body.active : true,
+      scheduledAt: req.body.scheduledAt || null,
+      createdAt: now,
+      updatedAt: now,
+      author: adminUser,
+    };
+
+    announcements.unshift(newAnnouncement);
+    await saveAnnouncementsToStore(announcements);
+
+    await logPhaseChange(adminUser, 'CREATE_ANNOUNCEMENT', newAnnouncement.id, {
+      title: newAnnouncement.title,
+      active: newAnnouncement.active,
+      scheduledAt: newAnnouncement.scheduledAt,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Announcement created successfully',
+      announcement: newAnnouncement,
+    });
+  } catch (error) {
+    console.error('Error in POST /api/admin/announcements:', error);
+    res.status(500).json({ success: false, message: 'Failed to create announcement' });
+  }
+});
+
+/**
+ * PUT /api/admin/announcements/:id
+ * Updates an existing ARG announcement.
+ */
+router.put('/announcements/:id', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const validation = validateAnnouncementBody(req.body);
+    if (!validation.isValid) {
+      res.status(400).json({ success: false, message: validation.error });
+      return;
+    }
+
+    const announcements = await getAnnouncementsFromStore();
+    const index = announcements.findIndex((a) => a.id === id);
+
+    if (index === -1) {
+      res.status(404).json({ success: false, message: 'Announcement not found' });
+      return;
+    }
+
+    const adminUser = getAdminUser(req);
+
+    const updatedAnnouncement: Announcement = {
+      ...announcements[index],
+      title: req.body.title.trim(),
+      content: req.body.content.trim(),
+      active: typeof req.body.active === 'boolean' ? req.body.active : announcements[index].active,
+      scheduledAt:
+        req.body.scheduledAt !== undefined
+          ? req.body.scheduledAt
+          : announcements[index].scheduledAt,
+      updatedAt: new Date().toISOString(),
+      author: adminUser,
+    };
+
+    announcements[index] = updatedAnnouncement;
+    await saveAnnouncementsToStore(announcements);
+
+    await logPhaseChange(adminUser, 'UPDATE_ANNOUNCEMENT', id, {
+      title: updatedAnnouncement.title,
+      active: updatedAnnouncement.active,
+      scheduledAt: updatedAnnouncement.scheduledAt,
+    });
+
+    res.json({
+      success: true,
+      message: 'Announcement updated successfully',
+      announcement: updatedAnnouncement,
+    });
+  } catch (error) {
+    console.error('Error in PUT /api/admin/announcements/:id:', error);
+    res.status(500).json({ success: false, message: 'Failed to update announcement' });
+  }
+});
+
+/**
+ * DELETE /api/admin/announcements/:id
+ * Deletes an ARG announcement.
+ */
+router.delete(
+  '/announcements/:id',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = req.params.id as string;
+      const announcements = await getAnnouncementsFromStore();
+      const filtered = announcements.filter((a) => a.id !== id);
+
+      if (filtered.length === announcements.length) {
+        res.status(404).json({ success: false, message: 'Announcement not found' });
+        return;
+      }
+
+      const adminUser = getAdminUser(req);
+
+      await saveAnnouncementsToStore(filtered);
+      await logPhaseChange(adminUser, 'DELETE_ANNOUNCEMENT', id, {});
+
+      res.json({
+        success: true,
+        message: 'Announcement deleted successfully',
+        id,
+      });
+    } catch (error) {
+      console.error('Error in DELETE /api/admin/announcements/:id:', error);
+      res.status(500).json({ success: false, message: 'Failed to delete announcement' });
+    }
+  }
+);
+
+/**
+ * POST /api/admin/announcements/:id/toggle
+ * Toggles an announcement's active state.
+ */
+router.post(
+  '/announcements/:id/toggle',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = req.params.id as string;
+      const announcements = await getAnnouncementsFromStore();
+      const item = announcements.find((a) => a.id === id);
+
+      if (!item) {
+        res.status(404).json({ success: false, message: 'Announcement not found' });
+        return;
+      }
+
+      const nextState = typeof req.body?.active === 'boolean' ? req.body.active : !item.active;
+      item.active = nextState;
+      item.updatedAt = new Date().toISOString();
+
+      const adminUser = getAdminUser(req);
+
+      await saveAnnouncementsToStore(announcements);
+      await logPhaseChange(adminUser, 'TOGGLE_ANNOUNCEMENT', id, { active: nextState });
+
+      res.json({
+        success: true,
+        message: `Announcement ${nextState ? 'enabled' : 'disabled'} successfully`,
+        announcement: item,
+      });
+    } catch (error) {
+      console.error('Error in POST /api/admin/announcements/:id/toggle:', error);
+      res.status(500).json({ success: false, message: 'Failed to toggle announcement' });
+    }
+  }
+);
+
+/**
+ * POST /api/admin/lockdown/toggle
+ * Enable or disable emergency lockdown state.
+ */
+router.post('/lockdown/toggle', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const currentConfig = await getConfigFromStore();
+    const nextState =
+      typeof req.body?.enabled === 'boolean' ? req.body.enabled : !currentConfig.emergencyLockdown;
+
+    const updatedConfig: SystemConfig = {
+      ...currentConfig,
+      emergencyLockdown: nextState,
+    };
+
+    const adminUser = getAdminUser(req);
+
+    await saveConfigToStore(updatedConfig);
+    await logPhaseChange(adminUser, 'TOGGLE_EMERGENCY_LOCKDOWN', 'system_config', {
+      emergencyLockdown: nextState,
+    });
+
+    res.json({
+      success: true,
+      message: `Emergency lockdown ${nextState ? 'enabled' : 'disabled'} successfully`,
+      emergencyLockdown: nextState,
+      config: updatedConfig,
+    });
+  } catch (error) {
+    console.error('Error in POST /api/admin/lockdown/toggle:', error);
+    res.status(500).json({ success: false, message: 'Failed to toggle emergency lockdown' });
+  }
+});
+
+/**
  * POST /api/admin/logout
  * Logs out the admin user and clears the session cookie.
  */
-router.post('/logout', async (_req: Request, res: Response): Promise<void> => {
+router.post('/logout', async (req: Request, res: Response): Promise<void> => {
+  const token = extractSessionToken(req);
+  if (token) {
+    await destroyAdminSession(token);
+  }
   res.clearCookie('admin_session', { path: '/' });
   res.json({
     success: true,

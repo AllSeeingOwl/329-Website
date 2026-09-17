@@ -17,7 +17,7 @@ jest.mock('@upstash/redis', () => {
 });
 
 const app = require('./server');
-const { resetRateLimitMap } = require('./src/routes/admin');
+const { resetRateLimitMap } = require('./src/middleware/adminAuth');
 
 describe('POST /api/admin/authenticate', () => {
   const originalEnv = process.env;
@@ -43,10 +43,8 @@ describe('POST /api/admin/authenticate', () => {
       .send({ password: 'super-secret-admin-pass' });
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      success: true,
-      message: 'Authenticated',
-    });
+    expect(res.body.success).toBe(true);
+    expect(res.body.message).toBe('Authenticated');
 
     const cookies = res.headers['set-cookie'];
     expect(cookies).toBeDefined();
@@ -62,10 +60,8 @@ describe('POST /api/admin/authenticate', () => {
       .send({ password: 'wrong-password' });
 
     expect(res.status).toBe(401);
-    expect(res.body).toEqual({
-      success: false,
-      message: 'Invalid password',
-    });
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toBe('Invalid password');
   });
 
   it('rate limits after 5 failed login attempts from the same IP', async () => {
@@ -83,10 +79,8 @@ describe('POST /api/admin/authenticate', () => {
       .send({ password: 'super-secret-admin-pass' });
 
     expect(resBlocked.status).toBe(429);
-    expect(resBlocked.body).toEqual({
-      success: false,
-      message: 'Too many failed login attempts. Please try again later.',
-    });
+    expect(resBlocked.body.success).toBe(false);
+    expect(resBlocked.body.message).toBe('Too many failed login attempts. Please try again later.');
   });
 
   it('clears failed attempts counter on successful login', async () => {
