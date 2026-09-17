@@ -73,9 +73,7 @@ describe('ARG Announcements API Endpoints', () => {
 
   it('retrieves announcements list when authenticated', async () => {
     const cookies = await loginAdmin();
-    const res = await request(app)
-      .get('/api/admin/announcements')
-      .set('Cookie', cookies);
+    const res = await request(app).get('/api/admin/announcements').set('Cookie', cookies);
 
     (expect as any)(res.status).toBe(200);
     (expect as any)(res.body.success).toBe(true);
