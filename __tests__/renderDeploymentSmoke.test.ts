@@ -68,9 +68,7 @@ describe('Render Deployment Smoke Tests', () => {
     });
 
     it('Login fails with invalid password', async () => {
-      const res = await request(app)
-        .post('/api/admin/verify')
-        .send({ password: 'wrong-password' });
+      const res = await request(app).post('/api/admin/verify').send({ password: 'wrong-password' });
 
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.success).toBe(false);
@@ -78,9 +76,7 @@ describe('Render Deployment Smoke Tests', () => {
     });
 
     it('Login succeeds only with server-side configured ADMIN_PASSWORD', async () => {
-      const res = await request(app)
-        .post('/api/admin/verify')
-        .send({ password: TEST_ADMIN_PWD });
+      const res = await request(app).post('/api/admin/verify').send({ password: TEST_ADMIN_PWD });
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
@@ -103,27 +99,21 @@ describe('Render Deployment Smoke Tests', () => {
     });
 
     it('Player verification (/api/verify) succeeds with AUTH_PASSWORD', async () => {
-      const res = await request(app)
-        .post('/api/verify')
-        .send({ code: TEST_AUTH_PWD });
+      const res = await request(app).post('/api/verify').send({ code: TEST_AUTH_PWD });
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
     });
 
     it('Player verification (/api/verify) fails with ADMIN_PASSWORD', async () => {
-      const res = await request(app)
-        .post('/api/verify')
-        .send({ code: TEST_ADMIN_PWD });
+      const res = await request(app).post('/api/verify').send({ code: TEST_ADMIN_PWD });
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(false);
     });
 
     it('Admin auth (/api/admin/verify) fails with AUTH_PASSWORD', async () => {
-      const res = await request(app)
-        .post('/api/admin/verify')
-        .send({ password: TEST_AUTH_PWD });
+      const res = await request(app).post('/api/admin/verify').send({ password: TEST_AUTH_PWD });
 
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.success).toBe(false);

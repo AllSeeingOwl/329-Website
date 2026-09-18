@@ -5,6 +5,7 @@ This document provides guidelines and verification steps for validating the Rend
 ## Overview & Architecture Verification
 
 Render Service Configuration (`render.yaml`):
+
 - **Service Type**: Web Service (`type: web`)
 - **Environment**: Node.js (`env: node`)
 - **Build Command**: `pnpm install && pnpm run build`
@@ -13,6 +14,7 @@ Render Service Configuration (`render.yaml`):
 - **Auto Deploy**: `true`
 
 ### Key Environment Variables Configured in Render
+
 - `NODE_ENV`: `production`
 - `ADMIN_PASSWORD`: Secret admin password for `/api/admin/verify` & admin console access.
 - `AUTH_PASSWORD`: Secret ARG player code for `/api/verify` gate.
@@ -26,12 +28,14 @@ Render Service Configuration (`render.yaml`):
 ## Smoke Test Checklist
 
 ### 1. Health Check
+
 - **Endpoint**: `GET /health`
 - **Expected Status**: `200 OK`
 - **Expected Response**: `{"status": "ok"}`
 - **Purpose**: Confirms the Express process is active and accepting requests on Render.
 
 ### 2. Admin UI Resolution
+
 - **Endpoint**: `GET /admin/`
 - **Expected Status**: `200 OK`
 - **Expected Response**: HTML page containing the retro retro-terminal Admin Console UI (`public/admin/index.html`).
@@ -40,6 +44,7 @@ Render Service Configuration (`render.yaml`):
 - **Expected Response**: HTML page containing the MLTK Admin Dashboard interface (`public/mltk-admin.html`).
 
 ### 3. Unauthenticated Access Protection
+
 - **Endpoints**:
   - `GET /api/admin/dashboard-config`
   - `GET /api/admin/maintenance-config`
@@ -51,6 +56,7 @@ Render Service Configuration (`render.yaml`):
 - **Expected Response**: JSON error indicating session required (e.g. `{"error": "Unauthorized: Admin session required"}`).
 
 ### 4. Admin Authentication (`ADMIN_PASSWORD`)
+
 - **Endpoint**: `POST /api/admin/verify`
 - **Invalid Password Test**:
   - Payload: `{"password": "wrong-password-123"}`
@@ -63,6 +69,7 @@ Render Service Configuration (`render.yaml`):
   - Cookie Set: `admin_session` HTTP-only, Secure cookie.
 
 ### 5. MLTK Player Verification Separation (`AUTH_PASSWORD`)
+
 - **Endpoint**: `POST /api/verify`
 - **Purpose**: Verify that MLTK ARG player verification is decoupled from administrative authentication.
 - **Incorrect Code Test**:
@@ -74,6 +81,7 @@ Render Service Configuration (`render.yaml`):
 - **Verification**: Ensure passing `ADMIN_PASSWORD` to `/api/verify` or `AUTH_PASSWORD` to `/api/admin/verify` fails cleanly without granting unintended privilege cross-over.
 
 ### 6. Zero Sensitive Data Exposure
+
 - Confirm that no responses, logs, or test outputs expose:
   - `ADMIN_PASSWORD`
   - `AUTH_PASSWORD`
