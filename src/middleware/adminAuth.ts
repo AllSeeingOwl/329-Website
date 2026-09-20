@@ -42,6 +42,29 @@ export const generateSessionToken = (): string => {
  * Verifies the provided password against ADMIN_PASSWORD.
  * Uses timing-safe equality comparison to prevent timing attacks.
  */
+/**
+ * Verifies the provided key against ADMIN_BYPASS_KEY / ADMIN_SECRET_KEY.
+ * Uses timing-safe equality comparison to prevent timing attacks.
+ */
+export const verifyBypassKey = (key: unknown): boolean => {
+  if (typeof key !== 'string' || !key.trim()) return false;
+
+  const bypassKey = process.env.ADMIN_BYPASS_KEY || process.env.ADMIN_SECRET_KEY;
+  if (!bypassKey || !bypassKey.trim()) {
+    return false;
+  }
+
+  const keyBuffer = Buffer.from(key.trim());
+  const bypassKeyBuffer = Buffer.from(bypassKey.trim());
+
+  if (keyBuffer.length !== bypassKeyBuffer.length) {
+    crypto.timingSafeEqual(bypassKeyBuffer, bypassKeyBuffer);
+    return false;
+  }
+
+  return crypto.timingSafeEqual(new Uint8Array(keyBuffer), new Uint8Array(bypassKeyBuffer));
+};
+
 export const verifyPassword = (password: unknown): boolean => {
   if (typeof password !== 'string') return false;
 
@@ -240,21 +263,32 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
     return;
   }
 
-  const { password } = req.body || {};
+  const password = req.body?.password || req.body?.key || req.query?.key || req.query?.token;
+  const directKey = req.body?.key || req.query?.key || req.query?.token;
 
   let isValid: boolean;
-  try {
-    isValid = verifyPassword(password);
-  } catch (err) {
-    if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
-      res.status(500).json({
-        success: false,
-        message: 'Server configuration error: ADMIN_PASSWORD not configured',
-        error: 'Server configuration error: ADMIN_PASSWORD not configured',
-      });
-      return;
+  let usedBypassKey = false;
+
+  if (directKey && verifyBypassKey(directKey)) {
+    isValid = true;
+    usedBypassKey = true;
+  } else if (password && verifyBypassKey(password)) {
+    isValid = true;
+    usedBypassKey = true;
+  } else {
+    try {
+      isValid = verifyPassword(password);
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('ADMIN_PASSWORD')) {
+        res.status(500).json({
+          success: false,
+          message: 'Server configuration error: ADMIN_PASSWORD not configured',
+          error: 'Server configuration error: ADMIN_PASSWORD not configured',
+        });
+        return;
+      }
+      throw err;
     }
-    throw err;
   }
 
   if (!isValid) {
@@ -276,7 +310,12 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
 
   rateLimitMap.delete(ip);
 
-  logAuthAttempt('LOGIN', true, ip, 'Password verified');
+  logAuthAttempt(
+    'LOGIN',
+    true,
+    ip,
+    usedBypassKey ? 'Authenticated via secret bypass key' : 'Password verified'
+  );
   const session = await createAdminSession(ip);
 
   if (!session) {

@@ -36,6 +36,55 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
     process.env = originalEnv;
   });
 
+  describe('Secret Bypass Key Authentication', () => {
+    beforeEach(() => {
+      process.env.ADMIN_BYPASS_KEY = 'secret-bypass-key-2084';
+    });
+
+    it('authenticates successfully via GET /api/admin/quick-login?key=...', async () => {
+      mockSet.mockResolvedValue('OK');
+
+      const res = await request(app).get('/api/admin/quick-login?key=secret-bypass-key-2084');
+
+      (expect as any)(res.status).toBe(200);
+      (expect as any)(res.body.success).toBe(true);
+
+      const cookies = res.headers['set-cookie'] as unknown as string[];
+      (expect as any)(cookies).toBeDefined();
+      const adminCookie = cookies.find((c: string) => c.startsWith('admin_session='));
+      (expect as any)(adminCookie).toBeDefined();
+    });
+
+    it('redirects HTML browser request to /admin/ on GET /api/admin/quick-login?key=...', async () => {
+      mockSet.mockResolvedValue('OK');
+
+      const res = await request(app)
+        .get('/api/admin/quick-login?key=secret-bypass-key-2084')
+        .set('Accept', 'text/html');
+
+      (expect as any)(res.status).toBe(302);
+      (expect as any)(res.headers.location).toBe('/admin/');
+    });
+
+    it('authenticates via POST /api/admin/authenticate using bypass key in password field', async () => {
+      mockSet.mockResolvedValue('OK');
+
+      const res = await request(app)
+        .post('/api/admin/authenticate')
+        .send({ password: 'secret-bypass-key-2084' });
+
+      (expect as any)(res.status).toBe(200);
+      (expect as any)(res.body.success).toBe(true);
+    });
+
+    it('rejects invalid bypass key (401)', async () => {
+      const res = await request(app).get('/api/admin/quick-login?key=wrong-bypass-key');
+
+      (expect as any)(res.status).toBe(401);
+      (expect as any)(res.body.success).toBe(false);
+    });
+  });
+
   describe('Login & Password Handling', () => {
     it('authenticates successfully with valid password and sets HttpOnly cookie', async () => {
       mockSet.mockResolvedValue('OK');

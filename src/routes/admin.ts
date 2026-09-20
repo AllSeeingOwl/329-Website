@@ -3,6 +3,9 @@ import adminAuth, {
   handleAdminLogin,
   extractSessionToken,
   destroyAdminSession,
+  verifyBypassKey,
+  createAdminSession,
+  logAuthAttempt,
 } from '../middleware/adminAuth';
 import { redis, isRedisAvailable } from '../redis';
 import { getAllEmails, clearAllEmails } from '../../db';
@@ -100,7 +103,7 @@ export const getAnnouncementsFromStore = async (): Promise<Announcement[]> => {
   return [...inMemoryAnnouncementsStore];
 };
 
-export const saveAnnouncementsToStore = async (announcements: Announcement[]): Promise<void> => {
+const saveAnnouncementsToStore = async (announcements: Announcement[]): Promise<void> => {
   inMemoryAnnouncementsStore = announcements;
   if (isRedisAvailable()) {
     try {
@@ -287,6 +290,66 @@ const logPhaseChange = async (
     }
   }
 };
+
+/**
+ * GET / POST /api/admin/quick-login
+ * Quick authentication route via secret bypass key (?key=... or ?token=...).
+ */
+router.all('/quick-login', async (req: Request, res: Response): Promise<void> => {
+  const key = req.query.key || req.query.token || req.body?.key || req.body?.token;
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+
+  if (!key || typeof key !== 'string' || !verifyBypassKey(key)) {
+    logAuthAttempt('QUICK_LOGIN', false, ip, 'Invalid or missing bypass key');
+    res.status(401).json({
+      success: false,
+      message: 'Invalid or missing secret bypass key',
+      error: 'Unauthorized',
+    });
+    return;
+  }
+
+  logAuthAttempt('QUICK_LOGIN', true, ip, 'Secret bypass key verified');
+  const session = await createAdminSession(ip);
+
+  if (!session) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create session due to storage error',
+      error: 'Failed to create session due to storage error',
+    });
+    return;
+  }
+
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (typeof res.cookie === 'function') {
+    res.cookie('admin_session', session.token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000,
+      path: '/',
+    });
+  }
+
+  if (req.method === 'GET' && req.accepts(['json', 'html']) === 'html') {
+    res.redirect('/admin/');
+    return;
+  }
+
+  const responseBody: Record<string, unknown> = {
+    success: true,
+    message: 'Authenticated via secret bypass key',
+    expiresAt: session.expiresAt,
+  };
+
+  if (!isProduction) {
+    responseBody.token = session.token;
+  }
+
+  res.json(responseBody);
+});
 
 /**
  * POST /api/admin/authenticate
