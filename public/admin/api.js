@@ -246,6 +246,29 @@
    * @param {string} password
    * @returns {Promise<Object>}
    */
+  /**
+   * Quick login using secret bypass key.
+   * Calls GET /api/admin/quick-login?key=...
+   *
+   * @param {string} key
+   * @returns {Promise<Object>}
+   */
+  function quickLogin(key) {
+    if (!key || typeof key !== 'string') {
+      return Promise.reject(createStandardError(400, 'Secret key is required'));
+    }
+
+    return apiRequest(`/api/admin/quick-login?key=${encodeURIComponent(key)}`, {
+      method: 'GET',
+    }).then((res) => {
+      if (res && res.success) {
+        authenticated = true;
+        flushQueue();
+      }
+      return res;
+    });
+  }
+
   function authenticateAdmin(password) {
     if (!password || typeof password !== 'string') {
       return Promise.reject(createStandardError(400, 'Password is required'));
@@ -533,6 +556,7 @@
   // Public Module API
   return {
     // Session & Configuration
+    quickLogin,
     authenticateAdmin,
     logoutAdmin,
     isAuthenticated,

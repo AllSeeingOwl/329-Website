@@ -714,6 +714,38 @@
 
         logoutBtn.addEventListener('click', handleLogout);
 
+        // Check for quick-login key / token parameter in URL (e.g. /admin/?key=YOUR_SECRET_KEY)
+        async function checkQuickLoginParam() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const keyParam = urlParams.get('key') || urlParams.get('token');
+
+          if (keyParam) {
+            const data = await apiFetch(
+              '/api/admin/quick-login?key=' + encodeURIComponent(keyParam),
+              { method: 'GET' },
+              authBtn,
+              'AUTHENTICATING VIA BYPASS KEY...'
+            );
+
+            if (data && data.success) {
+              // Clean secret key from URL bar to prevent history/referer exposure
+              const cleanUrl = window.location.pathname + window.location.hash;
+              window.history.replaceState({}, document.title, cleanUrl);
+
+              loginPanel.style.display = 'none';
+              adminDashboard.style.display = 'block';
+              clearMessage(loginStatus);
+              startSessionTimer(15);
+              loadDashboardData();
+            } else if (data) {
+              showMessage(data.message || 'BYPASS AUTHENTICATION FAILED', true, loginStatus);
+            }
+          }
+        }
+
+        // Initialize quick-login check on page load
+        checkQuickLoginParam();
+
         // Load all dashboard sections
         async function loadDashboardData() {
           await Promise.all([
