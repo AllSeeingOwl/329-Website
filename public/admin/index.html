@@ -630,6 +630,8 @@
             btn.textContent = loadingText;
           }
 
+          const targetEl = options.targetEl || globalStatus;
+
           try {
             const res = await fetch(url, {
               ...options,
@@ -639,9 +641,9 @@
               },
             });
 
-            if (res.status === 401) {
+            if (res.status === 401 && !options.skip401Redirect) {
               // Session invalid or expired
-              showMessage('UNAUTHORIZED OR SESSION EXPIRED. PLEASE LOG IN AGAIN.', true);
+              showMessage('UNAUTHORIZED OR SESSION EXPIRED. PLEASE LOG IN AGAIN.', true, targetEl);
               handleLogout();
               return null;
             }
@@ -665,7 +667,7 @@
             return data;
           } catch (err) {
             console.error('API Error:', url, err);
-            showMessage(err.message || 'NETWORK ERROR ENCOUNTERED', true);
+            showMessage(err.message || 'NETWORK ERROR ENCOUNTERED', true, targetEl);
             return null;
           } finally {
             if (btn) {
@@ -686,6 +688,8 @@
             {
               method: 'POST',
               body: JSON.stringify({ password: pwd }),
+              skip401Redirect: true,
+              targetEl: loginStatus,
             },
             authBtn,
             'AUTHENTICATING...'
@@ -699,7 +703,7 @@
             startSessionTimer(15);
             loadDashboardData();
           } else if (data) {
-            showMessage(data.message || 'AUTHENTICATION FAILED', true, loginStatus);
+            showMessage(data.message || data.error || 'AUTHENTICATION FAILED', true, loginStatus);
           }
         });
 
@@ -722,7 +726,7 @@
           if (keyParam) {
             const data = await apiFetch(
               '/api/admin/quick-login?key=' + encodeURIComponent(keyParam),
-              { method: 'GET' },
+              { method: 'GET', skip401Redirect: true, targetEl: loginStatus },
               authBtn,
               'AUTHENTICATING VIA BYPASS KEY...'
             );
@@ -738,13 +742,46 @@
               startSessionTimer(15);
               loadDashboardData();
             } else if (data) {
-              showMessage(data.message || 'BYPASS AUTHENTICATION FAILED', true, loginStatus);
+              showMessage(
+                data.message || data.error || 'BYPASS AUTHENTICATION FAILED',
+                true,
+                loginStatus
+              );
             }
           }
         }
 
-        // Initialize quick-login check on page load
-        checkQuickLoginParam();
+        // Check if an admin session is already active via session cookie
+        async function checkExistingSession() {
+          const res = await fetch('/api/admin/config', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (res.ok) {
+            const data = await res.json().catch(() => null);
+            if (data && data.success) {
+              loginPanel.style.display = 'none';
+              adminDashboard.style.display = 'block';
+              clearMessage(loginStatus);
+              startSessionTimer(15);
+              loadDashboardData();
+              return true;
+            }
+          }
+          return false;
+        }
+
+        // Initialize checks on page load
+        (async function init() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const hasKey = urlParams.has('key') || urlParams.has('token');
+          if (hasKey) {
+            await checkQuickLoginParam();
+          } else {
+            await checkExistingSession();
+          }
+        })();
 
         // Load all dashboard sections
         async function loadDashboardData() {
