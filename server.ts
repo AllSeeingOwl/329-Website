@@ -567,11 +567,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     } catch {
       reqPath = req.path;
     }
-    if (
-      reqPath.endsWith('.html') &&
-      reqPath !== '/404.html' &&
-      reqPath !== '/maintenance.html'
-    ) {
+    if (reqPath.endsWith('.html') && reqPath !== '/404.html' && reqPath !== '/maintenance.html') {
       if (reqPath === '/index.html') {
         const query = req.url.slice(reqPath.length);
         return res.redirect(301, '/' + query);
