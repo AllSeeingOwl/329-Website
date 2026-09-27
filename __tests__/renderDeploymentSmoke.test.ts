@@ -33,11 +33,10 @@ describe('Render Deployment Smoke Tests', () => {
       (expect as any)(res.text.toLowerCase()).toContain('admin');
     });
 
-    it('GET /mltk-admin.html returns 200 OK and serves MLTK admin UI', async () => {
+    it('GET /mltk-admin.html returns 301 redirect to /admin/', async () => {
       const res = await request(app).get('/mltk-admin.html');
-      (expect as any)(res.status).toBe(200);
-      (expect as any)(res.text).toContain('<!doctype html>');
-      (expect as any)(res.text).toContain('MLTK');
+      (expect as any)(res.status).toBe(301);
+      (expect as any)(res.headers.location).toBe('/admin/');
     });
   });
 
