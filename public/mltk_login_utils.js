@@ -121,7 +121,7 @@ async function verifyCode(e) {
 
     // Briefly display success screen then redirect to surveillance dashboard
     setTimeout(() => {
-      window.location.href = 'mltk-surveillance-dashboard.html';
+      window.location.href = 'mltk-surveillance-dashboard';
     }, 2000);
   } catch (error) {
     console.error('Error verifying code:', error);
