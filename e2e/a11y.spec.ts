@@ -8,7 +8,7 @@ const pages = [
   '/index.html',
   '/surface-home-page.html',
   '/mltk-privacy-policy.html',
-  '/mltk-admin.html',
+  '/admin/',
   '/mltk-surveillance-dashboard.html',
   '/secure-data-drop-page.html',
   '/404.html',

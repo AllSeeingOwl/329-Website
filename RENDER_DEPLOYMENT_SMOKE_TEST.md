@@ -40,8 +40,8 @@ Render Service Configuration (`render.yaml`):
 - **Expected Status**: `200 OK`
 - **Expected Response**: HTML page containing the retro retro-terminal Admin Console UI (`public/admin/index.html`).
 - **Endpoint**: `GET /mltk-admin.html`
-- **Expected Status**: `200 OK`
-- **Expected Response**: HTML page containing the MLTK Admin Dashboard interface (`public/mltk-admin.html`).
+- **Expected Status**: `301 Moved Permanently`
+- **Expected Response**: Redirect location header pointing to `/admin/`.
 
 ### 3. Unauthenticated Access Protection
 
