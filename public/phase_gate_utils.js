@@ -1,6 +1,9 @@
 async function checkPhaseModuleGate(pageFilename) {
   try {
-    const isLocalBypassed = localStorage.getItem('mltk_bypass_' + pageFilename) === 'true';
+    const cleanFilename = pageFilename.replace(/\.html$/, '');
+    const isLocalBypassed =
+      localStorage.getItem('mltk_bypass_' + pageFilename) === 'true' ||
+      localStorage.getItem('mltk_bypass_' + cleanFilename) === 'true';
     if (isLocalBypassed) return;
 
     const res = await fetch('/api/phases');
@@ -10,7 +13,11 @@ async function checkPhaseModuleGate(pageFilename) {
     const activePhase = data.phases.find((p) => p.id === data.activePhaseId);
     if (!activePhase) return;
 
-    if (activePhase.heldBackModules.includes(pageFilename)) {
+    if (
+      activePhase.heldBackModules.includes(pageFilename) ||
+      activePhase.heldBackModules.includes(cleanFilename) ||
+      activePhase.heldBackModules.includes(cleanFilename + '.html')
+    ) {
       renderHeldBackGate(pageFilename, activePhase.name);
     }
   } catch {
@@ -49,7 +56,7 @@ function renderHeldBackGate(pageFilename, phaseName) {
       </div>
       <div id="gate-error-msg" style="color: #ff3366; margin-top: 10px; display: none; font-weight: bold;">INVALID BYPASS CODE</div>
       <div style="margin-top: 25px;">
-        <a href="mltk-surveillance-dashboard.html" style="color: #00ff00; text-decoration: underline; font-size: 1.2rem;">&lt;&lt; RETURN TO SURVEILLANCE DASHBOARD</a>
+        <a href="mltk-surveillance-dashboard" style="color: #00ff00; text-decoration: underline; font-size: 1.2rem;">&lt;&lt; RETURN TO SURVEILLANCE DASHBOARD</a>
       </div>
     </div>
   `;

@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
-      <loc>https://www.yourdomain.com/index.html</loc>
+      <loc>https://www.yourdomain.com/</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>monthly</changefreq>
       <priority>1.0</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/surface-home-page.html</loc>
+      <loc>https://www.yourdomain.com/surface-home-page</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.8</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/studio-manifesto-page.html</loc>
+      <loc>https://www.yourdomain.com/studio-manifesto-page</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.6</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/business-privacy-policy.html</loc>
+      <loc>https://www.yourdomain.com/business-privacy-policy</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/business-terms-of-service.html</loc>
+      <loc>https://www.yourdomain.com/business-terms-of-service</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/studio-contact-us.html</loc>
+      <loc>https://www.yourdomain.com/studio-contact-us</loc>
       <lastmod>2024-05-18</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.7</priority>
    </url>
    <url>
-      <loc>https://www.yourdomain.com/studio-press-kit.html</loc>
+      <loc>https://www.yourdomain.com/studio-press-kit</loc>
       <lastmod>2026-03-23</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.6</priority>

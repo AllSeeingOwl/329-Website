@@ -8,21 +8,21 @@ import path from 'path';
 describe('QR Code Route & Entry Point Verification', () => {
   const qrRoutes = [
     '/',
-    '/surface-home-page.html',
-    '/mltk-login-gate.html',
-    '/mltk-surveillance-dashboard.html',
-    '/mltk-virtue-village-index.html',
-    '/mltk-five-finger-wheel.html',
-    '/mltk-3d-map.html',
-    '/mltk-classified-document.html',
-    '/system-override.html',
-    '/nova-classified-archive.html',
-    '/nova-parent-directory.html',
-    '/team-rabbit-hack.html',
-    '/secure-data-drop-page.html',
-    '/ollies-radio-scanner.html',
-    '/velvet-rope-landing-page.html',
-    '/in-universe-404-error.html',
+    '/surface-home-page',
+    '/mltk-login-gate',
+    '/mltk-surveillance-dashboard',
+    '/mltk-virtue-village-index',
+    '/mltk-five-finger-wheel',
+    '/mltk-3d-map',
+    '/mltk-classified-document',
+    '/system-override',
+    '/nova-classified-archive',
+    '/nova-parent-directory',
+    '/team-rabbit-hack',
+    '/secure-data-drop-page',
+    '/ollies-radio-scanner',
+    '/velvet-rope-landing-page',
+    '/in-universe-404-error',
   ];
 
   qrRoutes.forEach((route) => {
@@ -31,6 +31,14 @@ describe('QR Code Route & Entry Point Verification', () => {
       (expect(res.status) as any).toBe(200);
       (expect(res.text) as any).toBeTruthy();
     });
+
+    if (route !== '/') {
+      it(`should 301 redirect legacy route ${route}.html to clean route ${route}`, async () => {
+        const res = await request(app).get(`${route}.html`);
+        (expect(res.status) as any).toBe(301);
+        (expect(res.headers.location) as any).toBe(route);
+      });
+    }
   });
 
   it('should serve static QR code asset system_override_qr.png', async () => {

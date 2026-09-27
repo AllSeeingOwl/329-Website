@@ -139,29 +139,63 @@ const NOT_FOUND_PATH = path.join(publicDir, '404.html');
 
 // Lists of files belonging to each portal
 const studioFiles = new Set([
+  '/surface-home-page',
   '/surface-home-page.html',
+  '/studio-manifesto-page',
   '/studio-manifesto-page.html',
+  '/releases',
   '/releases.html',
+  '/studio-contact-us',
   '/studio-contact-us.html',
+  '/business-privacy-policy',
   '/business-privacy-policy.html',
+  '/business-terms-of-service',
   '/business-terms-of-service.html',
+  '/studio-faq',
+  '/studio-faq.html',
+  '/studio-press-kit',
+  '/studio-press-kit.html',
+  '/studio-puzzles-explained',
+  '/studio-puzzles-explained.html',
+  '/studio-team',
+  '/studio-team.html',
 ]);
 
 const mltkFiles = new Set([
+  '/mltk-login-gate',
   '/mltk-login-gate.html',
+  '/mltk-surveillance-dashboard',
   '/mltk-surveillance-dashboard.html',
+  '/mltk-privacy-policy',
   '/mltk-privacy-policy.html',
+  '/mltk-customer-service',
   '/mltk-customer-service.html',
+  '/mltk-classified-document',
   '/mltk-classified-document.html',
+  '/velvet-rope-landing-page',
   '/velvet-rope-landing-page.html',
+  '/nova-parent-directory',
   '/nova-parent-directory.html',
+  '/nova-classified-archive',
   '/nova-classified-archive.html',
+  '/ollies-radio-scanner',
   '/ollies-radio-scanner.html',
+  '/secure-data-drop-page',
   '/secure-data-drop-page.html',
+  '/developer-blog',
   '/developer-blog.html',
+  '/mltk-virtue-village-index',
   '/mltk-virtue-village-index.html',
+  '/team-rabbit-hack',
   '/team-rabbit-hack.html',
+  '/arg-progress-dashboard',
   '/arg-progress-dashboard.html',
+  '/mltk-3d-map',
+  '/mltk-3d-map.html',
+  '/mltk-five-finger-wheel',
+  '/mltk-five-finger-wheel.html',
+  '/system-override',
+  '/system-override.html',
 ]);
 
 // Sitemap caching
@@ -201,7 +235,8 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
         if (fileContent.includes('<meta name="robots" content="noindex"')) return null;
 
         const entryArr = ['  <url>\n'];
-        entryArr.push(`    <loc>${baseUrl}/${file}</loc>\n`);
+        const cleanFile = file === 'index.html' ? '' : file.replace(/\.html$/, '');
+        entryArr.push(`    <loc>${baseUrl}/${cleanFile}</loc>\n`);
 
         if (stats) {
           const lastMod = stats.mtime.toISOString().split('T')[0];
@@ -246,7 +281,8 @@ app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
 
     for (const file of files) {
       if (file.endsWith('.html')) {
-        allPages.push(`${baseUrl}/${file}`);
+        const cleanFile = file === 'index.html' ? '' : file.replace(/\.html$/, '');
+        allPages.push(`${baseUrl}/${cleanFile}`);
       }
     }
 
@@ -522,7 +558,34 @@ app.get('/api/announcements', async (req: Request, res: Response) => {
   }
 });
 
-app.use(express.static(publicDir));
+// 301 Redirect .html requests to clean URLs
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    let reqPath: string;
+    try {
+      reqPath = decodeURIComponent(req.path);
+    } catch {
+      reqPath = req.path;
+    }
+    if (
+      reqPath.endsWith('.html') &&
+      reqPath !== '/404.html' &&
+      reqPath !== '/maintenance.html'
+    ) {
+      if (reqPath === '/index.html') {
+        const query = req.url.slice(reqPath.length);
+        return res.redirect(301, '/' + query);
+      } else {
+        const cleanPath = reqPath.slice(0, -5);
+        const query = req.url.slice(reqPath.length);
+        return res.redirect(301, cleanPath + query);
+      }
+    }
+  }
+  next();
+});
+
+app.use(express.static(publicDir, { extensions: ['html'] }));
 
 interface RateLimitRecord {
   count: number;
