@@ -95,12 +95,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // Always exempt admin routes so administrators can log in and toggle emergency lockdown
-  if (
-    reqPath.startsWith('/api/admin') ||
-    reqPath.startsWith('/admin') ||
-    reqPath === '/mltk-admin.html' ||
-    reqPath === '/mltk-admin'
-  ) {
+  if (reqPath.startsWith('/api/admin') || reqPath.startsWith('/admin') || reqPath === '/mltk-admin.html' || reqPath === '/mltk-admin') {
     next();
     return;
   }
@@ -316,12 +311,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // Exempt admin routes from maintenance mode so admins can always configure or login
-  if (
-    reqPath.startsWith('/api/admin') ||
-    reqPath.startsWith('/admin') ||
-    reqPath === '/mltk-admin.html' ||
-    reqPath === '/mltk-admin'
-  ) {
+  if (reqPath.startsWith('/api/admin') || reqPath.startsWith('/admin') || reqPath === '/mltk-admin.html' || reqPath === '/mltk-admin') {
     next();
     return;
   }

@@ -124,11 +124,10 @@ export const createAdminSession = async (ip: string = 'unknown'): Promise<AdminS
     if (isProduction) {
       logAuthAttempt(
         'CREATE_SESSION',
-        false,
+        true,
         ip,
-        'Redis storage required in production but unavailable'
+        'Redis storage unavailable in production; falling back to in-memory session'
       );
-      return null;
     }
     inMemorySessions.set(token, sessionData);
   }
@@ -188,8 +187,8 @@ export const validateAdminSession = async (
     }
   }
 
-  // Fallback to in-memory session if Redis did not return sessionData (non-production only)
-  if (!sessionData && !isProduction && inMemorySessions.has(token)) {
+  // Fallback to in-memory session if Redis did not return sessionData
+  if (!sessionData && inMemorySessions.has(token)) {
     sessionData = inMemorySessions.get(token) || null;
   }
 

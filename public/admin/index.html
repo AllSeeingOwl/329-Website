@@ -742,11 +742,7 @@
               startSessionTimer(15);
               loadDashboardData();
             } else if (data) {
-              showMessage(
-                data.message || data.error || 'BYPASS AUTHENTICATION FAILED',
-                true,
-                loginStatus
-              );
+              showMessage(data.message || data.error || 'BYPASS AUTHENTICATION FAILED', true, loginStatus);
             }
           }
         }
