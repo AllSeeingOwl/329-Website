@@ -338,7 +338,6 @@
       <!-- GLOBAL FEEDBACK BANNER -->
       <div id="global-status" class="status-message"></div>
 
-
       <!-- SURVEILLANCE MODULES MANAGEMENT -->
       <div class="section-box">
         <div class="section-title">
@@ -348,10 +347,11 @@
           </button>
         </div>
         <p style="margin-bottom: 15px; font-size: 0.85rem">
-          CONTROL VISIBILITY AND ACCESS STATUS (ACTIVE, LOCKED, OR OFFLINE/HIDDEN) FOR EACH DASHBOARD MODULE CARD.
+          CONTROL VISIBILITY AND ACCESS STATUS (ACTIVE, LOCKED, OR OFFLINE/HIDDEN) FOR EACH
+          DASHBOARD MODULE CARD.
         </p>
         <div id="modules-list">
-          <div style="text-align: center; color: #00aa00; font-family: monospace; padding: 20px;">
+          <div style="text-align: center; color: #00aa00; font-family: monospace; padding: 20px">
             FETCHING SURVEILLANCE MODULE CONFIGURATION...
           </div>
         </div>
@@ -827,7 +827,7 @@
               return;
             }
 
-            modules.forEach(function(item) {
+            modules.forEach(function (item) {
               const card = document.createElement('div');
               card.className = 'phase-card';
               if (item.status === 'active') {
@@ -842,13 +842,19 @@
               const infoDiv = document.createElement('div');
               const titleDiv = document.createElement('div');
               titleDiv.style.fontWeight = 'bold';
-              titleDiv.style.color = item.status === 'active' ? '#00ff00' : (item.status === 'locked' ? '#ffaa00' : '#888888');
+              titleDiv.style.color =
+                item.status === 'active'
+                  ? '#00ff00'
+                  : item.status === 'locked'
+                    ? '#ffaa00'
+                    : '#888888';
               titleDiv.textContent = item.id + ' — ' + item.title;
 
               const metaDiv = document.createElement('div');
               metaDiv.style.fontSize = '0.8rem';
               metaDiv.style.color = '#888888';
-              metaDiv.textContent = 'LINK: ' + item.link + ' | STATUS: ' + item.status.toUpperCase();
+              metaDiv.textContent =
+                'LINK: ' + item.link + ' | STATUS: ' + item.status.toUpperCase();
 
               infoDiv.appendChild(titleDiv);
               infoDiv.appendChild(metaDiv);
@@ -857,7 +863,7 @@
               btnDiv.style.display = 'flex';
               btnDiv.style.gap = '6px';
 
-              ['active', 'locked', 'offline'].forEach(function(st) {
+              ['active', 'locked', 'offline'].forEach(function (st) {
                 const btn = document.createElement('button');
                 btn.style.fontSize = '0.75rem';
                 btn.style.padding = '3px 8px';
@@ -867,7 +873,7 @@
                   btn.style.color = '#000000';
                   btn.style.fontWeight = 'bold';
                 }
-                btn.addEventListener('click', async function() {
+                btn.addEventListener('click', async function () {
                   try {
                     await window.AdminAPI.updateDashboardCardStatus(item.id, st);
                     showMessage('MODULE ' + item.id + ' STATUS UPDATED TO ' + st.toUpperCase());
@@ -888,7 +894,9 @@
           }
         }
 
-        document.getElementById('refresh-modules-btn').addEventListener('click', fetchSurveillanceModules);
+        document
+          .getElementById('refresh-modules-btn')
+          .addEventListener('click', fetchSurveillanceModules);
 
         // 1. PHASES / TIERS
         // -------------------------------------------------------------
