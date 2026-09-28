@@ -564,6 +564,11 @@
     startAutoRefresh,
     stopAutoRefresh,
 
+    // Dashboard Management
+    getDashboardConfig,
+    updateDashboardCardStatus,
+    updateAllDashboardCardsStatus,
+
     // Phase Management
     getPhases,
     activatePhase,
