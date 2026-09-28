@@ -29,15 +29,19 @@ export const MLTK_PHASES: ReleasePhase[] = [
     activeModules: [
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
+      'mltk-privacy-policy.html',
       'UNCUT_PUZZLE.pdf',
       'VIRTUE_VILLAGE_LAYOUTS.pdf',
       'GRETCHEN_DOSSIER.txt',
     ],
     heldBackModules: [
       'ollies-radio-scanner.html',
-      'mltk-five-finger-wheel.html',
       'nova-classified-archive.html',
       'nova-parent-directory.html',
+      'mltk-five-finger-wheel.html',
+      'mltk-virtue-village-index.html',
+      'mltk-customer-service.html',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     ],
     narrativeReason:
       'Focuses 100% of reader attention on downloading the lead magnets and joining the mailing list.',
@@ -49,15 +53,19 @@ export const MLTK_PHASES: ReleasePhase[] = [
     activeModules: [
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
+      'mltk-privacy-policy.html',
       'UNCUT_PUZZLE.pdf',
       'VIRTUE_VILLAGE_LAYOUTS.pdf',
       'GRETCHEN_DOSSIER.txt',
       'ollies-radio-scanner.html',
     ],
     heldBackModules: [
-      'mltk-five-finger-wheel.html',
       'nova-classified-archive.html',
       'nova-parent-directory.html',
+      'mltk-five-finger-wheel.html',
+      'mltk-virtue-village-index.html',
+      'mltk-customer-service.html',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     ],
     narrativeReason: 'Rewards subscribers with audio clips from Four Corners Radio ("Over-Oops").',
   },
@@ -68,6 +76,7 @@ export const MLTK_PHASES: ReleasePhase[] = [
     activeModules: [
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
+      'mltk-privacy-policy.html',
       'UNCUT_PUZZLE.pdf',
       'VIRTUE_VILLAGE_LAYOUTS.pdf',
       'GRETCHEN_DOSSIER.txt',
@@ -75,7 +84,12 @@ export const MLTK_PHASES: ReleasePhase[] = [
       'nova-classified-archive.html',
       'nova-parent-directory.html',
     ],
-    heldBackModules: ['mltk-five-finger-wheel.html'],
+    heldBackModules: [
+      'mltk-five-finger-wheel.html',
+      'mltk-virtue-village-index.html',
+      'mltk-customer-service.html',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
+    ],
     narrativeReason:
       'Engages solvers with interactive trivia while introducing the corporate horrors of MLTK.',
   },
@@ -86,6 +100,7 @@ export const MLTK_PHASES: ReleasePhase[] = [
     activeModules: [
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
+      'mltk-privacy-policy.html',
       'UNCUT_PUZZLE.pdf',
       'VIRTUE_VILLAGE_LAYOUTS.pdf',
       'GRETCHEN_DOSSIER.txt',
@@ -122,7 +137,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'DOC: 001-VVL',
     title: 'Virtue Village Layouts',
-    status: 'locked',
+    status: 'active',
     link: 'VIRTUE_VILLAGE_LAYOUTS.pdf',
     type: 'DOWNLOAD',
     isDownload: true,
@@ -131,7 +146,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'DOC: 002-GD',
     title: 'Gretchen Dossier',
-    status: 'locked',
+    status: 'active',
     link: 'GRETCHEN_DOSSIER.txt',
     type: 'DOWNLOAD',
     isDownload: true,
@@ -211,7 +226,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'DOC: 004-UP',
     title: 'Uncut Puzzle',
-    status: 'locked',
+    status: 'active',
     link: 'UNCUT_PUZZLE.pdf',
     type: 'DOWNLOAD',
     isDownload: true,

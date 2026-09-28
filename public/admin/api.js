@@ -359,6 +359,53 @@
   }
 
   /**
+   * Fetch Surveillance Dashboard module configuration.
+   * Calls GET /api/admin/dashboard-config
+   *
+   * @returns {Promise<Object>}
+   */
+  function getDashboardConfig() {
+    return apiRequest('/api/admin/dashboard-config', { method: 'GET' });
+  }
+
+  /**
+   * Update a specific Surveillance Dashboard module status.
+   * Calls POST /api/admin/dashboard-config
+   *
+   * @param {string} id
+   * @param {string} status
+   * @returns {Promise<Object>}
+   */
+  function updateDashboardModuleStatus(id, status) {
+    if (!id || !status) {
+      return Promise.reject(createStandardError(400, 'Module ID and status are required'));
+    }
+
+    return apiRequest('/api/admin/dashboard-config', {
+      method: 'POST',
+      body: JSON.stringify({ id, status, adminUser: 'admin' }),
+    });
+  }
+
+  /**
+   * Batch update status for all Surveillance Dashboard modules.
+   * Calls POST /api/admin/dashboard-config/all
+   *
+   * @param {string} status
+   * @returns {Promise<Object>}
+   */
+  function updateAllDashboardModuleStatus(status) {
+    if (!status) {
+      return Promise.reject(createStandardError(400, 'Status is required'));
+    }
+
+    return apiRequest('/api/admin/dashboard-config/all', {
+      method: 'POST',
+      body: JSON.stringify({ status, adminUser: 'admin' }),
+    });
+  }
+
+  /**
    * Fetch all captured emails.
    * Calls GET /api/admin/emails
    *
@@ -568,6 +615,11 @@
     getPhases,
     activatePhase,
     deactivatePhase,
+
+    // Dashboard Module Management
+    getDashboardConfig,
+    updateDashboardModuleStatus,
+    updateAllDashboardModuleStatus,
 
     // Email Management
     getEmails,
