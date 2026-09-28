@@ -356,6 +356,53 @@
         </div>
       </div>
 
+      <!-- SURVEILLANCE DASHBOARD MODULE MANAGEMENT -->
+      <div class="section-box">
+        <div class="section-title">
+          <span>SURVEILLANCE DASHBOARD MODULE MANAGEMENT</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <button id="refresh-modules-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              REFRESH
+            </button>
+            <button id="set-all-active-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              [ ALL ACTIVE ]
+            </button>
+            <button id="set-all-locked-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              [ ALL LOCKED ]
+            </button>
+            <button
+              id="set-all-offline-btn"
+              class="danger-btn"
+              style="font-size: 0.8rem; padding: 2px 8px"
+            >
+              [ ALL OFFLINE ]
+            </button>
+          </div>
+        </div>
+        <p style="margin-bottom: 15px; font-size: 0.85rem">
+          DIRECTLY TOGGLE EACH SURVEILLANCE DASHBOARD CARD VISIBILITY AND ACCESS STATUS (ACTIVE,
+          LOCKED, OR OFFLINE / HIDDEN).
+        </p>
+        <div style="overflow-x: auto">
+          <table>
+            <thead>
+              <tr>
+                <th>MODULE ID</th>
+                <th>TITLE / LINK</th>
+                <th>TYPE</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="modules-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center">LOADING MODULE CONFIGURATION...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- EMAIL COLLECTION STATS & EXPORT -->
       <div class="section-box">
         <div class="section-title">
@@ -787,6 +834,7 @@
         async function loadDashboardData() {
           await Promise.all([
             fetchPhases(),
+            fetchDashboardModules(),
             fetchEmailStats(),
             fetchEmailsList(),
             fetchSystemConfig(),
@@ -917,6 +965,187 @@
         }
 
         document.getElementById('refresh-phases-btn').addEventListener('click', fetchPhases);
+
+        // -------------------------------------------------------------
+        // SURVEILLANCE DASHBOARD MODULES
+        // -------------------------------------------------------------
+        async function fetchDashboardModules() {
+          const data = await apiFetch('/api/admin/dashboard-config');
+          if (!data) return;
+
+          const modules = Array.isArray(data) ? data : data.config || [];
+          const tbody = document.getElementById('modules-table-body');
+          tbody.innerHTML = '';
+
+          if (modules.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" style="text-align: center">NO MODULES FOUND</td></tr>';
+            return;
+          }
+
+          modules.forEach(function (item) {
+            const tr = document.createElement('tr');
+
+            const tdId = document.createElement('td');
+            tdId.style.fontWeight = 'bold';
+            tdId.textContent = item.id;
+
+            const tdTitle = document.createElement('td');
+            tdTitle.textContent = item.title + ' (' + item.link + ')';
+
+            const tdType = document.createElement('td');
+            tdType.textContent = item.type + (item.isRogue ? ' [ROGUE]' : '');
+
+            const tdStatus = document.createElement('td');
+            if (item.status === 'active') {
+              tdStatus.innerHTML = '<span class="badge badge-active">ACTIVE</span>';
+            } else if (item.status === 'locked') {
+              tdStatus.innerHTML =
+                '<span class="badge" style="border-color: #ff3366; color: #ff3366;">LOCKED</span>';
+            } else {
+              tdStatus.innerHTML = '<span class="badge badge-inactive">OFFLINE</span>';
+            }
+
+            const tdActions = document.createElement('td');
+            tdActions.style.display = 'flex';
+            tdActions.style.gap = '5px';
+
+            const activeBtn = document.createElement('button');
+            activeBtn.textContent = 'ACTIVE';
+            activeBtn.style.fontSize = '0.75rem';
+            activeBtn.style.padding = '2px 6px';
+            if (item.status === 'active') activeBtn.disabled = true;
+            activeBtn.addEventListener('click', async function () {
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'active', adminUser: 'admin' }),
+                },
+                activeBtn,
+                'SAVING...'
+              );
+              if (res) {
+                showMessage('MODULE ' + item.id + ' SET TO ACTIVE');
+                fetchDashboardModules();
+                fetchAuditLogs();
+              }
+            });
+
+            const lockedBtn = document.createElement('button');
+            lockedBtn.textContent = 'LOCKED';
+            lockedBtn.style.fontSize = '0.75rem';
+            lockedBtn.style.padding = '2px 6px';
+            if (item.status === 'locked') lockedBtn.disabled = true;
+            lockedBtn.addEventListener('click', async function () {
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'locked', adminUser: 'admin' }),
+                },
+                lockedBtn,
+                'SAVING...'
+              );
+              if (res) {
+                showMessage('MODULE ' + item.id + ' SET TO LOCKED');
+                fetchDashboardModules();
+                fetchAuditLogs();
+              }
+            });
+
+            const offlineBtn = document.createElement('button');
+            offlineBtn.textContent = 'OFFLINE';
+            offlineBtn.className = 'danger-btn';
+            offlineBtn.style.fontSize = '0.75rem';
+            offlineBtn.style.padding = '2px 6px';
+            if (item.status === 'offline') offlineBtn.disabled = true;
+            offlineBtn.addEventListener('click', async function () {
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'offline', adminUser: 'admin' }),
+                },
+                offlineBtn,
+                'SAVING...'
+              );
+              if (res) {
+                showMessage('MODULE ' + item.id + ' SET TO OFFLINE');
+                fetchDashboardModules();
+                fetchAuditLogs();
+              }
+            });
+
+            tdActions.appendChild(activeBtn);
+            tdActions.appendChild(lockedBtn);
+            tdActions.appendChild(offlineBtn);
+
+            tr.appendChild(tdId);
+            tr.appendChild(tdTitle);
+            tr.appendChild(tdType);
+            tr.appendChild(tdStatus);
+            tr.appendChild(tdActions);
+
+            tbody.appendChild(tr);
+          });
+        }
+
+        document
+          .getElementById('refresh-modules-btn')
+          .addEventListener('click', fetchDashboardModules);
+
+        document.getElementById('set-all-active-btn').addEventListener('click', async function () {
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'active', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL ACTIVE...'
+          );
+          if (res) {
+            showMessage('ALL MODULES SET TO ACTIVE');
+            fetchDashboardModules();
+            fetchAuditLogs();
+          }
+        });
+
+        document.getElementById('set-all-locked-btn').addEventListener('click', async function () {
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'locked', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL LOCKED...'
+          );
+          if (res) {
+            showMessage('ALL MODULES SET TO LOCKED');
+            fetchDashboardModules();
+            fetchAuditLogs();
+          }
+        });
+
+        document.getElementById('set-all-offline-btn').addEventListener('click', async function () {
+          if (!confirm('CONFIRM ACTION: Hide ALL modules on the Surveillance Dashboard?')) return;
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'offline', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL OFFLINE...'
+          );
+          if (res) {
+            showMessage('ALL MODULES SET TO OFFLINE / HIDDEN');
+            fetchDashboardModules();
+            fetchAuditLogs();
+          }
+        });
 
         // -------------------------------------------------------------
         // 2. EMAIL METRICS & DATA

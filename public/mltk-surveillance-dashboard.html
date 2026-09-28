@@ -51,7 +51,8 @@
       /* CSS Grid Layout for Dashboard */
       .dashboard {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 260px));
+        justify-content: center;
         gap: 20px;
         padding: 0 40px 40px 40px;
         max-width: 1200px;
@@ -412,7 +413,8 @@
 
       @media (max-width: 600px) {
         .dashboard {
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          justify-content: center;
           padding: 0 20px 20px 20px;
           gap: 15px;
         }
@@ -556,8 +558,8 @@
         container.innerHTML = ''; // Clear current contents
 
         dashboardConfig.forEach((item) => {
-          if (item.status === 'offline') {
-            return; // Hide offline items if any remain
+          if (item.status === 'offline' || item.status === 'hidden') {
+            return; // Hide offline/hidden items
           }
 
           const cardEl = document.createElement('a');

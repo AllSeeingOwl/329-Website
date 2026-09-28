@@ -8,7 +8,13 @@ import adminAuth, {
   logAuthAttempt,
 } from '../middleware/adminAuth';
 import { redis, isRedisAvailable } from '../redis';
-import { getAllEmails, clearAllEmails } from '../../db';
+import {
+  getAllEmails,
+  clearAllEmails,
+  getDashboardConfig,
+  updateDashboardConfig,
+  updateAllDashboardConfig,
+} from '../../db';
 
 const router = Router();
 
@@ -572,6 +578,66 @@ router.delete(
     } catch (error) {
       console.error(`Error in DELETE /api/admin/phases/${req.params.phaseId}/deactivate:`, error);
       res.status(500).json({ success: false, message: 'Failed to deactivate phase' });
+    }
+  }
+);
+
+/**
+ * GET /api/admin/dashboard-config
+ * Returns all dashboard modules configuration.
+ */
+router.get('/dashboard-config', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const config = await getDashboardConfig();
+    res.json(config);
+  } catch (error) {
+    console.error('Error in GET /api/admin/dashboard-config:', error);
+    res.status(500).json({ error: 'Failed to fetch dashboard config' });
+  }
+});
+
+/**
+ * POST /api/admin/dashboard-config
+ * Updates a specific module status on the surveillance dashboard.
+ */
+router.post('/dashboard-config', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  const { id, status } = req.body || {};
+  if (!id || !status) {
+    res.status(400).json({ success: false, message: 'Module id and status are required' });
+    return;
+  }
+  try {
+    await updateDashboardConfig(id, status);
+    const adminUser = getAdminUser(req);
+    await logPhaseChange(adminUser, 'UPDATE_DASHBOARD_MODULE', id, { status });
+    res.json({ success: true, message: `Module ${id} updated to ${status}` });
+  } catch (error) {
+    console.error('Error in POST /api/admin/dashboard-config:', error);
+    res.status(500).json({ success: false, message: 'Failed to update dashboard config' });
+  }
+});
+
+/**
+ * POST /api/admin/dashboard-config/all
+ * Updates all modules on the surveillance dashboard to a given status.
+ */
+router.post(
+  '/dashboard-config/all',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    const { status } = req.body || {};
+    if (!status) {
+      res.status(400).json({ success: false, message: 'status is required' });
+      return;
+    }
+    try {
+      await updateAllDashboardConfig(status);
+      const adminUser = getAdminUser(req);
+      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', { status });
+      res.json({ success: true, message: `All modules updated to ${status}` });
+    } catch (error) {
+      console.error('Error in POST /api/admin/dashboard-config/all:', error);
+      res.status(500).json({ success: false, message: 'Failed to update all dashboard configs' });
     }
   }
 );
