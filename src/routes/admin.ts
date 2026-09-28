@@ -621,22 +621,26 @@ router.post('/dashboard-config', adminAuth, async (req: Request, res: Response):
  * POST /api/admin/dashboard-config/all
  * Updates all modules on the surveillance dashboard to a given status.
  */
-router.post('/dashboard-config/all', adminAuth, async (req: Request, res: Response): Promise<void> => {
-  const { status } = req.body || {};
-  if (!status) {
-    res.status(400).json({ success: false, message: 'status is required' });
-    return;
+router.post(
+  '/dashboard-config/all',
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    const { status } = req.body || {};
+    if (!status) {
+      res.status(400).json({ success: false, message: 'status is required' });
+      return;
+    }
+    try {
+      await updateAllDashboardConfig(status);
+      const adminUser = getAdminUser(req);
+      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', { status });
+      res.json({ success: true, message: `All modules updated to ${status}` });
+    } catch (error) {
+      console.error('Error in POST /api/admin/dashboard-config/all:', error);
+      res.status(500).json({ success: false, message: 'Failed to update all dashboard configs' });
+    }
   }
-  try {
-    await updateAllDashboardConfig(status);
-    const adminUser = getAdminUser(req);
-    await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', { status });
-    res.json({ success: true, message: `All modules updated to ${status}` });
-  } catch (error) {
-    console.error('Error in POST /api/admin/dashboard-config/all:', error);
-    res.status(500).json({ success: false, message: 'Failed to update all dashboard configs' });
-  }
-});
+);
 
 /**
  * GET /api/admin/emails

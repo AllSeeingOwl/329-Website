@@ -360,15 +360,28 @@
       <div class="section-box">
         <div class="section-title">
           <span>SURVEILLANCE DASHBOARD MODULE MANAGEMENT</span>
-          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <button id="refresh-modules-btn" style="font-size: 0.8rem; padding: 2px 8px">REFRESH</button>
-            <button id="set-all-active-btn" style="font-size: 0.8rem; padding: 2px 8px">[ ALL ACTIVE ]</button>
-            <button id="set-all-locked-btn" style="font-size: 0.8rem; padding: 2px 8px">[ ALL LOCKED ]</button>
-            <button id="set-all-offline-btn" class="danger-btn" style="font-size: 0.8rem; padding: 2px 8px">[ ALL OFFLINE ]</button>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <button id="refresh-modules-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              REFRESH
+            </button>
+            <button id="set-all-active-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              [ ALL ACTIVE ]
+            </button>
+            <button id="set-all-locked-btn" style="font-size: 0.8rem; padding: 2px 8px">
+              [ ALL LOCKED ]
+            </button>
+            <button
+              id="set-all-offline-btn"
+              class="danger-btn"
+              style="font-size: 0.8rem; padding: 2px 8px"
+            >
+              [ ALL OFFLINE ]
+            </button>
           </div>
         </div>
         <p style="margin-bottom: 15px; font-size: 0.85rem">
-          DIRECTLY TOGGLE EACH SURVEILLANCE DASHBOARD CARD VISIBILITY AND ACCESS STATUS (ACTIVE, LOCKED, OR OFFLINE / HIDDEN).
+          DIRECTLY TOGGLE EACH SURVEILLANCE DASHBOARD CARD VISIBILITY AND ACCESS STATUS (ACTIVE,
+          LOCKED, OR OFFLINE / HIDDEN).
         </p>
         <div style="overflow-x: auto">
           <table>
@@ -960,12 +973,13 @@
           const data = await apiFetch('/api/admin/dashboard-config');
           if (!data) return;
 
-          const modules = Array.isArray(data) ? data : (data.config || []);
+          const modules = Array.isArray(data) ? data : data.config || [];
           const tbody = document.getElementById('modules-table-body');
           tbody.innerHTML = '';
 
           if (modules.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center">NO MODULES FOUND</td></tr>';
+            tbody.innerHTML =
+              '<tr><td colspan="5" style="text-align: center">NO MODULES FOUND</td></tr>';
             return;
           }
 
@@ -986,7 +1000,8 @@
             if (item.status === 'active') {
               tdStatus.innerHTML = '<span class="badge badge-active">ACTIVE</span>';
             } else if (item.status === 'locked') {
-              tdStatus.innerHTML = '<span class="badge" style="border-color: #ff3366; color: #ff3366;">LOCKED</span>';
+              tdStatus.innerHTML =
+                '<span class="badge" style="border-color: #ff3366; color: #ff3366;">LOCKED</span>';
             } else {
               tdStatus.innerHTML = '<span class="badge badge-inactive">OFFLINE</span>';
             }
@@ -1001,10 +1016,15 @@
             activeBtn.style.padding = '2px 6px';
             if (item.status === 'active') activeBtn.disabled = true;
             activeBtn.addEventListener('click', async function () {
-              const res = await apiFetch('/api/admin/dashboard-config', {
-                method: 'POST',
-                body: JSON.stringify({ id: item.id, status: 'active', adminUser: 'admin' }),
-              }, activeBtn, 'SAVING...');
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'active', adminUser: 'admin' }),
+                },
+                activeBtn,
+                'SAVING...'
+              );
               if (res) {
                 showMessage('MODULE ' + item.id + ' SET TO ACTIVE');
                 fetchDashboardModules();
@@ -1018,10 +1038,15 @@
             lockedBtn.style.padding = '2px 6px';
             if (item.status === 'locked') lockedBtn.disabled = true;
             lockedBtn.addEventListener('click', async function () {
-              const res = await apiFetch('/api/admin/dashboard-config', {
-                method: 'POST',
-                body: JSON.stringify({ id: item.id, status: 'locked', adminUser: 'admin' }),
-              }, lockedBtn, 'SAVING...');
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'locked', adminUser: 'admin' }),
+                },
+                lockedBtn,
+                'SAVING...'
+              );
               if (res) {
                 showMessage('MODULE ' + item.id + ' SET TO LOCKED');
                 fetchDashboardModules();
@@ -1036,10 +1061,15 @@
             offlineBtn.style.padding = '2px 6px';
             if (item.status === 'offline') offlineBtn.disabled = true;
             offlineBtn.addEventListener('click', async function () {
-              const res = await apiFetch('/api/admin/dashboard-config', {
-                method: 'POST',
-                body: JSON.stringify({ id: item.id, status: 'offline', adminUser: 'admin' }),
-              }, offlineBtn, 'SAVING...');
+              const res = await apiFetch(
+                '/api/admin/dashboard-config',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: item.id, status: 'offline', adminUser: 'admin' }),
+                },
+                offlineBtn,
+                'SAVING...'
+              );
               if (res) {
                 showMessage('MODULE ' + item.id + ' SET TO OFFLINE');
                 fetchDashboardModules();
@@ -1061,13 +1091,20 @@
           });
         }
 
-        document.getElementById('refresh-modules-btn').addEventListener('click', fetchDashboardModules);
+        document
+          .getElementById('refresh-modules-btn')
+          .addEventListener('click', fetchDashboardModules);
 
         document.getElementById('set-all-active-btn').addEventListener('click', async function () {
-          const res = await apiFetch('/api/admin/dashboard-config/all', {
-            method: 'POST',
-            body: JSON.stringify({ status: 'active', adminUser: 'admin' }),
-          }, this, 'SETTING ALL ACTIVE...');
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'active', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL ACTIVE...'
+          );
           if (res) {
             showMessage('ALL MODULES SET TO ACTIVE');
             fetchDashboardModules();
@@ -1076,10 +1113,15 @@
         });
 
         document.getElementById('set-all-locked-btn').addEventListener('click', async function () {
-          const res = await apiFetch('/api/admin/dashboard-config/all', {
-            method: 'POST',
-            body: JSON.stringify({ status: 'locked', adminUser: 'admin' }),
-          }, this, 'SETTING ALL LOCKED...');
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'locked', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL LOCKED...'
+          );
           if (res) {
             showMessage('ALL MODULES SET TO LOCKED');
             fetchDashboardModules();
@@ -1089,10 +1131,15 @@
 
         document.getElementById('set-all-offline-btn').addEventListener('click', async function () {
           if (!confirm('CONFIRM ACTION: Hide ALL modules on the Surveillance Dashboard?')) return;
-          const res = await apiFetch('/api/admin/dashboard-config/all', {
-            method: 'POST',
-            body: JSON.stringify({ status: 'offline', adminUser: 'admin' }),
-          }, this, 'SETTING ALL OFFLINE...');
+          const res = await apiFetch(
+            '/api/admin/dashboard-config/all',
+            {
+              method: 'POST',
+              body: JSON.stringify({ status: 'offline', adminUser: 'admin' }),
+            },
+            this,
+            'SETTING ALL OFFLINE...'
+          );
           if (res) {
             showMessage('ALL MODULES SET TO OFFLINE / HIDDEN');
             fetchDashboardModules();
