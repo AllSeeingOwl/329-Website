@@ -429,16 +429,16 @@
             class="file-row"
             tabindex="0"
             role="button"
-            onclick="openDoc('gretchen')"
+            onclick="window.location.href = 'gretchen-dossier'"
             onkeydown="
               if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                openDoc('gretchen');
+                window.location.href = 'gretchen-dossier';
               }
             "
           >
             <td class="icon">[TXT]</td>
-            <td>DIR_GRETCHEN_DOSSIER.txt</td>
+            <td>DIR_GRETCHEN_DOSSIER.html</td>
             <td>SYSTEM_CURRENT</td>
             <td>8 KB</td>
           </tr>

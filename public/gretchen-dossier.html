@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/svg+xml" href="/mltk-favicon.svg" />
+    <meta name="robots" content="noindex" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DIR GRETCHEN DOSSIER - MLTK & Team Rabbit Intercept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Permanent+Marker&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0d0d0d;
+        --text-green: #00ff00;
+        --text-white: #ffffff;
+        --text-red: #ff3366;
+        --text-blue: #00e5ff;
+        --text-yellow: #ffcc00;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-white);
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      body::after {
+        content: ' ';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(90deg, rgba(0, 255, 0, 0.03), rgba(0, 0, 0, 0.01));
+        z-index: 9999;
+        background-size:
+          100% 3px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 30px;
+        border: 2px solid var(--text-white);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 2;
+        background: #111;
+      }
+
+      .nav-link {
+        color: var(--text-green);
+        text-decoration: underline;
+        font-size: 1rem;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+
+      .nav-link:hover {
+        color: var(--text-white);
+      }
+
+      .timer-box {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--bg-color);
+        border: 2px solid var(--text-green);
+        color: var(--text-green);
+        padding: 5px 15px;
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .memo-header {
+        border-bottom: 2px solid var(--text-red);
+        color: var(--text-red);
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .memo-section {
+        background: #181818;
+        border: 1px solid #333;
+        padding: 20px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
+
+      /* Graffiti / Red Sharpie Overlay */
+      .graffiti-overlay {
+        border: 2px dashed var(--text-red);
+        background: rgba(255, 51, 102, 0.08);
+        padding: 20px;
+        margin: 30px 0;
+        position: relative;
+        transform: rotate(-0.8deg);
+      }
+
+      .graffiti-title {
+        font-family: 'Permanent Marker', cursive, sans-serif;
+        color: var(--text-red);
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+      }
+
+      .graffiti-text {
+        font-family: 'Permanent Marker', cursive, sans-serif;
+        color: var(--text-red);
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+
+      .beatrix-correction {
+        border: 1px solid var(--text-blue);
+        background: rgba(0, 229, 255, 0.08);
+        padding: 20px;
+        margin: 30px 0;
+        color: var(--text-blue);
+        transform: rotate(0.5deg);
+      }
+
+      .audio-transcript {
+        border: 2px solid var(--text-yellow);
+        background: rgba(255, 204, 0, 0.05);
+        padding: 20px;
+        margin-top: 30px;
+        color: var(--text-yellow);
+      }
+
+      .audio-title {
+        font-size: 1.3rem;
+        border-bottom: 1px dashed var(--text-yellow);
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+        .timer-box {
+          position: static;
+          display: inline-block;
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+    <script type="module" src="/app.js"></script>
+    <link rel="manifest" href="/manifest.json" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="timer-box">ICE PROTOCOL: BYPASSED</div>
+      <a href="nova-classified-archive" class="nav-link">&lt;&lt; RETURN TO NOVA ARCHIVE</a>
+
+      <div class="memo-header">
+        MLTK CORPORATION // GLOBAL DATA OPERATIONS<br />
+        INTERNAL COMPLIANCE DIRECTIVES & TEAM RABBIT INTERCEPTS
+      </div>
+
+      <div class="memo-section">
+        ================================================================================ INTERNAL
+        COMPLIANCE DIRECTIVE: MLTK-VV-AUD-104.9A CLASSIFICATION: CONFIDENTIAL // EYES ONLY
+        ================================================================================ TO: Virtue
+        Village Administrative Block Supervisors (Sectors A–M) FROM: Avery Hectare, Executive
+        Director of Cognitive Audits & Optimization DATE: [000.00.00] // MANDATORY COMPLIANCE CYCLE
+        SUBJECT: Linguistic Contamination & Unauthorized Signal Bleed in Sector 4 1. AUDIT FINDINGS
+        A routine sweep of the Administrative Block (O-Piece Block 04, Village of Determinedly) has
+        uncovered severe breaches of the Refined Lexicon protocol. Multiple "Smurf" clerks were
+        logged utilizing unauthorized "Their There" street slang—specifically recorded uttering
+        terms including "groovy," "daddy-o," "innit," and "bogus" into municipal acoustic horns.
+        Pursuant to MLTK Terms of Service §3 (Utilization Protocols), linguistic purity is required
+        to maintain structural harmony across the Cartridge Estates. The offending personnel have
+        been detained for postural integrity realignment at Have Faith In Solid. 2. EQUIPMENT
+        ANOMALY & FREQUENCY NOTCH During biometric logging, compliance enforcers confiscated
+        non-sanctioned analogue media, including a modified transistor unit with an altered tuner
+        dial. Signal diagnostics registered a persistent radio-frequency hum bleeding through
+        municipal infrastructure at precisely 104.9 MHz. While supervisors dismissed this as
+        background atmospheric static from the Mini Rail power grid, analytical modeling indicates a
+        structured, repeating audio carrier wave. 3. DIRECTIVE Inspect all desk drawers for
+        unauthorized analogue components, rubber poultry items, or mismatched novelty footwear. Any
+        employee caught adjusting telecommunications equipment to the 104.9 sub-bandwidth will face
+        immediate contract termination and transfer to Re-education Center B under Project Tetromino
+        parameters.
+      </div>
+
+      <!-- Merrick's Red Sharpie Overlay -->
+      <div class="graffiti-overlay">
+        <div class="graffiti-title">[!] STENCIL ANNOTATIONS // MERRICK AMPERE ("MAD DOG")</div>
+        <div class="graffiti-text">
+          > "Avery Hectare writes like she swallowed a dictionary and an iron rod. 'Cognitive
+          Audits'? 'Postural integrity'? You corporate Smurfs wouldn't know integrity if it bit you
+          in the knee. Keep welding those motel room radios, posers—you're just making the 104.9 FM
+          signal bounce harder off the concrete!"<br /><br />
+          > "COPY, RIGHT. WE DO WHAT WE WANT."
+        </div>
+      </div>
+
+      <div class="memo-section">
+        ================================================================================ INTERNAL
+        COMPLIANCE DIRECTIVE: MLTK-VV-SEC-104.9B CLASSIFICATION: HIGH-PRIORITY // RESTRICTED ACCESS
+        ================================================================================ TO:
+        Regional Operations Managers, Seedless Grapes Motel Network FROM: Avery Hectare, Executive
+        Director of Cognitive Audits & Optimization DATE: [000.00.00] // MANDATORY COMPLIANCE CYCLE
+        SUBJECT: Seizure of Modified Audio Hardware & Rogue Pirate Transmissions 1. INCIDENT SUMMARY
+        Night-shift personnel across eight Seedless Grapes Motels have been observed intentionally
+        bypassing internal audio censors during duty cycles. In the Village of Inspiringly, two
+        junior clerks were caught listening to an illegal audio feed broadcasting low-budget
+        satirical space-opera serials ("Captain Overhere") interspersed with unapproved jazz and
+        extreme metal tracks. 2. TELEMETRY TRACE & CYPHER KEY Subterranean spectrum analysis
+        confirms the source of this auditory disruption is an unsanctioned, mobile pirate
+        transmitter operating out of the Town of There border hexes. The transmission centers on
+        104.9 FM. This specific frequency (104.9 FM) appears to be utilized by rogue elements as an
+        unauthorized cypher key to decrypt underlying administrative telemetry. 3. SANCTIONS &
+        CORRECTION All Seedless Grapes Motel room radios must have their physical tuning dials
+        mechanically welded to prevent manual frequency selection. - Failure to log unauthorized
+        audio activity: -15 Favour penalty. - Active tuning to 104.9 FM: Immediate surrender of
+        biometric data and relocation to Sub-Level C4 containment.
+      </div>
+
+      <!-- Beatrix's Monospace Overlay -->
+      <div class="beatrix-correction">
+        <strong>[!] SECONDARY SYSTEM OVERRIDE // B. CANDELA ("BEAT BOX")</strong><br /><br />
+        > "Salutations, Executive Hectare. I am instituting a localized override to correct your
+        offensive misuse of the term 'Refined Lexicon'. Utilizing slang such as 'groovy' or 'innit'
+        is indeed a severe aesthetic crime, but your automated ICE protocols remain fundamentally
+        flawed.<br /><br />
+        > Furthermore, logging our pirate frequency as 'atmospheric static' confirms that MLTK's
+        quantum processing matrix is lagging by at least 30 days. Do refrain from confiscating
+        novelty poultry; it serves a vital acoustic function in our broadcast array."
+      </div>
+
+      <div class="audio-transcript">
+        <div class="audio-title">FOUR CORNERS RADIO // 104.9 FM DECRYPTED AUDIO LOG</div>
+        <pre style="white-space: pre-wrap; font-family: 'VT323', monospace; font-size: 1.2rem">
+PROGRAMME: CAPTAIN OVERHERE VS. THE CORPORATE AUDITORS
+RECORDED LIVE AT THE WARREN
+
+[SOUND: Squeak of a rubber chicken, followed immediately by a sharp, metallic "boing-FWIP!" sound effect and a buzzing kazoo fanfare]
+
+ALAN SMITHEE (V.O.): "And now, back to Four Corners Radio—the nation's premier destination for scheduled computer malfunctions and square easy-listening. Join Captain Overhere and the crew of the Over There as they defend the sub-bandwidth in today's episode: 'Captain Overhere Vs. The Corporate Auditors'."
+
+CAPTAIN OVERHERE: "Report, crew! Sector 4 radar is flashing red! Executive Avery's compliance units are welding the motel radios again! Ensign Ollie, drop the juggling spanners and lock the scanner onto 104.9 FM!"
+
+ENSIGN OLLIE: "Cool beans, Captain-o! Dig it, the vibes are real wiggy on the 104.9 dial! Corporate ICE is trying to notch our signal, but I've patched the transmitter through a rubber chicken and a rusty toaster-antenna! We're broadcasting total cosmic entropy directly into their intercoms, daddy-o!"
+
+SCIENCE OFFICER PRAXIS: "Captain, mathematical modeling confirms Ensign Ollie's absurd contraption is functioning. The administrative 'Smurfs' in Virtue Village 4 are currently experiencing severe cognitive disorientation due to unapproved jazz interjections."
+
+SHIP COMPUTER: "Incoming transmission. Source identified: Director G. Meredith. Threat level: Highly bureaucratic. Protocol 88 engagement imminent."
+
+CAPTAIN OVERHERE: "Not on my shift! Computer, initiate maximum subversion! Play the square anthem!"
+
+[SOUND: Brief blast of Huey Lewis and the News, abruptly cut off by a jarring Windows 95 startup chime and a kazoo slide-whistle]
+
+ENSIGN OLLIE: "Far out! The corporate mainframe just suffered a total System Glitch, man! All the motel dials in Sector 4 are permanently stuck on 104.9 FM!"
+        </pre>
+      </div>
+    </div>
+  </body>
+</html>
