@@ -145,11 +145,11 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   },
   {
     id: 'DOC: 002-GD',
-    title: 'Gretchen Dossier',
+    title: '104.9 Global Directives',
     status: 'active',
     link: 'gretchen-dossier.html',
-    type: 'DOWNLOAD',
-    isDownload: true,
+    type: 'ENTER',
+    isDownload: false,
     lockPrompt: 'PHYSICAL ZINE CLEARANCE REQUIRED',
   },
   {
