@@ -9,6 +9,7 @@ describe('Phase Gate Utils Tests', () => {
     document.body.innerHTML = '';
     localStorage.clear();
     jest.restoreAllMocks();
+    window.history.pushState({}, '', 'http://localhost/');
   });
 
   it('renderHeldBackGate should append overlay to document.body and allow valid bypass code', () => {
@@ -43,5 +44,39 @@ describe('Phase Gate Utils Tests', () => {
 
     expect(global.fetch).not.toHaveBeenCalled();
     expect(document.getElementById('held-back-gate-overlay')).toBeNull();
+  });
+
+  it('checkPhaseModuleGate should bypass gate when ?preview=true parameter is present', async () => {
+    window.history.pushState({}, '', 'http://localhost/test-module.html?preview=true');
+    global.fetch = jest.fn();
+
+    await checkPhaseModuleGate('test-module.html');
+
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(document.getElementById('held-back-gate-overlay')).toBeNull();
+  });
+
+  it('checkPhaseModuleGate should render gate if module is held back and no bypass/preview is present', async () => {
+    window.history.pushState({}, '', 'http://localhost/test-module.html');
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        activePhaseId: 'phase1',
+        phases: [
+          {
+            id: 'phase1',
+            name: 'Phase 1: Initial Release',
+            heldBackModules: ['test-module.html'],
+          },
+        ],
+      }),
+    });
+
+    await checkPhaseModuleGate('test-module.html');
+
+    expect(global.fetch).toHaveBeenCalledWith('/api/phases');
+    const overlay = document.getElementById('held-back-gate-overlay');
+    expect(overlay).not.toBeNull();
+    expect(overlay.textContent).toContain('Phase 1: Initial Release');
   });
 });
