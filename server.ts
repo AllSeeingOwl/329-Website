@@ -567,6 +567,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     } catch {
       reqPath = req.path;
     }
+    if (
+      reqPath === '/gretchen-dossier' ||
+      reqPath === '/gretchen-dossier.html' ||
+      reqPath === '/104-9-global-directives' ||
+      reqPath === '/104-9-global-directives.html'
+    ) {
+      const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+      return res.redirect(301, '/104.9-global-directives' + query);
+    }
     if (reqPath.endsWith('.html') && reqPath !== '/404.html' && reqPath !== '/maintenance.html') {
       if (reqPath === '/index.html') {
         const query = req.url.slice(reqPath.length);
@@ -579,6 +588,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     }
   }
   next();
+});
+
+app.get('/104.9-global-directives', (req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, '104.9-global-directives.html'));
 });
 
 app.use(express.static(publicDir, { extensions: ['html'] }));
