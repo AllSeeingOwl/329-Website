@@ -131,7 +131,7 @@ const DEFAULT_PHASES: Phase[] = [
       'mltk-classified-document.html',
       'UNCUT_PUZZLE.pdf',
       'VIRTUE_VILLAGE_LAYOUTS.pdf',
-      'gretchen-dossier.html',
+      '104.9-global-directives.html',
     ],
     activatedAt: new Date().toISOString(),
     lastModifiedBy: 'system',
