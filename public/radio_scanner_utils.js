@@ -50,7 +50,7 @@ function setupRadioScanner() {
   }
 
   const decryptedMessage =
-    "TRANSMISSION SECURED: What's up, groovy cats? Ollie here. If you're hearing this, you cracked the Dvorak disclaimer. The MLTK has eyes on the main routes. We are moving the operation. Meet us at the abandoned developer room under the Mini Rail. Bring bolt cutters. Stay wild.";
+    "[FREQUENCY: 104.9 FM // FOUR CORNERS RADIO TRANSMISSION]\n\nALAN SMITHEE: \"Welcome back to The Glitch and The Gambit. Today's corporate-approved playlist opens with Huey Lewis and the News performing Hip to Be Scare. Please ignore any digital interference.\"\nOLLIE RADIAN: \"Dig it, daddy-o! If you're scanning the airwaves for the Asp Boy's records, make sure you don't trip the Rat traps! We’ve got Cheeps playing on the monitor and a Harmonic Humdinger humming at high voltage!\"\nALAN SMITHEE: \"Indeed. Next up is Talking Heads with Psycro Killer, followed by Bobby Day singing Rockin’ Rovin. If your receiver displays an ISBN anomaly, adjust your dial.\"\nOLLIE RADIAN: \"Stay tuned, groovy cats! The Viper enforcers are searching the Efficiency Express, but Team Rabbit holds the Frequency! Keep your eyes on Index Line Eight!\"\nCAPTAIN OVERHERE (V.O.): \"Computer... prepare the Zero-point Extraction! Code string: R-O-E!\"";
 
   let typingAnimationId; // Store the requestAnimationFrame ID so we can cancel it
 
