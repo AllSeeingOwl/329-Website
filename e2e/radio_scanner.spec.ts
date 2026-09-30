@@ -51,8 +51,7 @@ test.describe('Radio Scanner E2E', () => {
     await expect(radioBody).toHaveClass(/locked-in/);
 
     // The message is typed out, so we wait for it to be fully present
-    const expectedMessage =
-      `[FREQUENCY: 104.9 FM // FOUR CORNERS RADIO TRANSMISSION]
+    const expectedMessage = `[FREQUENCY: 104.9 FM // FOUR CORNERS RADIO TRANSMISSION]
 
 ALAN SMITHEE: "Welcome back to The Glitch and The Gambit. Today's corporate-approved playlist opens with Huey Lewis and the News performing Hip to Be Scare. Please ignore any digital interference."
 OLLIE RADIAN: "Dig it, daddy-o! If you're scanning the airwaves for the Asp Boy's records, make sure you don't trip the Rat traps! We’ve got Cheeps playing on the monitor and a Harmonic Humdinger humming at high voltage!"

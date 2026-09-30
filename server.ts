@@ -667,9 +667,15 @@ app.post('/api/verify', (req: Request, res: Response) => {
     const overrideBuffer = Buffer.from(puzzleOverride);
     const codeBuffer = Buffer.from(code);
 
-    if (codeBuffer.length === authBuffer.length && crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(authBuffer))) {
+    if (
+      codeBuffer.length === authBuffer.length &&
+      crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(authBuffer))
+    ) {
       success = true;
-    } else if (codeBuffer.length === overrideBuffer.length && crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(overrideBuffer))) {
+    } else if (
+      codeBuffer.length === overrideBuffer.length &&
+      crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(overrideBuffer))
+    ) {
       success = true;
     } else {
       // Prevent length leakage via timing by doing dummy comparisons
