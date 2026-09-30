@@ -991,7 +991,23 @@
             tdId.textContent = item.id;
 
             const tdTitle = document.createElement('td');
-            tdTitle.textContent = item.title + ' (' + item.link + ')';
+            const titleLink = document.createElement('a');
+            let previewUrl = item.link.startsWith('/') ? item.link : '/' + item.link;
+            if (item.link.endsWith('.html') || !item.link.includes('.')) {
+              previewUrl += (previewUrl.includes('?') ? '&' : '?') + 'preview=true';
+            }
+            titleLink.href = previewUrl;
+            titleLink.target = '_blank';
+            titleLink.rel = 'noopener noreferrer';
+            titleLink.style.color = '#00ff00';
+            titleLink.style.textDecoration = 'underline';
+            titleLink.textContent = item.title + ' (' + item.link + ')';
+            titleLink.addEventListener('click', function () {
+              const cleanLink = item.link.replace(/\.html$/, '');
+              localStorage.setItem('mltk_bypass_' + item.link, 'true');
+              localStorage.setItem('mltk_bypass_' + cleanLink, 'true');
+            });
+            tdTitle.appendChild(titleLink);
 
             const tdType = document.createElement('td');
             tdType.textContent = item.type + (item.isRogue ? ' [ROGUE]' : '');
@@ -1009,6 +1025,21 @@
             const tdActions = document.createElement('td');
             tdActions.style.display = 'flex';
             tdActions.style.gap = '5px';
+
+            const previewBtn = document.createElement('button');
+            previewBtn.textContent = 'PREVIEW';
+            previewBtn.style.fontSize = '0.75rem';
+            previewBtn.style.padding = '2px 6px';
+            previewBtn.addEventListener('click', function () {
+              const cleanLink = item.link.replace(/\.html$/, '');
+              localStorage.setItem('mltk_bypass_' + item.link, 'true');
+              localStorage.setItem('mltk_bypass_' + cleanLink, 'true');
+              let targetUrl = item.link.startsWith('/') ? item.link : '/' + item.link;
+              if (item.link.endsWith('.html') || !item.link.includes('.')) {
+                targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'preview=true';
+              }
+              window.open(targetUrl, '_blank');
+            });
 
             const activeBtn = document.createElement('button');
             activeBtn.textContent = 'ACTIVE';
@@ -1077,6 +1108,7 @@
               }
             });
 
+            tdActions.appendChild(previewBtn);
             tdActions.appendChild(activeBtn);
             tdActions.appendChild(lockedBtn);
             tdActions.appendChild(offlineBtn);

@@ -1,7 +1,13 @@
 async function checkPhaseModuleGate(pageFilename) {
   try {
     const cleanFilename = pageFilename.replace(/\.html$/, '');
+    let isPreview = false;
+    if (typeof window !== 'undefined' && window.location && window.location.search) {
+      const urlParams = new URLSearchParams(window.location.search);
+      isPreview = urlParams.get('preview') === 'true' || urlParams.get('preview') === '1';
+    }
     const isLocalBypassed =
+      isPreview ||
       localStorage.getItem('mltk_bypass_' + pageFilename) === 'true' ||
       localStorage.getItem('mltk_bypass_' + cleanFilename) === 'true';
     if (isLocalBypassed) return;
