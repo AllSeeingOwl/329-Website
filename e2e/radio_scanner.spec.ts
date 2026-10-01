@@ -80,4 +80,28 @@ CAPTAIN OVERHERE (V.O.): "Computer... prepare the Zero-point Extraction! Code st
     expect(text).not.toContain('FOUR CORNERS RADIO TRANSMISSION');
     expect(text.length).toBeGreaterThan(0);
   });
+
+  test("should allow vertical page scrolling when message is displayed at 104.9", async ({ page }) => {
+    const slider = page.locator("#freq-slider");
+    const radioBody = page.locator("#radio-body");
+
+    // Set viewport size to ensure content height exceeds viewport
+    await page.setViewportSize({ width: 375, height: 600 });
+
+    await slider.fill("1049");
+    await expect(radioBody).toHaveClass(/locked-in/);
+
+    // Verify computed overflow style on body is not hidden
+    const overflowY = await page.evaluate(() => window.getComputedStyle(document.body).overflowY);
+    expect(overflowY).not.toBe("hidden");
+
+    // Verify that the page is scrollable vertically
+    const isScrollable = await page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight || document.body.scrollHeight > window.innerHeight);
+    expect(isScrollable).toBe(true);
+
+    // Perform scrolling down and verify window scrollY changes
+    await page.evaluate(() => window.scrollTo(0, 300));
+    const scrollY = await page.evaluate(() => window.scrollY);
+    expect(scrollY).toBeGreaterThan(0);
+  });
 });

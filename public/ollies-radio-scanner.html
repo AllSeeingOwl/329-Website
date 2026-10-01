@@ -12,6 +12,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        box-sizing: border-box;
+      }
+
       body,
       html {
         margin: 0;
@@ -21,10 +25,17 @@
         background-color: #111;
         color: #fff;
         font-family: 'VT323', monospace;
+      }
+
+      body {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        overflow: hidden;
+        padding: 40px 20px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
 
       .radio-container {
@@ -36,6 +47,7 @@
         max-width: 600px;
         box-shadow: 10px 10px 0px #000;
         position: relative;
+        margin: auto 0 30px 0;
       }
 
       .tape {
@@ -198,8 +210,8 @@
       }
 
       .tacky-ad {
-        position: absolute;
-        bottom: 20px;
+        position: relative;
+        margin-bottom: auto;
         background-color: #ffff00;
         color: #ff0000;
         border: 4px dashed #ff0000;
