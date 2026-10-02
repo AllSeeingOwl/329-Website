@@ -3,7 +3,6 @@
 import {
   getRedisCredentials,
   isRedisConfigured,
-  validateProductionRedisConfig,
 } from '../src/redis';
 
 describe('src/redis.ts tests', () => {
