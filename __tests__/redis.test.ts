@@ -1,9 +1,6 @@
 /// <reference types="jest" />
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  getRedisCredentials,
-  isRedisConfigured,
-} from '../src/redis';
+import { getRedisCredentials, isRedisConfigured } from '../src/redis';
 
 describe('src/redis.ts tests', () => {
   let originalEnv: NodeJS.ProcessEnv;
