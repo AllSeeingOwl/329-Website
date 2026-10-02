@@ -172,7 +172,6 @@ export const validateAdminSession = async (
   token: string,
   ip: string = 'unknown'
 ): Promise<boolean> => {
-  const isProduction = process.env.NODE_ENV === 'production';
   let sessionData: AdminSession | null = null;
 
   if (isRedisAvailable()) {
