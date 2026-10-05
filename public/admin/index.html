@@ -853,6 +853,7 @@
           phasesList.innerHTML = '';
 
           const activePhaseId = data.activePhaseId;
+          const fragment = document.createDocumentFragment();
 
           data.phases.forEach(function (phase) {
             const card = document.createElement('div');
@@ -960,8 +961,10 @@
 
             card.appendChild(infoDiv);
             card.appendChild(actionDiv);
-            phasesList.appendChild(card);
+            fragment.appendChild(card);
           });
+
+          phasesList.appendChild(fragment);
         }
 
         document.getElementById('refresh-phases-btn').addEventListener('click', fetchPhases);
@@ -982,6 +985,8 @@
               '<tr><td colspan="5" style="text-align: center">NO MODULES FOUND</td></tr>';
             return;
           }
+
+          const fragment = document.createDocumentFragment();
 
           modules.forEach(function (item) {
             const tr = document.createElement('tr');
@@ -1119,8 +1124,10 @@
             tr.appendChild(tdStatus);
             tr.appendChild(tdActions);
 
-            tbody.appendChild(tr);
+            fragment.appendChild(tr);
           });
+
+          tbody.appendChild(fragment);
         }
 
         document
@@ -1206,6 +1213,8 @@
             return;
           }
 
+          const fragment = document.createDocumentFragment();
+
           data.emails.forEach(function (e) {
             const tr = document.createElement('tr');
 
@@ -1225,8 +1234,10 @@
             tr.appendChild(tdTime);
             tr.appendChild(tdSource);
             tr.appendChild(tdStatus);
-            tbody.appendChild(tr);
+            fragment.appendChild(tr);
           });
+
+          tbody.appendChild(fragment);
         }
 
         document.getElementById('refresh-emails-btn').addEventListener('click', function () {
@@ -1426,6 +1437,8 @@
             return;
           }
 
+          const fragment = document.createDocumentFragment();
+
           data.announcements.forEach(function (ann) {
             const tr = document.createElement('tr');
 
@@ -1461,7 +1474,6 @@
                 showMessage('ANNOUNCEMENT STATE UPDATED');
                 fetchAnnouncements();
                 fetchAuditLogs();
-                fetchAnnouncements();
               }
             });
 
@@ -1500,7 +1512,6 @@
                 showMessage('ANNOUNCEMENT DELETED');
                 fetchAnnouncements();
                 fetchAuditLogs();
-                fetchAnnouncements();
               }
             });
 
@@ -1514,8 +1525,10 @@
             tr.appendChild(tdAuthor);
             tr.appendChild(tdActions);
 
-            tbody.appendChild(tr);
+            fragment.appendChild(tr);
           });
+
+          tbody.appendChild(fragment);
         }
 
         document
@@ -1560,7 +1573,6 @@
             document.getElementById('cancel-ann-btn').style.display = 'none';
             fetchAnnouncements();
             fetchAuditLogs();
-            fetchAnnouncements();
           }
         });
 
@@ -1586,6 +1598,8 @@
             return;
           }
 
+          const fragment = document.createDocumentFragment();
+
           data.logs.forEach(function (log) {
             const tr = document.createElement('tr');
 
@@ -1609,8 +1623,10 @@
             tr.appendChild(tdAction);
             tr.appendChild(tdTarget);
             tr.appendChild(tdDetails);
-            tbody.appendChild(tr);
+            fragment.appendChild(tr);
           });
+
+          tbody.appendChild(fragment);
         }
 
         document.getElementById('refresh-audit-btn').addEventListener('click', fetchAuditLogs);
