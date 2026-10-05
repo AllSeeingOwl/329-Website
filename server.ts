@@ -466,13 +466,39 @@ app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, re
 });
 
 app.post('/api/emails/collect', async (req: Request, res: Response) => {
-  const { email, source } = req.body;
-  if (!email || !source) {
-    res.status(400).json({ error: 'Email and source are required' });
-    return;
-  }
   try {
-    await saveEmail(email, source);
+    const sysConfig = await getConfigFromStore();
+    if (sysConfig && sysConfig.allowEmailCollection === false) {
+      res.status(403).json({ error: 'Email collection is currently disabled.' });
+      return;
+    }
+
+    const { email, source } = req.body || {};
+    if (
+      typeof email !== 'string' ||
+      typeof source !== 'string' ||
+      !email.trim() ||
+      !source.trim()
+    ) {
+      res.status(400).json({ error: 'Email and source are required non-empty strings' });
+      return;
+    }
+
+    const cleanEmail = email.trim();
+    const cleanSource = source.trim();
+
+    if (cleanEmail.length > 254 || cleanSource.length > 100) {
+      res.status(400).json({ error: 'Input length exceeds allowable limit' });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanEmail)) {
+      res.status(400).json({ error: 'Invalid email format' });
+      return;
+    }
+
+    await saveEmail(cleanEmail, cleanSource);
     res.json({ success: true });
   } catch (error) {
     console.error('Failed to save email:', error);
