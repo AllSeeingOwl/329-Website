@@ -557,6 +557,10 @@
         const container = document.getElementById('dashboard-container');
         container.innerHTML = ''; // Clear current contents
 
+        // ⚡ Bolt: Use a DocumentFragment to batch DOM insertions into a single write operation,
+        // preventing multiple layout reflows and repaints during card rendering.
+        const fragment = document.createDocumentFragment();
+
         dashboardConfig.forEach((item) => {
           if (item.status === 'offline' || item.status === 'hidden') {
             return; // Hide offline/hidden items
@@ -637,8 +641,10 @@
             cardEl.appendChild(tagEl);
           }
 
-          container.appendChild(cardEl);
+          fragment.appendChild(cardEl);
         });
+
+        container.appendChild(fragment);
       }
 
       // Initial render

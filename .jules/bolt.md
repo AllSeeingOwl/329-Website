@@ -87,3 +87,8 @@
 
 **Learning:** When refactoring low-frequency `setInterval` loops (e.g., 1000ms countdown timers) to `requestAnimationFrame` for API consistency, naive implementations (`lastTime = currentTime`) can cause the timer to drift over time because animation frames rarely hit exactly on the millisecond mark.
 **Action:** Use a modulo calculation (`lastTime = currentTime - (deltaTime % 1000)`) to carry over the fractional remainder of time. This ensures the timer remains accurate across long intervals.
+
+## 2026-03-26 - Batch DOM updates in render loops using DocumentFragment
+
+**Learning:** Appending child elements directly to container DOM nodes inside loops (e.g. `container.appendChild(child)`) triggers layout recalculations and repaints on every iteration. For large lists or tables, this creates significant layout thrashing.
+**Action:** Append child nodes to an off-screen `DocumentFragment` (`const fragment = document.createDocumentFragment()`) within render loops, and perform a single `container.appendChild(fragment)` call at the end to commit all updates in a single reflow/repaint cycle.
