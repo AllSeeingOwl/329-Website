@@ -52,9 +52,7 @@ describe('POST /api/emails/collect', () => {
     (expect as any)(res1.status).toBe(400);
     (expect as any)(res1.body.error).toMatch(/Email and source are required/);
 
-    const res2 = await request(app)
-      .post('/api/emails/collect')
-      .send({ email: 'user@example.com' });
+    const res2 = await request(app).post('/api/emails/collect').send({ email: 'user@example.com' });
     (expect as any)(res2.status).toBe(400);
     (expect as any)(res2.body.error).toMatch(/Email and source are required/);
   });
@@ -91,24 +89,19 @@ describe('POST /api/emails/collect', () => {
   });
 
   it('should return 403 when allowEmailCollection is set to false in system config', async () => {
-    const loginRes = await request(app)
-      .post('/api/admin/authenticate')
-      .send({ password: 'admin' });
+    const loginRes = await request(app).post('/api/admin/authenticate').send({ password: 'admin' });
     const cookie = loginRes.headers['set-cookie'];
 
-    const configRes = await request(app)
-      .put('/api/admin/config')
-      .set('Cookie', cookie)
-      .send({
-        maintenanceMode: false,
-        publicSiteEnabled: true,
-        adminPanelEnabled: true,
-        allowEmailCollection: false,
-        emailNotificationEnabled: true,
-        maxConcurrentSessions: 10,
-        sessionTimeout: 15,
-        emergencyLockdown: false,
-      });
+    const configRes = await request(app).put('/api/admin/config').set('Cookie', cookie).send({
+      maintenanceMode: false,
+      publicSiteEnabled: true,
+      adminPanelEnabled: true,
+      allowEmailCollection: false,
+      emailNotificationEnabled: true,
+      maxConcurrentSessions: 10,
+      sessionTimeout: 15,
+      emergencyLockdown: false,
+    });
 
     (expect as any)(configRes.status).toBe(200);
 
