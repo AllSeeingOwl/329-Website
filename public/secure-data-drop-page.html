@@ -203,6 +203,18 @@
         }
       }
 
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px dashed #00ff00 !important;
+        outline-offset: 4px !important;
+      }
+
+      .btn-store:focus-visible {
+        outline: 2px dashed #ff3366 !important;
+        outline-offset: 4px !important;
+      }
+
       button:disabled,
       input:disabled,
       .btn:disabled {
@@ -292,6 +304,8 @@
         </form>
         <div
           id="terminal-output"
+          role="status"
+          aria-live="polite"
           style="
             color: #ff3366;
             font-size: 1.3rem;
