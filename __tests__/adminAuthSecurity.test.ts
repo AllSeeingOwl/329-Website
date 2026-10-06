@@ -134,6 +134,34 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       );
     });
 
+    it('evicts oldest rate limit entry when map capacity limit (1000) is exceeded', async () => {
+      // Simulate 1000 failed login attempts from distinct IPs
+      for (let i = 0; i < 1000; i++) {
+        const ip = `10.0.${Math.floor(i / 256)}.${i % 256}`;
+        const res = await request(app)
+          .post('/api/admin/authenticate')
+          .set('X-Forwarded-For', ip)
+          .send({ password: 'wrong-password' });
+        (expect as any)(res.status).toBe(401);
+      }
+
+      // Send 1001st request from a new IP
+      const newIp = '192.168.1.100';
+      const resNew = await request(app)
+        .post('/api/admin/authenticate')
+        .set('X-Forwarded-For', newIp)
+        .send({ password: 'wrong-password' });
+      (expect as any)(resNew.status).toBe(401);
+
+      // Verify oldest IP ('10.0.0.0') was evicted and can attempt login again without rate limiting error
+      const resOldest = await request(app)
+        .post('/api/admin/authenticate')
+        .set('X-Forwarded-For', '10.0.0.0')
+        .send({ password: 'wrong-password' });
+      (expect as any)(resOldest.status).toBe(401);
+      (expect as any)(resOldest.body.message).toBe('Invalid password');
+    });
+
     it('throws error / 500 when ADMIN_PASSWORD is missing in production', async () => {
       process.env.NODE_ENV = 'production';
       delete process.env.ADMIN_PASSWORD;
