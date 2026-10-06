@@ -290,6 +290,15 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
   }
 
   if (!isValid) {
+    // 🛡️ Sentinel: Enforce an O(1) eviction policy on the rate limit map to prevent
+    // memory leaks and memory exhaustion DoS attacks from IP spoofing/flooding.
+    if (rateLimitMap.size >= 1000 && !rateLimitMap.has(ip)) {
+      const oldestKey = rateLimitMap.keys().next().value;
+      if (oldestKey !== undefined) {
+        rateLimitMap.delete(oldestKey);
+      }
+    }
+
     const currentRecord = rateLimitMap.get(ip);
     if (!currentRecord || now - currentRecord.firstAttempt > RATE_LIMIT_WINDOW_MS) {
       rateLimitMap.set(ip, { count: 1, firstAttempt: now });
