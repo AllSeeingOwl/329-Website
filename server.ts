@@ -270,7 +270,6 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
 
 app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
   try {
-    const publicDir = path.join(__dirname, 'public');
     const files = await fs.promises.readdir(publicDir);
 
     const host = req.get('host') || 'localhost:3000';
@@ -293,40 +292,6 @@ app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
   }
 });
 
-// Maintenance Middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // Normalize path by stripping query strings and lowercasing encoded spaces if any
-  // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
-  let reqPath: string;
-  try {
-    reqPath = decodeURIComponent(req.path);
-  } catch {
-    res.status(400).json({ error: 'Bad Request: Malformed URI' });
-    return;
-  }
-
-  // Global Maintenance Mode applies to everything except static assets if we want,
-  // but originally it was fully blocking everything. Keeping the original behavior:
-  if (MAINTENANCE_MODE) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  // Check specific maintenance modes for HTML pages.
-  // We only block specific paths to allow CSS/JS to pass through freely.
-  if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  next();
-});
-
 // Endpoint for frontend to check maintenance status dynamically
 app.get('/api/maintenance-status', (req: Request, res: Response) => {
   res.json({
@@ -339,7 +304,9 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
 import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
 import adminRouter, { getConfigFromStore, getAnnouncementsFromStore } from './src/routes/admin';
 
-// Maintenance Middleware
+// ⚡ Bolt: Consolidated single maintenance middleware.
+// Removed redundant earlier maintenance middleware that duplicated decodeURIComponent parsing
+// and Set lookups on every HTTP request before reaching this comprehensive middleware.
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   // Normalize path by stripping query strings and lowercasing encoded spaces if any
   // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
