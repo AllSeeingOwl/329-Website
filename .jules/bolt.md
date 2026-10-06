@@ -92,3 +92,8 @@
 
 **Learning:** Appending child elements directly to container DOM nodes inside loops (e.g. `container.appendChild(child)`) triggers layout recalculations and repaints on every iteration. For large lists or tables, this creates significant layout thrashing.
 **Action:** Append child nodes to an off-screen `DocumentFragment` (`const fragment = document.createDocumentFragment()`) within render loops, and perform a single `container.appendChild(fragment)` call at the end to commit all updates in a single reflow/repaint cycle.
+
+## 2026-10-06 - Eliminate Duplicate Middleware Processing in Express Server
+
+**Learning:** Declaring duplicate Express middleware functions causes every single incoming HTTP request to execute redundant path decoding (`decodeURIComponent`) and Set lookups (`Set.prototype.has`) multiple times before reaching route handlers.
+**Action:** Audit Express app middleware stacks during performance profiling to ensure middleware handlers are consolidated into a single instance with proper exemption logic.
