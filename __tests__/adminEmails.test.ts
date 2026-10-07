@@ -92,17 +92,17 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
     });
 
     it('should sanitize cell values starting with formula trigger characters to prevent CSV Injection', async () => {
-      await saveEmail('=CMD|\' /C calc\'!A1@example.com', '=SUM(1,1)', 'verified');
+      await saveEmail("=CMD|' /C calc'!A1@example.com", '=SUM(1,1)', 'verified');
       await saveEmail('+100@example.com', '-50_source', 'pending');
 
       const res = await request(app).get('/api/admin/emails/export').set('Cookie', sessionCookie);
 
       (expect as any)(res.status).toBe(200);
       const csvLines = res.text.trim().split('\n');
-      (expect as any)(csvLines[1]).toContain('\'=CMD|\' /C calc\'!A1@example.com');
-      (expect as any)(csvLines[1]).toContain('\'=SUM(1,1)');
-      (expect as any)(csvLines[2]).toContain('\'+100@example.com');
-      (expect as any)(csvLines[2]).toContain('\'-50_source');
+      (expect as any)(csvLines[1]).toContain("'=CMD|' /C calc'!A1@example.com");
+      (expect as any)(csvLines[1]).toContain("'=SUM(1,1)");
+      (expect as any)(csvLines[2]).toContain("'+100@example.com");
+      (expect as any)(csvLines[2]).toContain("'-50_source");
     });
   });
 
