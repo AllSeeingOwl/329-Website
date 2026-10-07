@@ -271,6 +271,7 @@
           <input
             type="text"
             id="auth-key-input"
+            aria-label="Authorization Key or Passphrase"
             placeholder="[ ENTER PASSPHRASE... ]"
             required
             style="
@@ -387,6 +388,7 @@
       document.addEventListener('DOMContentLoaded', () => {
         const termForm = document.getElementById('terminal-form');
         const authInput = document.getElementById('auth-key-input');
+        const authBtn = document.getElementById('auth-submit-btn');
         const termOutput = document.getElementById('terminal-output');
         const downloadBox = document.querySelector('.download-box');
 
@@ -397,6 +399,14 @@
             termOutput.style.display = 'block';
             termOutput.style.color = '#ff3366';
             termOutput.textContent = '[SYSTEM] VERIFYING AUTHORIZATION HASH...';
+
+            if (authBtn) {
+              authBtn.disabled = true;
+              authBtn.textContent = 'VERIFYING...';
+            }
+            if (authInput) {
+              authInput.disabled = true;
+            }
 
             try {
               const res = await fetch('/api/verify', {
@@ -422,6 +432,14 @@
             } catch (err) {
               termOutput.style.color = '#ff3366';
               termOutput.textContent = '[ERROR] CONNECTION FAILURE. MLTK ICE BLOCKING SIGNAL.';
+            } finally {
+              if (authBtn) {
+                authBtn.disabled = false;
+                authBtn.textContent = 'VERIFY';
+              }
+              if (authInput) {
+                authInput.disabled = false;
+              }
             }
           });
         }
