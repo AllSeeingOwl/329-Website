@@ -745,40 +745,66 @@
         },
       };
 
-      // DOM Elements
-      const letterNav = document.getElementById('letter-nav');
-      const displayLetter = document.getElementById('display-letter');
-      const vName = document.getElementById('village-name');
-      const vVirtue = document.getElementById('village-virtue');
-      const vVice = document.getElementById('village-vice');
-      const vTetro = document.getElementById('village-tetromino');
-      const mName = document.getElementById('mayor-name');
-      const mHair = document.getElementById('mayor-hair');
-      const mEyes = document.getElementById('mayor-eyes');
-      const mExpr = document.getElementById('mayor-expr');
-      const vNotes = document.getElementById('village-notes');
+      // ⚡ Bolt: Cache DOM Element references to avoid re-querying the DOM tree on every letter selection
+      let domCache = null;
+      function getDomCache() {
+        if (!domCache) {
+          domCache = {
+            letterNav: document.getElementById('letter-nav'),
+            displayLetter: document.getElementById('display-letter'),
+            vName: document.getElementById('village-name'),
+            vVirtue: document.getElementById('village-virtue'),
+            vVice: document.getElementById('village-vice'),
+            vTetro: document.getElementById('village-tetromino'),
+            mName: document.getElementById('mayor-name'),
+            mHair: document.getElementById('mayor-hair'),
+            mEyes: document.getElementById('mayor-eyes'),
+            mExpr: document.getElementById('mayor-expr'),
+            vNotes: document.getElementById('village-notes'),
+          };
+        }
+        return domCache;
+      }
 
       // Generate A-Z Buttons
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-      alphabet.forEach((letter) => {
-        const btn = document.createElement('button');
-        btn.className = 'sidebar-item';
+      function initSidebarNav() {
+        const cache = getDomCache();
+        if (!cache.letterNav) return;
 
-        if (letter === 'A') {
-          btn.classList.add('active');
-        }
+        // ⚡ Bolt: Batch DOM button insertions using DocumentFragment to prevent 26 individual reflow/repaint cycles
+        const fragment = document.createDocumentFragment();
 
-        btn.innerText = letter;
-        btn.onclick = () => loadVillage(letter, btn);
-        letterNav.appendChild(btn);
-      });
+        alphabet.forEach((letter) => {
+          const btn = document.createElement('button');
+          btn.className = 'sidebar-item';
+
+          if (letter === 'A') {
+            btn.classList.add('active');
+          }
+
+          // ⚡ Bolt: Replace innerText with textContent to avoid layout reflows during initialization
+          btn.textContent = letter;
+          btn.onclick = () => loadVillage(letter, btn);
+          fragment.appendChild(btn);
+        });
+
+        cache.letterNav.appendChild(fragment);
+      }
+
+      initSidebarNav();
 
       function loadVillage(letter, btnElement) {
+        const cache = getDomCache();
+
         // Update active state on buttons
-        document.querySelectorAll('#letter-nav button').forEach((b) => {
-          b.className = 'sidebar-item';
-        });
+        if (cache.letterNav) {
+          const buttons = cache.letterNav.children;
+          for (let i = 0; i < buttons.length; i++) {
+            buttons[i].className = 'sidebar-item';
+          }
+        }
 
         if (btnElement) {
           btnElement.className = 'sidebar-item active';
@@ -798,17 +824,17 @@
             "Team Rabbit has not yet breached this sector's firewall. Check back later or find the correct 'Guess Who' code wheel alignment.",
         };
 
-        // Populate DOM
-        displayLetter.innerText = letter;
-        vName.innerText = data.name;
-        vVirtue.innerText = data.virtue;
-        vVice.innerText = data.vice;
-        vTetro.innerText = data.tetromino;
-        mName.innerText = data.mayor;
-        mHair.innerText = data.hair;
-        mEyes.innerText = data.eyes;
-        mExpr.innerText = data.expression;
-        vNotes.innerText = data.notes;
+        // ⚡ Bolt: Replace innerText with textContent across all element assignments to avoid synchronous layout reflows during tab switches
+        if (cache.displayLetter) cache.displayLetter.textContent = letter;
+        if (cache.vName) cache.vName.textContent = data.name;
+        if (cache.vVirtue) cache.vVirtue.textContent = data.virtue;
+        if (cache.vVice) cache.vVice.textContent = data.vice;
+        if (cache.vTetro) cache.vTetro.textContent = data.tetromino;
+        if (cache.mName) cache.mName.textContent = data.mayor;
+        if (cache.mHair) cache.mHair.textContent = data.hair;
+        if (cache.mEyes) cache.mEyes.textContent = data.eyes;
+        if (cache.mExpr) cache.mExpr.textContent = data.expression;
+        if (cache.vNotes) cache.vNotes.textContent = data.notes;
       }
 
       // Initialize the first village on load
