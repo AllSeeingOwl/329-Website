@@ -673,6 +673,18 @@ router.get('/emails', adminAuth, async (_req: Request, res: Response): Promise<v
 });
 
 /**
+ * Helper to sanitize CSV cells against CSV Formula Injection (CWE-1236).
+ * Prepends a single quote `'` if the value starts with formula trigger characters (=, +, -, @, \t, \r).
+ */
+const sanitizeCsvCell = (val: unknown): string => {
+  const str = String(val ?? '');
+  if (/^[=+\-@\t\r]/.test(str)) {
+    return `'${str}`;
+  }
+  return str;
+};
+
+/**
  * GET /api/admin/emails/export
  * Returns CSV file download of all emails.
  */
@@ -685,10 +697,10 @@ router.get('/emails/export', adminAuth, async (req: Request, res: Response): Pro
 
     const header = ['Email', 'Collected At', 'Source Phase', 'Status'];
     const rows = rawEmails.map((e) => [
-      e.email,
-      e.timestamp,
-      e.source || activePhaseId,
-      e.status || 'pending',
+      sanitizeCsvCell(e.email),
+      sanitizeCsvCell(e.timestamp),
+      sanitizeCsvCell(e.source || activePhaseId),
+      sanitizeCsvCell(e.status || 'pending'),
     ]);
 
     const csvContent = [header, ...rows]
