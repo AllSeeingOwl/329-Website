@@ -15,3 +15,9 @@
 **Vulnerability:** The admin login handler in `src/middleware/adminAuth.ts` maintained an in-memory `rateLimitMap` without a size bound. An attacker sending requests with spoofed IP addresses could grow the map indefinitely, leading to memory exhaustion and Denial of Service (DoS).
 **Learning:** In-memory rate-limiting maps in Node.js/Express applications must explicitly cap maximum size and implement an eviction strategy (such as deleting the oldest entry via Map insertion order iterator) to remain safe against IP spoofing DoS attacks.
 **Prevention:** Always bound Map structures used for rate limiting or session tracking when backed by in-memory stores.
+
+## 2026-10-07 - [Security Fix] CSV Formula Injection Sanitization
+
+**Vulnerability:** The admin email export endpoint (`GET /api/admin/emails/export`) generated CSV downloads directly from user-submitted email addresses and source parameters without sanitizing cell values starting with formula trigger characters (`=`, `+`, `-`, `@`, `\t`, `\r`). An attacker submitting malicious input (e.g. via `POST /api/emails/collect`) could trigger CSV/Formula Injection (CWE-1236) when an administrator opens the exported file in spreadsheet applications like Excel or Google Sheets.
+**Learning:** All user-supplied text exported to CSV format must be sanitized by prepending a single quote (`'`) to any cell string starting with formula trigger characters, ensuring the spreadsheet software treats the value strictly as literal text.
+**Prevention:** Always apply cell sanitization to user-generated data prior to generating downloadable CSV files.
