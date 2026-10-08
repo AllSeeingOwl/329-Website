@@ -528,7 +528,9 @@
     <div id="error-modal" class="result-modal">
       <h2>SYSTEM ERROR: ANOMALY DETECTED</h2>
       <p>Your responses do not align with MLTK compliance standards.</p>
-      <button class="close-btn" onclick="closeModal('error-modal')">[X] CLOSE</button>
+      <button class="close-btn" aria-label="Close error modal" onclick="closeModal('error-modal')">
+        [X] CLOSE
+      </button>
     </div>
 
     <div id="success-modal" class="result-modal">
@@ -538,7 +540,13 @@
         Classification: CLASSIFIED<br />
         Contents: TBD
       </div>
-      <button class="close-btn" onclick="closeModal('success-modal')">[X] CLOSE</button>
+      <button
+        class="close-btn"
+        aria-label="Close success modal"
+        onclick="closeModal('success-modal')"
+      >
+        [X] CLOSE
+      </button>
     </div>
 
     <!-- Hidden Document Viewer Modal -->
