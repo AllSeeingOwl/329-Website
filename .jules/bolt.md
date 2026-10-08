@@ -97,3 +97,8 @@
 
 **Learning:** Declaring duplicate Express middleware functions causes every single incoming HTTP request to execute redundant path decoding (`decodeURIComponent`) and Set lookups (`Set.prototype.has`) multiple times before reaching route handlers.
 **Action:** Audit Express app middleware stacks during performance profiling to ensure middleware handlers are consolidated into a single instance with proper exemption logic.
+
+## 2026-10-08 - TTL Caching for Middleware System Configuration
+
+**Learning:** Executing asynchronous database reads (like Redis GET) in global Express middleware (such as emergency lockdown and maintenance checks) causes database roundtrip latency and asynchronous microtask overhead on every single HTTP request. Under high request volumes (or rate-limiting test loops), this leads to severe server slowdowns and request timeouts.
+**Action:** Cache frequently read system configuration objects in module memory with a short TTL (e.g. 2000ms). Immediately invalidate or refresh the cache timestamp whenever configuration updates occur via state-changing admin routes.
