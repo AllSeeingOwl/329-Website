@@ -83,6 +83,22 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.success).toBe(false);
     });
+
+    it('enforces rate limiting on quick-login after 5 failed attempts', async () => {
+      for (let i = 0; i < 5; i++) {
+        const res = await request(app).get('/api/admin/quick-login?key=wrong-bypass-key');
+        (expect as any)(res.status).toBe(401);
+      }
+
+      const resBlocked = await request(app).get(
+        '/api/admin/quick-login?key=secret-bypass-key-2084'
+      );
+      (expect as any)(resBlocked.status).toBe(429);
+      (expect as any)(resBlocked.body.success).toBe(false);
+      (expect as any)(resBlocked.body.message).toBe(
+        'Too many failed login attempts. Please try again later.'
+      );
+    });
   });
 
   describe('Login & Password Handling', () => {

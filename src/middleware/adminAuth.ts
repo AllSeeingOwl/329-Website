@@ -242,16 +242,42 @@ export const resetRateLimitMap = (): void => {
   rateLimitMap.clear();
 };
 
-export const handleAdminLogin = async (req: Request, res: Response): Promise<void> => {
-  const ip = req.ip || req.socket.remoteAddress || 'unknown';
-  const now = Date.now();
-
+export const isRateLimited = (ip: string): boolean => {
   const record = rateLimitMap.get(ip);
-  if (
+  const now = Date.now();
+  return !!(
     record &&
     now - record.firstAttempt <= RATE_LIMIT_WINDOW_MS &&
     record.count >= MAX_FAILED_ATTEMPTS
-  ) {
+  );
+};
+
+export const recordFailedAttempt = (ip: string): void => {
+  const now = Date.now();
+  if (rateLimitMap.size >= 1000 && !rateLimitMap.has(ip)) {
+    const oldestKey = rateLimitMap.keys().next().value;
+    if (oldestKey !== undefined) {
+      rateLimitMap.delete(oldestKey);
+    }
+  }
+
+  const currentRecord = rateLimitMap.get(ip);
+  if (!currentRecord || now - currentRecord.firstAttempt > RATE_LIMIT_WINDOW_MS) {
+    rateLimitMap.set(ip, { count: 1, firstAttempt: now });
+  } else {
+    currentRecord.count += 1;
+    rateLimitMap.set(ip, currentRecord);
+  }
+};
+
+export const clearRateLimit = (ip: string): void => {
+  rateLimitMap.delete(ip);
+};
+
+export const handleAdminLogin = async (req: Request, res: Response): Promise<void> => {
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+
+  if (isRateLimited(ip)) {
     logAuthAttempt('LOGIN', false, ip, 'Rate limit exceeded');
     res.status(429).json({
       success: false,
@@ -290,22 +316,7 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
   }
 
   if (!isValid) {
-    // 🛡️ Sentinel: Enforce an O(1) eviction policy on the rate limit map to prevent
-    // memory leaks and memory exhaustion DoS attacks from IP spoofing/flooding.
-    if (rateLimitMap.size >= 1000 && !rateLimitMap.has(ip)) {
-      const oldestKey = rateLimitMap.keys().next().value;
-      if (oldestKey !== undefined) {
-        rateLimitMap.delete(oldestKey);
-      }
-    }
-
-    const currentRecord = rateLimitMap.get(ip);
-    if (!currentRecord || now - currentRecord.firstAttempt > RATE_LIMIT_WINDOW_MS) {
-      rateLimitMap.set(ip, { count: 1, firstAttempt: now });
-    } else {
-      currentRecord.count += 1;
-      rateLimitMap.set(ip, currentRecord);
-    }
+    recordFailedAttempt(ip);
     logAuthAttempt('LOGIN', false, ip, 'Invalid password');
     res.status(401).json({
       success: false,
@@ -315,7 +326,7 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
     return;
   }
 
-  rateLimitMap.delete(ip);
+  clearRateLimit(ip);
 
   logAuthAttempt(
     'LOGIN',

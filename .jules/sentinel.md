@@ -21,3 +21,9 @@
 **Vulnerability:** The admin email export endpoint (`GET /api/admin/emails/export`) generated CSV downloads directly from user-submitted email addresses and source parameters without sanitizing cell values starting with formula trigger characters (`=`, `+`, `-`, `@`, `\t`, `\r`). An attacker submitting malicious input (e.g. via `POST /api/emails/collect`) could trigger CSV/Formula Injection (CWE-1236) when an administrator opens the exported file in spreadsheet applications like Excel or Google Sheets.
 **Learning:** All user-supplied text exported to CSV format must be sanitized by prepending a single quote (`'`) to any cell string starting with formula trigger characters, ensuring the spreadsheet software treats the value strictly as literal text.
 **Prevention:** Always apply cell sanitization to user-generated data prior to generating downloadable CSV files.
+
+## 2026-10-08 - [Security Fix] Rate Limiting on Admin Quick-Login Endpoint
+
+**Vulnerability:** The admin quick-login route (`/api/admin/quick-login`) authenticated secret bypass keys without checking or updating rate limiting structures, allowing attackers to bypass standard login rate limits and brute-force bypass keys.
+**Learning:** Alternative login routes (such as quick-login/bypass links) must share and enforce the central rate-limiting mechanism (`isRateLimited`, `recordFailedAttempt`, `clearRateLimit`) rather than implementing independent auth handlers without rate checks.
+**Prevention:** Always export and apply centralized rate limiting helpers across all authentication routes in the application.
