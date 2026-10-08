@@ -6,6 +6,9 @@ import adminAuth, {
   verifyBypassKey,
   createAdminSession,
   logAuthAttempt,
+  isRateLimited,
+  recordFailedAttempt,
+  clearRateLimit,
 } from '../middleware/adminAuth';
 import { redis, isRedisAvailable } from '../redis';
 import {
@@ -305,7 +308,18 @@ router.all('/quick-login', async (req: Request, res: Response): Promise<void> =>
   const key = req.query.key || req.query.token || req.body?.key || req.body?.token;
   const ip = req.ip || req.socket.remoteAddress || 'unknown';
 
+  if (isRateLimited(ip)) {
+    logAuthAttempt('QUICK_LOGIN', false, ip, 'Rate limit exceeded');
+    res.status(429).json({
+      success: false,
+      message: 'Too many failed login attempts. Please try again later.',
+      error: 'Too many failed login attempts. Please try again later.',
+    });
+    return;
+  }
+
   if (!key || typeof key !== 'string' || !verifyBypassKey(key)) {
+    recordFailedAttempt(ip);
     logAuthAttempt('QUICK_LOGIN', false, ip, 'Invalid or missing bypass key');
     res.status(401).json({
       success: false,
@@ -315,6 +329,7 @@ router.all('/quick-login', async (req: Request, res: Response): Promise<void> =>
     return;
   }
 
+  clearRateLimit(ip);
   logAuthAttempt('QUICK_LOGIN', true, ip, 'Secret bypass key verified');
   const session = await createAdminSession(ip);
 
