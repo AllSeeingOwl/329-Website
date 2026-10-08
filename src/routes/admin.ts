@@ -176,6 +176,10 @@ let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
 }));
 
 let inMemoryConfigStore: SystemConfig = { ...DEFAULT_SYSTEM_CONFIG };
+// ⚡ Bolt: Cache system config in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
+let configCacheLastFetched = 0;
+const CONFIG_CACHE_TTL_MS = 2000;
+
 let inMemoryAuditLogs: Array<{
   timestamp: string;
   adminUser: string;
@@ -193,26 +197,33 @@ export const resetInMemPhases = (): void => {
 
 export const resetInMemConfig = (): void => {
   inMemoryConfigStore = { ...DEFAULT_SYSTEM_CONFIG };
+  configCacheLastFetched = 0;
 };
 
 export const getConfigFromStore = async (): Promise<SystemConfig> => {
+  const now = Date.now();
+  if (now - configCacheLastFetched < CONFIG_CACHE_TTL_MS) {
+    return inMemoryConfigStore;
+  }
+
   if (isRedisAvailable()) {
     try {
       const stored = await redis.get<SystemConfig | string>('config:system');
       if (stored) {
         const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
         inMemoryConfigStore = { ...DEFAULT_SYSTEM_CONFIG, ...parsed };
-        return inMemoryConfigStore;
       }
     } catch (err) {
       console.error('Failed to fetch system config from Redis:', err);
     }
   }
+  configCacheLastFetched = now;
   return inMemoryConfigStore;
 };
 
 const saveConfigToStore = async (config: SystemConfig): Promise<void> => {
   inMemoryConfigStore = { ...config };
+  configCacheLastFetched = Date.now();
   if (isRedisAvailable()) {
     try {
       await redis.set('config:system', JSON.stringify(config));
