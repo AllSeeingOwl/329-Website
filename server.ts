@@ -440,7 +440,8 @@ const EMAIL_MAX_ATTEMPTS = 10;
 const resetEmailRateLimitMap = (): void => {
   emailRateLimitMap.clear();
 };
-(app as unknown as { resetEmailRateLimitMap: () => void }).resetEmailRateLimitMap = resetEmailRateLimitMap;
+(app as unknown as { resetEmailRateLimitMap: () => void }).resetEmailRateLimitMap =
+  resetEmailRateLimitMap;
 
 app.post('/api/emails/collect', async (req: Request, res: Response) => {
   try {
@@ -462,7 +463,9 @@ app.post('/api/emails/collect', async (req: Request, res: Response) => {
     } else {
       record.count++;
       if (record.count > EMAIL_MAX_ATTEMPTS) {
-        res.status(429).json({ error: 'Too many email collection requests, please try again later.' });
+        res
+          .status(429)
+          .json({ error: 'Too many email collection requests, please try again later.' });
         return;
       }
     }

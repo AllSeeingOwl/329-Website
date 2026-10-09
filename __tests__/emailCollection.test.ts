@@ -132,6 +132,8 @@ describe('POST /api/emails/collect', () => {
       .send({ email: 'user10@example.com', source: 'studio_newsletter' });
 
     (expect as any)(rateLimitedRes.status).toBe(429);
-    (expect as any)(rateLimitedRes.body.error).toBe('Too many email collection requests, please try again later.');
+    (expect as any)(rateLimitedRes.body.error).toBe(
+      'Too many email collection requests, please try again later.'
+    );
   });
 });
