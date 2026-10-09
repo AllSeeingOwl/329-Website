@@ -432,8 +432,42 @@ app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, re
   }
 });
 
+// 🛡️ Sentinel: Rate limiting for public email collection to prevent DoS & spam floods
+const emailRateLimitMap = new Map<string, RateLimitRecord>();
+const EMAIL_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const EMAIL_MAX_ATTEMPTS = 10;
+
+const resetEmailRateLimitMap = (): void => {
+  emailRateLimitMap.clear();
+};
+(app as unknown as { resetEmailRateLimitMap: () => void }).resetEmailRateLimitMap = resetEmailRateLimitMap;
+
 app.post('/api/emails/collect', async (req: Request, res: Response) => {
   try {
+    const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const record = emailRateLimitMap.get(ip) || { count: 0, firstAttempt: now };
+
+    // Bounded Map with O(1) eviction to prevent memory leaks from IP spoofing
+    if (emailRateLimitMap.size >= 1000 && !emailRateLimitMap.has(ip)) {
+      const oldestKey = emailRateLimitMap.keys().next().value;
+      if (oldestKey !== undefined) {
+        emailRateLimitMap.delete(oldestKey);
+      }
+    }
+
+    if (now - record.firstAttempt > EMAIL_RATE_LIMIT_WINDOW_MS) {
+      record.count = 1;
+      record.firstAttempt = now;
+    } else {
+      record.count++;
+      if (record.count > EMAIL_MAX_ATTEMPTS) {
+        res.status(429).json({ error: 'Too many email collection requests, please try again later.' });
+        return;
+      }
+    }
+    emailRateLimitMap.set(ip, record);
+
     const sysConfig = await getConfigFromStore();
     if (sysConfig && sysConfig.allowEmailCollection === false) {
       res.status(403).json({ error: 'Email collection is currently disabled.' });
