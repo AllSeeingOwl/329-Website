@@ -10,6 +10,9 @@ describe('POST /api/emails/collect', () => {
   beforeEach(async () => {
     await clearAllEmails();
     resetInMemConfig();
+    if (typeof (app as any).resetEmailRateLimitMap === 'function') {
+      (app as any).resetEmailRateLimitMap();
+    }
     if (isRedisAvailable()) {
       try {
         await redis.del('config:system');
@@ -22,6 +25,9 @@ describe('POST /api/emails/collect', () => {
   afterEach(async () => {
     await clearAllEmails();
     resetInMemConfig();
+    if (typeof (app as any).resetEmailRateLimitMap === 'function') {
+      (app as any).resetEmailRateLimitMap();
+    }
     if (isRedisAvailable()) {
       try {
         await redis.del('config:system');
@@ -111,5 +117,23 @@ describe('POST /api/emails/collect', () => {
 
     (expect as any)(collectRes.status).toBe(403);
     (expect as any)(collectRes.body.error).toBe('Email collection is currently disabled.');
+  });
+
+  it('should return 429 when rate limit is exceeded for email collection', async () => {
+    for (let i = 0; i < 10; i++) {
+      const res = await request(app)
+        .post('/api/emails/collect')
+        .send({ email: `user${i}@example.com`, source: 'studio_newsletter' });
+      (expect as any)(res.status).toBe(200);
+    }
+
+    const rateLimitedRes = await request(app)
+      .post('/api/emails/collect')
+      .send({ email: 'user10@example.com', source: 'studio_newsletter' });
+
+    (expect as any)(rateLimitedRes.status).toBe(429);
+    (expect as any)(rateLimitedRes.body.error).toBe(
+      'Too many email collection requests, please try again later.'
+    );
   });
 });

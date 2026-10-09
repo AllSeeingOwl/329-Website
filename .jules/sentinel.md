@@ -27,3 +27,9 @@
 **Vulnerability:** The admin quick-login route (`/api/admin/quick-login`) authenticated secret bypass keys without checking or updating rate limiting structures, allowing attackers to bypass standard login rate limits and brute-force bypass keys.
 **Learning:** Alternative login routes (such as quick-login/bypass links) must share and enforce the central rate-limiting mechanism (`isRateLimited`, `recordFailedAttempt`, `clearRateLimit`) rather than implementing independent auth handlers without rate checks.
 **Prevention:** Always export and apply centralized rate limiting helpers across all authentication routes in the application.
+
+## 2026-10-09 - [Security Fix] Rate Limiting on Public Email Collection Endpoint
+
+**Vulnerability:** The public email collection endpoint (`POST /api/emails/collect`) lacked rate limiting, allowing unauthenticated attackers or bots to flood the endpoint with unlimited requests. This could cause memory exhaustion (OOM DoS), database list bloat, and analytics distortion.
+**Learning:** Public data collection endpoints must implement rate limiting with bounded memory stores and O(1) eviction logic so that high-volume automated requests are blocked (HTTP 429) without exhausting server memory.
+**Prevention:** Always apply rate limiting with size-bounded Map stores to public POST endpoints.
