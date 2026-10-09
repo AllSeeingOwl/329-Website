@@ -79,6 +79,13 @@
         cursor: not-allowed;
       }
 
+      .char-counter {
+        font-size: 0.85rem;
+        color: #666;
+        text-align: right;
+        margin-top: 4px;
+      }
+
       .info-text {
         text-align: center;
         margin-top: 20px;
@@ -474,8 +481,12 @@
             name="message"
             required
             maxlength="2000"
+            aria-describedby="message-char-count"
             placeholder="e.g. I received a damaged physical field guide and need a replacement."
           ></textarea>
+          <div id="message-char-count" class="char-counter" aria-live="polite">
+            0 / 2000 characters
+          </div>
         </div>
 
         <button type="submit" id="submit-btn">Send Message</button>
@@ -513,10 +524,33 @@
             btn: document.getElementById('submit-btn'),
             successMsg: document.getElementById('success-message'),
             rateLimitMsg: document.getElementById('rate-limit-message'),
+            messageInput: document.getElementById('message'),
+            charCounter: document.getElementById('message-char-count'),
           };
         }
         return domCache;
       }
+
+      function updateCharCount() {
+        const cache = getDomCache();
+        if (cache.messageInput && cache.charCounter) {
+          const currentLength = cache.messageInput.value.length;
+          cache.charCounter.textContent = `${currentLength} / 2000 characters`;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const cache = getDomCache();
+        if (cache.messageInput) {
+          cache.messageInput.addEventListener('input', updateCharCount);
+          updateCharCount();
+        }
+        if (cache.form) {
+          cache.form.addEventListener('reset', () => {
+            setTimeout(updateCharCount, 0);
+          });
+        }
+      });
 
       function submitContactForm(e) {
         e.preventDefault();
