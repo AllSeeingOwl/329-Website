@@ -291,22 +291,35 @@
           // Add glitch animation to tourism layer
           tourismLayer.classList.add('glitching');
 
-          // Flash effect
+          // ⚡ Bolt: Replace high-frequency setInterval with requestAnimationFrame to align DOM updates
+          // with browser refresh rate, preventing main thread blocking, layout thrashing, and timer jitter.
           let flashCount = 0;
-          const flashInterval = setInterval(() => {
-            document.body.style.backgroundColor = flashCount % 2 === 0 ? '#ff3366' : '#000';
-            flashCount++;
+          let lastFlashTime = 0;
+          const FLASH_INTERVAL_MS = 50;
 
-            if (flashCount > 5) {
-              clearInterval(flashInterval);
-              // Switch layers
-              document.body.style.backgroundColor = '#050505';
-              document.title = 'SYSTEM OVERRIDE';
-              tourismLayer.style.display = 'none';
-              hackedLayer.style.display = 'block';
-              document.body.classList.add('glitched'); // Adds CRT scanlines
+          function animateGlitchFlash(timestamp) {
+            if (!lastFlashTime) lastFlashTime = timestamp;
+            const elapsed = timestamp - lastFlashTime;
+
+            if (elapsed >= FLASH_INTERVAL_MS) {
+              lastFlashTime = timestamp - (elapsed % FLASH_INTERVAL_MS);
+              document.body.style.backgroundColor = flashCount % 2 === 0 ? '#ff3366' : '#000';
+              flashCount++;
+
+              if (flashCount > 5) {
+                // Switch layers
+                document.body.style.backgroundColor = '#050505';
+                document.title = 'SYSTEM OVERRIDE';
+                tourismLayer.style.display = 'none';
+                hackedLayer.style.display = 'block';
+                document.body.classList.add('glitched'); // Adds CRT scanlines
+                return;
+              }
             }
-          }, 50);
+            requestAnimationFrame(animateGlitchFlash);
+          }
+
+          requestAnimationFrame(animateGlitchFlash);
         }, 2000);
 
         // Handle form submission
