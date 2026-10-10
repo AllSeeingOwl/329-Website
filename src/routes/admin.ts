@@ -1065,18 +1065,26 @@ const validateAnnouncementBody = (body: unknown): { isValid: boolean; error?: st
   if (typeof obj.title !== 'string' || !obj.title.trim()) {
     return { isValid: false, error: "'title' is required and must be a non-empty string" };
   }
+  if (obj.title.length > 200) {
+    return { isValid: false, error: "'title' length exceeds maximum limit of 200 characters" };
+  }
   if (typeof obj.content !== 'string' || !obj.content.trim()) {
     return { isValid: false, error: "'content' is required and must be a non-empty string" };
+  }
+  if (obj.content.length > 5000) {
+    return { isValid: false, error: "'content' length exceeds maximum limit of 5000 characters" };
   }
   if (obj.active !== undefined && typeof obj.active !== 'boolean') {
     return { isValid: false, error: "'active' must be a boolean" };
   }
-  if (
-    obj.scheduledAt !== null &&
-    obj.scheduledAt !== undefined &&
-    typeof obj.scheduledAt !== 'string'
-  ) {
-    return { isValid: false, error: "'scheduledAt' must be an ISO date string or null" };
+  if (obj.scheduledAt !== null && obj.scheduledAt !== undefined) {
+    if (
+      typeof obj.scheduledAt !== 'string' ||
+      obj.scheduledAt.length > 50 ||
+      isNaN(Date.parse(obj.scheduledAt))
+    ) {
+      return { isValid: false, error: "'scheduledAt' must be a valid ISO date string or null" };
+    }
   }
   return { isValid: true };
 };

@@ -91,6 +91,33 @@ describe('ARG Announcements API Endpoints', () => {
 
     (expect as any)(invalidRes.status).toBe(400);
 
+    // Invalid body (title too long)
+    const longTitleRes = await request(app)
+      .post('/api/admin/announcements')
+      .set('Cookie', cookies)
+      .send({ title: 'A'.repeat(201), content: 'Some content' });
+
+    (expect as any)(longTitleRes.status).toBe(400);
+    (expect as any)(longTitleRes.body.message).toContain('200 characters');
+
+    // Invalid body (content too long)
+    const longContentRes = await request(app)
+      .post('/api/admin/announcements')
+      .set('Cookie', cookies)
+      .send({ title: 'Valid Title', content: 'B'.repeat(5001) });
+
+    (expect as any)(longContentRes.status).toBe(400);
+    (expect as any)(longContentRes.body.message).toContain('5000 characters');
+
+    // Invalid body (invalid scheduledAt date string)
+    const invalidDateRes = await request(app)
+      .post('/api/admin/announcements')
+      .set('Cookie', cookies)
+      .send({ title: 'Valid Title', content: 'Valid content', scheduledAt: 'invalid-date-string' });
+
+    (expect as any)(invalidDateRes.status).toBe(400);
+    (expect as any)(invalidDateRes.body.message).toContain('scheduledAt');
+
     // Valid creation
     const validRes = await request(app)
       .post('/api/admin/announcements')
@@ -99,6 +126,7 @@ describe('ARG Announcements API Endpoints', () => {
         title: 'EMERGENCY NARRATIVE ALERT',
         content: 'Surveillance nodes breached by RABBIT-HACK.',
         active: true,
+        scheduledAt: new Date().toISOString(),
       });
 
     (expect as any)(validRes.status).toBe(201);
