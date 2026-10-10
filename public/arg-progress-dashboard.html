@@ -99,6 +99,25 @@
         background: var(--mltk-green);
         color: var(--bg-color);
       }
+      .btn:focus-visible,
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px dashed var(--mltk-green);
+        outline-offset: 4px;
+      }
+      .btn:disabled,
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
       .disclaimer {
         margin-top: 20px;
         font-size: 12px;
