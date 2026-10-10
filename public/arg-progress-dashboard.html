@@ -221,6 +221,10 @@
         const list = document.getElementById('nodes');
         list.innerHTML = '';
 
+        // ⚡ Bolt: Use a DocumentFragment to batch DOM insertions into a single write operation,
+        // preventing multiple layout reflows and repaints during node rendering.
+        const fragment = document.createDocumentFragment();
+
         argNodes.forEach((node) => {
           const isUnlocked = node.check();
           let statusClass = 'status-locked';
@@ -237,8 +241,10 @@
             <span class="node-name">${node.name}</span>
             <span class="node-status ${statusClass}">${statusText}</span>
           `;
-          list.appendChild(li);
+          fragment.appendChild(li);
         });
+
+        list.appendChild(fragment);
       }
 
       document.getElementById('reset-btn').addEventListener('click', () => {
