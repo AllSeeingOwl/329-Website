@@ -9,3 +9,7 @@ exclude = [
     ".*index-.*\\.css",
     "https://discord\\.gg/.*"
 ]
+
+remap = [
+    "file:///(.*)/public/([^./]+)$ file:///$1/public/$2.html"
+]
