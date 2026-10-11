@@ -631,7 +631,9 @@ const ALLOWED_MODULE_STATUSES = ['active', 'locked', 'offline'];
 router.post('/dashboard-config', adminAuth, async (req: Request, res: Response): Promise<void> => {
   const { id, status } = req.body || {};
   if (typeof id !== 'string' || !id.trim() || typeof status !== 'string' || !status.trim()) {
-    res.status(400).json({ success: false, message: 'Module id and status are required non-empty strings' });
+    res
+      .status(400)
+      .json({ success: false, message: 'Module id and status are required non-empty strings' });
     return;
   }
 
@@ -690,7 +692,9 @@ router.post(
     try {
       await updateAllDashboardConfig(cleanStatus);
       const adminUser = getAdminUser(req);
-      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', { status: cleanStatus });
+      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', {
+        status: cleanStatus,
+      });
       res.json({ success: true, message: `All modules updated to ${cleanStatus}` });
     } catch (error) {
       console.error('Error in POST /api/admin/dashboard-config/all:', error);
