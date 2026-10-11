@@ -95,25 +95,52 @@ let inMemoryAnnouncementsStore: Announcement[] = [
   },
 ];
 
+// ⚡ Bolt: Cache announcements in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
+let announcementsCacheLastFetched = 0;
+const ANNOUNCEMENTS_CACHE_TTL_MS = 2000;
+
+export const resetInMemAnnouncements = (): void => {
+  inMemoryAnnouncementsStore = [
+    {
+      id: 'announcement-init-1',
+      title: 'NEURAL LINK NETWORK ACTIVE',
+      content: 'All surveillance nodes online. MLTK Phase 1 operational.',
+      active: true,
+      scheduledAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      author: 'SYSTEM',
+    },
+  ];
+  announcementsCacheLastFetched = 0;
+};
+
 export const getAnnouncementsFromStore = async (): Promise<Announcement[]> => {
+  const now = Date.now();
+  if (now - announcementsCacheLastFetched < ANNOUNCEMENTS_CACHE_TTL_MS) {
+    return [...inMemoryAnnouncementsStore];
+  }
+
   if (isRedisAvailable()) {
     try {
       const stored = await redis.get<Announcement[] | string>('arg:announcements');
       if (stored) {
         const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
         if (Array.isArray(parsed)) {
-          return parsed;
+          inMemoryAnnouncementsStore = parsed;
         }
       }
     } catch (err) {
       console.error('Error reading announcements from Redis:', err);
     }
   }
+  announcementsCacheLastFetched = now;
   return [...inMemoryAnnouncementsStore];
 };
 
 const saveAnnouncementsToStore = async (announcements: Announcement[]): Promise<void> => {
   inMemoryAnnouncementsStore = announcements;
+  announcementsCacheLastFetched = Date.now();
   if (isRedisAvailable()) {
     try {
       await redis.set('arg:announcements', JSON.stringify(announcements));
@@ -178,6 +205,10 @@ let inMemoryPhasesStore: Phase[] = DEFAULT_PHASES.map((p) => ({
   relatedContent: [...p.relatedContent],
 }));
 
+// ⚡ Bolt: Cache release phases in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
+let phasesCacheLastFetched = 0;
+const PHASES_CACHE_TTL_MS = 2000;
+
 let inMemoryConfigStore: SystemConfig = { ...DEFAULT_SYSTEM_CONFIG };
 // ⚡ Bolt: Cache system config in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
 let configCacheLastFetched = 0;
@@ -196,6 +227,7 @@ export const resetInMemPhases = (): void => {
     ...p,
     relatedContent: [...p.relatedContent],
   }));
+  phasesCacheLastFetched = 0;
 };
 
 export const resetInMemConfig = (): void => {
@@ -237,23 +269,29 @@ const saveConfigToStore = async (config: SystemConfig): Promise<void> => {
 };
 
 const getPhasesFromStore = async (): Promise<Phase[]> => {
+  const now = Date.now();
+  if (now - phasesCacheLastFetched < PHASES_CACHE_TTL_MS) {
+    return inMemoryPhasesStore;
+  }
+
   if (isRedisAvailable()) {
     try {
       const stored = await redis.get<Phase[] | string>('config:phases');
       if (stored) {
         const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
         inMemoryPhasesStore = parsed;
-        return parsed;
       }
     } catch (err) {
       console.error('Failed to fetch phases from Redis:', err);
     }
   }
+  phasesCacheLastFetched = now;
   return inMemoryPhasesStore;
 };
 
 const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
   inMemoryPhasesStore = phases;
+  phasesCacheLastFetched = Date.now();
   if (isRedisAvailable()) {
     try {
       await redis.set('config:phases', JSON.stringify(phases));
