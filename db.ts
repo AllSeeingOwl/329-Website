@@ -410,18 +410,22 @@ export async function getDashboardConfig(): Promise<DashboardConfig[]> {
   return inMemoryDashboardConfig;
 }
 
-export async function updateDashboardConfig(id: string, status: string) {
+export async function updateDashboardConfig(id: string, status: string): Promise<boolean> {
   if (isKvAvailable()) {
     const config = await getDashboardConfig();
     const item = config.find((d) => d.id === id);
     if (item) {
       item.status = status;
       await kv.set('config:dashboard', config);
+      return true;
     }
+    return false;
   } else {
     const item = inMemoryDashboardConfig.find((d) => d.id === id);
     if (item) {
       item.status = status;
+      return true;
     }
+    return false;
   }
 }

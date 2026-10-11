@@ -622,21 +622,44 @@ router.get('/dashboard-config', adminAuth, async (_req: Request, res: Response):
   }
 });
 
+const ALLOWED_MODULE_STATUSES = ['active', 'locked', 'offline'];
+
 /**
  * POST /api/admin/dashboard-config
  * Updates a specific module status on the surveillance dashboard.
  */
 router.post('/dashboard-config', adminAuth, async (req: Request, res: Response): Promise<void> => {
   const { id, status } = req.body || {};
-  if (!id || !status) {
-    res.status(400).json({ success: false, message: 'Module id and status are required' });
+  if (typeof id !== 'string' || !id.trim() || typeof status !== 'string' || !status.trim()) {
+    res
+      .status(400)
+      .json({ success: false, message: 'Module id and status are required non-empty strings' });
     return;
   }
+
+  const cleanId = id.trim();
+  const cleanStatus = status.trim().toLowerCase();
+
+  if (!ALLOWED_MODULE_STATUSES.includes(cleanStatus)) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid status value. Must be 'active', 'locked', or 'offline'",
+    });
+    return;
+  }
+
   try {
-    await updateDashboardConfig(id, status);
+    const updated = await updateDashboardConfig(cleanId, cleanStatus);
+    if (!updated) {
+      res.status(400).json({
+        success: false,
+        message: `Module with id '${cleanId}' not found`,
+      });
+      return;
+    }
     const adminUser = getAdminUser(req);
-    await logPhaseChange(adminUser, 'UPDATE_DASHBOARD_MODULE', id, { status });
-    res.json({ success: true, message: `Module ${id} updated to ${status}` });
+    await logPhaseChange(adminUser, 'UPDATE_DASHBOARD_MODULE', cleanId, { status: cleanStatus });
+    res.json({ success: true, message: `Module ${cleanId} updated to ${cleanStatus}` });
   } catch (error) {
     console.error('Error in POST /api/admin/dashboard-config:', error);
     res.status(500).json({ success: false, message: 'Failed to update dashboard config' });
@@ -652,15 +675,27 @@ router.post(
   adminAuth,
   async (req: Request, res: Response): Promise<void> => {
     const { status } = req.body || {};
-    if (!status) {
-      res.status(400).json({ success: false, message: 'status is required' });
+    if (typeof status !== 'string' || !status.trim()) {
+      res.status(400).json({ success: false, message: 'status is required as a non-empty string' });
       return;
     }
+
+    const cleanStatus = status.trim().toLowerCase();
+    if (!ALLOWED_MODULE_STATUSES.includes(cleanStatus)) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid status value. Must be 'active', 'locked', or 'offline'",
+      });
+      return;
+    }
+
     try {
-      await updateAllDashboardConfig(status);
+      await updateAllDashboardConfig(cleanStatus);
       const adminUser = getAdminUser(req);
-      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', { status });
-      res.json({ success: true, message: `All modules updated to ${status}` });
+      await logPhaseChange(adminUser, 'UPDATE_ALL_DASHBOARD_MODULES', 'all', {
+        status: cleanStatus,
+      });
+      res.json({ success: true, message: `All modules updated to ${cleanStatus}` });
     } catch (error) {
       console.error('Error in POST /api/admin/dashboard-config/all:', error);
       res.status(500).json({ success: false, message: 'Failed to update all dashboard configs' });

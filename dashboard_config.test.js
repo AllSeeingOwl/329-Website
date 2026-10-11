@@ -92,6 +92,52 @@ describe('Surveillance Dashboard Config API Tests', () => {
     expect(checkRes2.body.config.every((item) => item.status === 'active')).toBe(true);
   });
 
+  it('rejects invalid module id or status on POST /api/admin/dashboard-config', async () => {
+    app = require('./server');
+    const authRes = await request(app)
+      .post('/api/admin/verify')
+      .send({ password: 'admin_test_password' })
+      .expect(200);
+
+    const token = authRes.body.token;
+
+    // Invalid status string
+    const resInvalidStatus = await request(app)
+      .post('/api/admin/dashboard-config')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ id: 'PORTAL: RADIO', status: 'invalid_status' })
+      .expect(400);
+
+    expect(resInvalidStatus.body.success).toBe(false);
+
+    // Non-existent module ID
+    const resNonExistent = await request(app)
+      .post('/api/admin/dashboard-config')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ id: 'NON_EXISTENT_MODULE_ID', status: 'active' })
+      .expect(400);
+
+    expect(resNonExistent.body.success).toBe(false);
+  });
+
+  it('rejects invalid status on POST /api/admin/dashboard-config/all', async () => {
+    app = require('./server');
+    const authRes = await request(app)
+      .post('/api/admin/verify')
+      .send({ password: 'admin_test_password' })
+      .expect(200);
+
+    const token = authRes.body.token;
+
+    const res = await request(app)
+      .post('/api/admin/dashboard-config/all')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ status: 'malicious_status' })
+      .expect(400);
+
+    expect(res.body.success).toBe(false);
+  });
+
   it('phase change synchronizes module active and locked statuses', async () => {
     app = require('./server');
     const authRes = await request(app)
