@@ -30,6 +30,20 @@
         color: #000000;
       }
 
+      a:focus-visible,
+      button:focus-visible,
+      .btn:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 2px dashed #00ff00;
+        outline-offset: 3px;
+      }
+
+      .danger-btn:focus-visible {
+        outline: 2px dashed #ff3366;
+        outline-offset: 3px;
+      }
+
       header {
         border-bottom: 1px dotted #00ff00;
         padding-bottom: 15px;
@@ -342,7 +356,11 @@
       <div class="section-box">
         <div class="section-title">
           <span>PHASE / TIER MANAGEMENT</span>
-          <button id="refresh-phases-btn" style="font-size: 0.8rem; padding: 2px 8px">
+          <button
+            id="refresh-phases-btn"
+            style="font-size: 0.8rem; padding: 2px 8px"
+            aria-label="Refresh phase configuration"
+          >
             REFRESH
           </button>
         </div>
@@ -361,7 +379,11 @@
         <div class="section-title">
           <span>SURVEILLANCE DASHBOARD MODULE MANAGEMENT</span>
           <div style="display: flex; gap: 6px; flex-wrap: wrap">
-            <button id="refresh-modules-btn" style="font-size: 0.8rem; padding: 2px 8px">
+            <button
+              id="refresh-modules-btn"
+              style="font-size: 0.8rem; padding: 2px 8px"
+              aria-label="Refresh surveillance dashboard modules"
+            >
               REFRESH
             </button>
             <button id="set-all-active-btn" style="font-size: 0.8rem; padding: 2px 8px">
@@ -407,7 +429,11 @@
       <div class="section-box">
         <div class="section-title">
           <span>EMAIL COLLECTION & METRICS</span>
-          <button id="refresh-emails-btn" style="font-size: 0.8rem; padding: 2px 8px">
+          <button
+            id="refresh-emails-btn"
+            style="font-size: 0.8rem; padding: 2px 8px"
+            aria-label="Refresh email collection metrics"
+          >
             REFRESH
           </button>
         </div>
@@ -512,7 +538,11 @@
       <div class="section-box">
         <div class="section-title">
           <span>ARG NARRATIVE ANNOUNCEMENTS</span>
-          <button id="refresh-announcements-btn" style="font-size: 0.8rem; padding: 2px 8px">
+          <button
+            id="refresh-announcements-btn"
+            style="font-size: 0.8rem; padding: 2px 8px"
+            aria-label="Refresh ARG announcements"
+          >
             REFRESH
           </button>
         </div>
@@ -581,7 +611,11 @@
       <div class="section-box">
         <div class="section-title">
           <span>AUDIT LOG VIEWER (LAST 20 ACTIONS)</span>
-          <button id="refresh-audit-btn" style="font-size: 0.8rem; padding: 2px 8px">
+          <button
+            id="refresh-audit-btn"
+            style="font-size: 0.8rem; padding: 2px 8px"
+            aria-label="Refresh audit log entries"
+          >
             REFRESH
           </button>
         </div>
