@@ -409,13 +409,27 @@ app.get('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Re
   }
 });
 
+// 🛡️ Sentinel: Enforce key allowlisting and boolean type checks to prevent arbitrary field injection
+// into persistent storage and state corruption in in-memory maintenance mode variables.
+const ALLOWED_MAINTENANCE_KEYS = ['global', 'studio', 'mltk'];
+
 app.post('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
-  const { key, value } = req.body;
+  const { key, value } = req.body || {};
+  if (typeof key !== 'string' || !ALLOWED_MAINTENANCE_KEYS.includes(key.trim())) {
+    res.status(400).json({ error: "Invalid key. Must be 'global', 'studio', or 'mltk'" });
+    return;
+  }
+  if (typeof value !== 'boolean') {
+    res.status(400).json({ error: 'Value must be a boolean' });
+    return;
+  }
+
+  const cleanKey = key.trim();
   try {
-    await updateMaintenanceConfig(key, value);
-    if (key === 'global') MAINTENANCE_MODE = value;
-    if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
-    if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
+    await updateMaintenanceConfig(cleanKey, value);
+    if (cleanKey === 'global') MAINTENANCE_MODE = value;
+    if (cleanKey === 'studio') STUDIO_MAINTENANCE_MODE = value;
+    if (cleanKey === 'mltk') MLTK_MAINTENANCE_MODE = value;
     res.json({ success: true });
   } catch {
     res.status(500).json({ error: 'Failed to update maintenance config' });
@@ -423,9 +437,17 @@ app.post('/api/admin/maintenance-config', adminAuth, async (req: Request, res: R
 });
 
 app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, res: Response) => {
-  const { value } = req.body;
+  const { value } = req.body || {};
+  if (typeof value !== 'boolean') {
+    res.status(400).json({ error: 'Value must be a boolean' });
+    return;
+  }
+
   try {
     await updateAllMaintenanceConfig(value);
+    MAINTENANCE_MODE = value;
+    STUDIO_MAINTENANCE_MODE = value;
+    MLTK_MAINTENANCE_MODE = value;
     res.json({ success: true });
   } catch {
     res.status(500).json({ error: 'Failed to update all maintenance configs' });

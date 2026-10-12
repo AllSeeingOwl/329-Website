@@ -247,4 +247,52 @@ describe('Server Tests', () => {
 
     expect(response.body).toEqual({ error: 'Failed to fetch dashboard config' });
   });
+
+  it('should validate inputs for /api/admin/maintenance-config endpoints', async () => {
+    process.env.ADMIN_PASSWORD = 'test_admin_password';
+    app = require('./server');
+
+    // Get admin session
+    const authResponse = await request(app)
+      .post('/api/admin/verify')
+      .send({ password: 'test_admin_password' })
+      .expect(200);
+
+    const token = authResponse.body.token;
+
+    // Test invalid key
+    await request(app)
+      .post('/api/admin/maintenance-config')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ key: 'invalid_key', value: true })
+      .expect(400);
+
+    // Test non-boolean value
+    await request(app)
+      .post('/api/admin/maintenance-config')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ key: 'global', value: 'not_a_boolean' })
+      .expect(400);
+
+    // Test valid request
+    await request(app)
+      .post('/api/admin/maintenance-config')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ key: 'global', value: true })
+      .expect(200);
+
+    // Test /all invalid value
+    await request(app)
+      .post('/api/admin/maintenance-config/all')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ value: 'invalid' })
+      .expect(400);
+
+    // Test /all valid value
+    await request(app)
+      .post('/api/admin/maintenance-config/all')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ value: false })
+      .expect(200);
+  });
 });
