@@ -33,3 +33,9 @@
 **Vulnerability:** The public email collection endpoint (`POST /api/emails/collect`) lacked rate limiting, allowing unauthenticated attackers or bots to flood the endpoint with unlimited requests. This could cause memory exhaustion (OOM DoS), database list bloat, and analytics distortion.
 **Learning:** Public data collection endpoints must implement rate limiting with bounded memory stores and O(1) eviction logic so that high-volume automated requests are blocked (HTTP 429) without exhausting server memory.
 **Prevention:** Always apply rate limiting with size-bounded Map stores to public POST endpoints.
+
+## 2026-10-12 - [Security Fix] Input and Key Allowlist Validation on Maintenance Config Endpoints
+
+**Vulnerability:** The admin maintenance configuration endpoints (`POST /api/admin/maintenance-config` and `POST /api/admin/maintenance-config/all`) lacked input type checks and key allowlisting. An authenticated attacker or malicious payload could pass arbitrary `key` strings to populate unapproved fields in persistent Redis hash storage (`config:maintenance`), or supply non-boolean `value` types to corrupt internal boolean flags (`MAINTENANCE_MODE`, etc.).
+**Learning:** Admin endpoints updating system or feature configuration must explicitly validate property types and check property keys against a strict allowlist before updating database structures or in-memory process flags.
+**Prevention:** Always enforce explicit key allowlisting and primitive type validation (`typeof value === 'boolean'`) on administrative configuration endpoints.
