@@ -124,12 +124,14 @@
           const val = input.value.trim().toUpperCase();
 
           if (val === 'RABBIT' || val === 'TEAM RABBIT') {
-            output.innerHTML += `\n> ${val}\n`;
+            // ⚡ Bolt: Replace innerHTML += with textContent += to avoid serializing, destroying, and re-parsing HTML nodes
+            output.textContent += `\n> ${val}\n`;
             secret.classList.remove('hidden');
             input.disabled = true;
             localStorage.setItem('rabbit_hack_completed', 'true');
           } else if (val) {
-            output.innerHTML += `\n> ${val}\nERROR: INVALID PASSPHRASE.\n`;
+            // ⚡ Bolt: Replace innerHTML += with textContent += to avoid serializing, destroying, and re-parsing HTML nodes
+            output.textContent += `\n> ${val}\nERROR: INVALID PASSPHRASE.\n`;
             input.value = '';
           }
         }
