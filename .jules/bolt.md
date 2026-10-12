@@ -102,3 +102,8 @@
 
 **Learning:** Executing asynchronous database reads (like Redis GET) in global Express middleware (such as emergency lockdown and maintenance checks) causes database roundtrip latency and asynchronous microtask overhead on every single HTTP request. Under high request volumes (or rate-limiting test loops), this leads to severe server slowdowns and request timeouts.
 **Action:** Cache frequently read system configuration objects in module memory with a short TTL (e.g. 2000ms). Immediately invalidate or refresh the cache timestamp whenever configuration updates occur via state-changing admin routes.
+
+## 2026-10-12 - Avoid innerHTML += for Terminal Log Appends
+
+**Learning:** Using `innerHTML +=` in interactive terminal components forces the browser to serialize existing DOM nodes to HTML strings, destroy all child nodes, re-parse the concatenated string as HTML, and recreate all DOM nodes on every keypress.
+**Action:** Replace `innerHTML +=` with `textContent +=` or `appendChild(document.createTextNode(...))` for plain text logs to avoid DOM serialization and HTML parsing overheads.
