@@ -625,6 +625,7 @@
             href="#"
             class="btn-primary"
             id="storefront-link"
+            aria-disabled="true"
             style="
               pointer-events: none;
               opacity: 1 !important;
@@ -794,17 +795,18 @@
           if (data.url && data.url !== '#') {
             storeLink.href = data.url;
             storeLink.textContent = 'Procure Volume 1';
-            storeLink.style.pointerEvents = 'auto';
-            storeLink.style.opacity = '1';
+            storeLink.removeAttribute('style');
+            storeLink.removeAttribute('aria-disabled');
           } else {
             storeLink.href = '#';
             storeLink.textContent = 'Storefront Offline';
-            // Leave it visually disabled
+            storeLink.setAttribute('aria-disabled', 'true');
           }
         } catch (e) {
           console.error('Failed to load storefront config:', e);
           storeLink.href = '#';
           storeLink.textContent = 'Storefront Offline';
+          storeLink.setAttribute('aria-disabled', 'true');
         }
       });
     </script>
