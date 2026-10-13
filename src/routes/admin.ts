@@ -302,17 +302,33 @@ const savePhasesToStore = async (phases: Phase[]): Promise<void> => {
 };
 
 /**
- * Helper to extract admin user identifier from body or headers.
+ * Helper to extract and sanitize admin user identifier from body or headers.
+ * Strips control characters/newlines and limits length to 50 chars to prevent
+ * log injection and audit trail storage bloat.
  */
 const getAdminUser = (req: Request): string => {
+  let user = '';
   if (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) {
-    return req.body.adminUser.trim();
+    user = req.body.adminUser.trim();
+  } else if (
+    req.body &&
+    typeof req.body.lastModifiedBy === 'string' &&
+    req.body.lastModifiedBy.trim()
+  ) {
+    user = req.body.lastModifiedBy.trim();
+  } else if (
+    typeof req.headers['x-admin-user'] === 'string' &&
+    req.headers['x-admin-user'].trim()
+  ) {
+    user = req.headers['x-admin-user'].trim();
   }
-  const headerUser = req.headers['x-admin-user'];
-  if (typeof headerUser === 'string' && headerUser.trim()) {
-    return headerUser.trim();
+
+  if (!user) {
+    return 'admin';
   }
-  return 'admin';
+
+  // Remove control characters (e.g. newlines) and cap length to 50 chars
+  return user.replace(/[\r\n\t]/g, '').slice(0, 50) || 'admin';
 };
 
 const logPhaseChange = async (
@@ -452,7 +468,7 @@ router.get('/phases', adminAuth, async (_req: Request, res: Response): Promise<v
  */
 router.post('/phases/activate', adminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { phaseId, adminUser } = (req.body || {}) as ActivatePhaseRequestBody;
+    const { phaseId } = (req.body || {}) as ActivatePhaseRequestBody;
 
     if (!phaseId || typeof phaseId !== 'string' || !phaseId.trim()) {
       res.status(400).json({
@@ -474,7 +490,7 @@ router.post('/phases/activate', adminAuth, async (req: Request, res: Response): 
       return;
     }
 
-    const user = adminUser || 'admin';
+    const user = getAdminUser(req);
     const timestamp = new Date().toISOString();
 
     phases[targetIndex] = {
@@ -507,8 +523,7 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
     const phaseIdParam = Array.isArray(req.params.phaseId)
       ? req.params.phaseId[0]
       : req.params.phaseId;
-    const { name, tier, active, relatedContent, lastModifiedBy, adminUser } = (req.body ||
-      {}) as UpdatePhaseRequestBody;
+    const { name, tier, active, relatedContent } = (req.body || {}) as UpdatePhaseRequestBody;
 
     const phases = await getPhasesFromStore();
     const targetIndex = phases.findIndex((p) => p.id === phaseIdParam);
@@ -558,12 +573,7 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
     }
 
     const currentPhase = phases[targetIndex];
-    const user =
-      typeof adminUser === 'string' && adminUser.trim()
-        ? adminUser.trim()
-        : typeof lastModifiedBy === 'string' && lastModifiedBy.trim()
-          ? lastModifiedBy.trim()
-          : 'admin';
+    const user = getAdminUser(req);
     const timestamp = new Date().toISOString();
 
     let newActivatedAt = currentPhase.activatedAt;
@@ -610,7 +620,6 @@ router.delete(
       const phaseIdParam = Array.isArray(req.params.phaseId)
         ? req.params.phaseId[0]
         : req.params.phaseId;
-      const { adminUser } = (req.body || {}) as DeactivatePhaseRequestBody;
 
       const phases = await getPhasesFromStore();
       const targetIndex = phases.findIndex((p) => p.id === phaseIdParam);
@@ -623,7 +632,7 @@ router.delete(
         return;
       }
 
-      const user = typeof adminUser === 'string' && adminUser.trim() ? adminUser.trim() : 'admin';
+      const user = getAdminUser(req);
 
       phases[targetIndex] = {
         ...phases[targetIndex],
@@ -806,7 +815,7 @@ router.get('/emails/export', adminAuth, async (req: Request, res: Response): Pro
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
       .join('\n');
 
-    const adminUser = (req.headers['x-admin-user'] as string) || 'admin';
+    const adminUser = getAdminUser(req);
     await logPhaseChange(adminUser, 'EXPORT_EMAILS', 'emails', {
       count: rawEmails.length,
     });
@@ -842,8 +851,7 @@ router.post('/emails/clear', adminAuth, async (req: Request, res: Response): Pro
 
     await clearAllEmails();
 
-    const adminUser =
-      (req.body && req.body.adminUser) || (req.headers['x-admin-user'] as string) || 'admin';
+    const adminUser = getAdminUser(req);
     await logPhaseChange(adminUser, 'CLEAR_EMAILS', 'emails', {
       clearedCount: count,
     });
@@ -930,22 +938,24 @@ const validateSystemConfig = (body: unknown): { isValid: boolean; error?: string
   if (
     typeof reqObj.maxConcurrentSessions !== 'number' ||
     !Number.isInteger(reqObj.maxConcurrentSessions) ||
-    reqObj.maxConcurrentSessions <= 0
+    reqObj.maxConcurrentSessions <= 0 ||
+    reqObj.maxConcurrentSessions > 1000
   ) {
     return {
       isValid: false,
-      error: "'maxConcurrentSessions' must be a positive integer",
+      error: "'maxConcurrentSessions' must be a positive integer between 1 and 1000",
     };
   }
 
   if (
     typeof reqObj.sessionTimeout !== 'number' ||
     !Number.isInteger(reqObj.sessionTimeout) ||
-    reqObj.sessionTimeout <= 0
+    reqObj.sessionTimeout <= 0 ||
+    reqObj.sessionTimeout > 10080
   ) {
     return {
       isValid: false,
-      error: "'sessionTimeout' must be a positive integer (minutes)",
+      error: "'sessionTimeout' must be a positive integer between 1 and 10080 minutes (7 days)",
     };
   }
 
@@ -1054,10 +1064,7 @@ router.post(
         maintenanceMode: nextState,
       };
 
-      const adminUser =
-        (req.body && typeof req.body.adminUser === 'string' && req.body.adminUser.trim()) ||
-        (req.headers['x-admin-user'] as string) ||
-        'admin';
+      const adminUser = getAdminUser(req);
 
       await saveConfigToStore(updatedConfig);
       await logPhaseChange(adminUser, 'TOGGLE_MAINTENANCE', 'system_config', {
