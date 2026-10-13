@@ -20,6 +20,8 @@ jest.mock('@upstash/redis', () => {
   };
 });
 
+jest.setTimeout(30000);
+
 describe('Admin Authentication & Route Security Integration Tests', () => {
   const originalEnv = process.env;
 

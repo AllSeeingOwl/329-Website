@@ -107,3 +107,8 @@
 
 **Learning:** Using `innerHTML +=` in interactive terminal components forces the browser to serialize existing DOM nodes to HTML strings, destroy all child nodes, re-parse the concatenated string as HTML, and recreate all DOM nodes on every keypress.
 **Action:** Replace `innerHTML +=` with `textContent +=` or `appendChild(document.createTextNode(...))` for plain text logs to avoid DOM serialization and HTML parsing overheads.
+
+## 2026-10-13 - In-Memory TTL Caching for High-Frequency Redis Entities
+
+**Learning:** High-frequency public polling routes (such as `/api/dashboard-config` and `/api/phases`) that perform direct Upstash Redis GET calls (`kv.get`) introduce network roundtrip latency (~10-50ms) on every single request. Caching these entities in module memory with a 2000ms TTL reduces response latency to sub-millisecond level and prevents Redis request rate pressure. Returning shallow-cloned array objects (`map(item => ({ ...item }))`) prevents concurrent request contexts from mutating the shared in-memory reference during the TTL window.
+**Action:** Implement 2000ms TTL in-memory caches for high-frequency Redis entities, ensuring write functions immediately refresh/invalidate the cache, and return cloned objects to prevent reference mutation bugs.
