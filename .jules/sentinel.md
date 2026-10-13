@@ -39,3 +39,9 @@
 **Vulnerability:** The admin maintenance configuration endpoints (`POST /api/admin/maintenance-config` and `POST /api/admin/maintenance-config/all`) lacked input type checks and key allowlisting. An authenticated attacker or malicious payload could pass arbitrary `key` strings to populate unapproved fields in persistent Redis hash storage (`config:maintenance`), or supply non-boolean `value` types to corrupt internal boolean flags (`MAINTENANCE_MODE`, etc.).
 **Learning:** Admin endpoints updating system or feature configuration must explicitly validate property types and check property keys against a strict allowlist before updating database structures or in-memory process flags.
 **Prevention:** Always enforce explicit key allowlisting and primitive type validation (`typeof value === 'boolean'`) on administrative configuration endpoints.
+
+## 2026-10-13 - [Security Fix] Admin User Input Sanitization and System Config Bounds
+
+**Vulnerability:** The admin routes extracted `adminUser` in an inconsistent and unsanitized manner, allowing newline/control characters (`\r\n`) and unbounded string lengths (DoS via audit log bloat in Redis and memory), while `validateSystemConfig` lacked upper bound checks on `maxConcurrentSessions` and `sessionTimeout`.
+**Learning:** Centralizing user identity extraction in a helper like `getAdminUser(req)` ensures consistent control-character stripping and length truncation across all route handlers before logging or storing audit records.
+**Prevention:** Always sanitize control characters and cap string lengths for user identifiers recorded in system audit logs, and enforce upper bound constraints on numeric configuration parameters.

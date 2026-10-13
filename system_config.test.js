@@ -69,7 +69,7 @@ describe('System Configuration & Maintenance Endpoints Tests', () => {
     expect(resInvalid.body.success).toBe(false);
     expect(resInvalid.body.message).toContain('Invalid configuration');
 
-    // Invalid maxConcurrentSessions
+    // Invalid maxConcurrentSessions (negative)
     const resInvalidNum = await request(app)
       .put('/api/admin/config')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -85,6 +85,66 @@ describe('System Configuration & Maintenance Endpoints Tests', () => {
       .expect(400);
 
     expect(resInvalidNum.body.success).toBe(false);
+
+    // Exceeds maxConcurrentSessions upper bound (>1000)
+    const resTooLargeSessions = await request(app)
+      .put('/api/admin/config')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        maintenanceMode: false,
+        publicSiteEnabled: true,
+        adminPanelEnabled: true,
+        allowEmailCollection: true,
+        emailNotificationEnabled: true,
+        maxConcurrentSessions: 5000,
+        sessionTimeout: 15,
+      })
+      .expect(400);
+
+    expect(resTooLargeSessions.body.success).toBe(false);
+    expect(resTooLargeSessions.body.message).toContain('maxConcurrentSessions');
+
+    // Exceeds sessionTimeout upper bound (>10080)
+    const resTooLargeTimeout = await request(app)
+      .put('/api/admin/config')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        maintenanceMode: false,
+        publicSiteEnabled: true,
+        adminPanelEnabled: true,
+        allowEmailCollection: true,
+        emailNotificationEnabled: true,
+        maxConcurrentSessions: 10,
+        sessionTimeout: 99999,
+      })
+      .expect(400);
+
+    expect(resTooLargeTimeout.body.success).toBe(false);
+    expect(resTooLargeTimeout.body.message).toContain('sessionTimeout');
+  });
+
+  it('sanitizes newline/control characters and truncates adminUser in audit logs', async () => {
+    const dirtyUser = 'attacker\r\n[AUDIT INJECTION]\t' + 'a'.repeat(100);
+
+    await request(app)
+      .post('/api/admin/maintenance/toggle')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ enabled: true, adminUser: dirtyUser })
+      .expect(200);
+
+    const logsRes = await request(app)
+      .get('/api/admin/audit-logs')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
+
+    expect(logsRes.body.success).toBe(true);
+    const latestLog = logsRes.body.logs[0];
+
+    // Verify control characters \r, \n, \t were removed
+    expect(latestLog.adminUser).not.toMatch(/[\r\n\t]/);
+    // Verify length was capped to 50 characters
+    expect(latestLog.adminUser.length).toBeLessThanOrEqual(50);
+    expect(latestLog.adminUser).toBe('attacker[AUDIT INJECTION]' + 'a'.repeat(25));
   });
 
   it('PUT /api/admin/config updates configuration successfully', async () => {
