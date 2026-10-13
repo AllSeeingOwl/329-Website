@@ -247,6 +247,20 @@ const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
 let inMemoryActivePhase = 'phase1';
 
+// ⚡ Bolt: Cache dashboard config and active phase in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
+let dashboardConfigCacheStore: DashboardConfig[] | null = null;
+let dashboardConfigCacheLastFetched = 0;
+let activePhaseCacheStore: string | null = null;
+let activePhaseCacheLastFetched = 0;
+const DB_CACHE_TTL_MS = 2000;
+
+export const resetInMemDbCache = (): void => {
+  dashboardConfigCacheStore = null;
+  dashboardConfigCacheLastFetched = 0;
+  activePhaseCacheStore = null;
+  activePhaseCacheLastFetched = 0;
+};
+
 const isKvAvailable = (): boolean => isRedisAvailable();
 
 export async function initDb() {
@@ -269,21 +283,39 @@ export async function initDb() {
 }
 
 export async function getActivePhase(): Promise<string> {
-  if (isKvAvailable()) {
-    const phase = await kv.get<string>('config:active_phase');
-    return phase || 'phase1';
+  const now = Date.now();
+  if (activePhaseCacheStore !== null && now - activePhaseCacheLastFetched < DB_CACHE_TTL_MS) {
+    return activePhaseCacheStore;
   }
-  return inMemoryActivePhase;
+
+  let phase: string | null = null;
+  if (isKvAvailable()) {
+    try {
+      phase = await kv.get<string>('config:active_phase');
+    } catch (err) {
+      console.error('Error fetching active phase from Redis:', err);
+    }
+  }
+
+  activePhaseCacheStore = phase || inMemoryActivePhase;
+  activePhaseCacheLastFetched = now;
+  return activePhaseCacheStore;
 }
 
 export async function setActivePhase(phaseId: string): Promise<boolean> {
   const phase = MLTK_PHASES.find((p) => p.id === phaseId);
   if (!phase) return false;
 
+  inMemoryActivePhase = phaseId;
+  activePhaseCacheStore = phaseId;
+  activePhaseCacheLastFetched = Date.now();
+
   if (isKvAvailable()) {
-    await kv.set('config:active_phase', phaseId);
-  } else {
-    inMemoryActivePhase = phaseId;
+    try {
+      await kv.set('config:active_phase', phaseId);
+    } catch (err) {
+      console.error('Error saving active phase to Redis:', err);
+    }
   }
 
   // Update status of dashboard config items according to the selected phase
@@ -296,8 +328,15 @@ export async function setActivePhase(phaseId: string): Promise<boolean> {
     }
   });
 
+  dashboardConfigCacheStore = dashboard;
+  dashboardConfigCacheLastFetched = Date.now();
+
   if (isKvAvailable()) {
-    await kv.set('config:dashboard', dashboard);
+    try {
+      await kv.set('config:dashboard', dashboard);
+    } catch (err) {
+      console.error('Error saving dashboard config to Redis:', err);
+    }
   }
   return true;
 }
@@ -351,12 +390,19 @@ export async function clearAllEmails(): Promise<void> {
 }
 
 export async function updateAllDashboardConfig(status: string) {
+  const config = await getDashboardConfig();
+  config.forEach((item) => {
+    item.status = status;
+  });
+  dashboardConfigCacheStore = config;
+  dashboardConfigCacheLastFetched = Date.now();
+
   if (isKvAvailable()) {
-    const config = await getDashboardConfig();
-    config.forEach((item) => {
-      item.status = status;
-    });
-    await kv.set('config:dashboard', config);
+    try {
+      await kv.set('config:dashboard', config);
+    } catch (err) {
+      console.error('Error saving all dashboard config to Redis:', err);
+    }
   } else {
     inMemoryDashboardConfig.forEach((item) => {
       item.status = status;
@@ -403,29 +449,44 @@ export async function updateMaintenanceConfig(key: string, value: boolean) {
 }
 
 export async function getDashboardConfig(): Promise<DashboardConfig[]> {
-  if (isKvAvailable()) {
-    const config = await kv.get<DashboardConfig[]>('config:dashboard');
-    return config || DEFAULT_DASHBOARD_CONFIG;
+  const now = Date.now();
+  if (
+    dashboardConfigCacheStore !== null &&
+    now - dashboardConfigCacheLastFetched < DB_CACHE_TTL_MS
+  ) {
+    return dashboardConfigCacheStore.map((item) => ({ ...item }));
   }
-  return inMemoryDashboardConfig;
+
+  let config: DashboardConfig[] | null = null;
+  if (isKvAvailable()) {
+    try {
+      config = await kv.get<DashboardConfig[]>('config:dashboard');
+    } catch (err) {
+      console.error('Error fetching dashboard config from Redis:', err);
+    }
+  }
+
+  dashboardConfigCacheStore = config || inMemoryDashboardConfig;
+  dashboardConfigCacheLastFetched = now;
+  return dashboardConfigCacheStore.map((item) => ({ ...item }));
 }
 
 export async function updateDashboardConfig(id: string, status: string): Promise<boolean> {
-  if (isKvAvailable()) {
-    const config = await getDashboardConfig();
-    const item = config.find((d) => d.id === id);
-    if (item) {
-      item.status = status;
-      await kv.set('config:dashboard', config);
-      return true;
+  const config = await getDashboardConfig();
+  const item = config.find((d) => d.id === id);
+  if (item) {
+    item.status = status;
+    dashboardConfigCacheStore = config;
+    dashboardConfigCacheLastFetched = Date.now();
+
+    if (isKvAvailable()) {
+      try {
+        await kv.set('config:dashboard', config);
+      } catch (err) {
+        console.error('Error saving dashboard config to Redis:', err);
+      }
     }
-    return false;
-  } else {
-    const item = inMemoryDashboardConfig.find((d) => d.id === id);
-    if (item) {
-      item.status = status;
-      return true;
-    }
-    return false;
+    return true;
   }
+  return false;
 }

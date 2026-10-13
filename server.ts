@@ -61,6 +61,9 @@ app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
 });
 
+import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
+import adminRouter, { getConfigFromStore, getAnnouncementsFromStore } from './src/routes/admin';
+
 // Maintenance Mode Configuration
 let MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === 'true';
 let STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
@@ -82,51 +85,6 @@ initDb()
   .catch((err) => {
     console.error('Failed to initialize database', err);
   });
-
-// 🛡️ Sentinel: Emergency lockdown circuit breaker for severe incidents (e.g., data breach).
-// Placed at the top of the stack to bypass non-admin routing and static serving when active.
-app.use(async (req: Request, res: Response, next: NextFunction) => {
-  let reqPath: string;
-  try {
-    reqPath = decodeURIComponent(req.path);
-  } catch {
-    res.status(400).json({ error: 'Bad Request: Malformed URI' });
-    return;
-  }
-
-  // Always exempt admin routes so administrators can log in and toggle emergency lockdown
-  if (
-    reqPath.startsWith('/api/admin') ||
-    reqPath.startsWith('/admin') ||
-    reqPath === '/mltk-admin.html' ||
-    reqPath === '/mltk-admin'
-  ) {
-    next();
-    return;
-  }
-
-  try {
-    const sysConfig = await getConfigFromStore();
-    if (sysConfig.emergencyLockdown || EMERGENCY_LOCKDOWN) {
-      res
-        .status(503)
-        .type('text/plain')
-        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
-      return;
-    }
-  } catch (err) {
-    console.error('Error checking system lockdown configuration:', err);
-    if (EMERGENCY_LOCKDOWN) {
-      res
-        .status(503)
-        .type('text/plain')
-        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
-      return;
-    }
-  }
-
-  next();
-});
 
 // ⚡ Bolt: Pre-calculate static asset paths to avoid redundant path logic and allocations.
 // Ensures static files are located correctly whether running TS directly or compiled in dist/
@@ -197,6 +155,78 @@ const mltkFiles = new Set([
   '/system-override',
   '/system-override.html',
 ]);
+
+// 🛡️ Sentinel: Consolidated system control circuit breaker (Emergency Lockdown & Maintenance Mode).
+// Placed at the top of the Express middleware stack to bypass all non-admin routing and static serving when active.
+// Consolidates emergency lockdown and maintenance mode checks into a single middleware pass, eliminating duplicate
+// URI decoding, route string prefix matching, and redundant getConfigFromStore() calls per request.
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  let reqPath: string;
+  try {
+    reqPath = decodeURIComponent(req.path);
+  } catch {
+    res.status(400).json({ error: 'Bad Request: Malformed URI' });
+    return;
+  }
+
+  // Always exempt admin routes and status check so administrators can log in/configure, and clients can check maintenance status
+  if (
+    reqPath.startsWith('/api/admin') ||
+    reqPath.startsWith('/admin') ||
+    reqPath === '/mltk-admin.html' ||
+    reqPath === '/mltk-admin' ||
+    reqPath === '/api/maintenance-status'
+  ) {
+    next();
+    return;
+  }
+
+  try {
+    const sysConfig = await getConfigFromStore();
+
+    // 1. Check Emergency Lockdown
+    if (sysConfig.emergencyLockdown || EMERGENCY_LOCKDOWN) {
+      res
+        .status(503)
+        .type('text/plain')
+        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+      return;
+    }
+
+    // 2. Check System Config Maintenance Mode or Disabled Public Site
+    if (sysConfig.maintenanceMode || !sysConfig.publicSiteEnabled) {
+      res.status(503).sendFile(MAINTENANCE_PATH);
+      return;
+    }
+  } catch (err) {
+    console.error('Error checking system configuration in system control middleware:', err);
+    if (EMERGENCY_LOCKDOWN) {
+      res
+        .status(503)
+        .type('text/plain')
+        .send('503 Service Unavailable: SYSTEM LOCKDOWN IN EFFECT.');
+      return;
+    }
+  }
+
+  // 3. Check Environment Variable Maintenance Modes
+  if (MAINTENANCE_MODE) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
+    res.status(503).sendFile(MAINTENANCE_PATH);
+    return;
+  }
+
+  next();
+});
 
 // Sitemap caching
 let sitemapCache: { xml: string; timestamp: number } | null = null;
@@ -299,66 +329,6 @@ app.get('/api/maintenance-status', (req: Request, res: Response) => {
     studio: STUDIO_MAINTENANCE_MODE,
     mltk: MLTK_MAINTENANCE_MODE,
   });
-});
-
-import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
-import adminRouter, { getConfigFromStore, getAnnouncementsFromStore } from './src/routes/admin';
-
-// ⚡ Bolt: Consolidated single maintenance middleware.
-// Removed redundant earlier maintenance middleware that duplicated decodeURIComponent parsing
-// and Set lookups on every HTTP request before reaching this comprehensive middleware.
-app.use(async (req: Request, res: Response, next: NextFunction) => {
-  // Normalize path by stripping query strings and lowercasing encoded spaces if any
-  // 🛡️ Sentinel: Wrap decodeURIComponent in a try-catch to prevent unhandled URIError DoS from malformed paths
-  let reqPath: string;
-  try {
-    reqPath = decodeURIComponent(req.path);
-  } catch {
-    res.status(400).json({ error: 'Bad Request: Malformed URI' });
-    return;
-  }
-
-  // Exempt admin routes from maintenance mode so admins can always configure or login
-  if (
-    reqPath.startsWith('/api/admin') ||
-    reqPath.startsWith('/admin') ||
-    reqPath === '/mltk-admin.html' ||
-    reqPath === '/mltk-admin'
-  ) {
-    next();
-    return;
-  }
-
-  try {
-    const sysConfig = await getConfigFromStore();
-    if (sysConfig.maintenanceMode || !sysConfig.publicSiteEnabled) {
-      res.status(503).sendFile(MAINTENANCE_PATH);
-      return;
-    }
-  } catch (err) {
-    console.error('Error fetching system configuration in maintenance middleware:', err);
-  }
-
-  // Global Maintenance Mode applies to everything except static assets if we want,
-  // but originally it was fully blocking everything. Keeping the original behavior:
-  if (MAINTENANCE_MODE) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  // Check specific maintenance modes for HTML pages.
-  // We only block specific paths to allow CSS/JS to pass through freely.
-  if (STUDIO_MAINTENANCE_MODE && studioFiles.has(reqPath)) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  if (MLTK_MAINTENANCE_MODE && mltkFiles.has(reqPath)) {
-    res.status(503).sendFile(MAINTENANCE_PATH);
-    return;
-  }
-
-  next();
 });
 
 app.use('/api/admin', adminRouter);
