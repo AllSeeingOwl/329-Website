@@ -295,4 +295,27 @@ describe('Server Tests', () => {
       .send({ value: false })
       .expect(200);
   });
+
+  it('should sanitize invalid Host headers in sitemap endpoints to prevent Host Header Injection', async () => {
+    app = require('./server');
+
+    // Test malicious Host header with injected script tag
+    const xmlResponse = await request(app)
+      .get('/sitemap.xml')
+      .set('Host', 'evil.com"><script>alert(1)</script>')
+      .expect(200);
+
+    expect(xmlResponse.text).not.toContain('evil.com');
+    expect(xmlResponse.text).not.toContain('<script>');
+    expect(xmlResponse.text).toContain('localhost:3000');
+
+    // Test internal sitemap endpoint
+    const jsonResponse = await request(app)
+      .get('/internal-sitemap.json')
+      .set('Host', 'malicious-domain.com/path')
+      .expect(200);
+
+    expect(jsonResponse.body.pages[0]).not.toContain('malicious-domain.com');
+    expect(jsonResponse.body.pages[0]).toContain('localhost:3000');
+  });
 });
