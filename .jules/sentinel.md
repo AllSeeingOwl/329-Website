@@ -45,3 +45,9 @@
 **Vulnerability:** The admin routes extracted `adminUser` in an inconsistent and unsanitized manner, allowing newline/control characters (`\r\n`) and unbounded string lengths (DoS via audit log bloat in Redis and memory), while `validateSystemConfig` lacked upper bound checks on `maxConcurrentSessions` and `sessionTimeout`.
 **Learning:** Centralizing user identity extraction in a helper like `getAdminUser(req)` ensures consistent control-character stripping and length truncation across all route handlers before logging or storing audit records.
 **Prevention:** Always sanitize control characters and cap string lengths for user identifiers recorded in system audit logs, and enforce upper bound constraints on numeric configuration parameters.
+
+## 2026-10-14 - [Security Fix] Host Header Injection and Sitemap Cache Poisoning Sanitization
+
+**Vulnerability:** The sitemap endpoints (`/sitemap.xml` and `/internal-sitemap.json`) constructed absolute URLs by directly interpolating the unvalidated `req.get('host')` header. An attacker sending requests with a crafted Host header (e.g. containing HTML tags or external domains) could inject arbitrary URLs into generated sitemaps and poison the in-memory sitemap cache for up to 1 hour across all users and crawlers.
+**Learning:** Host headers supplied in HTTP requests are untrusted user input. When constructing absolute URLs in cached dynamic endpoints (like XML/JSON sitemaps), the `Host` header must be validated against a strict hostname pattern (`/^[a-zA-Z0-9.-]+(?::\d+)?$/`) and fall back to a safe default if invalid or malformed.
+**Prevention:** Always validate and sanitize HTTP Host headers before using them to construct response content or cache keys.

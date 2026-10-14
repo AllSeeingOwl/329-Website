@@ -228,6 +228,15 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// 🛡️ Sentinel: Helper to sanitize and validate Host header against Host Header Injection & Cache Poisoning
+const getSanitizedHost = (req: Request): string => {
+  const rawHost = req.get('host');
+  if (rawHost && /^[a-zA-Z0-9.-]+(?::\d+)?$/.test(rawHost)) {
+    return rawHost;
+  }
+  return 'localhost:3000';
+};
+
 // Sitemap caching
 let sitemapCache: { xml: string; timestamp: number } | null = null;
 const SITEMAP_CACHE_TTL = 1000 * 60 * 60; // 1 hour
@@ -242,7 +251,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
 
     const files = await fs.promises.readdir(publicDir);
 
-    const host = req.get('host') || 'localhost:3000';
+    const host = getSanitizedHost(req);
     const protocol = req.protocol || 'https';
     const baseUrl = `${protocol}://${host}`;
 
@@ -302,7 +311,7 @@ app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
   try {
     const files = await fs.promises.readdir(publicDir);
 
-    const host = req.get('host') || 'localhost:3000';
+    const host = getSanitizedHost(req);
     const protocol = req.protocol || 'https';
     const baseUrl = `${protocol}://${host}`;
 
