@@ -26,9 +26,17 @@ export const logAuthAttempt = (
 ): void => {
   const timestamp = new Date().toISOString();
   const status = success ? 'SUCCESS' : 'FAILED';
-  const cleanAction = String(action || '').replace(/[\r\n\t]/g, '').slice(0, 50);
-  const cleanIp = String(ip || '').replace(/[\r\n\t]/g, '').slice(0, 50);
-  const cleanDetails = details ? String(details).replace(/[\r\n\t]/g, '').slice(0, 200) : '';
+  const cleanAction = String(action || '')
+    .replace(/[\r\n\t]/g, '')
+    .slice(0, 50);
+  const cleanIp = String(ip || '')
+    .replace(/[\r\n\t]/g, '')
+    .slice(0, 50);
+  const cleanDetails = details
+    ? String(details)
+        .replace(/[\r\n\t]/g, '')
+        .slice(0, 200)
+    : '';
   const detailMsg = cleanDetails ? ` - ${cleanDetails}` : '';
   console.log(
     `[AUDIT TRAIL] [${timestamp}] Admin Auth ${cleanAction} [${status}] IP: ${cleanIp}${detailMsg}`
