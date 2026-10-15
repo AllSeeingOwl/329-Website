@@ -219,7 +219,8 @@
 
       function renderNodes() {
         const list = document.getElementById('nodes');
-        list.innerHTML = '';
+        // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+        list.textContent = '';
 
         // ⚡ Bolt: Use a DocumentFragment to batch DOM insertions into a single write operation,
         // preventing multiple layout reflows and repaints during node rendering.
@@ -237,10 +238,20 @@
 
           const li = document.createElement('li');
           li.className = 'node-item';
-          li.innerHTML = `
-            <span class="node-name">${node.name}</span>
-            <span class="node-status ${statusClass}">${statusText}</span>
-          `;
+
+          // ⚡ Bolt: Use explicit DOM elements and textContent instead of innerHTML template strings
+          // to bypass the browser's HTML parser, reducing CPU overhead and memory allocation during rendering.
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'node-name';
+          nameSpan.textContent = node.name;
+
+          const statusSpan = document.createElement('span');
+          statusSpan.className = `node-status ${statusClass}`;
+          statusSpan.textContent = statusText;
+
+          li.appendChild(nameSpan);
+          li.appendChild(statusSpan);
+
           fragment.appendChild(li);
         });
 
