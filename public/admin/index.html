@@ -1057,14 +1057,21 @@
 
           const modules = Array.isArray(data) ? data : data.config || [];
           const tbody = document.getElementById('modules-table-body');
-          tbody.innerHTML = '';
+          // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+          tbody.textContent = '';
 
           if (modules.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="5" style="text-align: center">NO MODULES FOUND</td></tr>';
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 5;
+            emptyTd.style.textAlign = 'center';
+            emptyTd.textContent = 'NO MODULES FOUND';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
             return;
           }
 
+          // ⚡ Bolt: Use a DocumentFragment to batch DOM updates in a single reflow/repaint pass
           const fragment = document.createDocumentFragment();
 
           modules.forEach(function (item) {
@@ -1097,14 +1104,20 @@
             tdType.textContent = item.type + (item.isRogue ? ' [ROGUE]' : '');
 
             const tdStatus = document.createElement('td');
+            const statusBadge = document.createElement('span');
             if (item.status === 'active') {
-              tdStatus.innerHTML = '<span class="badge badge-active">ACTIVE</span>';
+              statusBadge.className = 'badge badge-active';
+              statusBadge.textContent = 'ACTIVE';
             } else if (item.status === 'locked') {
-              tdStatus.innerHTML =
-                '<span class="badge" style="border-color: #ff3366; color: #ff3366;">LOCKED</span>';
+              statusBadge.className = 'badge';
+              statusBadge.style.borderColor = '#ff3366';
+              statusBadge.style.color = '#ff3366';
+              statusBadge.textContent = 'LOCKED';
             } else {
-              tdStatus.innerHTML = '<span class="badge badge-inactive">OFFLINE</span>';
+              statusBadge.className = 'badge badge-inactive';
+              statusBadge.textContent = 'OFFLINE';
             }
+            tdStatus.appendChild(statusBadge);
 
             const tdActions = document.createElement('td');
             tdActions.style.display = 'flex';
@@ -1284,11 +1297,17 @@
           if (!data || !data.success) return;
 
           const tbody = document.getElementById('emails-table-body');
-          tbody.innerHTML = '';
+          // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+          tbody.textContent = '';
 
           if (!data.emails || data.emails.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="4" style="text-align: center">NO EMAILS CAPTURED YET</td></tr>';
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 4;
+            emptyTd.style.textAlign = 'center';
+            emptyTd.textContent = 'NO EMAILS CAPTURED YET';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
             return;
           }
 
@@ -1508,11 +1527,17 @@
           if (!data || !data.success) return;
 
           const tbody = document.getElementById('announcements-table-body');
-          tbody.innerHTML = '';
+          // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+          tbody.textContent = '';
 
           if (!data.announcements || data.announcements.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="5" style="text-align: center">NO ARG ANNOUNCEMENTS FOUND</td></tr>';
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 5;
+            emptyTd.style.textAlign = 'center';
+            emptyTd.textContent = 'NO ARG ANNOUNCEMENTS FOUND';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
             return;
           }
 
@@ -1669,11 +1694,17 @@
           if (!data || !data.success) return;
 
           const tbody = document.getElementById('audit-table-body');
-          tbody.innerHTML = '';
+          // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+          tbody.textContent = '';
 
           if (!data.logs || data.logs.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="5" style="text-align: center">NO RECENT AUDIT LOGS FOUND</td></tr>';
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 5;
+            emptyTd.style.textAlign = 'center';
+            emptyTd.textContent = 'NO RECENT AUDIT LOGS FOUND';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
             return;
           }
 
