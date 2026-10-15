@@ -45,10 +45,6 @@ interface UpdatePhaseRequestBody {
   adminUser?: string;
 }
 
-interface DeactivatePhaseRequestBody {
-  adminUser?: string;
-}
-
 export interface SystemConfig {
   maintenanceMode: boolean;
   publicSiteEnabled: boolean;
