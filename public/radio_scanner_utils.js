@@ -54,9 +54,16 @@ function setupRadioScanner() {
 
   let typingAnimationId; // Store the requestAnimationFrame ID so we can cancel it
 
+  // Set initial aria-valuetext if slider value is present
+  const initialRawVal = parseInt(slider.value);
+  if (!isNaN(initialRawVal)) {
+    slider.setAttribute('aria-valuetext', `${(initialRawVal / 10).toFixed(1)} MHz`);
+  }
+
   slider.addEventListener('input', function () {
     let rawVal = parseInt(this.value);
     let freq = (rawVal / 10).toFixed(1);
+    this.setAttribute('aria-valuetext', `${freq} MHz`);
     // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows during high-frequency slider input events
     display.textContent = freq;
 

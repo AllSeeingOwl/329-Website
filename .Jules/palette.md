@@ -12,3 +12,8 @@
 
 **Learning:** Several static HTML pages featuring the "Glitch Effect" (like `404.html`, `mltk-privacy-policy.html`) had hover states for links and buttons, but lacked a distinct `:focus-visible` state for keyboard navigation. This made it difficult for keyboard users to track their focus.
 **Action:** When creating retro-styled or custom interactive elements, always ensure a `a:focus-visible, button:focus-visible` style is defined (e.g., using a dashed outline matching the theme color) alongside any `:hover` effects to maintain keyboard accessibility.
+
+## 2026-10-15 - Unscaled Numeric Range Sliders Lack ARIA Value Text
+
+**Learning:** Custom UI sliders (like frequency scanners) often use raw integer ranges internally (e.g., `880` to `1080` for `88.0` to `108.0 MHz`). Screen readers announce raw numbers without context or formatting.
+**Action:** Always provide `aria-valuetext` with formatted units (e.g. `104.9 MHz`) on `<input type="range">` elements and update `aria-valuetext` dynamically in JavaScript whenever the slider value changes.
