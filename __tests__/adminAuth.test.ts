@@ -355,5 +355,24 @@ describe('adminAuth Middleware & Security Checks', () => {
 
       consoleSpy.mockRestore();
     });
+
+    it('sanitizes newline and control characters in action, ip, and details to prevent log injection', () => {
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+
+      logAuthAttempt(
+        'TEST_ACTION\r\n[AUDIT TRAIL] Fake Log Entry',
+        false,
+        '127.0.0.1\nInjectedHeader: value',
+        'Details\r\nFake line'
+      );
+
+      (expect as any)(consoleSpy).toHaveBeenCalledWith(
+        (expect as any).stringMatching(
+          /\[AUDIT TRAIL\] \[.*\] Admin Auth TEST_ACTION\[AUDIT TRAIL\] Fake Log Entry \[FAILED\] IP: 127\.0\.0\.1InjectedHeader: value - DetailsFake line/
+        )
+      );
+
+      consoleSpy.mockRestore();
+    });
   });
 });
