@@ -106,26 +106,30 @@ describe('setupRadioScanner', () => {
     // Nothing should throw
   });
 
-  test('displays static when far from frequency', () => {
+  test('displays static when far from frequency and updates aria-valuetext', () => {
     setupRadioScanner();
+
+    expect(slider.getAttribute('aria-valuetext')).toBe('88.0 MHz');
 
     slider.value = '880';
     slider.dispatchEvent(new Event('input'));
 
     expect(display.textContent).toBe('88.0');
+    expect(slider.getAttribute('aria-valuetext')).toBe('88.0 MHz');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
     expect(output.textContent.length).toBeGreaterThan(0);
     expect(output.textContent).not.toContain('...TRANSMISSION S');
   });
 
-  test('displays partial static when close to frequency', () => {
+  test('displays partial static when close to frequency and updates aria-valuetext', () => {
     setupRadioScanner();
 
     slider.value = '1046'; // distance is 3 (1049 - 1046)
     slider.dispatchEvent(new Event('input'));
 
     expect(display.textContent).toBe('104.6');
+    expect(slider.getAttribute('aria-valuetext')).toBe('104.6 MHz');
     expect(radioBody.classList.contains('locked-in')).toBe(false);
     expect(output.classList.contains('anim-shake')).toBe(true);
     expect(output.textContent).toContain('...TRANSMISSION S');
