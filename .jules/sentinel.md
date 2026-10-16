@@ -51,3 +51,9 @@
 **Vulnerability:** The sitemap endpoints (`/sitemap.xml` and `/internal-sitemap.json`) constructed absolute URLs by directly interpolating the unvalidated `req.get('host')` header. An attacker sending requests with a crafted Host header (e.g. containing HTML tags or external domains) could inject arbitrary URLs into generated sitemaps and poison the in-memory sitemap cache for up to 1 hour across all users and crawlers.
 **Learning:** Host headers supplied in HTTP requests are untrusted user input. When constructing absolute URLs in cached dynamic endpoints (like XML/JSON sitemaps), the `Host` header must be validated against a strict hostname pattern (`/^[a-zA-Z0-9.-]+(?::\d+)?$/`) and fall back to a safe default if invalid or malformed.
 **Prevention:** Always validate and sanitize HTTP Host headers before using them to construct response content or cache keys.
+
+## 2026-10-16 - [Security Fix] Log Injection and Audit Store Bloat Sanitization in Phase Changes
+
+**Vulnerability:** The administrative action audit logger `logPhaseChange()` in `src/routes/admin.ts` incorporated `action` and `targetId` parameters without stripping control characters (`\r\n\t`) or capping string lengths. An attacker sending requests with crafted parameters (e.g. `phaseId` or `id`) containing newline characters could perform Log Injection (CWE-117) to forge fake `[AUDIT TRAIL]` log lines in standard output or exhaust Redis/in-memory audit log storage.
+**Learning:** All parameters logged to stdout or stored in audit logs—even those coming from administrative URL or body parameters—must be explicitly sanitized to remove newline/control characters and length-capped before logging or persisting.
+**Prevention:** Always strip `[\r\n\t]` and cap string lengths for every parameter included in audit trail logging or persistent audit lists.

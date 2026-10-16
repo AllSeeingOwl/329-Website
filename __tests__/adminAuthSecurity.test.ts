@@ -7,6 +7,8 @@ import { resetRateLimitMap } from '../src/middleware/adminAuth';
 const mockSet = jest.fn();
 const mockGet = jest.fn();
 const mockDel = jest.fn();
+const mockLpush = jest.fn().mockResolvedValue(1);
+const mockLtrim = jest.fn().mockResolvedValue('OK');
 
 jest.mock('@upstash/redis', () => {
   return {
@@ -15,6 +17,8 @@ jest.mock('@upstash/redis', () => {
         set: (...args: any[]) => mockSet(...args),
         get: (...args: any[]) => mockGet(...args),
         del: (...args: any[]) => mockDel(...args),
+        lpush: (...args: any[]) => mockLpush(...args),
+        ltrim: (...args: any[]) => mockLtrim(...args),
       };
     }),
   };
@@ -227,6 +231,51 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       (expect as any)(cookies).toBeDefined();
       const clearedCookie = cookies.find((c: string) => c.startsWith('admin_session=;'));
       (expect as any)(clearedCookie).toBeDefined();
+    });
+  });
+
+  describe('Audit Log Injection & Sanitization', () => {
+    it('sanitizes control characters and truncates long inputs in phase change audit logs', async () => {
+      const activeSession = JSON.stringify({
+        token: 'valid-test-token',
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 15).toISOString(),
+      });
+      mockGet.mockImplementation((key: string) => {
+        if (key === 'admin:session:valid-test-token') {
+          return Promise.resolve(activeSession);
+        }
+        return Promise.resolve(null);
+      });
+
+      const spyConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      // Attempt phase activation for existing phase 'phase-1-zine-launch' with newline characters in adminUser
+      await request(app)
+        .post('/api/admin/phases/activate')
+        .set('Cookie', ['admin_session=valid-test-token'])
+        .send({
+          phaseId: 'phase-1-zine-launch',
+          adminUser: 'attacker_admin\r\n[AUDIT TRAIL] Malicious Injected Log',
+        });
+
+      (expect as any)(spyConsoleLog).toHaveBeenCalled();
+      const auditLogCall = spyConsoleLog.mock.calls.find(
+        (args) => typeof args[0] === 'string' && args[0].includes('ACTIVATE_PHASE')
+      );
+
+      (expect as any)(auditLogCall).toBeDefined();
+      const logString = auditLogCall![0];
+
+      // Newlines and carriage returns must be stripped
+      (expect as any)(logString).not.toContain('\r');
+      (expect as any)(logString).not.toContain('\n');
+      (expect as any)(logString).toContain(
+        'attacker_admin[AUDIT TRAIL] Malicious Injected Log'
+      );
+      (expect as any)(logString).toContain('phase-1-zine-launch');
+
+      spyConsoleLog.mockRestore();
     });
   });
 
