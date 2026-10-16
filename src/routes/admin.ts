@@ -334,9 +334,10 @@ const logPhaseChange = async (
   details: Record<string, unknown> = {}
 ): Promise<void> => {
   const timestamp = new Date().toISOString();
-  const cleanAdminUser = String(adminUser || 'admin')
-    .replace(/[\r\n\t]/g, '')
-    .slice(0, 50) || 'admin';
+  const cleanAdminUser =
+    String(adminUser || 'admin')
+      .replace(/[\r\n\t]/g, '')
+      .slice(0, 50) || 'admin';
   const cleanAction = String(action || '')
     .replace(/[\r\n\t]/g, '')
     .slice(0, 50);

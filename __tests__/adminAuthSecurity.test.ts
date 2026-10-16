@@ -270,9 +270,7 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       // Newlines and carriage returns must be stripped
       (expect as any)(logString).not.toContain('\r');
       (expect as any)(logString).not.toContain('\n');
-      (expect as any)(logString).toContain(
-        'attacker_admin[AUDIT TRAIL] Malicious Injected Log'
-      );
+      (expect as any)(logString).toContain('attacker_admin[AUDIT TRAIL] Malicious Injected Log');
       (expect as any)(logString).toContain('phase-1-zine-launch');
 
       spyConsoleLog.mockRestore();
