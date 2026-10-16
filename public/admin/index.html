@@ -929,7 +929,8 @@
           if (!data || !data.success) return;
 
           const phasesList = document.getElementById('phases-list');
-          phasesList.innerHTML = '';
+          // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
+          phasesList.textContent = '';
 
           const activePhaseId = data.activePhaseId;
           const fragment = document.createDocumentFragment();
