@@ -3,6 +3,7 @@
 import request from 'supertest';
 import app from '../server';
 import { resetRateLimitMap } from '../src/middleware/adminAuth';
+import { resetInMemAnnouncements } from '../src/routes/admin';
 
 const mockSet = jest.fn();
 const mockGet = jest.fn();
@@ -32,6 +33,7 @@ describe('ARG Announcements API Endpoints', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     resetRateLimitMap();
+    resetInMemAnnouncements();
     process.env = { ...originalEnv };
     process.env.KV_REST_API_URL = 'https://test-kv.upstash.io';
     process.env.KV_REST_API_TOKEN = 'test-token';
