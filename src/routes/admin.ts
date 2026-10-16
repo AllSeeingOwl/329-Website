@@ -334,15 +334,26 @@ const logPhaseChange = async (
   details: Record<string, unknown> = {}
 ): Promise<void> => {
   const timestamp = new Date().toISOString();
+  const cleanAdminUser =
+    String(adminUser || 'admin')
+      .replace(/[\r\n\t]/g, '')
+      .slice(0, 50) || 'admin';
+  const cleanAction = String(action || '')
+    .replace(/[\r\n\t]/g, '')
+    .slice(0, 50);
+  const cleanTargetId = String(targetId || '')
+    .replace(/[\r\n\t]/g, '')
+    .slice(0, 100);
+
   const logEntry = {
     timestamp,
-    adminUser,
-    action,
-    phaseId: targetId,
+    adminUser: cleanAdminUser,
+    action: cleanAction,
+    phaseId: cleanTargetId,
     details,
   };
   console.log(
-    `[AUDIT TRAIL] [${timestamp}] Admin '${adminUser}' ${action} on '${targetId}'`,
+    `[AUDIT TRAIL] [${timestamp}] Admin '${cleanAdminUser}' ${cleanAction} on '${cleanTargetId}'`,
     details
   );
 
