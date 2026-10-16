@@ -17,3 +17,8 @@
 
 **Learning:** Custom UI sliders (like frequency scanners) often use raw integer ranges internally (e.g., `880` to `1080` for `88.0` to `108.0 MHz`). Screen readers announce raw numbers without context or formatting.
 **Action:** Always provide `aria-valuetext` with formatted units (e.g. `104.9 MHz`) on `<input type="range">` elements and update `aria-valuetext` dynamically in JavaScript whenever the slider value changes.
+
+## 2026-10-16 - Dynamically Injected Modals Require Explicit Dialog ARIA Roles and Focus Management
+
+**Learning:** Dynamically created DOM overlays/dialogs in plain JS helper scripts often lack ARIA accessibility semantics (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`) and keyboard escape handling (`Escape` key event listener), making them invisible or unusable for screen reader and keyboard-only users.
+**Action:** Whenever generating dynamic dialog overlays in JS, always set `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, shift initial focus to the primary interactive element (e.g., close button), listen for `Escape` key events to close, and restore focus to the trigger element upon modal dismissal.

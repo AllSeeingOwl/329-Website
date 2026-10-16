@@ -94,8 +94,47 @@ describe('Velvet Rope Utilities Tests', () => {
     );
     const modal = modals.length > 0 ? modals[0] : null;
     expect(modal).toBeTruthy();
+    expect(modal.getAttribute('role')).toBe('dialog');
+    expect(modal.getAttribute('aria-modal')).toBe('true');
+    expect(modal.getAttribute('aria-labelledby')).toBe('breach-modal-msg');
     // Ensure developer note is NOT present
     expect(modal.textContent).not.toContain('Developer Note');
+  });
+
+  test('breachMainframe modal supports focus management and Escape key dismissal', async () => {
+    CONFIG.SHOULD_REDIRECT = false;
+    document.body.innerHTML = '<div><button id="submit-btn">BREACH</button></div>';
+    const submitBtn = document.getElementById('submit-btn');
+
+    const event = {
+      preventDefault: jest.fn(),
+      target: {
+        querySelector: jest.fn().mockReturnValue(submitBtn),
+        parentNode: document.body,
+        nextSibling: null,
+      },
+    };
+
+    localStorage.removeItem('lastMainframeBreach');
+    breachMainframe(event, null);
+
+    jest.advanceTimersByTime(800);
+    await Promise.resolve(); // Flush microtasks
+
+    const modal = document.querySelector('[role="dialog"]');
+    expect(modal).toBeTruthy();
+    const closeBtn = modal.querySelector('button');
+
+    // Close button should receive initial focus
+    expect(document.activeElement).toBe(closeBtn);
+
+    // Press Escape key
+    const escEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+    document.dispatchEvent(escEvent);
+
+    // Modal should be removed and focus restored to submit button
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(submitBtn);
   });
 
   test('breachMainframe redirects when SHOULD_REDIRECT is true', async () => {

@@ -144,19 +144,25 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
   }
 
   const customBox = document.createElement('div');
+  customBox.setAttribute('role', 'dialog');
+  customBox.setAttribute('aria-modal', 'true');
+  customBox.setAttribute('aria-labelledby', 'breach-modal-msg');
   customBox.style.cssText =
     "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #ff3366; color:#00ff00; padding:20px; z-index:9999; font-family:'VT323', monospace; font-size:1.5rem; max-width: 400px; text-align:center;";
 
   const p = document.createElement('p');
+  p.id = 'breach-modal-msg';
   p.textContent = 'COMMUNICATION SECURED.';
 
   const closeBtn = document.createElement('button');
   closeBtn.textContent = 'CLOSE';
   closeBtn.style.cssText =
     'background:#ff3366; color:#000; border:none; padding:5px 10px; font-family:Anton, sans-serif; cursor:pointer; margin-top:10px;';
-  closeBtn.onclick = function () {
-    if (this.parentElement) {
-      this.parentElement.remove();
+
+  const closeModal = () => {
+    document.removeEventListener('keydown', handleKeydown);
+    if (customBox.parentElement) {
+      customBox.parentElement.removeChild(customBox);
     }
     if (e && e.target && typeof e.target.removeAttribute === 'function') {
       e.target.removeAttribute('aria-busy');
@@ -167,12 +173,29 @@ async function breachMainframe(e, win = typeof window !== 'undefined' ? window :
       btn.textContent = 'BREACH THE MAINFRAME';
       btn.style.backgroundColor = '';
       btn.style.color = '';
+      if (typeof btn.focus === 'function') {
+        btn.focus();
+      }
     }
   };
+
+  const handleKeydown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      closeModal();
+    }
+  };
+
+  closeBtn.onclick = closeModal;
 
   customBox.appendChild(p);
   customBox.appendChild(closeBtn);
   document.body.appendChild(customBox);
+
+  document.addEventListener('keydown', handleKeydown);
+  if (typeof closeBtn.focus === 'function') {
+    closeBtn.focus();
+  }
 }
 
 if (typeof document !== 'undefined') {
