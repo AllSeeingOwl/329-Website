@@ -2,44 +2,86 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
       <loc>https://www.yourdomain.com/</loc>
-      <lastmod>2024-05-18</lastmod>
+      <lastmod>2026-10-17</lastmod>
       <changefreq>monthly</changefreq>
       <priority>1.0</priority>
    </url>
    <url>
       <loc>https://www.yourdomain.com/surface-home-page</loc>
-      <lastmod>2024-05-18</lastmod>
+      <lastmod>2026-10-17</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.8</priority>
    </url>
    <url>
+      <loc>https://www.yourdomain.com/releases</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/developer-blog</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/arg-progress-dashboard</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>0.7</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/studio-contact-us</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.7</priority>
+   </url>
+   <url>
       <loc>https://www.yourdomain.com/studio-manifesto-page</loc>
-      <lastmod>2024-05-18</lastmod>
+      <lastmod>2026-10-17</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.6</priority>
    </url>
    <url>
+      <loc>https://www.yourdomain.com/studio-press-kit</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/studio-faq</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/studio-puzzles-explained</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/studio-team</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
+      <loc>https://www.yourdomain.com/team-rabbit-hack</loc>
+      <lastmod>2026-10-17</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+   </url>
+   <url>
       <loc>https://www.yourdomain.com/business-privacy-policy</loc>
-      <lastmod>2024-05-18</lastmod>
+      <lastmod>2026-10-17</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
       <loc>https://www.yourdomain.com/business-terms-of-service</loc>
-      <lastmod>2024-05-18</lastmod>
+      <lastmod>2026-10-17</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.5</priority>
-   </url>
-   <url>
-      <loc>https://www.yourdomain.com/studio-contact-us</loc>
-      <lastmod>2024-05-18</lastmod>
-      <changefreq>yearly</changefreq>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://www.yourdomain.com/studio-press-kit</loc>
-      <lastmod>2026-03-23</lastmod>
-      <changefreq>yearly</changefreq>
-      <priority>0.6</priority>
    </url>
 </urlset>

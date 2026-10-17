@@ -318,4 +318,23 @@ describe('Server Tests', () => {
     expect(jsonResponse.body.pages[0]).not.toContain('malicious-domain.com');
     expect(jsonResponse.body.pages[0]).toContain('localhost:3000');
   });
+
+  it('should exclude noindex pages and include indexable pages in sitemap.xml', async () => {
+    app = require('./server');
+
+    const response = await request(app)
+      .get('/sitemap.xml')
+      .set('Host', 'www.yourdomain.com')
+      .expect(200);
+
+    expect(response.text).toContain('<loc>http://www.yourdomain.com/</loc>');
+    expect(response.text).toContain('<loc>http://www.yourdomain.com/surface-home-page</loc>');
+    expect(response.text).toContain('<loc>http://www.yourdomain.com/releases</loc>');
+
+    // Excluded noindex pages
+    expect(response.text).not.toContain('404');
+    expect(response.text).not.toContain('maintenance');
+    expect(response.text).not.toContain('mltk-classified-document');
+    expect(response.text).not.toContain('104.9-global-directives');
+  });
 });

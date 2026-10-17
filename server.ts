@@ -260,7 +260,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n',
     ];
 
-    const htmlFiles = files.filter((file) => file.endsWith('.html'));
+    const htmlFiles = files.filter((file) => file.endsWith('.html')).sort();
 
     const urlEntries = await Promise.all(
       htmlFiles.map(async (file) => {
