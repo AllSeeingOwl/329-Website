@@ -112,3 +112,8 @@
 
 **Learning:** High-frequency public polling routes (such as `/api/dashboard-config` and `/api/phases`) that perform direct Upstash Redis GET calls (`kv.get`) introduce network roundtrip latency (~10-50ms) on every single request. Caching these entities in module memory with a 2000ms TTL reduces response latency to sub-millisecond level and prevents Redis request rate pressure. Returning shallow-cloned array objects (`map(item => ({ ...item }))`) prevents concurrent request contexts from mutating the shared in-memory reference during the TTL window.
 **Action:** Implement 2000ms TTL in-memory caches for high-frequency Redis entities, ensuring write functions immediately refresh/invalidate the cache, and return cloned objects to prevent reference mutation bugs.
+
+## 2026-10-17 - O(1) Reference Tracking for Active Button State Switching
+
+**Learning:** Iterating over all child DOM nodes in a container (e.g. `for (let i = 0; i < buttons.length; i++) buttons[i].className = 'sidebar-item'`) on every item selection causes 25 unnecessary DOM property mutations per click.
+**Action:** Maintain an `activeSidebarBtn` reference variable to reset only the previously active element and activate the newly selected element in O(1) time with 2 DOM mutations.

@@ -823,6 +823,7 @@
 
       // Generate A-Z Buttons
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      let activeSidebarBtn = null;
 
       function initSidebarNav() {
         const cache = getDomCache();
@@ -836,6 +837,7 @@
 
           if (letter === 'A') {
             btn.classList.add('active');
+            activeSidebarBtn = btn;
           }
 
           btn.textContent = letter;
@@ -851,16 +853,15 @@
       function loadVillage(letter, btnElement) {
         const cache = getDomCache();
 
-        // Update active state on buttons
-        if (cache.letterNav) {
-          const buttons = cache.letterNav.children;
-          for (let i = 0; i < buttons.length; i++) {
-            buttons[i].className = 'sidebar-item';
-          }
+        // ⚡ Bolt: Replace O(N) iteration over all 26 sidebar items with O(1) tracking
+        // of activeSidebarBtn to eliminate 25 redundant DOM property updates per click.
+        if (activeSidebarBtn) {
+          activeSidebarBtn.className = 'sidebar-item';
         }
 
         if (btnElement) {
           btnElement.className = 'sidebar-item active';
+          activeSidebarBtn = btnElement;
         }
 
         // Load Data or Placeholder
