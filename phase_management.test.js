@@ -99,10 +99,7 @@ describe('Phase & Tier Management API Tests', () => {
       .send({ phaseId: 12345 })
       .expect(400);
 
-    expect(nonStringRes.body).toHaveProperty(
-      'error',
-      'phaseId is required as a non-empty string'
-    );
+    expect(nonStringRes.body).toHaveProperty('error', 'phaseId is required as a non-empty string');
 
     // Test oversized phaseId
     const oversizedRes = await request(app)
@@ -111,9 +108,6 @@ describe('Phase & Tier Management API Tests', () => {
       .send({ phaseId: 'a'.repeat(101) })
       .expect(400);
 
-    expect(oversizedRes.body).toHaveProperty(
-      'error',
-      'phaseId length exceeds allowable limit'
-    );
+    expect(oversizedRes.body).toHaveProperty('error', 'phaseId length exceeds allowable limit');
   });
 });
