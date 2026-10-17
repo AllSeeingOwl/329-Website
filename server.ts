@@ -536,16 +536,24 @@ app.get('/api/admin/phases', adminAuth, async (req: Request, res: Response) => {
   }
 });
 
+// 🛡️ Sentinel: Enforce strict input validation and string length capping on phase updates
 app.post('/api/admin/phases/set', adminAuth, async (req: Request, res: Response) => {
-  const { phaseId } = req.body;
-  if (!phaseId) {
-    res.status(400).json({ error: 'phaseId is required' });
+  const { phaseId } = req.body || {};
+  if (typeof phaseId !== 'string' || !phaseId.trim()) {
+    res.status(400).json({ error: 'phaseId is required as a non-empty string' });
     return;
   }
+
+  const cleanPhaseId = phaseId.trim();
+  if (cleanPhaseId.length > 100) {
+    res.status(400).json({ error: 'phaseId length exceeds allowable limit' });
+    return;
+  }
+
   try {
-    const success = await setActivePhase(phaseId);
+    const success = await setActivePhase(cleanPhaseId);
     if (success) {
-      res.json({ success: true, activePhaseId: phaseId });
+      res.json({ success: true, activePhaseId: cleanPhaseId });
     } else {
       res.status(400).json({ error: 'Invalid phaseId' });
     }
