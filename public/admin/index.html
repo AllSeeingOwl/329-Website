@@ -330,7 +330,7 @@
         </div>
         <button type="submit" id="auth-btn" style="width: 100%">[ AUTHENTICATE TERMINAL ]</button>
       </form>
-      <div id="login-status" class="status-message"></div>
+      <div id="login-status" class="status-message" role="alert" aria-live="polite"></div>
     </div>
 
     <!-- MAIN ADMIN DASHBOARD -->
@@ -356,7 +356,7 @@
       </div>
 
       <!-- GLOBAL FEEDBACK BANNER -->
-      <div id="global-status" class="status-message"></div>
+      <div id="global-status" class="status-message" role="alert" aria-live="polite"></div>
 
       <!-- PHASE / TIER MANAGEMENT -->
       <div class="section-box">
@@ -1128,6 +1128,7 @@
             previewBtn.textContent = 'PREVIEW';
             previewBtn.style.fontSize = '0.75rem';
             previewBtn.style.padding = '2px 6px';
+            previewBtn.setAttribute('aria-label', 'Preview module ' + item.id);
             previewBtn.addEventListener('click', function () {
               const cleanLink = item.link.replace(/\.html$/, '');
               localStorage.setItem('mltk_bypass_' + item.link, 'true');
@@ -1143,6 +1144,7 @@
             activeBtn.textContent = 'ACTIVE';
             activeBtn.style.fontSize = '0.75rem';
             activeBtn.style.padding = '2px 6px';
+            activeBtn.setAttribute('aria-label', 'Set module ' + item.id + ' to active');
             if (item.status === 'active') activeBtn.disabled = true;
             activeBtn.addEventListener('click', async function () {
               const res = await apiFetch(
@@ -1165,6 +1167,7 @@
             lockedBtn.textContent = 'LOCKED';
             lockedBtn.style.fontSize = '0.75rem';
             lockedBtn.style.padding = '2px 6px';
+            lockedBtn.setAttribute('aria-label', 'Set module ' + item.id + ' to locked');
             if (item.status === 'locked') lockedBtn.disabled = true;
             lockedBtn.addEventListener('click', async function () {
               const res = await apiFetch(
@@ -1188,6 +1191,7 @@
             offlineBtn.className = 'danger-btn';
             offlineBtn.style.fontSize = '0.75rem';
             offlineBtn.style.padding = '2px 6px';
+            offlineBtn.setAttribute('aria-label', 'Set module ' + item.id + ' to offline');
             if (item.status === 'offline') offlineBtn.disabled = true;
             offlineBtn.addEventListener('click', async function () {
               const res = await apiFetch(
@@ -1570,6 +1574,10 @@
             toggleBtn.textContent = ann.active ? 'DISABLE' : 'ENABLE';
             toggleBtn.style.fontSize = '0.75rem';
             toggleBtn.style.padding = '2px 6px';
+            toggleBtn.setAttribute(
+              'aria-label',
+              (ann.active ? 'Disable announcement ' : 'Enable announcement ') + (ann.title || '')
+            );
             toggleBtn.addEventListener('click', async function () {
               const res = await apiFetch('/api/admin/announcements/' + ann.id + '/toggle', {
                 method: 'POST',
@@ -1586,6 +1594,7 @@
             editBtn.textContent = 'EDIT';
             editBtn.style.fontSize = '0.75rem';
             editBtn.style.padding = '2px 6px';
+            editBtn.setAttribute('aria-label', 'Edit announcement ' + (ann.title || ''));
             editBtn.addEventListener('click', function () {
               document.getElementById('ann-id').value = ann.id;
               document.getElementById('ann-title').value = ann.title;
@@ -1603,6 +1612,7 @@
             delBtn.style.padding = '2px 6px';
             delBtn.style.borderColor = '#ff0055';
             delBtn.style.color = '#ff0055';
+            delBtn.setAttribute('aria-label', 'Delete announcement ' + (ann.title || ''));
             delBtn.addEventListener('click', async function () {
               if (
                 !confirm("CONFIRM DELETION: Permanently delete announcement '" + ann.title + "'?")
