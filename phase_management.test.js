@@ -81,4 +81,39 @@ describe('Phase & Tier Management API Tests', () => {
 
     expect(setRes.body).toHaveProperty('error', 'Invalid phaseId');
   });
+
+  it('POST /api/admin/phases/set should return 400 for non-string or oversized phaseId', async () => {
+    app = require('./server');
+
+    const authRes = await request(app)
+      .post('/api/admin/verify')
+      .send({ password: 'admin_test_password' })
+      .expect(200);
+
+    const token = authRes.body.token;
+
+    // Test non-string phaseId
+    const nonStringRes = await request(app)
+      .post('/api/admin/phases/set')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ phaseId: 12345 })
+      .expect(400);
+
+    expect(nonStringRes.body).toHaveProperty(
+      'error',
+      'phaseId is required as a non-empty string'
+    );
+
+    // Test oversized phaseId
+    const oversizedRes = await request(app)
+      .post('/api/admin/phases/set')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ phaseId: 'a'.repeat(101) })
+      .expect(400);
+
+    expect(oversizedRes.body).toHaveProperty(
+      'error',
+      'phaseId length exceeds allowable limit'
+    );
+  });
 });
