@@ -4,6 +4,13 @@
 
 # 3minsto9 ARG / Web Experience
 
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Upstash Redis](https://img.shields.io/badge/Upstash_Redis-00E599?style=flat-square&logo=redis&logoColor=white)
+
 This repository contains the web assets and supporting infrastructure for the **"3minsto9"** Alternate Reality Game (ARG) and immersive media project.
 
 ## Narrative Context
@@ -16,7 +23,7 @@ The project relies on a Node.js Express backend (`server.ts`) that serves static
 
 - **`public/`**: Contains the web assets, including `.html` pages, CSS, and some inline JavaScript files.
   - **JavaScript Utilities**: Extracted business logic and DOM interactions are stored as standard `.js` files within `public/`. They use a UMD-like pattern (`if (typeof module !== 'undefined' && module.exports)`) to allow execution in both the browser and Node.js environments.
-- **`server.ts`**: An Express server configured to serve static files from the `public/` directory.
+- **`server.ts`**: An Express server configured to serve static files from the `public/` directory, resolve clean extensionless page routes, handle maintenance mode circuit breakers, and dynamically serve sitemap endpoints (`/sitemap.xml` and `/internal-sitemap.json`).
 - **Persistent State**: The application utilizes Upstash Redis (`@upstash/redis`) for persistent storage (e.g., dashboard configuration) replacing previous SQLite/Vercel KV implementations. It includes an in-memory fallback for local development.
 - **Root Directory**: Contains configuration files (Vite, Playwright, Cypress, ESLint, Prettier) and Jest unit tests (e.g., `velvet_rope_utils.test.js`).
 
