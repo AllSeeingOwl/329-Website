@@ -486,6 +486,13 @@ router.post('/phases/activate', adminAuth, async (req: Request, res: Response): 
     }
 
     const cleanPhaseId = phaseId.trim();
+    if (cleanPhaseId.length > 100) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid phase data: phaseId length exceeds allowable limit',
+      });
+      return;
+    }
     const phases = await getPhasesFromStore();
     const targetIndex = phases.findIndex((p) => p.id === cleanPhaseId);
 
@@ -530,6 +537,19 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
     const phaseIdParam = Array.isArray(req.params.phaseId)
       ? req.params.phaseId[0]
       : req.params.phaseId;
+
+    if (
+      typeof phaseIdParam !== 'string' ||
+      !phaseIdParam.trim() ||
+      phaseIdParam.trim().length > 100
+    ) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid phase data: phaseId parameter length exceeds allowable limit',
+      });
+      return;
+    }
+
     const { name, tier, active, relatedContent } = (req.body || {}) as UpdatePhaseRequestBody;
 
     const phases = await getPhasesFromStore();
@@ -628,6 +648,18 @@ router.delete(
         ? req.params.phaseId[0]
         : req.params.phaseId;
 
+      if (
+        typeof phaseIdParam !== 'string' ||
+        !phaseIdParam.trim() ||
+        phaseIdParam.trim().length > 100
+      ) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid phase data: phaseId parameter length exceeds allowable limit',
+        });
+        return;
+      }
+
       const phases = await getPhasesFromStore();
       const targetIndex = phases.findIndex((p) => p.id === phaseIdParam);
 
@@ -692,6 +724,13 @@ router.post('/dashboard-config', adminAuth, async (req: Request, res: Response):
   }
 
   const cleanId = id.trim();
+  if (cleanId.length > 100) {
+    res.status(400).json({
+      success: false,
+      message: 'Module id length exceeds allowable limit',
+    });
+    return;
+  }
   const cleanStatus = status.trim().toLowerCase();
 
   if (!ALLOWED_MODULE_STATUSES.includes(cleanStatus)) {

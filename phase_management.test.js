@@ -110,4 +110,27 @@ describe('Phase & Tier Management API Tests', () => {
 
     expect(oversizedRes.body).toHaveProperty('error', 'phaseId length exceeds allowable limit');
   });
+
+  it('POST /api/admin/phases/activate should return 400 for oversized phaseId', async () => {
+    app = require('./server');
+
+    const authRes = await request(app)
+      .post('/api/admin/authenticate')
+      .send({ password: 'admin_test_password' })
+      .expect(200);
+
+    const token = authRes.body.token;
+
+    const oversizedRes = await request(app)
+      .post('/api/admin/phases/activate')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ phaseId: 'b'.repeat(101) })
+      .expect(400);
+
+    expect(oversizedRes.body).toHaveProperty('success', false);
+    expect(oversizedRes.body).toHaveProperty(
+      'message',
+      'Invalid phase data: phaseId length exceeds allowable limit'
+    );
+  });
 });
