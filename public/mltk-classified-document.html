@@ -262,8 +262,6 @@
     </div>
 
     <script>
-      const redactedElements = document.querySelectorAll('.redacted');
-
       function revealText(el) {
         if (!el.classList.contains('revealed')) {
           el.classList.add('revealed');
@@ -275,15 +273,28 @@
         }
       }
 
-      redactedElements.forEach((el) => {
-        el.addEventListener('click', () => revealText(el));
-        el.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            revealText(el);
+      // ⚡ Bolt: Use event delegation on the container element instead of registering
+      // separate click and keydown event listeners on every redacted element. Reduces initial
+      // listener registrations, memory overhead, and closure allocations on DOM load.
+      const docBody = document.querySelector('.doc-body');
+      if (docBody) {
+        docBody.addEventListener('click', (e) => {
+          const redactedEl = e.target.closest('.redacted');
+          if (redactedEl) {
+            revealText(redactedEl);
           }
         });
-      });
+
+        docBody.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            const redactedEl = e.target.closest('.redacted');
+            if (redactedEl) {
+              e.preventDefault();
+              revealText(redactedEl);
+            }
+          }
+        });
+      }
     </script>
   </body>
 </html>
