@@ -87,6 +87,14 @@
         color: #00ff00;
       }
 
+      .char-counter {
+        font-size: 0.9rem;
+        color: #00cc00;
+        text-align: right;
+        margin-top: 4px;
+        font-family: 'VT323', monospace;
+      }
+
       input[type='text'],
       select,
       textarea {
@@ -345,8 +353,10 @@
             rows="3"
             required
             maxlength="1000"
+            aria-describedby="char-counter"
             placeholder="e.g. My nutritional ration was missing its synthetic protein supplement..."
           ></textarea>
+          <div id="char-counter" class="char-counter" aria-live="polite">0 / 1000 characters</div>
         </div>
 
         <button type="submit" id="submit-btn">SUBMIT INQUIRY TO MAINFRAME</button>
@@ -376,10 +386,32 @@
             rateLimitMsg: document.getElementById('rate-limit-message'),
             categorySelect: document.getElementById('category'),
             msgInputElement: document.getElementById('message'),
+            charCounter: document.getElementById('char-counter'),
           };
         }
         return domCache;
       }
+
+      function updateCharCount() {
+        const cache = getDomCache();
+        if (cache.msgInputElement && cache.charCounter) {
+          const currentLength = cache.msgInputElement.value.length;
+          cache.charCounter.textContent = `${currentLength} / 1000 characters`;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const cache = getDomCache();
+        if (cache.msgInputElement) {
+          cache.msgInputElement.addEventListener('input', updateCharCount);
+          updateCharCount();
+        }
+        if (cache.form) {
+          cache.form.addEventListener('reset', () => {
+            setTimeout(updateCharCount, 0);
+          });
+        }
+      });
 
       function submitTicket(e) {
         e.preventDefault();
@@ -472,6 +504,7 @@
 
           // Reset form
           form.reset();
+          updateCharCount();
           btn.disabled = false;
           btn.removeAttribute('aria-disabled');
           btn.textContent = 'SUBMIT INQUIRY TO MAINFRAME';
