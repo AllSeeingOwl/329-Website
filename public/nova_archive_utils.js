@@ -46,6 +46,14 @@ const buildSafe = (node, target) => {
   }
 };
 
+let previousFocusedElement = null;
+
+function handleKeyDown(e) {
+  if (e.key === 'Escape') {
+    closeDoc();
+  }
+}
+
 function openDoc(docId) {
   const viewer = document.getElementById('doc-viewer');
   const header = document.getElementById('modal-header');
@@ -61,6 +69,14 @@ function openDoc(docId) {
     return;
   }
 
+  previousFocusedElement = document.activeElement;
+
+  if (!viewer.hasAttribute('role')) {
+    viewer.setAttribute('role', 'dialog');
+    viewer.setAttribute('aria-modal', 'true');
+    viewer.setAttribute('aria-labelledby', 'modal-header');
+  }
+
   // ⚡ Bolt: Replace innerText with textContent to avoid synchronous layout reflows when opening documents
   header.textContent = documents[docId].title;
 
@@ -70,12 +86,24 @@ function openDoc(docId) {
   buildSafe(docHtml.body, body);
 
   viewer.classList.add('visible');
+
+  const closeBtn = viewer.querySelector('.close-btn');
+  if (closeBtn) {
+    closeBtn.focus();
+  }
+
+  document.addEventListener('keydown', handleKeyDown);
 }
 
 function closeDoc() {
   const viewer = document.getElementById('doc-viewer');
   if (viewer) {
     viewer.classList.remove('visible');
+  }
+  document.removeEventListener('keydown', handleKeyDown);
+  if (previousFocusedElement && typeof previousFocusedElement.focus === 'function') {
+    previousFocusedElement.focus();
+    previousFocusedElement = null;
   }
 }
 
