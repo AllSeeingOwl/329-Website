@@ -8,7 +8,9 @@ describe('NOVA Classified Archive Modal', () => {
   beforeEach(() => {
     // Set up the DOM
     document.body.innerHTML = `
-            <div id="doc-viewer">
+            <button id="trigger-btn">Open Doc</button>
+            <div id="doc-viewer" role="dialog" aria-modal="true" aria-labelledby="modal-header">
+                <button class="close-btn">[X] CLOSE</button>
                 <div id="modal-header"></div>
                 <div id="modal-body"></div>
             </div>
@@ -84,6 +86,41 @@ describe('NOVA Classified Archive Modal', () => {
 
       // Should not throw an error
       expect(() => closeDoc()).not.toThrow();
+    });
+  });
+
+  describe('Accessibility & Focus Management', () => {
+    test('sets ARIA attributes on modal element', () => {
+      const viewer = document.getElementById('doc-viewer');
+      openDoc('vv');
+      expect(viewer.getAttribute('role')).toBe('dialog');
+      expect(viewer.getAttribute('aria-modal')).toBe('true');
+      expect(viewer.getAttribute('aria-labelledby')).toBe('modal-header');
+    });
+
+    test('shifts focus to close button on open and restores focus to trigger element on close', () => {
+      const trigger = document.getElementById('trigger-btn');
+      const closeBtn = document.querySelector('.close-btn');
+
+      trigger.focus();
+      expect(document.activeElement).toBe(trigger);
+
+      openDoc('vv');
+      expect(document.activeElement).toBe(closeBtn);
+
+      closeDoc();
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    test('closes modal when Escape key is pressed', () => {
+      const viewer = document.getElementById('doc-viewer');
+      openDoc('vv');
+      expect(viewer.classList.contains('visible')).toBe(true);
+
+      const event = new KeyboardEvent('keydown', { key: 'Escape' });
+      document.dispatchEvent(event);
+
+      expect(viewer.classList.contains('visible')).toBe(false);
     });
   });
 });
