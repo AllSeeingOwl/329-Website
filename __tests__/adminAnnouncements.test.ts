@@ -220,4 +220,29 @@ describe('ARG Announcements API Endpoints', () => {
     (expect as any)(res.body.success).toBe(true);
     (expect as any)(Array.isArray(res.body.announcements)).toBe(true);
   });
+
+  it('rejects oversized announcement id parameter (>100 chars)', async () => {
+    const cookies = await loginAdmin();
+    const oversizedId = 'a'.repeat(101);
+
+    const updateRes = await request(app)
+      .put(`/api/admin/announcements/${oversizedId}`)
+      .set('Cookie', cookies)
+      .send({ title: 'Title', content: 'Content' });
+    (expect as any)(updateRes.status).toBe(400);
+    (expect as any)(updateRes.body.message).toContain('Invalid announcement id');
+
+    const toggleRes = await request(app)
+      .post(`/api/admin/announcements/${oversizedId}/toggle`)
+      .set('Cookie', cookies)
+      .send({ active: true });
+    (expect as any)(toggleRes.status).toBe(400);
+    (expect as any)(toggleRes.body.message).toContain('Invalid announcement id');
+
+    const delRes = await request(app)
+      .delete(`/api/admin/announcements/${oversizedId}`)
+      .set('Cookie', cookies);
+    (expect as any)(delRes.status).toBe(400);
+    (expect as any)(delRes.body.message).toContain('Invalid announcement id');
+  });
 });
