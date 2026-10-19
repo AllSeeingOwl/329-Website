@@ -1285,7 +1285,12 @@ router.post('/announcements', adminAuth, async (req: Request, res: Response): Pr
  */
 router.put('/announcements/:id', adminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id as string;
+    const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    if (typeof idParam !== 'string' || !idParam.trim() || idParam.trim().length > 100) {
+      res.status(400).json({ success: false, message: 'Invalid announcement id parameter' });
+      return;
+    }
+    const id = idParam.trim();
     const validation = validateAnnouncementBody(req.body);
     if (!validation.isValid) {
       res.status(400).json({ success: false, message: validation.error });
@@ -1344,7 +1349,12 @@ router.delete(
   adminAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const id = req.params.id as string;
+      const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      if (typeof idParam !== 'string' || !idParam.trim() || idParam.trim().length > 100) {
+        res.status(400).json({ success: false, message: 'Invalid announcement id parameter' });
+        return;
+      }
+      const id = idParam.trim();
       const announcements = await getAnnouncementsFromStore();
       const filtered = announcements.filter((a) => a.id !== id);
 
@@ -1379,7 +1389,12 @@ router.post(
   adminAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const id = req.params.id as string;
+      const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      if (typeof idParam !== 'string' || !idParam.trim() || idParam.trim().length > 100) {
+        res.status(400).json({ success: false, message: 'Invalid announcement id parameter' });
+        return;
+      }
+      const id = idParam.trim();
       const announcements = await getAnnouncementsFromStore();
       const item = announcements.find((a) => a.id === id);
 
