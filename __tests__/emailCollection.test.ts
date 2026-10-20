@@ -51,6 +51,22 @@ describe('POST /api/emails/collect', () => {
     (expect as any)(emails[0].source).toBe('studio_newsletter');
   });
 
+  it('should sanitize control characters and newlines in source parameter', async () => {
+    const res = await request(app)
+      .post('/api/emails/collect')
+      .send({ email: 'cleanuser@example.com', source: 'newsletter\r\n=1+1\t[INJECTED]' });
+
+    (expect as any)(res.status).toBe(200);
+    (expect as any)(res.body).toEqual({ success: true });
+
+    const emails = await getAllEmails();
+    (expect as any)(emails.length).toBe(1);
+    (expect as any)(emails[0].source).toBe('newsletter=1+1[INJECTED]');
+    (expect as any)(emails[0].source).not.toContain('\r');
+    (expect as any)(emails[0].source).not.toContain('\n');
+    (expect as any)(emails[0].source).not.toContain('\t');
+  });
+
   it('should return 400 when email or source is missing', async () => {
     const res1 = await request(app)
       .post('/api/emails/collect')
