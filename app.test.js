@@ -89,3 +89,22 @@ describe('app.js service worker registration', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
+
+describe('Accessibility - Character counter live region tests', () => {
+  const fs = require('fs');
+  const path = require('path');
+
+  test('public/studio-contact-us.html character counter does not use aria-live="polite"', () => {
+    const html = fs.readFileSync(path.join(__dirname, 'public/studio-contact-us.html'), 'utf8');
+    expect(html).toContain('id="message-char-count"');
+    expect(html).not.toMatch(/id="message-char-count"[^>]*aria-live="polite"/);
+    expect(html).toMatch(/id="message-char-count"[^>]*aria-live="off"/);
+  });
+
+  test('public/mltk-customer-service.html character counter does not use aria-live="polite"', () => {
+    const html = fs.readFileSync(path.join(__dirname, 'public/mltk-customer-service.html'), 'utf8');
+    expect(html).toContain('id="char-counter"');
+    expect(html).not.toMatch(/id="char-counter"[^>]*aria-live="polite"/);
+    expect(html).toMatch(/id="char-counter"[^>]*aria-live="off"/);
+  });
+});
