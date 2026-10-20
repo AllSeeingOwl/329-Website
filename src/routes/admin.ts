@@ -828,10 +828,10 @@ router.get('/emails', adminAuth, async (_req: Request, res: Response): Promise<v
 
 /**
  * Helper to sanitize CSV cells against CSV Formula Injection (CWE-1236).
- * Prepends a single quote `'` if the value starts with formula trigger characters (=, +, -, @, \t, \r).
+ * Strips embedded newlines and prepends a single quote `'` if the value starts with formula trigger characters (=, +, -, @, \t, \r).
  */
 const sanitizeCsvCell = (val: unknown): string => {
-  const str = String(val ?? '');
+  const str = String(val ?? '').replace(/[\r\n]/g, ' ');
   if (/^[=+\-@\t\r]/.test(str)) {
     return `'${str}`;
   }

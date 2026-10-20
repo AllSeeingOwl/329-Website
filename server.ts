@@ -590,7 +590,13 @@ app.post('/api/emails/collect', async (req: Request, res: Response) => {
     }
 
     const cleanEmail = email.trim();
-    const cleanSource = source.trim();
+    // 🛡️ Sentinel: Strip control characters and newlines to prevent CSV formula/line injection and log injection
+    const cleanSource = source.trim().replace(/[\r\n\t]/g, '');
+
+    if (!cleanSource) {
+      res.status(400).json({ error: 'Email and source are required non-empty strings' });
+      return;
+    }
 
     if (cleanEmail.length > 254 || cleanSource.length > 100) {
       res.status(400).json({ error: 'Input length exceeds allowable limit' });
