@@ -66,7 +66,8 @@ export const SOURCE_PAGES: SourcePage[] = [
     githubPath: 'public/studio-puzzles-explained.html',
     category: 'Studio & Business',
     title: 'Design Philosophy & Puzzles Explained',
-    description: 'In-depth guide explaining puzzle design, ARG mechanics, and transmedia storytelling.',
+    description:
+      'In-depth guide explaining puzzle design, ARG mechanics, and transmedia storytelling.',
   },
   {
     slug: 'studio-team',
@@ -116,7 +117,8 @@ export const SOURCE_PAGES: SourcePage[] = [
     githubPath: 'public/104.9-global-directives.html',
     category: 'MLTK Lore & ARG',
     title: '104.9 Global Directives & Gretchen Dossier',
-    description: 'Corporate directives, Gretchen dossier, decrypted audio transcripts, and hacker overlays.',
+    description:
+      'Corporate directives, Gretchen dossier, decrypted audio transcripts, and hacker overlays.',
   },
   {
     slug: 'mltk-classified-document',
@@ -132,7 +134,8 @@ export const SOURCE_PAGES: SourcePage[] = [
     githubPath: 'public/nova-classified-archive.html',
     category: 'MLTK Lore & ARG',
     title: 'NOVA Classified Intelligence Archive',
-    description: 'Classified archives detailing NOVA project files, incident reports, and corporate logs.',
+    description:
+      'Classified archives detailing NOVA project files, incident reports, and corporate logs.',
   },
   {
     slug: 'nova-parent-directory',
@@ -147,7 +150,7 @@ export const SOURCE_PAGES: SourcePage[] = [
     filename: 'ollies-radio-scanner.html',
     githubPath: 'public/ollies-radio-scanner.html',
     category: 'MLTK Lore & ARG',
-    title: 'Ollie\'s 104.9 FM Radio Scanner',
+    title: "Ollie's 104.9 FM Radio Scanner",
     description: 'Interactive radio scanner intercepting frequencies and noise anomalies.',
   },
   {
@@ -196,7 +199,8 @@ export const SOURCE_PAGES: SourcePage[] = [
     githubPath: 'public/arg-progress-dashboard.html',
     category: 'MLTK Lore & ARG',
     title: 'Neural Link ARG Progress Tracker',
-    description: 'Public progress monitor tracking overall community ARG completion and phase unlocks.',
+    description:
+      'Public progress monitor tracking overall community ARG completion and phase unlocks.',
   },
   {
     slug: 'mltk-3d-map',
@@ -325,7 +329,9 @@ export function generateNotebookSourcesContent(
   mdLines.push('---');
   mdLines.push('');
   mdLines.push('## 2. MLTK In-Universe Lore & ARG Pages');
-  mdLines.push('Corporate surveillance portals, classified archives, hacker intercepts, and interactive lore nodes.');
+  mdLines.push(
+    'Corporate surveillance portals, classified archives, hacker intercepts, and interactive lore nodes.'
+  );
   mdLines.push('');
 
   for (const page of mltkPages) {
@@ -344,8 +350,12 @@ export function generateNotebookSourcesContent(
   mdLines.push('1. Open [Google NotebookLM](https://notebooklm.google.com/).');
   mdLines.push('2. Create a new notebook or select an existing one.');
   mdLines.push('3. Click **Add Source** -> **Website / Link** or **Text File**.');
-  mdLines.push('4. Either paste the live URLs listed above, or upload the downloaded `notebook-full-content.txt` file directly.');
-  mdLines.push('5. If NotebookLM experiences issues crawling dynamic HTML elements, use the provided **Raw GitHub Source** links or download the single `.txt` bundle.');
+  mdLines.push(
+    '4. Either paste the live URLs listed above, or upload the downloaded `notebook-full-content.txt` file directly.'
+  );
+  mdLines.push(
+    '5. If NotebookLM experiences issues crawling dynamic HTML elements, use the provided **Raw GitHub Source** links or download the single `.txt` bundle.'
+  );
 
   const notebookSourcesMd = mdLines.join('\n');
 
@@ -360,7 +370,9 @@ export function generateNotebookSourcesContent(
   for (const page of studioPages) {
     const liveUrl = `${cleanBaseUrl}/${page.slug}`;
     const rawUrl = `${RAW_GITHUB_BASE}/${page.githubPath}`;
-    llmsTxtLines.push(`- [${page.title}](${liveUrl}): ${page.description} (Raw Fallback: ${rawUrl})`);
+    llmsTxtLines.push(
+      `- [${page.title}](${liveUrl}): ${page.description} (Raw Fallback: ${rawUrl})`
+    );
   }
 
   llmsTxtLines.push('');
@@ -369,7 +381,9 @@ export function generateNotebookSourcesContent(
   for (const page of mltkPages) {
     const liveUrl = `${cleanBaseUrl}/${page.slug}`;
     const rawUrl = `${RAW_GITHUB_BASE}/${page.githubPath}`;
-    llmsTxtLines.push(`- [${page.title}](${liveUrl}): ${page.description} (Raw Fallback: ${rawUrl})`);
+    llmsTxtLines.push(
+      `- [${page.title}](${liveUrl}): ${page.description} (Raw Fallback: ${rawUrl})`
+    );
   }
 
   const llmsTxt = llmsTxtLines.join('\n') + '\n';
@@ -415,12 +429,16 @@ export function generateNotebookSourcesContent(
       extractedText = `[File ${page.filename} not found on disk]`;
     }
 
-    fullContentLines.push('------------------------------------------------------------------------');
+    fullContentLines.push(
+      '------------------------------------------------------------------------'
+    );
     fullContentLines.push(`PAGE TITLE: ${page.title}`);
     fullContentLines.push(`CATEGORY:   ${page.category}`);
     fullContentLines.push(`LIVE URL:   ${cleanBaseUrl}/${page.slug}`);
     fullContentLines.push(`RAW GITHUB: ${RAW_GITHUB_BASE}/${page.githubPath}`);
-    fullContentLines.push('------------------------------------------------------------------------');
+    fullContentLines.push(
+      '------------------------------------------------------------------------'
+    );
     fullContentLines.push('');
     fullContentLines.push(extractedText);
     fullContentLines.push('');
@@ -441,10 +459,8 @@ export function writeGeneratedFiles() {
   const rootDir = path.join(__dirname, '..');
   const publicDir = path.join(rootDir, 'public');
 
-  const { notebookSourcesMd, llmsTxt, notebookLinksTxt, fullContentTxt } = generateNotebookSourcesContent(
-    BASE_LIVE_URL,
-    publicDir
-  );
+  const { notebookSourcesMd, llmsTxt, notebookLinksTxt, fullContentTxt } =
+    generateNotebookSourcesContent(BASE_LIVE_URL, publicDir);
 
   fs.writeFileSync(path.join(rootDir, 'NOTEBOOK_SOURCES.md'), notebookSourcesMd, 'utf8');
   fs.writeFileSync(path.join(publicDir, 'llms.txt'), llmsTxt, 'utf8');

@@ -47,9 +47,13 @@ describe('NotebookLM Source Generator & Endpoints', () => {
       const { notebookSourcesMd, llmsTxt, notebookLinksTxt, fullContentTxt } =
         generateNotebookSourcesContent('https://test.3minsto9.co.uk');
 
-      (expect as any)(notebookSourcesMd).toContain('Google Gemini Notebook / NotebookLM Sources Guide');
+      (expect as any)(notebookSourcesMd).toContain(
+        'Google Gemini Notebook / NotebookLM Sources Guide'
+      );
       (expect as any)(notebookSourcesMd).toContain('https://test.3minsto9.co.uk/surface-home-page');
-      (expect as any)(notebookSourcesMd).toContain('https://test.3minsto9.co.uk/104.9-global-directives');
+      (expect as any)(notebookSourcesMd).toContain(
+        'https://test.3minsto9.co.uk/104.9-global-directives'
+      );
 
       (expect as any)(llmsTxt).toContain('# 3minsto9 ARG & Studio Sources');
       (expect as any)(llmsTxt).toContain('Studio & Business Pages');
@@ -60,7 +64,9 @@ describe('NotebookLM Source Generator & Endpoints', () => {
         'https://raw.githubusercontent.com/3minsto9/329-Website/main/public/surface-home-page.html'
       );
 
-      (expect as any)(fullContentTxt).toContain('3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE');
+      (expect as any)(fullContentTxt).toContain(
+        '3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE'
+      );
       (expect as any)(fullContentTxt).toContain('PAGE TITLE:');
     });
 
@@ -78,10 +84,7 @@ describe('NotebookLM Source Generator & Endpoints', () => {
 
   describe('Express Endpoints & Downloads', () => {
     it('GET /llms.txt should return plain text with dynamic host', async () => {
-      const res = await request(app)
-        .get('/llms.txt')
-        .set('Host', 'example.com')
-        .expect(200);
+      const res = await request(app).get('/llms.txt').set('Host', 'example.com').expect(200);
 
       (expect as any)(res.headers['content-type']).toContain('text/plain');
       (expect as any)(res.text).toContain('example.com/surface-home-page');
@@ -89,13 +92,12 @@ describe('NotebookLM Source Generator & Endpoints', () => {
     });
 
     it('GET /llms-full.txt should return plain text full content bundle', async () => {
-      const res = await request(app)
-        .get('/llms-full.txt')
-        .set('Host', 'example.com')
-        .expect(200);
+      const res = await request(app).get('/llms-full.txt').set('Host', 'example.com').expect(200);
 
       (expect as any)(res.headers['content-type']).toContain('text/plain');
-      (expect as any)(res.text).toContain('3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE');
+      (expect as any)(res.text).toContain(
+        '3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE'
+      );
       (expect as any)(res.text).toContain('example.com/surface-home-page');
     });
 
@@ -106,7 +108,9 @@ describe('NotebookLM Source Generator & Endpoints', () => {
         .expect(200);
 
       (expect as any)(res.headers['content-type']).toContain('text/plain');
-      (expect as any)(res.headers['content-disposition']).toContain('attachment; filename="3minsto9-notebooklm-links.txt"');
+      (expect as any)(res.headers['content-disposition']).toContain(
+        'attachment; filename="3minsto9-notebooklm-links.txt"'
+      );
       (expect as any)(res.text).toContain('example.com/surface-home-page');
       (expect as any)(res.text).toContain('https://raw.githubusercontent.com');
     });
@@ -118,8 +122,12 @@ describe('NotebookLM Source Generator & Endpoints', () => {
         .expect(200);
 
       (expect as any)(res.headers['content-type']).toContain('text/plain');
-      (expect as any)(res.headers['content-disposition']).toContain('attachment; filename="3minsto9-notebooklm-full-sources.txt"');
-      (expect as any)(res.text).toContain('3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE');
+      (expect as any)(res.headers['content-disposition']).toContain(
+        'attachment; filename="3minsto9-notebooklm-full-sources.txt"'
+      );
+      (expect as any)(res.text).toContain(
+        '3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE'
+      );
     });
 
     it('GET /download/notebook-sources.txt alias should return full content source attachment', async () => {
@@ -129,8 +137,12 @@ describe('NotebookLM Source Generator & Endpoints', () => {
         .expect(200);
 
       (expect as any)(res.headers['content-type']).toContain('text/plain');
-      (expect as any)(res.headers['content-disposition']).toContain('attachment; filename="3minsto9-notebooklm-full-sources.txt"');
-      (expect as any)(res.text).toContain('3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE');
+      (expect as any)(res.headers['content-disposition']).toContain(
+        'attachment; filename="3minsto9-notebooklm-full-sources.txt"'
+      );
+      (expect as any)(res.text).toContain(
+        '3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE'
+      );
     });
   });
 });
