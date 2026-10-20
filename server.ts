@@ -237,24 +237,30 @@ const getSanitizedHost = (req: Request): string => {
   return 'localhost:3000';
 };
 
-// Sitemap caching
-let sitemapCache: { xml: string; timestamp: number } | null = null;
+// ⚡ Bolt: Cache pre-built sitemap XML and internal sitemap JSON per host with a 1-hour TTL
+// to deliver sub-millisecond responses and eliminate disk readdirs on every request.
+let sitemapCache: { host: string; xml: string; timestamp: number } | null = null;
+let internalSitemapCache: { host: string; json: { pages: string[] }; timestamp: number } | null =
+  null;
 const SITEMAP_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
 // Sitemap Endpoints
 app.get('/sitemap.xml', async (req: Request, res: Response) => {
   try {
-    if (sitemapCache && Date.now() - sitemapCache.timestamp < SITEMAP_CACHE_TTL) {
+    const host = getSanitizedHost(req);
+    const protocol = req.protocol || 'https';
+    const baseUrl = `${protocol}://${host}`;
+
+    if (
+      sitemapCache &&
+      sitemapCache.host === host &&
+      Date.now() - sitemapCache.timestamp < SITEMAP_CACHE_TTL
+    ) {
       res.header('Content-Type', 'application/xml');
       return res.send(sitemapCache.xml);
     }
 
     const files = await fs.promises.readdir(publicDir);
-
-    const host = getSanitizedHost(req);
-    const protocol = req.protocol || 'https';
-    const baseUrl = `${protocol}://${host}`;
-
     const xmlArr = [
       '<?xml version="1.0" encoding="UTF-8"?>\n',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n',
@@ -296,8 +302,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
     xmlArr.push('</urlset>');
 
     const xml = xmlArr.join('');
-
-    sitemapCache = { xml, timestamp: Date.now() };
+    sitemapCache = { host, xml, timestamp: Date.now() };
 
     res.header('Content-Type', 'application/xml');
     res.send(xml);
@@ -409,12 +414,19 @@ app.get(
 
 app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
   try {
-    const files = await fs.promises.readdir(publicDir);
-
     const host = getSanitizedHost(req);
     const protocol = req.protocol || 'https';
     const baseUrl = `${protocol}://${host}`;
 
+    if (
+      internalSitemapCache &&
+      internalSitemapCache.host === host &&
+      Date.now() - internalSitemapCache.timestamp < SITEMAP_CACHE_TTL
+    ) {
+      return res.json(internalSitemapCache.json);
+    }
+
+    const files = await fs.promises.readdir(publicDir);
     const allPages: string[] = [];
 
     for (const file of files) {
@@ -424,7 +436,10 @@ app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
       }
     }
 
-    res.json({ pages: allPages });
+    const json = { pages: allPages };
+    internalSitemapCache = { host, json, timestamp: Date.now() };
+
+    res.json(json);
   } catch (err) {
     console.error('Error generating internal-sitemap.json:', err);
     res.status(500).json({ error: 'Internal Server Error' });
