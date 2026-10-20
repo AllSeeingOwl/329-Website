@@ -7,7 +7,6 @@ dist
 .Jules
 __tests__
 e2e
-scripts
 wiki_boilerplate
 .env
 .env.local
