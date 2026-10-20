@@ -16,10 +16,11 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "build": "tsc && vite build && cp -r public/* dist/public/",
+    "build": "ts-node scripts/generate-notebook-sources.ts && tsc && vite build && cp -r public/* dist/public/",
     "build:vite": "vite build",
     "prepare": "husky",
-    "verify:prod": "./scripts/verify-production.sh"
+    "verify:prod": "./scripts/verify-production.sh",
+    "generate:notebook-sources": "ts-node scripts/generate-notebook-sources.ts"
   },
   "lint-staged": {
     "**/*.{js,ts,jsx,tsx}": [
