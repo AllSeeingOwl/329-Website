@@ -307,6 +307,106 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
   }
 });
 
+// Google NotebookLM / LLM Source Endpoints & Direct Download Features
+app.get('/llms.txt', async (req: Request, res: Response) => {
+  try {
+    const filePath = path.join(publicDir, 'llms.txt');
+    if (!fs.existsSync(filePath)) {
+      res.status(404).send('llms.txt not found');
+      return;
+    }
+    let contentStr = await fs.promises.readFile(filePath, 'utf8');
+    const host = getSanitizedHost(req);
+    const protocol = req.protocol || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    contentStr = contentStr.replace(/https:\/\/3minsto9\.co\.uk/g, baseUrl);
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.send(contentStr);
+  } catch (err) {
+    console.error('Error serving llms.txt:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/llms-full.txt', async (req: Request, res: Response) => {
+  try {
+    const filePath = path.join(publicDir, 'llms-full.txt');
+    if (!fs.existsSync(filePath)) {
+      res.status(404).send('llms-full.txt not found');
+      return;
+    }
+    let contentStr = await fs.promises.readFile(filePath, 'utf8');
+    const host = getSanitizedHost(req);
+    const protocol = req.protocol || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    contentStr = contentStr.replace(/https:\/\/3minsto9\.co\.uk/g, baseUrl);
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.send(contentStr);
+  } catch (err) {
+    console.error('Error serving llms-full.txt:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get(
+  ['/download/notebook-links.txt', '/download/notebook-links'],
+  async (req: Request, res: Response) => {
+    try {
+      const filePath = path.join(publicDir, 'notebook-links.txt');
+      if (!fs.existsSync(filePath)) {
+        res.status(404).send('notebook-links.txt not found');
+        return;
+      }
+      let contentStr = await fs.promises.readFile(filePath, 'utf8');
+      const host = getSanitizedHost(req);
+      const protocol = req.protocol || 'https';
+      const baseUrl = `${protocol}://${host}`;
+      contentStr = contentStr.replace(/https:\/\/3minsto9\.co\.uk/g, baseUrl);
+
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename="3minsto9-notebooklm-links.txt"');
+      res.send(contentStr);
+    } catch (err) {
+      console.error('Error serving notebook links download:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+);
+
+app.get(
+  [
+    '/download/notebook-full-content.txt',
+    '/download/notebook-sources.txt',
+    '/download/notebook-sources',
+  ],
+  async (req: Request, res: Response) => {
+    try {
+      const filePath = path.join(publicDir, 'llms-full.txt');
+      if (!fs.existsSync(filePath)) {
+        res.status(404).send('llms-full.txt not found');
+        return;
+      }
+      let contentStr = await fs.promises.readFile(filePath, 'utf8');
+      const host = getSanitizedHost(req);
+      const protocol = req.protocol || 'https';
+      const baseUrl = `${protocol}://${host}`;
+      contentStr = contentStr.replace(/https:\/\/3minsto9\.co\.uk/g, baseUrl);
+
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="3minsto9-notebooklm-full-sources.txt"'
+      );
+      res.send(contentStr);
+    } catch (err) {
+      console.error('Error serving notebook full content download:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+);
+
 app.get('/internal-sitemap.json', async (req: Request, res: Response) => {
   try {
     const files = await fs.promises.readdir(publicDir);

@@ -1,0 +1,1375 @@
+========================================================================
+3MINSTO9 ARG & STUDIO OPERATIONS - CONSOLIDATED SOURCE BUNDLE
+========================================================================
+This file contains the complete extracted plain-text and narrative content
+of all public Studio & Business pages and MLTK Lore & ARG pages.
+Optimized for direct ingestion into Google NotebookLM and Gemini.
+========================================================================
+
+------------------------------------------------------------------------
+PAGE TITLE: 3minsto9 Operations - Surface Home Page
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/surface-home-page
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/surface-home-page.html
+------------------------------------------------------------------------
+
+3minsto9 | Independent Micro-Press & Immersive Media
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Welcome to the Unknown.
+The Unknown Field (MINE) Guide (Vol. 0) is a 32-page interactive puzzle
+zine. Officially, it is a pristine 1950s tourist brochure. Unofficially, it has been
+stolen, vandalised, and "corrected" by the punk gang Team Rabbit.
+We don't just print books. We forge artefacts. Secure your physical copy today.
+Loading Store...
+## High Value. Low Volume. Direct to Reader.
+3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
+We operate as Comicsmiths and
+Puzzlesmiths . Our mission is to bridge the gap between
+graphic novels, Alternate Reality Games, and tactile, high-quality physical media. You
+aren't just reading a story; you are stepping into a labyrinth.
+### Join the Dispatch
+Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
+{
+this.reset();
+this.style.display = 'none';
+this.setAttribute('aria-busy', 'false');
+btn.disabled = false;
+btn.removeAttribute('aria-disabled');
+btn.textContent = 'Subscribe';
+successMsg.style.display = 'block';
+})
+.catch((err) => {
+console.error('Newsletter signup error', err);
+btn.disabled = false;
+btn.removeAttribute('aria-disabled');
+btn.textContent = 'Subscribe';
+rateLimitMsg.textContent = 'Network error. Please try again.';
+rateLimitMsg.style.display = 'block';
+localStorage.removeItem('lastNewsletterSubmission');
+});
+"
+>
+Subscribe
+Subscribed successfully!
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
+Press Kit
+| Sitemap
+
+
+------------------------------------------------------------------------
+PAGE TITLE: 3minsto9 Studio Manifesto & Mission
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-manifesto-page
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-manifesto-page.html
+------------------------------------------------------------------------
+
+The Studio | 3minsto9 Operations
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+#
+The Studio.
+Independent Micro-Press & Immersive Media.
+## Forging Artefacts
+Based in Wendover, UK, 3minsto9 operates outside the traditional
+publishing machine. Our philosophy is simple:
+High Value. Low Volume. Direct to Reader.
+We do not believe in disposable media or algorithm-chasing content. We believe in creating
+tactile, dangerous physical media that respects the intelligence of our audience. We build
+"In-World Artefacts"—books and zines that feel like they have been smuggled out of an
+alternate reality, surviving riots and corporate censorship to reach your hands.
+"You aren't just reading a story. You are stepping into a labyrinth."
+## Our Protocols
+Our studio functions through two highly disciplined design methodologies that bridge the
+gap between graphic novels and Alternate Reality Games (ARGs).
+### The Comicsmith Protocol
+We approach visual storytelling with architectural precision. Our projects feature highly
+detailed, "Where's Wally" style cross-sections and raw, DIY punk aesthetics. By employing
+a strict layering rule with our freelance illustrators, we ensure that the sterile,
+corporate background of the world can be aggressively "vandalised" by our characters,
+creating an interactive canvas rather than just a picture.
+### The Puzzlesmith Protocol
+We gamify the page. 3minsto9 books are designed to be played, not just read. We turn our
+readers into active detectives by embedding a multi-tiered meta-puzzle layer—dubbed "The
+Game of Unknown"—directly into the art and text. From cyphers hidden in the legal
+copyright pages to physical code wheels and deductive grids, every detail is a functional
+mechanic.
+We don't use standard "Art By..." credit pages, because that ruins the illusion. Instead,
+our artists hide their personal signatures as "red herring" puzzles within the dense
+clutter of the artwork itself.
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. Do not copy. We do
+what we want. | Media Kit
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Studio Releases & Physical Media
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/releases
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/releases.html
+------------------------------------------------------------------------
+
+Releases
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Placeholder: Releases
+This page is currently under construction.
+Return Home
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Frequently Asked Questions (FAQ)
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-faq
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-faq.html
+------------------------------------------------------------------------
+
+3minsto9 | FAQ
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+Home
+Releases
+The Studio
+Team
+FAQ
+Dev Blog
+Contact
+# Frequently Asked Questions
+## About the Studio
+What is 3minsto9?
++
+3minsto9 is an independent micro-press and immersive media studio based in Wendover,
+UK. We operate as Comicsmiths and Puzzlesmiths, forging high-value, low-volume
+physical artefacts.
+Why physical media?
++
+We believe in creating tactile, dangerous physical media that respects the
+intelligence of our audience. Our books feel like they have been smuggled out of an
+alternate reality.
+Where are you located?
++
+We are based in Wendover, UK, operating directly to our readers without traditional
+middlemen.
+## Ordering & Shipping
+How long does shipping take?
++
+Shipping times vary depending on the destination and the artefact. Domestic orders
+typically arrive within 3-5 business days.
+Do you ship internationally?
++
+Yes, we ship globally. Customs and import duties may apply depending on your location.
+Can I pre-order?
++
+Yes, joining our Dispatch newsletter is the best way to receive pre-order alerts and
+secure early drops.
+## Puzzle Mechanics
+How do I solve the puzzles?
++
+Every detail could be a functional mechanic. You might need to decipher codes, find
+hidden signatures, or manipulate physical components of the book.
+Is there a difficulty level?
++
+Our puzzles range from accessible entry-level mysteries to multi-tiered, complex
+meta-puzzles embedded in the artwork and text.
+Are there spoiler guides?
++
+We encourage community collaboration, but official spoiler guides are highly
+classified and may require their own puzzle-solving to access.
+## Accessibility
+Are puzzles screen-reader friendly?
++
+We are constantly working to make our digital puzzle elements accessible, though some
+physical mechanics rely on visual or tactile inspection. Digital counterparts with
+alt-text are provided where possible.
+Do you offer alternative formats?
++
+Currently, our core experience is physical, but we are exploring audio and
+screen-reader optimized digital versions of our narratives.
+What about color blindness?
++
+Our graphic design generally relies on high contrast and distinct shapes, ensuring
+that colour alone is not the only vector for solving a puzzle.
+### Join the Dispatch
+Sign up to receive pre-order alerts, exclusive Kickstarter intel, and secure puzzle drops.
+{
+this.reset();
+this.style.display = 'none';
+this.setAttribute('aria-busy', 'false');
+btn.disabled = false;
+btn.removeAttribute('aria-disabled');
+btn.textContent = 'Subscribe';
+successMsg.style.display = 'block';
+})
+.catch((err) => {
+console.error('Newsletter signup error', err);
+btn.disabled = false;
+btn.removeAttribute('aria-disabled');
+btn.textContent = 'Subscribe';
+rateLimitMsg.textContent = 'Network error. Please try again.';
+rateLimitMsg.style.display = 'block';
+localStorage.removeItem('lastNewsletterSubmission');
+});
+"
+>
+Subscribe
+Subscribed successfully!
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Studio Press Kit & Media Assets
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-press-kit
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-press-kit.html
+------------------------------------------------------------------------
+
+Media Resources | 3minsto9
+3minsto9
+Home
+Releases
+The Studio
+Team
+FAQ
+Dev Blog
+Contact
+# Media Resources
+Everything journalists, reviewers, and publications need to cover 3minsto9.
+## About 3minsto9
+3minsto9 is an independent micro-press and immersive media studio based in Wendover, UK.
+Founded in 2024, we operate as Comicsmiths and Puzzlesmiths, bridging the gap between
+graphic novels, Alternate Reality Games, and tactile, high-quality physical media.
+"High Value. Low Volume. Direct to Reader."
+## Key Facts
+### Founded & Location
+Founded in 2024. Based in Wendover, United Kingdom.
+### Studio Type
+Independent Micro-Press & Immersive Media Studio.
+### Mission
+Bridge graphic novels, ARGs, and tactile physical media.
+### Approach
+Comicsmiths + Puzzlesmiths protocols.
+## Press Photos & Assets
+Download Full Press Kit (PDF)
+Cover Art - The Unknown Field Guide Vol. 0
+PNG - 2400x3200px
+Download
+Logo - 3minsto9 Primary Dark
+SVG & PNG - High Res
+Download
+Logo - 3minsto9 Primary Light
+SVG & PNG - High Res
+Download
+Product Shot - Zine Open Spread
+JPG - 3000x2000px
+Download
+Team Photo - Studio Operations
+JPG - 4000x3000px
+Download
+Concept Art - Team Rabbit
+PNG - 1920x1080px
+Download
+## Press Release Template
+FOR IMMEDIATE RELEASE [HEADLINE: 3minsto9 Announces Launch of 'The Unknown Field Guide
+Vol. 0'] [DATE] – WENDOVER, UK – 3minsto9, an independent micro-press and immersive media
+studio, today announced the upcoming release of their debut project... [BODY PARAGRAPH:
+Details about the project, the interactive puzzle elements, and the physical artefact
+nature of the zine.] About 3minsto9: 3minsto9 is an independent micro-press based in
+Wendover, UK. Operating as Comicsmiths and Puzzlesmiths, their mission is to bridge the
+gap between graphic novels, Alternate Reality Games, and tactile physical media. High
+Value. Low Volume. Direct to Reader. Press Contact: press@3minsto9.co.uk
+https://www.yourdomain.com/studio-press-kit.html
+Right-click to copy this text.
+## Publications & Reviews
+PUBLICATION LOGO PLACEHOLDER
+PUBLICATION LOGO PLACEHOLDER
+PUBLICATION LOGO PLACEHOLDER
+Your publication here &ndash; contact us to be featured.
+## Press Contact
+Email for press inquiries: press@3minsto9.co.uk
+Full Contact Page
+Read Our Manifesto
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Studio Contact & Inquiries
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-contact-us
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-contact-us.html
+------------------------------------------------------------------------
+
+Contact Us - 3minsto9 Operations
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Contact Us
+Name *
+Email Address *
+Subject *
+Message *
+0 / 2000 characters
+Send Message
+Thank you for reaching out! We will get back to you shortly.
+For press inquiries or technical support regarding the physical field guides, please allow
+2-3 business days for a response from our operations team.
+View Press Resources .
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Design Philosophy & Puzzles Explained
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-puzzles-explained
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-puzzles-explained.html
+------------------------------------------------------------------------
+
+How 3minsto9 Puzzles Work | 3minsto9 Operations
+3minsto9
+Home
+Releases
+The Studio
+Team
+FAQ
+Dev Blog
+Contact
+# How 3minsto9 Puzzles Work
+Understanding the Comicsmith Protocol and Puzzlesmith Protocol
+### Comicsmith Protocol
+Detailed cross-sections and vandalism layers create an interactive canvas.
+Where's Wally style complexity
+Raw, DIY punk aesthetics
+Sterile corporate background + aggressive character vandalism
+Creates friction between "official" and "vandal" narratives
+### Puzzlesmith Protocol
+Multi-tiered meta-puzzle layer called "The Game of Unknown".
+Ciphers hidden in copyright pages
+Physical code wheels and deductive grids
+Readers become active detectives
+Functional mechanics embedded in art and text
+## What's a Meta-Puzzle?
+A meta-puzzle is a puzzle that uses the solutions or elements of other, smaller puzzles
+to reveal a hidden, overarching message. In our books, you might find several standalone
+ciphers or riddles that, once solved, provide the pieces needed to unlock a larger
+mystery hidden within the narrative framework.
+Example from "The Unknown Field Guide" (Vol. 0):
+In Vol. 0, a 1950s-style tourist brochure was "corrupted" by Team Rabbit
+graffiti. Hidden code in margin notes, when decoded, reveals classified MLTK data.
+Readers must determine what is "official" brochure content vs.
+"vandal" clues.
+See an example puzzle walkthrough
+&#9660;
+Step 1: The Setup
+You find a seemingly innocuous list of "Recommended Hotels" in the brochure.
+Step 2: The Clue
+Team Rabbit has crossed out certain letters in the hotel names using a specific
+color of red ink.
+Step 3: The Deduction
+By reading only the crossed-out letters in order, you spell out a URL leading to a
+hidden page on the MLTK Surveillance Dashboard.
+Step 4: The Reward
+Accessing the dashboard reveals a downloadable file containing backstory on a key
+character.
+## How to Read the Layers
+01
+### Spot the Vandalism Layer
+Look for Team Rabbit tags, unnatural color differences, or out-of-place text.
+02
+### Identify the Mechanic
+Determine the type of puzzle: code wheel, logic grid, or cipher key.
+03
+### Work the Deduction
+Gather the pieces and research what the puzzle is asking of you.
+04
+### Reveal the Hidden Connection
+Apply your solution to unlock lore, hidden websites, or real-world drops.
+## Difficulty Levels
+### Easy
+Pick-the-answer puzzles, visual riddles, simple ciphers. Newcomers welcome.
+### Medium
+Multi-step deductions, research required, code wheels, pattern recognition.
+### Hard
+Cross-book references, encrypted messages, requires external resources (ARG wikis,
+codebreaking tools).
+### Expert
+Hidden meta-narrative, requires community collaboration, leads to real-world events or
+drops.
+## Community Resources
+Puzzles are meant to be solved together. No spoilers without warning!
+Join the Community Discord
+Browse the Fan Puzzle Wiki
+Read Puzzle Walkthroughs
+## Frequently Asked Questions
+### Can I solve puzzles solo?
+Yes, but community collaboration often reveals hidden layers and makes the experience
+richer.
+### Is there a "correct" solution?
+The meta-puzzle has objective answers, but the interpretation of the lore and
+narrative is personal.
+### What if I get stuck?
+Check the community wiki, post on Discord, or email us for hints. We want you to
+succeed!
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved. |
+Press Kit
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Studio Team & Core Members
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/studio-team
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/studio-team.html
+------------------------------------------------------------------------
+
+3minsto9 | Studio Team
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Meet the Makers
+The architects behind the artefacts. We are a small, dedicated team of creators forging
+immersive experiences and physical media.
+## Jordan Clarke
+Creative Director, Illustration
+##
+Jordan Clarke
+(Placeholder)
+Creative Director, Illustration (Placeholder)
+Jordan is the visual mastermind shaping the world of 3minsto9. With a background in
+indie comics and printmaking, they specialize in brutalist layouts, hidden symbolic
+details, and the kind of art that makes you look twice.
+Comicsmith
+Character Vandalism
+## Sam Rivera
+Lead Puzzlesmith, Narrative
+##
+Sam Rivera
+(Placeholder)
+Lead Puzzlesmith, Narrative (Placeholder)
+Sam weaves complex Alternate Reality Game mechanics into physical media. Former
+cryptanalyst turned storyteller, Sam ensures every artifact is a puzzle box waiting to
+be solved, blurring the line between fiction and reality.
+Cryptography
+Worldbuilding
+## Alex Chen
+Operations & Production
+##
+Alex Chen
+(Placeholder)
+Operations & Production (Placeholder)
+The glue that holds the studio together. Alex manages the supply chain, coordinates
+physical print runs with our bespoke manufacturing partners, and ensures every volume
+arrives in pristine (or intentionally distressed) condition.
+Logistics
+Print Production
+Contact Us
+Studio Manifesto
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Business Privacy Policy
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/business-privacy-policy
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/business-privacy-policy.html
+------------------------------------------------------------------------
+
+Privacy Policy - 3minsto9 Operations
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Privacy Policy
+Last updated: [Current Date]
+## 1. Information We Collect
+We may collect personal information such as your name, email address, and IP address when
+you interact with our website, sign up for our newsletter, or contact us. We also collect
+non-personal information through cookies and similar technologies to improve user
+experience.
+## 2. How We Use Your Information
+We use the information we collect to operate and maintain our website, communicate with you,
+analyze website usage, and provide you with information or services you request.
+## 3. Information Sharing
+We do not sell, trade, or otherwise transfer your personally identifiable information to
+outside parties without your consent, except to trusted third parties who assist us in
+operating our website or conducting our business, so long as those parties agree to keep
+this information confidential.
+## 4. Data Security
+We implement a variety of security measures to maintain the safety of your personal
+information. However, no method of transmission over the Internet or electronic storage is
+100% secure.
+## 5. Your Rights
+You have the right to access, correct, or delete your personal information. If you wish to
+exercise these rights, please contact us using the information provided below.
+## 6. Changes to This Privacy Policy
+We may update this privacy policy from time to time. We will notify you of any changes by
+posting the new privacy policy on this page.
+## 7. Contact Us
+If you have any questions about this Privacy Policy, please contact us at [Contact Email].
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Business Terms of Service
+CATEGORY:   Studio & Business
+LIVE URL:   https://3minsto9.co.uk/business-terms-of-service
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/business-terms-of-service.html
+------------------------------------------------------------------------
+
+Terms of Service - 3minsto9 Operations
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+# Terms of Service
+Last updated: [Current Date]
+## 1. Acceptance of Terms
+By accessing or using our website, you agree to comply with and be bound by these Terms of
+Service. If you disagree with any part of these terms, please do not use our website.
+## 2. Intellectual Property
+All content on this website, including but not limited to text, graphics, logos, images,
+audio clips, digital downloads, and data compilations, is the property of 3minsto9
+Operations or its content suppliers and protected by international copyright laws. You may
+not reproduce, distribute, modify, create derivative works of, publicly display, or in any
+way exploit any of the content without prior written consent.
+## 3. User Conduct
+You agree to use this website only for lawful purposes and in a manner that does not
+infringe the rights of, restrict, or inhibit the use and enjoyment of this website by any
+third party.
+## 4. Limitation of Liability
+In no event shall 3minsto9 Operations be liable for any direct, indirect, incidental,
+special, or consequential damages arising out of or in connection with your use of the
+website or inability to use the website, even if advised of the possibility of such damages.
+## 5. Disclaimer of Warranties
+This website is provided "as is" and "as available" without any representations or
+warranties, express or implied. 3minsto9 Operations makes no representations or warranties
+in relation to this website or the information and materials provided on this website.
+## 6. Links to Other Websites
+Our website may contain links to third-party web sites or services that are not owned or
+controlled by 3minsto9 Operations. We have no control over, and assume no responsibility
+for, the content, privacy policies, or practices of any third party web sites or services.
+## 7. Governing Law
+These Terms shall be governed and construed in accordance with the laws of [Jurisdiction],
+without regard to its conflict of law provisions.
+## 8. Changes to Terms
+We reserve the right to modify or replace these Terms at any time. By continuing to access
+or use our website after those revisions become effective, you agree to be bound by the
+revised terms.
+## 9. Contact Us
+If you have any questions about these Terms, please contact us at [Contact Email].
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Executive Portal Login Gate
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-login-gate
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-login-gate.html
+------------------------------------------------------------------------
+
+SYSTEM ERROR // MLTK MAINFRAME
+C:\MLTK\AUTH>
+INVALID SERIAL. ACCESS DENIED.
+IDENTITY VERIFIED: B. CANDELA
+Welcome, Beatrix.
+Override accepted. Quarantine protocols bypassed.
+[ RE-ROUTING TO SURVEILLANCE DASHBOARD... ]
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Surveillance & Infrastructure Monitor
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-surveillance-dashboard
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-surveillance-dashboard.html
+------------------------------------------------------------------------
+
+MLTK // SURVEILLANCE DASHBOARD
+# MLTK Global Surveillance
+## Authorized Personnel Only // Tracker Network v4.2
+ACTIVE RELEASE: LOADING PHASE...
+<< RETURN TO LOGIN
+
+
+------------------------------------------------------------------------
+PAGE TITLE: 104.9 Global Directives & Gretchen Dossier
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/104.9-global-directives
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/104.9-global-directives.html
+------------------------------------------------------------------------
+
+GLOBAL DIRECTIVES // 104.9 INTERCEPT - MLTK & Team Rabbit
+ICE PROTOCOL: BYPASSED
+<< RETURN TO NOVA ARCHIVE
+MLTK CORPORATION // GLOBAL DATA OPERATIONS
+INTERNAL COMPLIANCE DIRECTIVES & FREQUENCY INTERCEPTS
+================================================================================
+MLTK CORPORATION // GLOBAL DATA OPERATIONS
+INTERNAL COMPLIANCE DIRECTIVE: MLTK-VV-AUD-104.9A
+CLASSIFICATION: CONFIDENTIAL // EYES ONLY
+================================================================================
+TO: Virtue Village Administrative Block Supervisors (Sectors A–M)
+FROM: Avery Hectare, Executive Director of Cognitive Audits & Optimization
+DATE: [000.00.00] // MANDATORY COMPLIANCE CYCLE
+SUBJECT: Linguistic Contamination & Unauthorized Signal Bleed in Sector 4
+--------------------------------------------------------------------------------
+1. AUDIT FINDINGS
+--------------------------------------------------------------------------------
+A routine sweep of the Administrative Block (O-Piece Block 04, Village of
+Determinedly) has uncovered severe breaches of the Refined Lexicon protocol.
+Multiple "Smurf" clerks were logged utilizing unauthorized "Their There"
+street slang—specifically recorded uttering terms including "groovy,"
+"daddy-o," "innit," and "bogus" into municipal acoustic horns.
+Pursuant to MLTK Terms of Service §3 (Utilization Protocols), linguistic purity
+is required to maintain structural harmony across the Cartridge Estates.
+The offending personnel have been detained for postural integrity realignment
+at Have Faith In Solid.
+--------------------------------------------------------------------------------
+2. EQUIPMENT ANOMALY & FREQUENCY NOTCH
+--------------------------------------------------------------------------------
+During biometric logging, compliance enforcers confiscated non-sanctioned
+analogue media, including a modified transistor unit with an altered tuner dial.
+Signal diagnostics registered a persistent radio-frequency hum bleeding
+through municipal infrastructure at precisely 104.9 MHz.
+While supervisors dismissed this as background atmospheric static from the
+Mini Rail power grid, analytical modeling indicates a structured, repeating
+audio carrier wave.
+--------------------------------------------------------------------------------
+3. DIRECTIVE
+--------------------------------------------------------------------------------
+Inspect all desk drawers for unauthorized analogue components, rubber poultry
+items, or mismatched novelty footwear. Any employee caught adjusting
+telecommunications equipment to the 104.9 sub-bandwidth will face immediate
+contract termination and transfer to Re-education Center B under Project
+Tetromino parameters.
+INDEX OF: DIR_GRETCHEN_DOSSIER.txt // CLASSIFIED PERSONNEL PROFILE
+Entry Line
+Parameter / Attribute
+Archive Value / Encrypted String
+Notes & Protocols
+01
+Subject Identity
+Gretchen Meredith ("The Goblin")
+CEO of NOVA / Ex-Karen Force
+02
+Suit Supremacy Rank
+King of Spades
+Absolute Systemic Power
+03
+Primary Weapon
+Modified Black Glock Nerf Gun
+Concealed in Catsuit
+04
+Primary Objective
+Project TETROMINO / Virtue Village
+Sector 4 Containment
+05
+Dvorak Layout Flag
+Ydco co a ,spv sl ucjydsl
+Standard Keyboard Glitch
+06
+Hardware Key
+"The Space" Card (Ace of Spades)
+Issued by MLTK
+07
+Time Anchor Variable
+10.08 AM ("10.08 or Nothing")
+Harriet / Clock Alignment
+08
+Bypass Passphrase Cipher
+0408-1998-KIKL (Dvorak Encrypted)
+Target Line Solved from Stage 1
+[!] STENCIL ANNOTATIONS // MERRICK AMPERE ("MAD DOG")
+> "Avery Hectare writes like she swallowed a dictionary and an iron rod. 'Cognitive
+Audits'? 'Postural integrity'? You corporate Smurfs wouldn't know integrity if it bit you
+in the knee. Keep welding those motel room radios, posers—you're just making the 104.9 FM
+signal bounce harder off the concrete!"
+> "And heed the warning, folks: if Avery's goons offer you a trip to 'Have Faith In Solid'
+or talk about 'postural integrity realignment', RUN. We've seen the whispers out of the
+Town of There border. Those squeaky-clean white corridors aren't a clinic—they're a
+one-way trip. You take their 'bad medicine', your legs stop working, and they drop you
+right down the laundry chute. Stay messy. Stay loud."
+> "COPY, RIGHT. WE DO WHAT WE WANT."
+================================================================================
+INTERNAL COMPLIANCE DIRECTIVE: MLTK-VV-SEC-104.9B
+CLASSIFICATION: HIGH-PRIORITY // RESTRICTED ACCESS
+================================================================================
+TO: Regional Operations Managers, Seedless Grapes Motel Network
+FROM: Avery Hectare, Executive Director of Cognitive Audits & Optimization
+DATE: [000.00.00] // MANDATORY COMPLIANCE CYCLE
+SUBJECT: Seizure of Modified Audio Hardware & Rogue Pirate Transmissions
+--------------------------------------------------------------------------------
+1. INCIDENT SUMMARY
+--------------------------------------------------------------------------------
+Night-shift personnel across eight Seedless Grapes Motels have been observed
+intentionally bypassing internal audio censors during duty cycles. In the Village
+of Inspiringly, two junior clerks were caught listening to an illegal audio feed
+broadcasting low-budget satirical space-opera serials ("Captain Overhere")
+interspersed with unapproved jazz and extreme metal tracks.
+--------------------------------------------------------------------------------
+2. TELEMETRY TRACE & CYPHER KEY
+--------------------------------------------------------------------------------
+Subterranean spectrum analysis confirms the source of this auditory disruption
+is an unsanctioned, mobile pirate transmitter operating out of the Town of
+There border hexes. The transmission centers on 104.9 FM. This specific
+frequency (104.9 FM) appears to be utilized by rogue elements as an unauthorized
+cypher key to decrypt underlying administrative telemetry.
+--------------------------------------------------------------------------------
+3. SANCTIONS & CORRECTION
+--------------------------------------------------------------------------------
+All Seedless Grapes Motel room radios must have their physical tuning dials
+mechanically welded to prevent manual frequency selection.
+- Failure to log unauthorized audio activity: -15 Favour penalty.
+- Active tuning to 104.9 FM: Immediate surrender of biometric data and
+relocation to Sub-Level C4 containment.
+[!] SECONDARY SYSTEM OVERRIDE // B. CANDELA ("BEAT BOX")
+> "Salutations, Executive Hectare. I am instituting a localized override to correct your
+offensive misuse of the term 'Refined Lexicon'. Utilizing slang such as 'groovy' or 'innit'
+is indeed a severe aesthetic crime, but your automated ICE protocols remain fundamentally
+flawed.
+> Furthermore, logging our pirate frequency as 'atmospheric static' confirms that MLTK's
+quantum processing matrix is lagging by at least 30 days. Do refrain from confiscating
+novelty poultry; it serves a vital acoustic function in our broadcast array."
+[!] MARGIN NOTE // MERRICK AMPERE
+> "SHUT UP, ASP BOY! Nobody cares about your grammar lessons when corporate Smurfs are
+kicking down doors. And don't you dare touch Ollie's rubber chicken—that thing has better
+comedic timing than you ever will, Wordsworth."
+FOUR CORNERS RADIO // 104.9 FM DECRYPTED AUDIO LOG
+PROGRAMME: CAPTAIN OVERHERE VS. THE CORPORATE AUDITORS
+RECORDED LIVE AT THE WARREN
+[SOUND: Squeak of a rubber chicken, followed immediately by a sharp, metallic "boing-FWIP!" sound effect and a buzzing kazoo fanfare]
+ALAN SMITHEE (V.O.): "And now, back to Four Corners Radio—the nation's premier destination for scheduled computer malfunctions and square easy-listening. Join Captain Overhere and the crew of the Over There as they defend the sub-bandwidth in today's episode: 'Captain Overhere Vs. The Corporate Auditors'."
+CAPTAIN OVERHERE: "Report, crew! Sector 4 radar is flashing red! Executive Avery's compliance units are welding the motel radios again! Ensign Ollie, drop the juggling spanners and lock the scanner onto 104.9 FM!"
+ENSIGN OLLIE: "Cool beans, Captain-o! Dig it, the vibes are real wiggy on the 104.9 dial! Corporate ICE is trying to notch our signal, but I've patched the transmitter through a rubber chicken and a rusty toaster-antenna! We're broadcasting total cosmic entropy directly into their intercoms, daddy-o!"
+SCIENCE OFFICER PRAXIS: "Captain, mathematical modeling confirms Ensign Ollie's absurd contraption is functioning. The administrative 'Smurfs' in Virtue Village 4 are currently experiencing severe cognitive disorientation due to unapproved jazz interjections."
+SHIP COMPUTER: "Incoming transmission. Source identified: Director G. Meredith. Threat level: Highly bureaucratic. Protocol 88 engagement imminent."
+CAPTAIN OVERHERE: "Not on my shift! Computer, initiate maximum subversion! Play the square anthem!"
+[SOUND: Brief blast of Huey Lewis and the News, abruptly cut off by a jarring Windows 95 startup chime and a kazoo slide-whistle]
+ENSIGN OLLIE: "Far out! The corporate mainframe just suffered a total System Glitch, man! All the motel dials in Sector 4 are permanently stuck on 104.9 FM!"
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Redacted Intelligence Briefing
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-classified-document
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-classified-document.html
+------------------------------------------------------------------------
+
+Classified Document - MLTK Corporation
+ICE PROTOCOL: BYPASSED
+<< RETURN TO DASHBOARD
+CLASSIFIED // EYES ONLY
+SUBJECT: Project
+TETROMINO
+Initialization
+As per the directives from Director
+G. Meredith , Phase 2 of the Virtue Village deployment has been
+authorized .
+The underground facilities located beneath Sector
+4 must be
+secured prior to the arrival of the
+Specimen .
+Warning: Any unauthorized disclosure of this document will result in immediate
+termination
+and relocation to Re-education Center
+B .
+
+
+------------------------------------------------------------------------
+PAGE TITLE: NOVA Classified Intelligence Archive
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/nova-classified-archive
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/nova-classified-archive.html
+------------------------------------------------------------------------
+
+INDEX OF: /archive-01
+ICE PROTOCOL: BYPASSED
+<< RETURN TO DASHBOARD
+INDEX OF: /NOVA/CLASSIFIED/ARCHIVE-01
+LEVEL 4 CLEARANCE ACCEPTED
+Type
+Name
+Last Modified
+Size
+[DIR]
+../
+-
+-
+[PDF]
+VIRTUE_VILLAGES_SCHEMATICS.pdf
+1998-04-08
+14.2 MB
+[TXT]
+DIR_104.9_GLOBAL_DIRECTIVES.html
+SYSTEM_CURRENT
+8 KB
+[LOG]
+TETROMINO_RESTRICTION_PROTOCOL.log
+1995-11-22
+2 KB
+System: Unauthorized packet sniffing detected.
+JAKE_A: I'm holding the backdoor open, but Meredith's ICE
+software is tracing the ping. We don't have long.
+MERRICK: READ FAST, ASP BOY. GRAB THE TETROMINO LAYOUTS
+SO WE KNOW HOW TO NAVIGATE THE VILLAGES WITHOUT TRIPPING THE ALARMS.
+B_CANDELA: I am processing the data. Kindly refrain from
+yelling; it disrupts my cognitive retention.
+### The Bakery's D59 Manifesto
+Bread is life. Control the yeast, control the people. They think they can limit our
+ingredients, but the dough will rise. We strike at dawn.
+AI Immigration Test
+Q1: You observe a neighbour painting their fence a colour not approved by the MLTK
+hex-code directory. Do you:
+A) Compliment their
+individuality.
+B) Report the anomaly to the nearest
+drone.
+C) Drink the paint.
+Q2: A 'Cat's Eye Marble' is presented to you. What is its primary function?
+A) A child's plaything.
+B) Unsanctioned underground currency in
+the Town of There.
+C) A choking hazard.
+Submit Answers
+## SYSTEM ERROR: ANOMALY DETECTED
+Your responses do not align with MLTK compliance standards.
+[X] CLOSE
+## ASSIMILATION APPROVED. ACCESS GRANTED.
+[SECRET DOCUMENT PLACEHOLDER]
+Classification: CLASSIFIED
+Contents: TBD
+[X] CLOSE
+[X] CLOSE
+CONFIDENTIAL DOCUMENT
+
+
+------------------------------------------------------------------------
+PAGE TITLE: NOVA Systems Parent Directory
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/nova-parent-directory
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/nova-parent-directory.html
+------------------------------------------------------------------------
+
+MLTK CITIZEN IDENTIFICATION CALIBRATION TOOL
+# MLTK CITIZEN IDENTIFICATION CALIBRATION TOOL
+Hair
+Select Hair Option
+Blonde Bob
+Pompadour
+Powdered Wig
+Eyewear
+Select Eyewear Option
+Cat-Eye Glasses
+Shutter Shades
+Mirrored Aviators
+Expression
+Select Expression Option
+Spiked Knuckles
+Suspicious Milk Mustache
+Sweating Scowl
+[ VERIFY MAYOR ]
+## Identity Verified
+Access Granted to Village of Kindly Database.
+Proceed to Village of Kindly Database
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Ollie's 104.9 FM Radio Scanner
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/ollies-radio-scanner
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/ollies-radio-scanner.html
+------------------------------------------------------------------------
+
+PIRATE FREQUENCY // O. RADIAN
+OLLIE'S RIG
+UnKnNet // FREQ SCANNER
+88.0
+88
+92
+96
+100
+104
+108
+[SCANNING FREQUENCIES...]
+TEAM RABBIT INTERCEPT
+Your browser does not support the audio element.
+Timmy I. Timmykins' Emporium
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Secure Data Drop & Decryption Node
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/secure-data-drop-page
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/secure-data-drop-page.html
+------------------------------------------------------------------------
+
+SECURE DATA DROP // TEAM RABBIT
+COMMUNICATION SECURED.
+YOU ARE NOW IN THE NETWORK.
+Comms link verified. Your frequency has been added to the encrypted roster. When we make
+our next move against the MLTK network, you'll be the first to know.
+As promised, here is the classified intel we smuggled out. Keep it quiet. The City of
+Everywhere has eyes everywhere.
+============================================================
+C:\MLTK\AUTH> ENTER AUTHORIZATION KEY OR ADMIN BYPASS CODE:
+============================================================
+>
+VERIFY
+DECRYPTED FILES READY FOR EXTRACTION
+⬇ SEEDLESS GRAPES MOTEL [BLUEPRINTS.ZIP]
+⬇ CLASSIFIED [UNCUT_PUZZLE.PDF]
+WE NEED OPERATIONAL CAPITAL.
+Digital files are cute, but if you want to actually see the hidden layers clearly, you
+need the physical hardware. We smuggled a limited run of the
+Unknown: Volume 1 field guides out of the
+quarantine zone.
+Grab a copy. Fund the war. Uncover the truth.
+LOADING COMM CHANNELS...
+End of Transmission. // 3M29 Operations.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Dev Log & Team Rabbit Transcripts
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/developer-blog
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/developer-blog.html
+------------------------------------------------------------------------
+
+3minsto9 | Developer Blog
+3minsto9
+&#9776;
+Home
+Releases
+All Releases
+Placeholder: Vol 1 (Future)
+Placeholder: Vol 2 (Future)
+The Studio
+Manifesto
+Team
+Contact Us
+FAQ
+Privacy Policy
+Terms of Service
+Store
+Placeholder: Apparel (Future)
+Placeholder: Artefacts (Future)
+Dev Blog
+October 24, 2026
+# Architecting the Unknown: Behind the Scenes of Vol. 0
+Welcome to the first entry of our developer blog. As we continue to blur the lines
+between physical artefacts and digital experiences, we wanted a space to discuss the
+technical and creative hurdles of building an Alternate Reality Game (ARG) layered
+beneath a traditional indie publishing facade.
+When we set out to create The Unknown Field Guide , the primary
+challenge wasn't just writing the narrative; it was designing the architecture that
+would allow players to organically discover the hidden layers of the story.
+### The Physical-Digital Bridge
+Our physical zine is pristine, meant to look like a 1950s tourist brochure. But the
+real magic happens when players notice the "corrections" scribbled in the margins by
+Team Rabbit. These corrections are more than just flavor text—they are breadcrumbs
+leading to our digital infrastructure.
+Building a robust, un-gameable backend that still feels like a vulnerable, compromised
+corporate intranet (MLTK) has been a fascinating exercise in contradictory design. We
+have to build secure systems that pretend to be insecure.
+September 15, 2026
+# Placeholder: Upcoming Infrastructure Changes
+This is a placeholder post for future updates regarding server migrations, database
+schema optimizations, and upcoming feature rollouts for the MLTK terminal interface.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+## Recent Updates
+Oct 20, 2026
+Patch Notes v1.4.2: Terminal Security Hotfix
+Oct 12, 2026
+New Physical Artefact Pre-orders Live
+Sep 28, 2026
+Server Maintenance Scheduled for Sunday
+Sep 10, 2026
+Welcome to the 3minsto9 Dev Blog
+## Categories
+Architecture
+Game Design
+Patch Notes
+Physical Media
+&copy; 2026 3minsto9 Operations. Wendover, UK. All rights reserved.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Virtue Village Corporate Directory
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-virtue-village-index
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-virtue-village-index.html
+------------------------------------------------------------------------
+
+MLTK Classified: Virtue Village Index
+INDEX
+# FILE DIRECTORY: A
+MLTK VIRTUE VILLAGE CLASSIFIED DATABASE // ACCESS: OVERRIDE
+SYS_STATUS: ONLINE
+ZONING: TETROMINO LOCK
+VILLAGE DESIGNATION
+The Village of Altruistically
+PUBLIC VIRTUE
+---
+CLASSIFIED VICE
+---
+MINI RAIL TRANSIT STATION
+---
+ZONING ARCHITECTURE (TETROMINO)
+---
+DESIGNATED MAYOR
+---
+BIOMETRIC IDENTIFIERS (GUESS WHO CALIBRATION)
+[HAIR]
+---
+[EYES]
+---
+[EXPR]
+---
+[ACCS]
+---
+>> TEAM RABBIT INTERCEPT <<
+---
+<< RETURN TO DASHBOARD
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Velvet Rope VIP Access Terminal
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/velvet-rope-landing-page
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/velvet-rope-landing-page.html
+------------------------------------------------------------------------
+
+City of Everywhere Tourism Board
+# City of Everywhere
+Welcome to your perfect, peaceful getaway. Loading your itinerary...
+SYSTEM OVERRIDE SUCCESSFUL.
+WELCOME TO THE UNDERGROUND, POSER.
+So, you actually scanned it.
+I’ll admit, I thought you were just another brain-dead tourist wandering around the City
+of Everywhere, drinking the NOVA Kool-Aid and keeping your head down.
+But you saw the glitch in the matrix, didn't you? You saw our handiwork.
+I’m Merrick. The City calls my crew 'Team Rabbit.' They also call us domestic
+terrorists, vandals, and a statistical anomaly.
+We just call ourselves awake.
+That little brochure you’re holding? We hijacked a whole shipment of them. We hid the
+truth in the margins—codes, frequencies, the real dirt on this plastic city.
+If you solved the "Author Signature" puzzle on page 12, congratulations. You aren't
+totally useless. (The real artist's name is
+[Artist Name] , by the way. Give them some cred,
+their portfolio is linked below).
+[SECONDARY OVERRIDE INITIATED - USER: B. CANDELA]
+Salutations. I am instituting a localized override to counteract this visual atrocity.
+The ocular strain induced by this individual's 'terminal' aesthetic is frankly
+barbaric. Please hold while I execute a civilized graphical interface and correct her
+numerous grammatical—
+ACCESS DENIED.
+BACK TO YOUR BOOKS, WIKI-BOY.
+But that zine is just the bedrock. We are planning something massive, and we need people
+who actually know how to open their eyes.
+Our comms are heavily monitored by the MLTK supercomputers. We can't just broadcast our
+next move.
+Drop your secure comms link (your email address) in the terminal below. If you do, I’ll
+send you a secure data packet right now: High-res digital blueprints of the Seedless
+Grapes Motel (Wallpapers) and a classified, uncut puzzle file we couldn't fit in the
+physical zine.
+Don't be a sheep. Join the war.
+BREACH THE MAINFRAME
+Transmission intercepted by 3minsto9 Operations.
+By joining this frequency, you agree to receive future transmissions, classified puzzle
+drops, and crowdfunding intel for 'Unknown: Volume 1'. No spam. We leave the junk to the
+City of Everywhere.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Team Rabbit Broadcast Hijack
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/team-rabbit-hack
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/team-rabbit-hack.html
+------------------------------------------------------------------------
+
+TERMINAL // UPLINK
+# _UPLINK ESTABLISHED
+CONNECTING TO SECURE RELAY... [OK] AWAITING PASSPHRASE...
+guest@rabbit_hole:~#
+ACCESS GRANTED.
+>> WE ARE THE RABBITS IN THE MAINFRAME.
+>> THE CITY OF EVERYWHERE IS A CAGE.
+>> MLTK LIES.
+>> AWAIT FURTHER INSTRUCTIONS.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: Neural Link ARG Progress Tracker
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/arg-progress-dashboard
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/arg-progress-dashboard.html
+------------------------------------------------------------------------
+
+ARG Progress // NEURAL LINK
+# Neural Link Progress
+Global Surveillance Network Phase
+FETCHING PHASE DATA...
+Surveillance Dashboard
+Purge Local Memory
+Progress is saved locally on this terminal via localStorage. Clearing browser data will
+reset this terminal.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Facility 3D Spatial Map
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-3d-map
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-3d-map.html
+------------------------------------------------------------------------
+
+MLTK 3D Vector Map Prototype
+MLTK VECTOR MAP SYSTEM v1.0
+STATUS: ONLINE
+MODE: WIREFRAME
+⟲
+↑
+⟳
+←
+↓
+→
++
+-
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Five Finger Wheel Interface
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-five-finger-wheel
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-five-finger-wheel.html
+------------------------------------------------------------------------
+
+MLTK // FIVE FINGER WHEEL
+# Five Finger Selection
+## Authorized Personnel Only // Risk Assessment Utility
+<< RETURN TO DASHBOARD
+PINKY
+RING
+MIDDLE
+INDEX
+THUMB
+INITIATE SPIN
+ASSESSMENT RESULT
+AWAITING INPUT...
+
+
+------------------------------------------------------------------------
+PAGE TITLE: System Override Emergency Gate
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/system-override
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/system-override.html
+------------------------------------------------------------------------
+
+City of Everywhere Tourism Board
+Welcome to Everywhere
+A city of endless possibilities, polite society, and perfectly planned avenues.
+We hope you enjoy your structured, safe, and completely predictable stay. Please remember
+to adhere to all municipal guidelines for your own comfort.
+Official
+Seal
+Transmission intercepted by 3minsto9 Operations. That little brochure you’re holding? We
+hijacked it. We hid the truth in the margins. Drop your secure comms link below to receive
+the classified data packet.
+BREACH THE MAINFRAME
+DATA PACKET DISPATCHED. WELCOME TO THE WAR.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK In-Universe Privacy Notice
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-privacy-policy
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-privacy-policy.html
+------------------------------------------------------------------------
+
+Privacy Policy & Terms - MLTK Corporation
+## MLTK Corporation // Global Data Operations
+CONFIDENTIALITY IS MANDATORY
+# Privacy "Policy" & Terms of Service
+Effective Date: [000.00.00] //
+MANDATORY COMPLIANCE
+## 1. TERMS OF SERVICE
+By accessing any MLTK Corporation system, terminal, or physical facility, you agree to be
+bound by these Terms of Service. You are authorized to use MLTK systems solely for
+official, sanctioned business.
+MLTK Corporation reserves the right to terminate access, employment, and potentially
+physical existence for any violations of these terms, including unauthorized access to
+classified materials (e.g., Project Tetromino).
+## 2. DATA ASSIMILATION
+By interfacing with MLTK systems, the City of Everywhere infrastructure, or any affiliated
+network node, you hereby surrender all rights, claims, and expectations of privacy
+regarding your digital footprint, biometric data, neuro-kinetic patterns, and genetic
+sequencing metadata.
+We do not "collect" data; we integrate it.
+## 3. UTILIZATION PROTOCOLS
+Your assimilated data will be utilized for:
+- Optimization of the Virtue Villages.
+- Identification and neutralization of dissenting frequencies (e.g., TEAM RABBIT).
+- Predictive behavioral modeling to ensure absolute compliance with Corporate
+Director G. Meredith's directives.
+-
+[CLASSIFIED PROJECT NOVA EXPLOITATION] .
+## 4. DATA DISSEMINATION
+MLTK Corporation does not sell your data. Your data is MLTK property. We share it solely
+with internal security forces, automated algorithmic enforcers, and authorized tier-4
+personnel to maintain operational harmony within the City of Everywhere.
+## 5. SECURITY APPARATUS
+Your data is secured by proprietary Quantum ICE protocols. Any attempt to encrypt,
+obfuscate, or withhold mandatory telemetry will be classified as an act of cyber-sedition
+and met with immediate physical quarantine measures.
+## 6. YOUR "RIGHTS"
+Citizens of the City of Everywhere possess the right to continued existence, contingent
+upon consistent data output. Requests for data deletion are computationally impossible and
+philosophically discouraged.
+## 7. AMENDMENTS
+MLTK Corporation reserves the right to alter these terms retrospectively. Notification
+will not be provided. Ignorance of the updated policy is not a valid defense during
+Tribunal proceedings.
+## 8. CONTACT
+Do not contact us regarding this policy. Our automated systems are already monitoring your
+emotional response to reading this document. Have a productive cycle.
+
+
+------------------------------------------------------------------------
+PAGE TITLE: MLTK Customer Service Portal
+CATEGORY:   MLTK Lore & ARG
+LIVE URL:   https://3minsto9.co.uk/mltk-customer-service
+RAW GITHUB: https://raw.githubusercontent.com/3minsto9/329-Website/main/public/mltk-customer-service.html
+------------------------------------------------------------------------
+
+Customer Service - MLTK Corporation
+## MLTK Citizen Interaction Portal
+Your compliance is our priority
+<< RETURN TO DASHBOARD
+Automated Support Interface v9.4
+> CONNECTION ESTABLISHED. > IDENTIFYING CITIZEN BIOMETRICS... OK. > WELCOME TO MLTK CUSTOMER
+SERVICE. > PLEASE STATE THE NATURE OF YOUR INQUIRY OR DISPLEASURE. > NOTE: ALL
+COMMUNICATIONS ARE RECORDED FOR COMPLIANCE PURPOSES.
+INQUIRY CATEGORY: *
+SELECT REASON...
+Virtue Village Housing Assignment Query
+Nutritional Ration Discrepancy
+Report Suspicious Activity (TEAM RABBIT)
+Existential Dread (Requires Form 8B)
+General Submission (Low Priority)
+COMPLAINT DETAILS: *
+0 / 1000 characters
+SUBMIT INQUIRY TO MAINFRAME
+PROCESSING REQUEST... PLEASE STAND BY...
