@@ -22,3 +22,8 @@
 
 **Learning:** Dynamically created DOM overlays/dialogs in plain JS helper scripts often lack ARIA accessibility semantics (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`) and keyboard escape handling (`Escape` key event listener), making them invisible or unusable for screen reader and keyboard-only users.
 **Action:** Whenever generating dynamic dialog overlays in JS, always set `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, shift initial focus to the primary interactive element (e.g., close button), listen for `Escape` key events to close, and restore focus to the trigger element upon modal dismissal.
+
+## 2026-10-20 - Real-Time Textarea Character Counters Should Not Use Live Regions (aria-live="polite")
+
+**Learning:** Putting `aria-live="polite"` on a live character counter container causes screen readers to announce the character count on every single keypress, creating overwhelming screen reader verbosity chatter during text entry. Using `aria-describedby` links the field to the counter to provide character limit context on focus, while `aria-live="off"` prevents keystroke announcement spam.
+**Action:** When implementing real-time character counters, rely on `aria-describedby` on the `<textarea>` or `<input>` for focus context, and set `aria-live="off"` on the counter element to allow visual updates without flooding screen readers.
