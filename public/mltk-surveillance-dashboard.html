@@ -555,7 +555,8 @@
       // Function to render the dashboard based on the configuration
       function renderDashboard() {
         const container = document.getElementById('dashboard-container');
-        container.innerHTML = ''; // Clear current contents
+        // ⚡ Bolt: Fast DOM clearing using textContent to avoid HTML parsing overhead
+        container.textContent = ''; // Clear current contents
 
         // ⚡ Bolt: Use a DocumentFragment to batch DOM insertions into a single write operation,
         // preventing multiple layout reflows and repaints during card rendering.
