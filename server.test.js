@@ -72,6 +72,18 @@ describe('Server Tests', () => {
     expect(response.body).toEqual({ success: false });
   });
 
+  it('should safely handle unparsed or empty body on /api/verify without throwing', async () => {
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    app = require('./server');
+
+    const response = await request(app)
+      .post('/api/verify')
+      .set('Content-Type', 'application/json')
+      .expect(200);
+
+    expect(response.body).toEqual({ success: false });
+  });
+
   it('should use the default fallback password if AUTH_PASSWORD is not set', async () => {
     // Remove AUTH_PASSWORD from environment
     delete process.env.AUTH_PASSWORD;

@@ -199,6 +199,28 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
   });
 
   describe('Session Expiration & Logout', () => {
+    it('authenticates when token is supplied as an array header', async () => {
+      const activeSession = JSON.stringify({
+        token: 'array-token-123',
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 15).toISOString(),
+      });
+
+      mockGet.mockImplementation((key: string) => {
+        if (key === 'admin:session:array-token-123') {
+          return Promise.resolve(activeSession);
+        }
+        return Promise.resolve(null);
+      });
+
+      const res = await request(app)
+        .get('/api/admin/phases')
+        .set('x-admin-session', ['array-token-123', 'duplicate-header-val'] as any);
+
+      (expect as any)(res.status).toBe(200);
+      (expect as any)(res.body.success).toBe(true);
+    });
+
     it('rejects requests with expired session (401)', async () => {
       const expiredSession = JSON.stringify({
         token: 'expired-token-123',

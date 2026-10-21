@@ -819,7 +819,7 @@ app.post('/api/verify', (req: Request, res: Response) => {
   }
   rateLimitMap.set(ip, record);
 
-  const { code } = req.body;
+  const { code } = req.body || {};
   let success = false;
 
   if (typeof code === 'string') {
