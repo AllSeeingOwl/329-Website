@@ -154,14 +154,26 @@ export const createAdminSession = async (ip: string = 'unknown'): Promise<AdminS
  */
 export const extractSessionToken = (req: Request): string | null => {
   // Check headers first
-  const customHeader = req.headers['x-admin-session'] || req.headers['x-admin-token'];
-  if (typeof customHeader === 'string' && customHeader.trim()) {
+  const rawCustomHeader = req.headers['x-admin-session'] || req.headers['x-admin-token'];
+  const customHeader = Array.isArray(rawCustomHeader)
+    ? rawCustomHeader[0]
+    : typeof rawCustomHeader === 'string'
+      ? rawCustomHeader.split(',')[0]
+      : null;
+
+  if (customHeader && customHeader.trim()) {
     return customHeader.trim();
   }
 
-  const authHeader = req.headers['authorization'];
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    return authHeader.split(' ')[1].trim();
+  const rawAuthHeader = req.headers['authorization'];
+  const authHeader = Array.isArray(rawAuthHeader)
+    ? rawAuthHeader[0]
+    : typeof rawAuthHeader === 'string'
+      ? rawAuthHeader.split(',')[0]
+      : null;
+
+  if (authHeader && authHeader.trim().startsWith('Bearer ')) {
+    return authHeader.trim().split(' ')[1].trim();
   }
 
   // Check cookies if available
