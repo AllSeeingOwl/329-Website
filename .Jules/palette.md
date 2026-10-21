@@ -27,3 +27,8 @@
 
 **Learning:** Putting `aria-live="polite"` on a live character counter container causes screen readers to announce the character count on every single keypress, creating overwhelming screen reader verbosity chatter during text entry. Using `aria-describedby` links the field to the counter to provide character limit context on focus, while `aria-live="off"` prevents keystroke announcement spam.
 **Action:** When implementing real-time character counters, rely on `aria-describedby` on the `<textarea>` or `<input>` for focus context, and set `aria-live="off"` on the counter element to allow visual updates without flooding screen readers.
+
+## 2026-10-21 - Dynamic Theme Toggle Accessibility & OS Dark Mode Detection
+
+**Learning:** Theme toggle buttons that dynamically update state should automatically fall back to `prefers-color-scheme: dark` when no preference is saved in `localStorage`. Additionally, changing `aria-label` alone does not reliably trigger screen reader announcements on click—an `aria-live="polite"` status announcer element (`role="status"`) is needed to announce state changes ("Dark mode enabled") to screen reader users.
+**Action:** When implementing custom theme toggle buttons, check `window.matchMedia('(prefers-color-scheme: dark)')` for initial fallbacks and include a visually-hidden `aria-live="polite"` element to explicitly announce theme switches.
