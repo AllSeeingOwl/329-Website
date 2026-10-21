@@ -19,10 +19,13 @@ async function checkPhaseModuleGate(pageFilename) {
     const activePhase = data.phases.find((p) => p.id === data.activePhaseId);
     if (!activePhase) return;
 
+    // ⚡ Bolt: Convert heldBackModules array to a Set for O(1) lookups instead of
+    // performing multiple O(N) array includes() checks on every phase gate check.
+    const heldBackSet = new Set(activePhase.heldBackModules);
     if (
-      activePhase.heldBackModules.includes(pageFilename) ||
-      activePhase.heldBackModules.includes(cleanFilename) ||
-      activePhase.heldBackModules.includes(cleanFilename + '.html')
+      heldBackSet.has(pageFilename) ||
+      heldBackSet.has(cleanFilename) ||
+      heldBackSet.has(cleanFilename + '.html')
     ) {
       renderHeldBackGate(pageFilename, activePhase.name);
     }
