@@ -656,7 +656,6 @@ app.get('/api/admin/phases', adminAuth, async (req: Request, res: Response) => {
   }
 });
 
-
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   try {
