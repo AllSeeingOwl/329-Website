@@ -17,6 +17,7 @@ import {
   getDashboardConfig,
   updateDashboardConfig,
   updateAllDashboardConfig,
+  setActivePhase,
 } from '../../db';
 
 const router = Router();
@@ -449,6 +450,39 @@ router.all('/quick-login', async (req: Request, res: Response): Promise<void> =>
  * Canonical admin authentication endpoint.
  */
 router.post('/authenticate', handleAdminLogin);
+
+/**
+ * POST /api/admin/phases/set
+ * Sets active phase system-wide, updating dashboard module lock status and recording audit log.
+ */
+router.post('/phases/set', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  const { phaseId } = req.body || {};
+  if (typeof phaseId !== 'string' || !phaseId.trim()) {
+    res.status(400).json({ error: 'phaseId is required as a non-empty string' });
+    return;
+  }
+
+  const cleanPhaseId = phaseId.trim();
+  if (cleanPhaseId.length > 100) {
+    res.status(400).json({ error: 'phaseId length exceeds allowable limit' });
+    return;
+  }
+
+  try {
+    const success = await setActivePhase(cleanPhaseId);
+    if (success) {
+      const adminUser = getAdminUser(req);
+      await logPhaseChange(adminUser, 'SET_ACTIVE_PHASE', cleanPhaseId, {
+        activePhaseId: cleanPhaseId,
+      });
+      res.json({ success: true, activePhaseId: cleanPhaseId });
+    } else {
+      res.status(400).json({ error: 'Invalid phaseId' });
+    }
+  } catch {
+    res.status(500).json({ error: 'Failed to set active phase' });
+  }
+});
 
 /**
  * GET /api/admin/phases

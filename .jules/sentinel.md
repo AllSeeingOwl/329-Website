@@ -63,3 +63,9 @@
 **Vulnerability:** The public email collection endpoint (`POST /api/emails/collect`) accepted user-supplied `source` parameters without stripping newline or control characters (`[\r\n\t]`). An attacker providing a multi-line `source` parameter containing embedded newlines (e.g., `newsletter\r\n=1+1`) could bypass initial-character CSV formula injection checks in `sanitizeCsvCell` and execute arbitrary spreadsheet formulas or split lines in CSV exports.
 **Learning:** `sanitizeCsvCell` only checks if string values start (`^`) with formula trigger characters (`=`, `+`, `-`, `@`, `\t`, `\r`). Input containing embedded newline characters can break out of CSV rows and place formula triggers at the beginning of a new line, effectively bypassing initial-character sanitization rules.
 **Prevention:** Always strip control characters (`[\r\n\t]`) from user inputs during collection, and ensure `sanitizeCsvCell` replaces embedded newlines with spaces before checking for formula trigger characters.
+
+## 2026-10-22 - [Security Fix] Audit Logging and Admin User Sanitization for Phase Setting Endpoint
+
+**Vulnerability:** The active phase setting endpoint (`POST /api/admin/phases/set`) was implemented directly on `app` in `server.ts` rather than in `src/routes/admin.ts`. As a result, changing active phase state bypassed administrative audit logging (`logPhaseChange`) and user identity sanitization (`getAdminUser`), leaving a gap in the administrative audit trail.
+**Learning:** Consolidating all admin routes strictly in `src/routes/admin.ts` ensures that state-changing administrative operations consistently extract/sanitize `adminUser` identifiers and persist audit log records to Redis (`admin:audit_logs`).
+**Prevention:** Ensure all admin endpoints are co-located in `src/routes/admin.ts` and explicitly invoke `logPhaseChange` on state-changing operations.

@@ -13,7 +13,6 @@ import {
   updateAllMaintenanceConfig,
   saveEmail,
   getActivePhase,
-  setActivePhase,
   MLTK_PHASES,
 } from './db';
 
@@ -654,32 +653,6 @@ app.get('/api/admin/phases', adminAuth, async (req: Request, res: Response) => {
     });
   } catch {
     res.status(500).json({ error: 'Failed to fetch phase configuration' });
-  }
-});
-
-// 🛡️ Sentinel: Enforce strict input validation and string length capping on phase updates
-app.post('/api/admin/phases/set', adminAuth, async (req: Request, res: Response) => {
-  const { phaseId } = req.body || {};
-  if (typeof phaseId !== 'string' || !phaseId.trim()) {
-    res.status(400).json({ error: 'phaseId is required as a non-empty string' });
-    return;
-  }
-
-  const cleanPhaseId = phaseId.trim();
-  if (cleanPhaseId.length > 100) {
-    res.status(400).json({ error: 'phaseId length exceeds allowable limit' });
-    return;
-  }
-
-  try {
-    const success = await setActivePhase(cleanPhaseId);
-    if (success) {
-      res.json({ success: true, activePhaseId: cleanPhaseId });
-    } else {
-      res.status(400).json({ error: 'Invalid phaseId' });
-    }
-  } catch {
-    res.status(500).json({ error: 'Failed to set active phase' });
   }
 });
 
