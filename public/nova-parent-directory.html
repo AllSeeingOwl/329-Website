@@ -190,7 +190,7 @@
       <button id="verify-btn">[ VERIFY MAYOR ]</button>
     </div>
 
-    <div id="success-modal">
+    <div id="success-modal" role="dialog" aria-modal="true" aria-live="polite">
       <div class="modal-content">
         <h2>Identity Verified</h2>
         <p>Access Granted to Village of Kindly Database.</p>
@@ -218,6 +218,9 @@
         const cache = getDomCache();
 
         cache.verifyBtn.addEventListener('click', () => {
+          cache.verifyBtn.disabled = true;
+          cache.verifyBtn.textContent = '[ VERIFYING MAYOR... ]';
+
           const hairVal = cache.hair.value;
           const eyewearVal = cache.eyewear.value;
           const expressionVal = cache.expression.value;
@@ -228,8 +231,12 @@
             expressionVal === 'Spiked Knuckles'
           ) {
             cache.successModal.style.display = 'flex';
+            const modalLink = cache.successModal.querySelector('a');
+            if (modalLink) modalLink.focus();
           } else {
             alert('ERROR: MAYORAL IDENTITY REJECTED BY MLTK.');
+            cache.verifyBtn.disabled = false;
+            cache.verifyBtn.textContent = '[ VERIFY MAYOR ]';
           }
         });
       });
