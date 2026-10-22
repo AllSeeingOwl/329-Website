@@ -38,7 +38,7 @@ describe('Phase & Tier Management API Tests', () => {
     expect(Array.isArray(response.body.config)).toBe(true);
   });
 
-  it('POST /api/admin/phases/set should allow admin to change active phase', async () => {
+  it('POST /api/admin/phases/set should allow admin to change active phase and record audit log', async () => {
     app = require('./server');
 
     // Authenticate admin
@@ -49,11 +49,11 @@ describe('Phase & Tier Management API Tests', () => {
 
     const token = authRes.body.token;
 
-    // Set active phase to phase1_5_email1
+    // Set active phase to phase1_5_email1 with adminUser parameter
     const setRes = await request(app)
       .post('/api/admin/phases/set')
       .set('Authorization', `Bearer ${token}`)
-      .send({ phaseId: 'phase1_5_email1' })
+      .send({ phaseId: 'phase1_5_email1', adminUser: 'sentinel_admin\r\n' })
       .expect(200);
 
     expect(setRes.body).toEqual({ success: true, activePhaseId: 'phase1_5_email1' });
@@ -61,6 +61,18 @@ describe('Phase & Tier Management API Tests', () => {
     // Verify GET /api/phases returns updated activePhaseId
     const phasesRes = await request(app).get('/api/phases').expect(200);
     expect(phasesRes.body.activePhaseId).toBe('phase1_5_email1');
+
+    // Verify audit log entry was created and adminUser was sanitized
+    const logsRes = await request(app)
+      .get('/api/admin/audit-logs')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(logsRes.body.success).toBe(true);
+    const latestLog = logsRes.body.logs[0];
+    expect(latestLog.action).toBe('SET_ACTIVE_PHASE');
+    expect(latestLog.phaseId).toBe('phase1_5_email1');
+    expect(latestLog.adminUser).toBe('sentinel_admin');
   });
 
   it('POST /api/admin/phases/set should return 400 for invalid phaseId', async () => {
