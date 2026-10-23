@@ -247,11 +247,13 @@ const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
 let inMemoryActivePhase = 'phase1';
 
-// ⚡ Bolt: Cache dashboard config and active phase in memory with a short TTL (2000ms) to prevent per-request Redis GET queries.
+// ⚡ Bolt: Cache dashboard config, active phase, and captured emails in memory with a short TTL (2000ms) to prevent per-request Redis GET/LRANGE queries.
 let dashboardConfigCacheStore: DashboardConfig[] | null = null;
 let dashboardConfigCacheLastFetched = 0;
 let activePhaseCacheStore: string | null = null;
 let activePhaseCacheLastFetched = 0;
+let emailsCacheStore: CapturedEmail[] | null = null;
+let emailsCacheLastFetched = 0;
 const DB_CACHE_TTL_MS = 2000;
 
 export const resetInMemDbCache = (): void => {
@@ -259,6 +261,8 @@ export const resetInMemDbCache = (): void => {
   dashboardConfigCacheLastFetched = 0;
   activePhaseCacheStore = null;
   activePhaseCacheLastFetched = 0;
+  emailsCacheStore = null;
+  emailsCacheLastFetched = 0;
 };
 
 const isKvAvailable = (): boolean => isRedisAvailable();
@@ -358,6 +362,10 @@ export async function saveEmail(
   const timestamp = new Date().toISOString();
   const record: CapturedEmail = { email, source, timestamp, status };
 
+  // Invalidate cache on write
+  emailsCacheStore = null;
+  emailsCacheLastFetched = 0;
+
   if (isKvAvailable()) {
     await kv.lpush('emails:captured', JSON.stringify(record));
   } else {
@@ -366,23 +374,47 @@ export async function saveEmail(
 }
 
 export async function getAllEmails(): Promise<CapturedEmail[]> {
-  if (isKvAvailable()) {
-    const emails = await kv.lrange('emails:captured', 0, -1);
-    return emails.map((e) => {
-      const parsed = typeof e === 'string' ? JSON.parse(e) : e;
-      return {
-        ...parsed,
-        status: parsed.status || 'pending',
-      };
-    }) as CapturedEmail[];
+  const now = Date.now();
+  // ⚡ Bolt: Return cached captured emails if within 2000ms TTL window to eliminate redundant Redis LRANGE and JSON parsing overhead
+  if (emailsCacheStore !== null && now - emailsCacheLastFetched < DB_CACHE_TTL_MS) {
+    return emailsCacheStore.map((e) => ({ ...e }));
   }
-  return inMemoryEmails.map((e) => ({
-    ...e,
-    status: e.status || 'pending',
-  }));
+
+  let emails: CapturedEmail[];
+  if (isKvAvailable()) {
+    try {
+      const rawEmails = await kv.lrange('emails:captured', 0, -1);
+      emails = rawEmails.map((e) => {
+        const parsed = typeof e === 'string' ? JSON.parse(e) : e;
+        return {
+          ...parsed,
+          status: parsed.status || 'pending',
+        };
+      }) as CapturedEmail[];
+    } catch (err) {
+      console.error('Error fetching captured emails from Redis:', err);
+      emails = inMemoryEmails.map((e) => ({
+        ...e,
+        status: e.status || 'pending',
+      }));
+    }
+  } else {
+    emails = inMemoryEmails.map((e) => ({
+      ...e,
+      status: e.status || 'pending',
+    }));
+  }
+
+  emailsCacheStore = emails;
+  emailsCacheLastFetched = now;
+  return emailsCacheStore.map((e) => ({ ...e }));
 }
 
 export async function clearAllEmails(): Promise<void> {
+  // Invalidate cache on clear
+  emailsCacheStore = null;
+  emailsCacheLastFetched = 0;
+
   if (isKvAvailable()) {
     await kv.del('emails:captured');
   }
