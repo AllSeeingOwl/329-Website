@@ -81,10 +81,12 @@ const setAllInMemoryMaintenanceFlags = (value: boolean): void => {
   MLTK_MAINTENANCE_MODE = value;
 };
 
-(app as unknown as { setInMemoryMaintenanceFlag: typeof setInMemoryMaintenanceFlag }).setInMemoryMaintenanceFlag =
-  setInMemoryMaintenanceFlag;
-(app as unknown as { setAllInMemoryMaintenanceFlags: typeof setAllInMemoryMaintenanceFlags }).setAllInMemoryMaintenanceFlags =
-  setAllInMemoryMaintenanceFlags;
+(
+  app as unknown as { setInMemoryMaintenanceFlag: typeof setInMemoryMaintenanceFlag }
+).setInMemoryMaintenanceFlag = setInMemoryMaintenanceFlag;
+(
+  app as unknown as { setAllInMemoryMaintenanceFlags: typeof setAllInMemoryMaintenanceFlags }
+).setAllInMemoryMaintenanceFlags = setAllInMemoryMaintenanceFlags;
 
 // Initialize DB and load maintenance state
 initDb()
@@ -480,7 +482,6 @@ app.get(['/mltk-admin.html', '/mltk-admin'], (req: Request, res: Response) => {
   res.redirect(301, '/admin/');
 });
 
-
 // 🛡️ Sentinel: Rate limiting for public email collection to prevent DoS & spam floods
 const emailRateLimitMap = new Map<string, RateLimitRecord>();
 const EMAIL_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -577,7 +578,6 @@ app.get('/api/phases', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch phases' });
   }
 });
-
 
 // Public dashboard config endpoint
 app.get('/api/dashboard-config', async (req: Request, res: Response) => {
