@@ -18,6 +18,9 @@ import {
   updateDashboardConfig,
   updateAllDashboardConfig,
   setActivePhase,
+  getMaintenanceConfig,
+  updateMaintenanceConfig,
+  updateAllMaintenanceConfig,
 } from '../../db';
 
 const router = Router();
@@ -829,6 +832,83 @@ router.post(
     }
   }
 );
+
+const ALLOWED_MAINTENANCE_KEYS = ['global', 'studio', 'mltk'];
+
+/**
+ * GET /api/admin/maintenance-config
+ * Returns current maintenance flags for global, studio, and mltk.
+ */
+router.get('/maintenance-config', adminAuth, async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const config = await getMaintenanceConfig();
+    res.json(config);
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch maintenance config' });
+  }
+});
+
+/**
+ * POST /api/admin/maintenance-config
+ * Updates maintenance mode for a specific key ('global', 'studio', or 'mltk').
+ */
+router.post('/maintenance-config', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  const { key, value } = req.body || {};
+  if (typeof key !== 'string' || !ALLOWED_MAINTENANCE_KEYS.includes(key.trim())) {
+    res.status(400).json({ error: "Invalid key. Must be 'global', 'studio', or 'mltk'" });
+    return;
+  }
+  if (typeof value !== 'boolean') {
+    res.status(400).json({ error: 'Value must be a boolean' });
+    return;
+  }
+
+  const cleanKey = key.trim();
+  try {
+    await updateMaintenanceConfig(cleanKey, value);
+    const app = req.app as unknown as {
+      setInMemoryMaintenanceFlag?: (key: string, value: boolean) => void;
+    };
+    if (typeof app.setInMemoryMaintenanceFlag === 'function') {
+      app.setInMemoryMaintenanceFlag(cleanKey, value);
+    }
+    const adminUser = getAdminUser(req);
+    await logPhaseChange(adminUser, 'UPDATE_MAINTENANCE_CONFIG', cleanKey, {
+      key: cleanKey,
+      value,
+    });
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update maintenance config' });
+  }
+});
+
+/**
+ * POST /api/admin/maintenance-config/all
+ * Updates maintenance mode for all keys simultaneously.
+ */
+router.post('/maintenance-config/all', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  const { value } = req.body || {};
+  if (typeof value !== 'boolean') {
+    res.status(400).json({ error: 'Value must be a boolean' });
+    return;
+  }
+
+  try {
+    await updateAllMaintenanceConfig(value);
+    const app = req.app as unknown as {
+      setAllInMemoryMaintenanceFlags?: (value: boolean) => void;
+    };
+    if (typeof app.setAllInMemoryMaintenanceFlags === 'function') {
+      app.setAllInMemoryMaintenanceFlags(value);
+    }
+    const adminUser = getAdminUser(req);
+    await logPhaseChange(adminUser, 'UPDATE_ALL_MAINTENANCE_CONFIG', 'all', { value });
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to update all maintenance configs' });
+  }
+});
 
 /**
  * GET /api/admin/emails

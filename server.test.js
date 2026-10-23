@@ -290,6 +290,7 @@ describe('Server Tests', () => {
     await request(app)
       .post('/api/admin/maintenance-config')
       .set('Authorization', `Bearer ${token}`)
+      .set('X-Admin-User', 'sentinel-test-admin')
       .send({ key: 'global', value: true })
       .expect(200);
 
@@ -304,8 +305,20 @@ describe('Server Tests', () => {
     await request(app)
       .post('/api/admin/maintenance-config/all')
       .set('Authorization', `Bearer ${token}`)
+      .set('X-Admin-User', 'sentinel-test-admin')
       .send({ value: false })
       .expect(200);
+
+    // Verify audit log entries were created
+    const logsRes = await request(app)
+      .get('/api/admin/audit-logs')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(logsRes.body.success).toBe(true);
+    const actions = logsRes.body.logs.map((l) => l.action);
+    expect(actions).toContain('UPDATE_MAINTENANCE_CONFIG');
+    expect(actions).toContain('UPDATE_ALL_MAINTENANCE_CONFIG');
   });
 
   it('should sanitize invalid Host headers in sitemap endpoints to prevent Host Header Injection', async () => {
