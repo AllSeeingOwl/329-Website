@@ -69,6 +69,25 @@ let STUDIO_MAINTENANCE_MODE = process.env.STUDIO_MAINTENANCE_MODE === 'true';
 let MLTK_MAINTENANCE_MODE = process.env.MLTK_MAINTENANCE_MODE === 'true';
 const EMERGENCY_LOCKDOWN = process.env.EMERGENCY_LOCKDOWN === 'true';
 
+const setInMemoryMaintenanceFlag = (key: string, value: boolean): void => {
+  if (key === 'global') MAINTENANCE_MODE = value;
+  if (key === 'studio') STUDIO_MAINTENANCE_MODE = value;
+  if (key === 'mltk') MLTK_MAINTENANCE_MODE = value;
+};
+
+const setAllInMemoryMaintenanceFlags = (value: boolean): void => {
+  MAINTENANCE_MODE = value;
+  STUDIO_MAINTENANCE_MODE = value;
+  MLTK_MAINTENANCE_MODE = value;
+};
+
+(
+  app as unknown as { setInMemoryMaintenanceFlag: typeof setInMemoryMaintenanceFlag }
+).setInMemoryMaintenanceFlag = setInMemoryMaintenanceFlag;
+(
+  app as unknown as { setAllInMemoryMaintenanceFlags: typeof setAllInMemoryMaintenanceFlags }
+).setAllInMemoryMaintenanceFlags = setAllInMemoryMaintenanceFlags;
+
 // Initialize DB and load maintenance state
 initDb()
   .then(async () => {
@@ -463,90 +482,6 @@ app.get(['/mltk-admin.html', '/mltk-admin'], (req: Request, res: Response) => {
   res.redirect(301, '/admin/');
 });
 
-// Admin API routes
-app.get('/api/admin/dashboard-config', adminAuth, async (req: Request, res: Response) => {
-  try {
-    const config = await getDashboardConfig();
-    res.json(config);
-  } catch {
-    res.status(500).json({ error: 'Failed to fetch dashboard config' });
-  }
-});
-
-app.post('/api/admin/dashboard-config', adminAuth, async (req: Request, res: Response) => {
-  const { id, status } = req.body;
-  try {
-    await updateDashboardConfig(id, status);
-    res.json({ success: true });
-  } catch {
-    res.status(500).json({ error: 'Failed to update dashboard config' });
-  }
-});
-
-app.post('/api/admin/dashboard-config/all', adminAuth, async (req: Request, res: Response) => {
-  const { status } = req.body;
-  try {
-    await updateAllDashboardConfig(status);
-    res.json({ success: true });
-  } catch {
-    res.status(500).json({ error: 'Failed to update all dashboard configs' });
-  }
-});
-
-app.get('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
-  try {
-    const config = await getMaintenanceConfig();
-    res.json(config);
-  } catch {
-    res.status(500).json({ error: 'Failed to fetch maintenance config' });
-  }
-});
-
-// 🛡️ Sentinel: Enforce key allowlisting and boolean type checks to prevent arbitrary field injection
-// into persistent storage and state corruption in in-memory maintenance mode variables.
-const ALLOWED_MAINTENANCE_KEYS = ['global', 'studio', 'mltk'];
-
-app.post('/api/admin/maintenance-config', adminAuth, async (req: Request, res: Response) => {
-  const { key, value } = req.body || {};
-  if (typeof key !== 'string' || !ALLOWED_MAINTENANCE_KEYS.includes(key.trim())) {
-    res.status(400).json({ error: "Invalid key. Must be 'global', 'studio', or 'mltk'" });
-    return;
-  }
-  if (typeof value !== 'boolean') {
-    res.status(400).json({ error: 'Value must be a boolean' });
-    return;
-  }
-
-  const cleanKey = key.trim();
-  try {
-    await updateMaintenanceConfig(cleanKey, value);
-    if (cleanKey === 'global') MAINTENANCE_MODE = value;
-    if (cleanKey === 'studio') STUDIO_MAINTENANCE_MODE = value;
-    if (cleanKey === 'mltk') MLTK_MAINTENANCE_MODE = value;
-    res.json({ success: true });
-  } catch {
-    res.status(500).json({ error: 'Failed to update maintenance config' });
-  }
-});
-
-app.post('/api/admin/maintenance-config/all', adminAuth, async (req: Request, res: Response) => {
-  const { value } = req.body || {};
-  if (typeof value !== 'boolean') {
-    res.status(400).json({ error: 'Value must be a boolean' });
-    return;
-  }
-
-  try {
-    await updateAllMaintenanceConfig(value);
-    MAINTENANCE_MODE = value;
-    STUDIO_MAINTENANCE_MODE = value;
-    MLTK_MAINTENANCE_MODE = value;
-    res.json({ success: true });
-  } catch {
-    res.status(500).json({ error: 'Failed to update all maintenance configs' });
-  }
-});
-
 // 🛡️ Sentinel: Rate limiting for public email collection to prevent DoS & spam floods
 const emailRateLimitMap = new Map<string, RateLimitRecord>();
 const EMAIL_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -641,18 +576,6 @@ app.get('/api/phases', async (req: Request, res: Response) => {
     });
   } catch {
     res.status(500).json({ error: 'Failed to fetch phases' });
-  }
-});
-
-app.get('/api/admin/phases', adminAuth, async (req: Request, res: Response) => {
-  try {
-    const activePhaseId = await getActivePhase();
-    res.json({
-      activePhaseId,
-      phases: MLTK_PHASES,
-    });
-  } catch {
-    res.status(500).json({ error: 'Failed to fetch phase configuration' });
   }
 });
 
