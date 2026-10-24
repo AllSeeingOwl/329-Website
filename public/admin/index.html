@@ -702,6 +702,42 @@
         const sessionCountdown = document.getElementById('session-countdown');
         const globalStatus = document.getElementById('global-status');
 
+        // ⚡ Bolt: Cache DOM elements on first access using lazy initialization to prevent
+        // repetitive DOM tree traversals during high-frequency status checks and data refreshes.
+        let domCache = null;
+        function getDomCache() {
+          if (!domCache) {
+            domCache = {
+              phasesList: document.getElementById('phases-list'),
+              modulesTableBody: document.getElementById('modules-table-body'),
+              emailStatTotal: document.getElementById('email-stat-total'),
+              emailStatPending: document.getElementById('email-stat-pending'),
+              emailStatVerified: document.getElementById('email-stat-verified'),
+              emailsTableBody: document.getElementById('emails-table-body'),
+              cfgMaintenance: document.getElementById('cfg-maintenance'),
+              cfgPublic: document.getElementById('cfg-public'),
+              cfgAdmin: document.getElementById('cfg-admin'),
+              cfgEmailCol: document.getElementById('cfg-email-col'),
+              cfgEmailNotify: document.getElementById('cfg-email-notify'),
+              cfgLockdown: document.getElementById('cfg-lockdown'),
+              cfgMaxSessions: document.getElementById('cfg-max-sessions'),
+              cfgSessionTimeout: document.getElementById('cfg-session-timeout'),
+              saveConfigBtn: document.getElementById('save-config-btn'),
+              announcementsTableBody: document.getElementById('announcements-table-body'),
+              announcementForm: document.getElementById('announcement-form'),
+              annId: document.getElementById('ann-id'),
+              annTitle: document.getElementById('ann-title'),
+              annContent: document.getElementById('ann-content'),
+              annActive: document.getElementById('ann-active'),
+              annScheduled: document.getElementById('ann-scheduled'),
+              saveAnnBtn: document.getElementById('save-ann-btn'),
+              cancelAnnBtn: document.getElementById('cancel-ann-btn'),
+              auditTableBody: document.getElementById('audit-table-body'),
+            };
+          }
+          return domCache;
+        }
+
         // Show feedback message in global banner or specified container
         function showMessage(msg, isError = false, targetEl = globalStatus) {
           if (!targetEl) return;
@@ -928,7 +964,8 @@
           const data = await apiFetch('/api/admin/phases');
           if (!data || !data.success) return;
 
-          const phasesList = document.getElementById('phases-list');
+          const cache = getDomCache();
+          const phasesList = cache.phasesList;
           // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
           phasesList.textContent = '';
 
@@ -1056,8 +1093,9 @@
           const data = await apiFetch('/api/admin/dashboard-config');
           if (!data) return;
 
+          const cache = getDomCache();
           const modules = Array.isArray(data) ? data : data.config || [];
-          const tbody = document.getElementById('modules-table-body');
+          const tbody = cache.modulesTableBody;
           // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
           tbody.textContent = '';
 
@@ -1290,18 +1328,18 @@
           const data = await apiFetch('/api/admin/emails/stats');
           if (!data || !data.success) return;
 
-          document.getElementById('email-stat-total').textContent = data.total || 0;
-          document.getElementById('email-stat-pending').textContent =
-            (data.byStatus && data.byStatus.pending) || 0;
-          document.getElementById('email-stat-verified').textContent =
-            (data.byStatus && data.byStatus.verified) || 0;
+          const cache = getDomCache();
+          cache.emailStatTotal.textContent = data.total || 0;
+          cache.emailStatPending.textContent = (data.byStatus && data.byStatus.pending) || 0;
+          cache.emailStatVerified.textContent = (data.byStatus && data.byStatus.verified) || 0;
         }
 
         async function fetchEmailsList() {
           const data = await apiFetch('/api/admin/emails');
           if (!data || !data.success) return;
 
-          const tbody = document.getElementById('emails-table-body');
+          const cache = getDomCache();
+          const tbody = cache.emailsTableBody;
           // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
           tbody.textContent = '';
 
@@ -1425,15 +1463,16 @@
           const data = await apiFetch('/api/admin/config');
           if (!data || !data.success || !data.config) return;
 
+          const cache = getDomCache();
           const cfg = data.config;
-          document.getElementById('cfg-maintenance').checked = !!cfg.maintenanceMode;
-          document.getElementById('cfg-public').checked = !!cfg.publicSiteEnabled;
-          document.getElementById('cfg-admin').checked = !!cfg.adminPanelEnabled;
-          document.getElementById('cfg-email-col').checked = !!cfg.allowEmailCollection;
-          document.getElementById('cfg-email-notify').checked = !!cfg.emailNotificationEnabled;
-          document.getElementById('cfg-lockdown').checked = !!cfg.emergencyLockdown;
-          document.getElementById('cfg-max-sessions').value = cfg.maxConcurrentSessions || 10;
-          document.getElementById('cfg-session-timeout').value = cfg.sessionTimeout || 15;
+          cache.cfgMaintenance.checked = !!cfg.maintenanceMode;
+          cache.cfgPublic.checked = !!cfg.publicSiteEnabled;
+          cache.cfgAdmin.checked = !!cfg.adminPanelEnabled;
+          cache.cfgEmailCol.checked = !!cfg.allowEmailCollection;
+          cache.cfgEmailNotify.checked = !!cfg.emailNotificationEnabled;
+          cache.cfgLockdown.checked = !!cfg.emergencyLockdown;
+          cache.cfgMaxSessions.value = cfg.maxConcurrentSessions || 10;
+          cache.cfgSessionTimeout.value = cfg.sessionTimeout || 15;
 
           if (cfg.sessionTimeout) {
             startSessionTimer(cfg.sessionTimeout);
@@ -1442,17 +1481,18 @@
 
         document.getElementById('config-form').addEventListener('submit', async function (e) {
           e.preventDefault();
-          const btn = document.getElementById('save-config-btn');
+          const cache = getDomCache();
+          const btn = cache.saveConfigBtn;
 
           const payload = {
-            maintenanceMode: document.getElementById('cfg-maintenance').checked,
-            publicSiteEnabled: document.getElementById('cfg-public').checked,
-            adminPanelEnabled: document.getElementById('cfg-admin').checked,
-            allowEmailCollection: document.getElementById('cfg-email-col').checked,
-            emailNotificationEnabled: document.getElementById('cfg-email-notify').checked,
-            emergencyLockdown: document.getElementById('cfg-lockdown').checked,
-            maxConcurrentSessions: parseInt(document.getElementById('cfg-max-sessions').value, 10),
-            sessionTimeout: parseInt(document.getElementById('cfg-session-timeout').value, 10),
+            maintenanceMode: cache.cfgMaintenance.checked,
+            publicSiteEnabled: cache.cfgPublic.checked,
+            adminPanelEnabled: cache.cfgAdmin.checked,
+            allowEmailCollection: cache.cfgEmailCol.checked,
+            emailNotificationEnabled: cache.cfgEmailNotify.checked,
+            emergencyLockdown: cache.cfgLockdown.checked,
+            maxConcurrentSessions: parseInt(cache.cfgMaxSessions.value, 10),
+            sessionTimeout: parseInt(cache.cfgSessionTimeout.value, 10),
             adminUser: 'admin',
           };
 
@@ -1531,7 +1571,8 @@
           const data = await apiFetch('/api/admin/announcements');
           if (!data || !data.success) return;
 
-          const tbody = document.getElementById('announcements-table-body');
+          const cache = getDomCache();
+          const tbody = cache.announcementsTableBody;
           // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
           tbody.textContent = '';
 
@@ -1596,14 +1637,15 @@
             editBtn.style.padding = '2px 6px';
             editBtn.setAttribute('aria-label', 'Edit announcement ' + (ann.title || ''));
             editBtn.addEventListener('click', function () {
-              document.getElementById('ann-id').value = ann.id;
-              document.getElementById('ann-title').value = ann.title;
-              document.getElementById('ann-content').value = ann.content;
-              document.getElementById('ann-active').checked = !!ann.active;
-              document.getElementById('ann-scheduled').value = ann.scheduledAt
+              const cache = getDomCache();
+              cache.annId.value = ann.id;
+              cache.annTitle.value = ann.title;
+              cache.annContent.value = ann.content;
+              cache.annActive.checked = !!ann.active;
+              cache.annScheduled.value = ann.scheduledAt
                 ? new Date(ann.scheduledAt).toISOString().slice(0, 16)
                 : '';
-              document.getElementById('cancel-ann-btn').style.display = 'inline-block';
+              cache.cancelAnnBtn.style.display = 'inline-block';
             });
 
             const delBtn = document.createElement('button');
@@ -1652,12 +1694,13 @@
 
         document.getElementById('announcement-form').addEventListener('submit', async function (e) {
           e.preventDefault();
-          const btn = document.getElementById('save-ann-btn');
-          const id = document.getElementById('ann-id').value;
-          const title = document.getElementById('ann-title').value;
-          const content = document.getElementById('ann-content').value;
-          const active = document.getElementById('ann-active').checked;
-          const scheduledVal = document.getElementById('ann-scheduled').value;
+          const cache = getDomCache();
+          const btn = cache.saveAnnBtn;
+          const id = cache.annId.value;
+          const title = cache.annTitle.value;
+          const content = cache.annContent.value;
+          const active = cache.annActive.checked;
+          const scheduledVal = cache.annScheduled.value;
           const scheduledAt = scheduledVal ? new Date(scheduledVal).toISOString() : null;
 
           const payload = {
@@ -1683,17 +1726,18 @@
 
           if (res && res.success) {
             showMessage(id ? 'ANNOUNCEMENT UPDATED' : 'ANNOUNCEMENT CREATED');
-            document.getElementById('announcement-form').reset();
-            document.getElementById('ann-id').value = '';
-            document.getElementById('cancel-ann-btn').style.display = 'none';
+            cache.announcementForm.reset();
+            cache.annId.value = '';
+            cache.cancelAnnBtn.style.display = 'none';
             fetchAnnouncements();
             fetchAuditLogs();
           }
         });
 
         document.getElementById('cancel-ann-btn').addEventListener('click', function () {
-          document.getElementById('announcement-form').reset();
-          document.getElementById('ann-id').value = '';
+          const cache = getDomCache();
+          cache.announcementForm.reset();
+          cache.annId.value = '';
           this.style.display = 'none';
         });
 
@@ -1704,7 +1748,8 @@
           const data = await apiFetch('/api/admin/audit-logs');
           if (!data || !data.success) return;
 
-          const tbody = document.getElementById('audit-table-body');
+          const cache = getDomCache();
+          const tbody = cache.auditTableBody;
           // ⚡ Bolt: Fast DOM clearing using textContent to prevent HTML parsing overhead
           tbody.textContent = '';
 
