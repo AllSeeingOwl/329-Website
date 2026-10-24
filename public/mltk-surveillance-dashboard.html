@@ -615,6 +615,13 @@
               cardEl.classList.add('shake');
               showLockBanner(item.title, item.lockPrompt || 'ACCESS DENIED');
             });
+
+            cardEl.addEventListener('keydown', (e) => {
+              if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                cardEl.click();
+              }
+            });
           } else {
             cardEl.className = isRogueItem ? 'card active rogue' : 'card active';
             cardEl.href = item.link;
