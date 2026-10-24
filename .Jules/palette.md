@@ -32,3 +32,8 @@
 
 **Learning:** Theme toggle buttons that dynamically update state should automatically fall back to `prefers-color-scheme: dark` when no preference is saved in `localStorage`. Additionally, changing `aria-label` alone does not reliably trigger screen reader announcements on click—an `aria-live="polite"` status announcer element (`role="status"`) is needed to announce state changes ("Dark mode enabled") to screen reader users.
 **Action:** When implementing custom theme toggle buttons, check `window.matchMedia('(prefers-color-scheme: dark)')` for initial fallbacks and include a visually-hidden `aria-live="polite"` element to explicitly announce theme switches.
+
+## 2026-10-24 - Custom `role="button"` Anchor Elements Require Space Key Handlers
+
+**Learning:** When anchor elements (`<a href="#">`) are given `role="button"`, web browsers natively trigger `click` events for `Enter` keypresses but NOT for `Space` keypresses (which default to scrolling the viewport). To adhere to WAI-ARIA `role="button"` standards, an explicit `keydown` listener for `Space` (`e.key === ' '` or `'Spacebar'`) is required to prevent page scrolling and trigger button activation.
+**Action:** Whenever converting anchor tags into interactive buttons using `role="button"`, always attach a `keydown` handler that checks for Space keypresses, calls `e.preventDefault()`, and triggers `element.click()`.
