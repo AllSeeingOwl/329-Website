@@ -1330,10 +1330,8 @@
 
           const cache = getDomCache();
           cache.emailStatTotal.textContent = data.total || 0;
-          cache.emailStatPending.textContent =
-            (data.byStatus && data.byStatus.pending) || 0;
-          cache.emailStatVerified.textContent =
-            (data.byStatus && data.byStatus.verified) || 0;
+          cache.emailStatPending.textContent = (data.byStatus && data.byStatus.pending) || 0;
+          cache.emailStatVerified.textContent = (data.byStatus && data.byStatus.verified) || 0;
         }
 
         async function fetchEmailsList() {
