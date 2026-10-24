@@ -69,3 +69,9 @@
 **Vulnerability:** The active phase setting endpoint (`POST /api/admin/phases/set`) was implemented directly on `app` in `server.ts` rather than in `src/routes/admin.ts`. As a result, changing active phase state bypassed administrative audit logging (`logPhaseChange`) and user identity sanitization (`getAdminUser`), leaving a gap in the administrative audit trail.
 **Learning:** Consolidating all admin routes strictly in `src/routes/admin.ts` ensures that state-changing administrative operations consistently extract/sanitize `adminUser` identifiers and persist audit log records to Redis (`admin:audit_logs`).
 **Prevention:** Ensure all admin endpoints are co-located in `src/routes/admin.ts` and explicitly invoke `logPhaseChange` on state-changing operations.
+
+## 2026-10-24 - [Security Enhancement] Input Length Validation on Phase Updates and Puzzle Code Verification
+
+**Vulnerability:** `PUT /api/admin/phases/:phaseId` accepted `name` and `relatedContent` inputs without upper-bound length or array element limits, creating storage bloat and potential DoS risks. Similarly, `POST /api/verify` created Buffer instances and ran timing comparisons on puzzle code inputs of arbitrary length.
+**Learning:** Input parameters mapped to persistent object fields (`name`, `relatedContent`) or processed into Buffer instances for cryptographic timing checks must enforce explicit length constraints (e.g., `code.length <= 100`, `name.length <= 200`) to prevent memory/storage exhaustion.
+**Prevention:** Always bound array element counts and string parameter lengths on public and administrative endpoints.

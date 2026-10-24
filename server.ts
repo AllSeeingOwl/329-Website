@@ -718,7 +718,8 @@ app.post('/api/verify', (req: Request, res: Response) => {
   const { code } = req.body || {};
   let success = false;
 
-  if (typeof code === 'string') {
+  // 🛡️ Sentinel: Cap code string length to 100 characters to prevent DoS via large buffer allocations
+  if (typeof code === 'string' && code.length <= 100) {
     const puzzleOverride = 'TETROMINO_OVERRIDE_0408';
     const overrideBuffer = Buffer.from(puzzleOverride);
     const codeBuffer = Buffer.from(code);
