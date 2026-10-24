@@ -72,6 +72,19 @@ describe('Server Tests', () => {
     expect(response.body).toEqual({ success: false });
   });
 
+  it('should return { success: false } when code length exceeds 100 characters', async () => {
+    process.env.AUTH_PASSWORD = 'test_password_123';
+    app = require('./server');
+
+    const oversizedCode = 'x'.repeat(101);
+    const response = await request(app)
+      .post('/api/verify')
+      .send({ code: oversizedCode })
+      .expect(200);
+
+    expect(response.body).toEqual({ success: false });
+  });
+
   it('should safely handle unparsed or empty body on /api/verify without throwing', async () => {
     process.env.AUTH_PASSWORD = 'test_password_123';
     app = require('./server');

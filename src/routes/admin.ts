@@ -601,10 +601,13 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
     }
 
     // Validation
-    if (name !== undefined && (typeof name !== 'string' || !name.trim())) {
+    if (
+      name !== undefined &&
+      (typeof name !== 'string' || !name.trim() || name.trim().length > 200)
+    ) {
       res.status(400).json({
         success: false,
-        message: 'Invalid phase data: name must be a non-empty string',
+        message: 'Invalid phase data: name must be a non-empty string max 200 characters',
       });
       return;
     }
@@ -627,11 +630,14 @@ router.put('/phases/:phaseId', adminAuth, async (req: Request, res: Response): P
 
     if (
       relatedContent !== undefined &&
-      (!Array.isArray(relatedContent) || !relatedContent.every((item) => typeof item === 'string'))
+      (!Array.isArray(relatedContent) ||
+        relatedContent.length > 50 ||
+        !relatedContent.every((item) => typeof item === 'string' && item.trim().length <= 200))
     ) {
       res.status(400).json({
         success: false,
-        message: 'Invalid phase data: relatedContent must be an array of strings',
+        message:
+          'Invalid phase data: relatedContent must be an array of max 50 strings (max 200 chars each)',
       });
       return;
     }

@@ -172,6 +172,38 @@ describe('Admin Phase & Tier Management API Endpoints', () => {
       (expect as any)(response.status).toBe(400);
       (expect as any)(response.body.success).toBe(false);
     });
+
+    it('returns 400 Bad Request when phase name exceeds 200 characters', async () => {
+      const longName = 'A'.repeat(201);
+      const response = await request(app)
+        .put('/api/admin/phases/phase-1-5-email-1')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ name: longName });
+
+      (expect as any)(response.status).toBe(400);
+      (expect as any)(response.body.success).toBe(false);
+      (expect as any)(response.body.message).toMatch(/max 200 characters/i);
+    });
+
+    it('returns 400 Bad Request when relatedContent exceeds 50 items or items exceed 200 chars', async () => {
+      const tooManyItems = Array(51).fill('doc.html');
+      const response1 = await request(app)
+        .put('/api/admin/phases/phase-1-5-email-1')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ relatedContent: tooManyItems });
+
+      (expect as any)(response1.status).toBe(400);
+      (expect as any)(response1.body.success).toBe(false);
+
+      const oversizedItem = ['B'.repeat(201)];
+      const response2 = await request(app)
+        .put('/api/admin/phases/phase-1-5-email-1')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ relatedContent: oversizedItem });
+
+      (expect as any)(response2.status).toBe(400);
+      (expect as any)(response2.body.success).toBe(false);
+    });
   });
 
   describe('DELETE /api/admin/phases/:phaseId/deactivate', () => {
