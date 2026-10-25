@@ -198,6 +198,18 @@
         background: rgba(0, 255, 0, 0.1);
       }
 
+      .error-message {
+        display: none;
+        color: #ff3366;
+        font-size: 1.5rem;
+        margin-top: 20px;
+        border: 2px solid #ff3366;
+        padding: 15px;
+        text-align: center;
+        text-shadow: 0 0 5px #ff3366;
+        background: rgba(255, 51, 102, 0.1);
+      }
+
       /* --- GLITCH ANIMATION --- */
       @keyframes glitch-anim {
         0% {
@@ -273,6 +285,9 @@
           <div id="successMessage" class="success-message" role="alert" aria-live="assertive">
             DATA PACKET DISPATCHED. WELCOME TO THE WAR.
           </div>
+          <div id="errorMessage" class="error-message" role="alert" aria-live="assertive">
+            [ ERROR ] TRANSMISSION FAILED. PLEASE TRY AGAIN.
+          </div>
         </div>
       </div>
     </div>
@@ -322,12 +337,18 @@
           requestAnimationFrame(animateGlitchFlash);
         }, 2000);
 
+        const errorMessage = document.getElementById('errorMessage');
+
         // Handle form submission
         form.addEventListener('submit', (e) => {
           e.preventDefault();
 
           const email = emailInput.value.trim();
           if (!email) return;
+
+          if (errorMessage) {
+            errorMessage.style.display = 'none';
+          }
 
           // Disable form to prevent double-submits
           submitBtn.disabled = true;
@@ -339,15 +360,23 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, source: 'mltk_access' }),
           })
-            .then(() => {
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+              }
               form.style.display = 'none';
               successMessage.style.display = 'block';
+              successMessage.tabIndex = -1;
+              successMessage.focus();
             })
             .catch((err) => {
               console.error('Submission error:', err);
               submitBtn.disabled = false;
               emailInput.disabled = false;
-              submitBtn.textContent = 'TRANSMIT SECURE LINK';
+              submitBtn.textContent = 'BREACH THE MAINFRAME';
+              if (errorMessage) {
+                errorMessage.style.display = 'block';
+              }
             });
         });
       });
