@@ -117,3 +117,8 @@
 
 **Learning:** Iterating over all child DOM nodes in a container (e.g. `for (let i = 0; i < buttons.length; i++) buttons[i].className = 'sidebar-item'`) on every item selection causes 25 unnecessary DOM property mutations per click.
 **Action:** Maintain an `activeSidebarBtn` reference variable to reset only the previously active element and activate the newly selected element in O(1) time with 2 DOM mutations.
+
+## 2026-10-25 - Consolidate Parallel Dependency Endpoints into Single Composite Payload
+
+**Learning:** When a page loads multiple API endpoints in parallel via `Promise.all()` (e.g., fetching dashboard configuration and current active phase details separately), it doubles HTTP network roundtrip latency and request overhead. Including small dependent metadata properties (like `activePhaseName`) directly in the main composite response payload eliminates redundant API calls on initial page load.
+**Action:** Enrich primary dashboard/initialization API responses with needed metadata fields to allow client applications to fetch all required rendering state in a single HTTP request.
