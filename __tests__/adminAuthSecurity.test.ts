@@ -90,6 +90,14 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       (expect as any)(res.body.success).toBe(false);
     });
 
+    it('rejects oversized bypass key exceeding 200 characters (401)', async () => {
+      const oversizedKey = 'a'.repeat(201);
+      const res = await request(app).get(`/api/admin/quick-login?key=${oversizedKey}`);
+
+      (expect as any)(res.status).toBe(401);
+      (expect as any)(res.body.success).toBe(false);
+    });
+
     it('enforces rate limiting on quick-login after 5 failed attempts', async () => {
       for (let i = 0; i < 5; i++) {
         const res = await request(app).get('/api/admin/quick-login?key=wrong-bypass-key');
@@ -131,6 +139,17 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       const res = await request(app)
         .post('/api/admin/authenticate')
         .send({ password: 'wrong-password' });
+
+      (expect as any)(res.status).toBe(401);
+      (expect as any)(res.body.success).toBe(false);
+      (expect as any)(res.body.message).toBe('Invalid password');
+    });
+
+    it('rejects authentication with oversized password exceeding 200 characters (401)', async () => {
+      const oversizedPassword = 'p'.repeat(201);
+      const res = await request(app)
+        .post('/api/admin/authenticate')
+        .send({ password: oversizedPassword });
 
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.success).toBe(false);
@@ -237,6 +256,19 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
 
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.error).toContain('Unauthorized');
+    });
+
+    it('rejects requests with oversized session token exceeding 100 characters (401)', async () => {
+      const oversizedToken = 't'.repeat(101);
+
+      const res = await request(app)
+        .get('/api/admin/phases')
+        .set('x-admin-session', oversizedToken);
+
+      (expect as any)(res.status).toBe(401);
+      (expect as any)(res.body.error).toContain('Unauthorized');
+      // Verify Redis get was NOT invoked for oversized token
+      (expect(mockGet) as any).not.toHaveBeenCalledWith(`admin:session:${oversizedToken}`);
     });
 
     it('logs out successfully and clears session cookie', async () => {

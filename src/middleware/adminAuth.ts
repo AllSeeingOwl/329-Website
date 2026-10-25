@@ -66,8 +66,15 @@ export const verifyBypassKey = (key: unknown): boolean => {
     return false;
   }
 
-  const keyBuffer = Buffer.from(key.trim());
+  const cleanKey = key.trim();
   const bypassKeyBuffer = Buffer.from(bypassKey.trim());
+
+  if (cleanKey.length > 200) {
+    crypto.timingSafeEqual(bypassKeyBuffer, bypassKeyBuffer);
+    return false;
+  }
+
+  const keyBuffer = Buffer.from(cleanKey);
 
   if (keyBuffer.length !== bypassKeyBuffer.length) {
     crypto.timingSafeEqual(bypassKeyBuffer, bypassKeyBuffer);
@@ -90,9 +97,14 @@ export const verifyPassword = (password: unknown): boolean => {
   }
 
   const effectivePassword = adminPassword || 'admin';
+  const adminPwdBuffer = Buffer.from(effectivePassword);
+
+  if (password.length > 200) {
+    crypto.timingSafeEqual(adminPwdBuffer, adminPwdBuffer);
+    return false;
+  }
 
   const pwdBuffer = Buffer.from(password);
-  const adminPwdBuffer = Buffer.from(effectivePassword);
 
   if (pwdBuffer.length !== adminPwdBuffer.length) {
     // Perform dummy comparison to mitigate timing attacks
@@ -162,7 +174,8 @@ export const extractSessionToken = (req: Request): string | null => {
       : null;
 
   if (customHeader && customHeader.trim()) {
-    return customHeader.trim();
+    const token = customHeader.trim();
+    if (token.length <= 100) return token;
   }
 
   const rawAuthHeader = req.headers['authorization'];
@@ -173,7 +186,8 @@ export const extractSessionToken = (req: Request): string | null => {
       : null;
 
   if (authHeader && authHeader.trim().startsWith('Bearer ')) {
-    return authHeader.trim().split(' ')[1].trim();
+    const token = authHeader.trim().split(' ')[1].trim();
+    if (token.length <= 100) return token;
   }
 
   // Check cookies if available
@@ -181,7 +195,8 @@ export const extractSessionToken = (req: Request): string | null => {
     const cookies = req.headers.cookie.split(';').map((c) => c.trim());
     for (const cookie of cookies) {
       if (cookie.startsWith('admin_session=')) {
-        return cookie.substring('admin_session='.length).trim();
+        const token = cookie.substring('admin_session='.length).trim();
+        if (token.length <= 100) return token;
       }
     }
   }
@@ -196,6 +211,11 @@ export const validateAdminSession = async (
   token: string,
   ip: string = 'unknown'
 ): Promise<boolean> => {
+  if (typeof token !== 'string' || !token.trim() || token.length > 100) {
+    logAuthAttempt('VALIDATE_SESSION', false, ip, 'Session token invalid or oversized');
+    return false;
+  }
+
   let sessionData: AdminSession | null = null;
 
   if (isRedisAvailable()) {

@@ -75,3 +75,9 @@
 **Vulnerability:** `PUT /api/admin/phases/:phaseId` accepted `name` and `relatedContent` inputs without upper-bound length or array element limits, creating storage bloat and potential DoS risks. Similarly, `POST /api/verify` created Buffer instances and ran timing comparisons on puzzle code inputs of arbitrary length.
 **Learning:** Input parameters mapped to persistent object fields (`name`, `relatedContent`) or processed into Buffer instances for cryptographic timing checks must enforce explicit length constraints (e.g., `code.length <= 100`, `name.length <= 200`) to prevent memory/storage exhaustion.
 **Prevention:** Always bound array element counts and string parameter lengths on public and administrative endpoints.
+
+## 2026-10-25 - [Security Fix] Input Length Validation on Admin Password, Bypass Key, and Session Token Validation
+
+**Vulnerability:** `verifyPassword` and `verifyBypassKey` in `src/middleware/adminAuth.ts` allocated Buffer instances from input strings via `Buffer.from()` before checking character lengths, creating memory exhaustion risks if sent massive strings. Similarly, `extractSessionToken` and `validateAdminSession` allowed oversized tokens to perform unnecessary Redis lookups.
+**Learning:** In authentication routines with constant-time comparisons, string inputs should be length-checked (e.g., `password.length <= 200`, `token.length <= 100`) before converting to Buffer or querying database stores, while maintaining dummy timing comparisons if oversized to prevent side-channel leaks.
+**Prevention:** Always validate string input upper bounds before memory allocation or database queries in authentication routines.
