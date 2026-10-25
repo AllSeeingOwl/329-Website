@@ -511,24 +511,20 @@
       let dashboardConfig = [];
 
       // Function to fetch config from the backend
+      // ⚡ Bolt: Fetch dashboard config in a single request instead of parallel calls,
+      // eliminating a redundant HTTP network roundtrip for phase data.
       async function fetchDashboardConfig() {
         try {
-          const [dashRes, phasesRes] = await Promise.all([
-            fetch('/api/dashboard-config'),
-            fetch('/api/phases'),
-          ]);
+          const dashRes = await fetch('/api/dashboard-config');
 
           if (dashRes.ok) {
             const data = await dashRes.json();
             dashboardConfig = Array.isArray(data) ? data : data.config || [];
 
-            if (phasesRes.ok) {
-              const phasesData = await phasesRes.json();
-              const activePhase = phasesData.phases.find((p) => p.id === phasesData.activePhaseId);
-              const badgeEl = document.getElementById('phase-badge-container');
-              if (badgeEl && activePhase) {
-                badgeEl.textContent = `ACTIVE RELEASE: ${activePhase.name.toUpperCase()}`;
-              }
+            const phaseName = data.activePhaseName || data.activePhaseId;
+            const badgeEl = document.getElementById('phase-badge-container');
+            if (badgeEl && phaseName) {
+              badgeEl.textContent = `ACTIVE RELEASE: ${phaseName.toUpperCase()}`;
             }
 
             renderDashboard();

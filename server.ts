@@ -584,8 +584,10 @@ app.get('/api/dashboard-config', async (req: Request, res: Response) => {
   try {
     const config = await getDashboardConfig();
     const activePhaseId = await getActivePhase();
+    const activePhase = MLTK_PHASES.find((p) => p.id === activePhaseId);
     res.json({
       activePhaseId,
+      activePhaseName: activePhase ? activePhase.name : activePhaseId,
       config,
     });
   } catch {
