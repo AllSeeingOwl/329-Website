@@ -1290,6 +1290,7 @@ hijacked it. We hid the truth in the margins. Drop your secure comms link below 
 the classified data packet.
 BREACH THE MAINFRAME
 DATA PACKET DISPATCHED. WELCOME TO THE WAR.
+[ ERROR ] TRANSMISSION FAILED. PLEASE TRY AGAIN.
 
 
 ------------------------------------------------------------------------
