@@ -728,10 +728,7 @@ app.post('/api/verify', (req: Request, res: Response) => {
     const codeBuffer = Buffer.from(code);
 
     // ⚡ Bolt: Pass Buffers directly to timingSafeEqual without redundant Uint8Array wrapper allocations
-    if (
-      codeBuffer.length === authBuffer.length &&
-      crypto.timingSafeEqual(codeBuffer, authBuffer)
-    ) {
+    if (codeBuffer.length === authBuffer.length && crypto.timingSafeEqual(codeBuffer, authBuffer)) {
       success = true;
     } else if (
       codeBuffer.length === PUZZLE_OVERRIDE_BUFFER.length &&
