@@ -1234,7 +1234,9 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       if (req.body && 'enabled' in req.body && typeof req.body.enabled !== 'boolean') {
-        res.status(400).json({ success: false, message: "'enabled' must be a boolean if provided" });
+        res
+          .status(400)
+          .json({ success: false, message: "'enabled' must be a boolean if provided" });
         return;
       }
       const currentConfig = await getConfigFromStore();
