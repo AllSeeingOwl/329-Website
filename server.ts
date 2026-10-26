@@ -662,6 +662,9 @@ const rateLimitMap = new Map<string, RateLimitRecord>();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
 
+// ⚡ Bolt: Module-level pre-allocation of puzzle override buffer to avoid repeated allocations per verification request
+const PUZZLE_OVERRIDE_BUFFER = Buffer.from('TETROMINO_OVERRIDE_0408');
+
 const getEffectiveAuthPassword = (): string => {
   const isProduction = process.env.NODE_ENV === 'production';
   const envAuthPassword = process.env.AUTH_PASSWORD;
@@ -722,24 +725,20 @@ app.post('/api/verify', (req: Request, res: Response) => {
 
   // 🛡️ Sentinel: Cap code string length to 100 characters to prevent DoS via large buffer allocations
   if (typeof code === 'string' && code.length <= 100) {
-    const puzzleOverride = 'TETROMINO_OVERRIDE_0408';
-    const overrideBuffer = Buffer.from(puzzleOverride);
     const codeBuffer = Buffer.from(code);
 
-    if (
-      codeBuffer.length === authBuffer.length &&
-      crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(authBuffer))
-    ) {
+    // ⚡ Bolt: Pass Buffers directly to timingSafeEqual without redundant Uint8Array wrapper allocations
+    if (codeBuffer.length === authBuffer.length && crypto.timingSafeEqual(codeBuffer, authBuffer)) {
       success = true;
     } else if (
-      codeBuffer.length === overrideBuffer.length &&
-      crypto.timingSafeEqual(new Uint8Array(codeBuffer), new Uint8Array(overrideBuffer))
+      codeBuffer.length === PUZZLE_OVERRIDE_BUFFER.length &&
+      crypto.timingSafeEqual(codeBuffer, PUZZLE_OVERRIDE_BUFFER)
     ) {
       success = true;
     } else {
       // Prevent length leakage via timing by doing dummy comparisons
-      crypto.timingSafeEqual(new Uint8Array(authBuffer), new Uint8Array(authBuffer));
-      crypto.timingSafeEqual(new Uint8Array(overrideBuffer), new Uint8Array(overrideBuffer));
+      crypto.timingSafeEqual(authBuffer, authBuffer);
+      crypto.timingSafeEqual(PUZZLE_OVERRIDE_BUFFER, PUZZLE_OVERRIDE_BUFFER);
     }
   }
 
