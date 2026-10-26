@@ -123,4 +123,37 @@ describe('NOVA Classified Archive Modal', () => {
       expect(viewer.classList.contains('visible')).toBe(false);
     });
   });
+
+  describe('Quiz Result Modals Accessibility', () => {
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <form id="immigration-quiz">
+          <input type="radio" name="q1" value="A" />
+          <input type="radio" name="q2" value="A" />
+          <button type="button" class="submit-btn">Submit Answers</button>
+        </form>
+        <div id="error-modal" class="result-modal" role="dialog" aria-modal="true" aria-labelledby="error-modal-header">
+          <h2 id="error-modal-header">SYSTEM ERROR: ANOMALY DETECTED</h2>
+          <button class="close-btn" aria-label="Close error modal">[X] CLOSE</button>
+        </div>
+        <div id="success-modal" class="result-modal" role="dialog" aria-modal="true" aria-labelledby="success-modal-header">
+          <h2 id="success-modal-header">ASSIMILATION APPROVED</h2>
+          <button class="close-btn" aria-label="Close success modal">[X] CLOSE</button>
+        </div>
+      `;
+    });
+
+    test('error-modal and success-modal have required dialog ARIA attributes', () => {
+      const errorModal = document.getElementById('error-modal');
+      const successModal = document.getElementById('success-modal');
+
+      expect(errorModal.getAttribute('role')).toBe('dialog');
+      expect(errorModal.getAttribute('aria-modal')).toBe('true');
+      expect(errorModal.getAttribute('aria-labelledby')).toBe('error-modal-header');
+
+      expect(successModal.getAttribute('role')).toBe('dialog');
+      expect(successModal.getAttribute('aria-modal')).toBe('true');
+      expect(successModal.getAttribute('aria-labelledby')).toBe('success-modal-header');
+    });
+  });
 });

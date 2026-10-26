@@ -525,16 +525,28 @@
     </div>
 
     <!-- Modals for Quiz Results -->
-    <div id="error-modal" class="result-modal">
-      <h2>SYSTEM ERROR: ANOMALY DETECTED</h2>
+    <div
+      id="error-modal"
+      class="result-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="error-modal-header"
+    >
+      <h2 id="error-modal-header">SYSTEM ERROR: ANOMALY DETECTED</h2>
       <p>Your responses do not align with MLTK compliance standards.</p>
       <button class="close-btn" aria-label="Close error modal" onclick="closeModal('error-modal')">
         [X] CLOSE
       </button>
     </div>
 
-    <div id="success-modal" class="result-modal">
-      <h2>ASSIMILATION APPROVED. ACCESS GRANTED.</h2>
+    <div
+      id="success-modal"
+      class="result-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-modal-header"
+    >
+      <h2 id="success-modal-header">ASSIMILATION APPROVED. ACCESS GRANTED.</h2>
       <div class="secret-doc-placeholder">
         [SECRET DOCUMENT PLACEHOLDER]<br />
         Classification: CLASSIFIED<br />
@@ -564,21 +576,48 @@
       // -----------------------------------------
       // 1. Quiz Logic
       // -----------------------------------------
+      let lastQuizTrigger = null;
+
       function submitQuiz() {
         const form = document.getElementById('immigration-quiz');
         const q1 = form.elements['q1']?.value;
         const q2 = form.elements['q2']?.value;
 
-        if (q1 === 'B' && q2 === 'B') {
-          document.getElementById('success-modal').style.display = 'block';
-        } else {
-          document.getElementById('error-modal').style.display = 'block';
+        lastQuizTrigger = document.activeElement;
+
+        const modalId = q1 === 'B' && q2 === 'B' ? 'success-modal' : 'error-modal';
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = 'block';
+          const closeBtn = modal.querySelector('.close-btn');
+          if (closeBtn) {
+            closeBtn.focus();
+          }
         }
       }
 
       function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = 'none';
+        }
+        if (lastQuizTrigger && typeof lastQuizTrigger.focus === 'function') {
+          lastQuizTrigger.focus();
+          lastQuizTrigger = null;
+        }
       }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const errorModal = document.getElementById('error-modal');
+          const successModal = document.getElementById('success-modal');
+          if (errorModal && errorModal.style.display === 'block') {
+            closeModal('error-modal');
+          } else if (successModal && successModal.style.display === 'block') {
+            closeModal('success-modal');
+          }
+        }
+      });
     </script>
     <script src="nova_archive_utils.js"></script>
     <script src="phase_gate_utils.js"></script>
