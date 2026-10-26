@@ -122,3 +122,8 @@
 
 **Learning:** When a page loads multiple API endpoints in parallel via `Promise.all()` (e.g., fetching dashboard configuration and current active phase details separately), it doubles HTTP network roundtrip latency and request overhead. Including small dependent metadata properties (like `activePhaseName`) directly in the main composite response payload eliminates redundant API calls on initial page load.
 **Action:** Enrich primary dashboard/initialization API responses with needed metadata fields to allow client applications to fetch all required rendering state in a single HTTP request.
+
+## 2026-10-26 - Avoid Redundant Buffer and Uint8Array Allocations in Timing-Safe Comparisons
+
+**Learning:** Re-wrapping Node.js `Buffer` instances in `new Uint8Array(...)` when passing them to `crypto.timingSafeEqual()` is unnecessary because `Buffer` inherits directly from `Uint8Array` in Node.js. Furthermore, allocating `Buffer` instances inside request handlers for constant strings recreates memory buffers on every request.
+**Action:** Pass `Buffer` objects directly to `crypto.timingSafeEqual()` without wrapping, and pre-allocate static string `Buffer`s at module scope to eliminate redundant GC pressure on high-throughput security routes.

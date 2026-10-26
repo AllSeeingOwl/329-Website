@@ -81,7 +81,8 @@ export const verifyBypassKey = (key: unknown): boolean => {
     return false;
   }
 
-  return crypto.timingSafeEqual(new Uint8Array(keyBuffer), new Uint8Array(bypassKeyBuffer));
+  // ⚡ Bolt: Pass Buffers directly to timingSafeEqual without redundant Uint8Array wrapper allocations
+  return crypto.timingSafeEqual(keyBuffer, bypassKeyBuffer);
 };
 
 export const verifyPassword = (password: unknown): boolean => {
@@ -112,7 +113,8 @@ export const verifyPassword = (password: unknown): boolean => {
     return false;
   }
 
-  return crypto.timingSafeEqual(new Uint8Array(pwdBuffer), new Uint8Array(adminPwdBuffer));
+  // ⚡ Bolt: Pass Buffers directly to timingSafeEqual without redundant Uint8Array wrapper allocations
+  return crypto.timingSafeEqual(pwdBuffer, adminPwdBuffer);
 };
 
 /**
