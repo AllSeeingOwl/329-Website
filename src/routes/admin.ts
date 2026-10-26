@@ -1233,6 +1233,10 @@ router.post(
   adminAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
+      if (req.body && 'enabled' in req.body && typeof req.body.enabled !== 'boolean') {
+        res.status(400).json({ success: false, message: "'enabled' must be a boolean if provided" });
+        return;
+      }
       const currentConfig = await getConfigFromStore();
       const nextState =
         typeof req.body?.enabled === 'boolean' ? req.body.enabled : !currentConfig.maintenanceMode;
@@ -1535,6 +1539,11 @@ router.post(
         return;
       }
 
+      if (req.body && 'active' in req.body && typeof req.body.active !== 'boolean') {
+        res.status(400).json({ success: false, message: "'active' must be a boolean if provided" });
+        return;
+      }
+
       const nextState = typeof req.body?.active === 'boolean' ? req.body.active : !item.active;
       item.active = nextState;
       item.updatedAt = new Date().toISOString();
@@ -1562,6 +1571,10 @@ router.post(
  */
 router.post('/lockdown/toggle', adminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
+    if (req.body && 'enabled' in req.body && typeof req.body.enabled !== 'boolean') {
+      res.status(400).json({ success: false, message: "'enabled' must be a boolean if provided" });
+      return;
+    }
     const currentConfig = await getConfigFromStore();
     const nextState =
       typeof req.body?.enabled === 'boolean' ? req.body.enabled : !currentConfig.emergencyLockdown;

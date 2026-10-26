@@ -83,4 +83,17 @@ describe('Emergency Lockdown Toggle Endpoint', () => {
     (expect as any)(res.body.success).toBe(true);
     (expect as any)(res.body.emergencyLockdown).toBe(true);
   });
+
+  it('rejects non-boolean enabled parameter in POST /api/admin/lockdown/toggle', async () => {
+    const cookies = await loginAdmin();
+
+    const res = await request(app)
+      .post('/api/admin/lockdown/toggle')
+      .set('Cookie', cookies)
+      .send({ enabled: 'true' });
+
+    (expect as any)(res.status).toBe(400);
+    (expect as any)(res.body.success).toBe(false);
+    (expect as any)(res.body.message).toBe("'enabled' must be a boolean if provided");
+  });
 });
