@@ -111,9 +111,7 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
     });
 
     it('rejects Authorization Bearer header with empty token (401)', async () => {
-      const res = await request(app)
-        .get('/api/admin/phases')
-        .set('Authorization', 'Bearer    ');
+      const res = await request(app).get('/api/admin/phases').set('Authorization', 'Bearer    ');
 
       (expect as any)(res.status).toBe(401);
       (expect as any)(res.body.error).toContain('Unauthorized');
