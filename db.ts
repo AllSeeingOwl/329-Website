@@ -247,13 +247,15 @@ const inMemoryDashboardConfig = [...DEFAULT_DASHBOARD_CONFIG];
 const inMemoryMaintenanceConfig = { global: false, studio: false, mltk: false };
 let inMemoryActivePhase = 'phase1';
 
-// ⚡ Bolt: Cache dashboard config, active phase, and captured emails in memory with a short TTL (2000ms) to prevent per-request Redis GET/LRANGE queries.
+// ⚡ Bolt: Cache dashboard config, active phase, maintenance config, and captured emails in memory with a short TTL (2000ms) to prevent per-request Redis GET/LRANGE/HGETALL queries.
 let dashboardConfigCacheStore: DashboardConfig[] | null = null;
 let dashboardConfigCacheLastFetched = 0;
 let activePhaseCacheStore: string | null = null;
 let activePhaseCacheLastFetched = 0;
 let emailsCacheStore: CapturedEmail[] | null = null;
 let emailsCacheLastFetched = 0;
+let maintenanceConfigCacheStore: Record<string, string> | null = null;
+let maintenanceConfigCacheLastFetched = 0;
 const DB_CACHE_TTL_MS = 2000;
 
 export const resetInMemDbCache = (): void => {
@@ -263,6 +265,8 @@ export const resetInMemDbCache = (): void => {
   activePhaseCacheLastFetched = 0;
   emailsCacheStore = null;
   emailsCacheLastFetched = 0;
+  maintenanceConfigCacheStore = null;
+  maintenanceConfigCacheLastFetched = 0;
 };
 
 const isKvAvailable = (): boolean => isRedisAvailable();
@@ -443,6 +447,10 @@ export async function updateAllDashboardConfig(status: string) {
 }
 
 export async function updateAllMaintenanceConfig(value: boolean) {
+  // Invalidate cache on update
+  maintenanceConfigCacheStore = null;
+  maintenanceConfigCacheLastFetched = 0;
+
   if (isKvAvailable()) {
     await kv.hset('config:maintenance', {
       global: String(value),
@@ -457,20 +465,41 @@ export async function updateAllMaintenanceConfig(value: boolean) {
 }
 
 export async function getMaintenanceConfig(): Promise<Record<string, string>> {
-  if (isKvAvailable()) {
-    const config = await kv.hgetall('config:maintenance');
-    return (
-      (config as Record<string, string>) || { global: 'false', studio: 'false', mltk: 'false' }
-    );
+  const now = Date.now();
+  // ⚡ Bolt: Return cached maintenance configuration if within 2000ms TTL window to eliminate redundant Redis HGETALL network roundtrips
+  if (
+    maintenanceConfigCacheStore !== null &&
+    now - maintenanceConfigCacheLastFetched < DB_CACHE_TTL_MS
+  ) {
+    return { ...maintenanceConfigCacheStore };
   }
-  return {
+
+  let config: Record<string, string> | null = null;
+  if (isKvAvailable()) {
+    try {
+      const rawConfig = await kv.hgetall('config:maintenance');
+      if (rawConfig) {
+        config = rawConfig as Record<string, string>;
+      }
+    } catch (err) {
+      console.error('Error fetching maintenance config from Redis:', err);
+    }
+  }
+
+  maintenanceConfigCacheStore = config || {
     global: String(inMemoryMaintenanceConfig.global),
     studio: String(inMemoryMaintenanceConfig.studio),
     mltk: String(inMemoryMaintenanceConfig.mltk),
   };
+  maintenanceConfigCacheLastFetched = now;
+  return { ...maintenanceConfigCacheStore };
 }
 
 export async function updateMaintenanceConfig(key: string, value: boolean) {
+  // Invalidate cache on update
+  maintenanceConfigCacheStore = null;
+  maintenanceConfigCacheLastFetched = 0;
+
   if (isKvAvailable()) {
     await kv.hset('config:maintenance', { [key]: String(value) });
   } else {
