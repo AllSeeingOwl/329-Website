@@ -83,6 +83,42 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       (expect as any)(res.body.success).toBe(true);
     });
 
+    it('authenticates Bearer token with multiple spaces or lowercase prefix in Authorization header', async () => {
+      const activeSession = JSON.stringify({
+        token: 'bearer-token-123',
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 15).toISOString(),
+      });
+
+      mockGet.mockImplementation((key: string) => {
+        if (key === 'admin:session:bearer-token-123') {
+          return Promise.resolve(activeSession);
+        }
+        return Promise.resolve(null);
+      });
+
+      const res1 = await request(app)
+        .get('/api/admin/phases')
+        .set('Authorization', 'Bearer   bearer-token-123');
+
+      (expect as any)(res1.status).toBe(200);
+
+      const res2 = await request(app)
+        .get('/api/admin/phases')
+        .set('Authorization', 'bearer bearer-token-123');
+
+      (expect as any)(res2.status).toBe(200);
+    });
+
+    it('rejects Authorization Bearer header with empty token (401)', async () => {
+      const res = await request(app)
+        .get('/api/admin/phases')
+        .set('Authorization', 'Bearer    ');
+
+      (expect as any)(res.status).toBe(401);
+      (expect as any)(res.body.error).toContain('Unauthorized');
+    });
+
     it('rejects invalid bypass key (401)', async () => {
       const res = await request(app).get('/api/admin/quick-login?key=wrong-bypass-key');
 
