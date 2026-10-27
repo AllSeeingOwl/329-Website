@@ -187,9 +187,12 @@ export const extractSessionToken = (req: Request): string | null => {
       ? rawAuthHeader.split(',')[0]
       : null;
 
-  if (authHeader && authHeader.trim().startsWith('Bearer ')) {
-    const token = authHeader.trim().split(' ')[1].trim();
-    if (token.length <= 100) return token;
+  if (authHeader) {
+    const trimmedHeader = authHeader.trim();
+    if (/^Bearer\s+/i.test(trimmedHeader)) {
+      const token = trimmedHeader.replace(/^Bearer\s+/i, '').trim();
+      if (token.length > 0 && token.length <= 100) return token;
+    }
   }
 
   // Check cookies if available
