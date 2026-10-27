@@ -105,6 +105,17 @@
         border-color: #555;
       }
 
+      .error-message {
+        display: none;
+        color: #ff0000;
+        border: var(--border-width) solid #ff0000;
+        padding: 1rem;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        background-color: rgba(255, 0, 0, 0.05);
+      }
+
       /* Modal Styles */
       #success-modal {
         display: none;
@@ -188,11 +199,12 @@
       </div>
 
       <button id="verify-btn">[ VERIFY MAYOR ]</button>
+      <div id="error-message" class="error-message" role="alert" aria-live="assertive"></div>
     </div>
 
-    <div id="success-modal" role="dialog" aria-modal="true" aria-live="polite">
+    <div id="success-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-live="polite">
       <div class="modal-content">
-        <h2>Identity Verified</h2>
+        <h2 id="modal-title">Identity Verified</h2>
         <p>Access Granted to Village of Kindly Database.</p>
         <a href="/mltk-virtue-village-index">Proceed to Village of Kindly Database</a>
       </div>
@@ -209,6 +221,7 @@
             expression: document.getElementById('expression-select'),
             verifyBtn: document.getElementById('verify-btn'),
             successModal: document.getElementById('success-modal'),
+            errorMessage: document.getElementById('error-message'),
           };
         }
         return domCache;
@@ -217,7 +230,18 @@
       document.addEventListener('DOMContentLoaded', () => {
         const cache = getDomCache();
 
+        const clearError = () => {
+          if (cache.errorMessage) {
+            cache.errorMessage.style.display = 'none';
+          }
+        };
+
+        [cache.hair, cache.eyewear, cache.expression].forEach((selectEl) => {
+          if (selectEl) selectEl.addEventListener('change', clearError);
+        });
+
         cache.verifyBtn.addEventListener('click', () => {
+          clearError();
           cache.verifyBtn.disabled = true;
           cache.verifyBtn.textContent = '[ VERIFYING MAYOR... ]';
 
@@ -234,7 +258,10 @@
             const modalLink = cache.successModal.querySelector('a');
             if (modalLink) modalLink.focus();
           } else {
-            alert('ERROR: MAYORAL IDENTITY REJECTED BY MLTK.');
+            if (cache.errorMessage) {
+              cache.errorMessage.textContent = 'ERROR: MAYORAL IDENTITY REJECTED BY MLTK.';
+              cache.errorMessage.style.display = 'block';
+            }
             cache.verifyBtn.disabled = false;
             cache.verifyBtn.textContent = '[ VERIFY MAYOR ]';
           }
