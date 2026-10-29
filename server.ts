@@ -670,6 +670,10 @@ const MAX_ATTEMPTS = 5;
 // ⚡ Bolt: Module-level pre-allocation of puzzle override buffer to avoid repeated allocations per verification request
 const PUZZLE_OVERRIDE_BUFFER = Buffer.from('TETROMINO_OVERRIDE_0408');
 
+// ⚡ Bolt: Cache auth password Buffer to prevent repeated Buffer allocations on high-throughput /api/verify requests
+let cachedAuthPasswordStr: string | null = null;
+let cachedAuthBuffer: Buffer | null = null;
+
 const getEffectiveAuthPassword = (): string => {
   const isProduction = process.env.NODE_ENV === 'production';
   const envAuthPassword = process.env.AUTH_PASSWORD;
@@ -680,7 +684,16 @@ const getEffectiveAuthPassword = (): string => {
     );
   }
 
-  return envAuthPassword || ['0408', '1998', 'XXXX'].join('-');
+  return envAuthPassword || '0408-1998-XXXX';
+};
+
+const getEffectiveAuthBuffer = (effectiveAuthPassword: string): Buffer => {
+  if (cachedAuthPasswordStr === effectiveAuthPassword && cachedAuthBuffer !== null) {
+    return cachedAuthBuffer;
+  }
+  cachedAuthPasswordStr = effectiveAuthPassword;
+  cachedAuthBuffer = Buffer.from(effectiveAuthPassword);
+  return cachedAuthBuffer;
 };
 
 app.post('/api/verify', (req: Request, res: Response) => {
@@ -698,7 +711,7 @@ app.post('/api/verify', (req: Request, res: Response) => {
     throw err;
   }
 
-  const authBuffer = Buffer.from(effectiveAuthPassword);
+  const authBuffer = getEffectiveAuthBuffer(effectiveAuthPassword);
 
   const ip: string = req.ip || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
