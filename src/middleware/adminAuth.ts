@@ -195,12 +195,14 @@ export const extractSessionToken = (req: Request): string | null => {
     }
   }
 
-  // Check cookies if available
+  // ⚡ Bolt: Iterate over split cookies directly without map() to eliminate intermediate array allocations
   if (req.headers.cookie) {
-    const cookies = req.headers.cookie.split(';').map((c) => c.trim());
-    for (const cookie of cookies) {
-      if (cookie.startsWith('admin_session=')) {
-        const token = cookie.substring('admin_session='.length).trim();
+    const rawCookies = req.headers.cookie.split(';');
+    const cookiePrefix = 'admin_session=';
+    for (let i = 0; i < rawCookies.length; i++) {
+      const cookie = rawCookies[i].trim();
+      if (cookie.startsWith(cookiePrefix)) {
+        const token = cookie.substring(cookiePrefix.length).trim();
         if (token.length <= 100) return token;
       }
     }
