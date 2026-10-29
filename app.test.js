@@ -108,3 +108,26 @@ describe('Accessibility - Character counter live region tests', () => {
     expect(html).toMatch(/id="char-counter"[^>]*aria-live="off"/);
   });
 });
+
+describe('Accessibility - Success message keyboard focus management', () => {
+  const fs = require('fs');
+  const path = require('path');
+
+  test('public/studio-contact-us.html manages focus on success message', () => {
+    const html = fs.readFileSync(path.join(__dirname, 'public/studio-contact-us.html'), 'utf8');
+    expect(html).toContain('successMsg.tabIndex = -1');
+    expect(html).toContain('successMsg.focus()');
+  });
+
+  test('public/surface-home-page.html manages focus on success message', () => {
+    const html = fs.readFileSync(path.join(__dirname, 'public/surface-home-page.html'), 'utf8');
+    expect(html).toContain('successMsg.tabIndex = -1');
+    expect(html).toContain('successMsg.focus()');
+  });
+
+  test('public/studio-faq.html manages focus on success message', () => {
+    const html = fs.readFileSync(path.join(__dirname, 'public/studio-faq.html'), 'utf8');
+    expect(html).toContain('successMsg.tabIndex = -1');
+    expect(html).toContain('successMsg.focus()');
+  });
+});

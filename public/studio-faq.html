@@ -879,6 +879,8 @@
               btn.removeAttribute('aria-disabled');
               btn.textContent = 'Subscribe';
               successMsg.style.display = 'block';
+              successMsg.tabIndex = -1;
+              successMsg.focus();
             })
             .catch((err) => {
               console.error('Newsletter signup error', err);
