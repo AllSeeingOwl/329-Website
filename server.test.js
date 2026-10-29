@@ -172,6 +172,8 @@ describe('Server Tests', () => {
 
     expect(response.headers['x-content-type-options']).toBe('nosniff');
     expect(response.headers['x-frame-options']).toBe('DENY');
+    expect(response.headers['x-download-options']).toBe('noopen');
+    expect(response.headers['x-permitted-cross-domain-policies']).toBe('none');
     expect(response.headers['permissions-policy']).toBe('geolocation=(), camera=(), microphone=()');
     expect(response.headers['content-security-policy']).toBe(
       "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
