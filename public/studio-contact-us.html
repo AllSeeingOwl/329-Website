@@ -592,6 +592,8 @@
             form.style.display = 'none';
             form.setAttribute('aria-busy', 'false');
             successMsg.style.display = 'block';
+            successMsg.tabIndex = -1;
+            successMsg.focus();
           })
           .catch((err) => {
             console.error('Contact form error', err);
