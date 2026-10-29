@@ -375,4 +375,20 @@ describe('Server Tests', () => {
     expect(response.text).not.toContain('mltk-classified-document');
     expect(response.text).not.toContain('104.9-global-directives');
   });
+
+  it('should prevent Open Redirect vulnerabilities when redirecting .html requests to clean URLs', async () => {
+    app = require('./server');
+
+    // Protocol-relative URL attempt with leading double slash
+    const response1 = await request(app).get('//evil.com/test.html').expect(301);
+    expect(response1.headers['location']).toBe('/evil.com/test');
+
+    // Attempt with leading slash and backslash
+    const response2 = await request(app).get('/\\evil.com/phishing.html').expect(301);
+    expect(response2.headers['location']).toBe('/evil.com/phishing');
+
+    // Standard valid clean URL redirect
+    const response3 = await request(app).get('/surface-home-page.html').expect(301);
+    expect(response3.headers['location']).toBe('/surface-home-page');
+  });
 });

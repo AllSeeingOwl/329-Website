@@ -639,9 +639,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         const query = req.url.slice(reqPath.length);
         return res.redirect(301, '/' + query);
       } else {
-        const cleanPath = reqPath.slice(0, -5);
+        // 🛡️ Sentinel: Sanitize clean path to ensure it starts with a single '/' and prevent Open Redirect (CWE-601) via leading '//' or '/\'
+        const rawCleanPath = reqPath.slice(0, -5);
+        const safeCleanPath = '/' + rawCleanPath.replace(/^[/\\]+/, '');
         const query = req.url.slice(reqPath.length);
-        return res.redirect(301, cleanPath + query);
+        return res.redirect(301, safeCleanPath + query);
       }
     }
   }

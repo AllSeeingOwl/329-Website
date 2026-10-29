@@ -81,3 +81,9 @@
 **Vulnerability:** `verifyPassword` and `verifyBypassKey` in `src/middleware/adminAuth.ts` allocated Buffer instances from input strings via `Buffer.from()` before checking character lengths, creating memory exhaustion risks if sent massive strings. Similarly, `extractSessionToken` and `validateAdminSession` allowed oversized tokens to perform unnecessary Redis lookups.
 **Learning:** In authentication routines with constant-time comparisons, string inputs should be length-checked (e.g., `password.length <= 200`, `token.length <= 100`) before converting to Buffer or querying database stores, while maintaining dummy timing comparisons if oversized to prevent side-channel leaks.
 **Prevention:** Always validate string input upper bounds before memory allocation or database queries in authentication routines.
+
+## 2026-10-28 - [Security Fix] Open Redirect Prevention on Clean URL Middleware
+
+**Vulnerability:** The legacy `.html` redirect middleware in `server.ts` stripped `.html` from `req.path` and issued `res.redirect(301, cleanPath + query)`. When an attacker supplied a request with a leading double slash (e.g. `//evil.com/test.html`), `cleanPath` evaluated to `//evil.com/test`, resulting in an Open Redirect (CWE-601) to a protocol-relative external URL.
+**Learning:** Redirect targets constructed from request paths must be sanitized by stripping leading slashes and backslashes (`/^[/\\]+/`) before prepending a single `/` to ensure the redirect target is strictly interpreted as a relative path on the same host.
+**Prevention:** Always sanitize dynamic redirect target paths to ensure they begin with a single `/` and cannot be abused as protocol-relative URLs (`//`).

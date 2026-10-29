@@ -81,16 +81,19 @@
     "unrs-resolver"
   ],
   "overrides": {
-    "qs": "^6.15.2",
+    "qs": "^6.17.0",
     "uuid": "^11.1.1",
     "tmp": "^0.2.6",
     "js-yaml": "^4.3.1",
     "form-data": "^4.0.6",
     "@babel/core": "^7.29.1",
-    "systeminformation": ">=5.31.7",
+    "systeminformation": ">=5.33.16",
     "brace-expansion@<2.0.0": "^1.1.18",
     "brace-expansion@>=2.0.0 <3.0.0": "^2.1.7",
     "brace-expansion@>=4.0.0": "^5.0.12",
-    "chokidar": "^4.0.3"
+    "chokidar": "^4.0.3",
+    "deepmerge": "4.1.2",
+    "body-parser": "^2.4.0",
+    "zod": ">=4.6.6"
   }
 }
