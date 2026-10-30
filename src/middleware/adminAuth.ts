@@ -457,9 +457,7 @@ const adminAuth = async (req: Request, res: Response, next: NextFunction): Promi
   // If cookie auth was used on a state-changing request, require matching anti-CSRF token
   if (isStateChangingMethod && !hasCustomAuthHeader) {
     const rawCsrfHeader =
-      req.headers['x-csrf-token'] ||
-      req.headers['x-admin-session'] ||
-      req.headers['x-admin-token'];
+      req.headers['x-csrf-token'] || req.headers['x-admin-session'] || req.headers['x-admin-token'];
     const csrfHeader = Array.isArray(rawCsrfHeader)
       ? rawCsrfHeader[0]
       : typeof rawCsrfHeader === 'string'
