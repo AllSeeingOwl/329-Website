@@ -339,6 +339,70 @@ describe('adminAuth Middleware & Security Checks', () => {
       });
       (expect as any)(next).not.toHaveBeenCalled();
     });
+
+    it('rejects state-changing requests authenticated strictly via cookie when anti-CSRF token is missing or mismatched', async () => {
+      const expiresAt = new Date(Date.now() + 1000 * 60 * 10).toISOString();
+      mockGet.mockResolvedValue(
+        JSON.stringify({
+          token: 'cookie-session-token',
+          createdAt: new Date().toISOString(),
+          expiresAt,
+        })
+      );
+
+      const req = {
+        method: 'POST',
+        ip: '10.0.0.1',
+        headers: { cookie: 'admin_session=cookie-session-token' },
+      } as unknown as Request;
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      const next = jest.fn() as NextFunction;
+
+      await adminAuth(req, res, next);
+
+      (expect as any)(res.status).toHaveBeenCalledWith(403);
+      (expect as any)(res.json).toHaveBeenCalledWith({
+        error: 'Forbidden: CSRF token missing or invalid',
+      });
+      (expect as any)(next).not.toHaveBeenCalled();
+    });
+
+    it('allows state-changing requests authenticated strictly via cookie when valid anti-CSRF header is present', async () => {
+      const expiresAt = new Date(Date.now() + 1000 * 60 * 10).toISOString();
+      mockGet.mockResolvedValue(
+        JSON.stringify({
+          token: 'cookie-session-token',
+          createdAt: new Date().toISOString(),
+          expiresAt,
+        })
+      );
+
+      const req = {
+        method: 'POST',
+        ip: '10.0.0.1',
+        headers: {
+          cookie: 'admin_session=cookie-session-token',
+          'x-csrf-token': 'cookie-session-token',
+        },
+      } as unknown as Request;
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      const next = jest.fn() as NextFunction;
+
+      await adminAuth(req, res, next);
+
+      (expect as any)(next).toHaveBeenCalled();
+      (expect as any)(res.status).not.toHaveBeenCalled();
+    });
   });
 
   describe('audit logging', () => {

@@ -65,7 +65,7 @@ describe('ARG Announcements API Endpoints', () => {
     });
 
     const cookies = authRes.headers['set-cookie'] as unknown as string[];
-    return cookies;
+    return { cookies, token };
   };
 
   it('rejects unauthenticated GET /api/admin/announcements', async () => {
@@ -74,7 +74,7 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('retrieves announcements list when authenticated', async () => {
-    const cookies = await loginAdmin();
+    const { cookies } = await loginAdmin();
     const res = await request(app).get('/api/admin/announcements').set('Cookie', cookies);
 
     (expect as any)(res.status).toBe(200);
@@ -83,12 +83,13 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('creates a new announcement with validation', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     // Invalid body (missing title)
     const invalidRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ title: '', content: 'Some content' });
 
     (expect as any)(invalidRes.status).toBe(400);
@@ -97,6 +98,7 @@ describe('ARG Announcements API Endpoints', () => {
     const longTitleRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ title: 'A'.repeat(201), content: 'Some content' });
 
     (expect as any)(longTitleRes.status).toBe(400);
@@ -106,6 +108,7 @@ describe('ARG Announcements API Endpoints', () => {
     const longContentRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ title: 'Valid Title', content: 'B'.repeat(5001) });
 
     (expect as any)(longContentRes.status).toBe(400);
@@ -115,6 +118,7 @@ describe('ARG Announcements API Endpoints', () => {
     const invalidDateRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ title: 'Valid Title', content: 'Valid content', scheduledAt: 'invalid-date-string' });
 
     (expect as any)(invalidDateRes.status).toBe(400);
@@ -124,6 +128,7 @@ describe('ARG Announcements API Endpoints', () => {
     const validRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({
         title: 'EMERGENCY NARRATIVE ALERT',
         content: 'Surveillance nodes breached by RABBIT-HACK.',
@@ -137,12 +142,13 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('updates an existing announcement', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     // First create
     const createRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({
         title: 'ORIGINAL TITLE',
         content: 'Original content',
@@ -155,6 +161,7 @@ describe('ARG Announcements API Endpoints', () => {
     const updateRes = await request(app)
       .put(`/api/admin/announcements/${annId}`)
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({
         title: 'UPDATED TITLE',
         content: 'Updated content',
@@ -168,11 +175,12 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('toggles an announcement active state', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     const createRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({
         title: 'TOGGLE TEST',
         content: 'Toggle content',
@@ -184,6 +192,7 @@ describe('ARG Announcements API Endpoints', () => {
     const toggleRes = await request(app)
       .post(`/api/admin/announcements/${annId}/toggle`)
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ active: false });
 
     (expect as any)(toggleRes.status).toBe(200);
@@ -192,11 +201,12 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('deletes an announcement', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     const createRes = await request(app)
       .post('/api/admin/announcements')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({
         title: 'TO BE DELETED',
         content: 'Temporary content',
@@ -207,7 +217,8 @@ describe('ARG Announcements API Endpoints', () => {
 
     const delRes = await request(app)
       .delete(`/api/admin/announcements/${annId}`)
-      .set('Cookie', cookies);
+      .set('Cookie', cookies)
+      .set('X-CSRF-Token', token);
 
     (expect as any)(delRes.status).toBe(200);
     (expect as any)(delRes.body.success).toBe(true);
@@ -222,12 +233,13 @@ describe('ARG Announcements API Endpoints', () => {
   });
 
   it('rejects oversized announcement id parameter (>100 chars)', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
     const oversizedId = 'a'.repeat(101);
 
     const updateRes = await request(app)
       .put(`/api/admin/announcements/${oversizedId}`)
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ title: 'Title', content: 'Content' });
     (expect as any)(updateRes.status).toBe(400);
     (expect as any)(updateRes.body.message).toContain('Invalid announcement id');
@@ -235,13 +247,15 @@ describe('ARG Announcements API Endpoints', () => {
     const toggleRes = await request(app)
       .post(`/api/admin/announcements/${oversizedId}/toggle`)
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ active: true });
     (expect as any)(toggleRes.status).toBe(400);
     (expect as any)(toggleRes.body.message).toContain('Invalid announcement id');
 
     const delRes = await request(app)
       .delete(`/api/admin/announcements/${oversizedId}`)
-      .set('Cookie', cookies);
+      .set('Cookie', cookies)
+      .set('X-CSRF-Token', token);
     (expect as any)(delRes.status).toBe(400);
     (expect as any)(delRes.body.message).toContain('Invalid announcement id');
   });

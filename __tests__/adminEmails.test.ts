@@ -6,14 +6,16 @@ import { clearAllEmails, saveEmail, getAllEmails } from '../db';
 
 describe('Admin Email Endpoints (/api/admin/emails)', () => {
   let sessionCookie: string;
+  let sessionToken: string;
 
   beforeAll(async () => {
-    // Authenticate to get session cookie
+    // Authenticate to get session cookie and token
     const authRes = await request(app)
       .post('/api/admin/authenticate')
       .send({ password: process.env.ADMIN_PASSWORD || 'admin' });
 
     (expect as any)(authRes.status).toBe(200);
+    sessionToken = authRes.body.token;
     const cookies = authRes.headers['set-cookie'];
     if (cookies && Array.isArray(cookies)) {
       sessionCookie = cookies[0];
@@ -115,7 +117,10 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
     it('should reject clear request without confirmation parameter', async () => {
       await saveEmail('toclear@example.com', 'studio_newsletter');
 
-      const res = await request(app).post('/api/admin/emails/clear').set('Cookie', sessionCookie);
+      const res = await request(app)
+        .post('/api/admin/emails/clear')
+        .set('Cookie', sessionCookie)
+        .set('X-CSRF-Token', sessionToken);
 
       (expect as any)(res.status).toBe(400);
       (expect as any)(res.body.success).toBe(false);
@@ -132,7 +137,8 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
 
       const res = await request(app)
         .post('/api/admin/emails/clear?confirm=true')
-        .set('Cookie', sessionCookie);
+        .set('Cookie', sessionCookie)
+        .set('X-CSRF-Token', sessionToken);
 
       (expect as any)(res.status).toBe(200);
       (expect as any)(res.body.success).toBe(true);
@@ -148,6 +154,7 @@ describe('Admin Email Endpoints (/api/admin/emails)', () => {
       const res = await request(app)
         .post('/api/admin/emails/clear')
         .set('Cookie', sessionCookie)
+        .set('X-CSRF-Token', sessionToken)
         .send({ confirm: true });
 
       (expect as any)(res.status).toBe(200);

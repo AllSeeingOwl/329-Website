@@ -113,17 +113,22 @@ describe('POST /api/emails/collect', () => {
   it('should return 403 when allowEmailCollection is set to false in system config', async () => {
     const loginRes = await request(app).post('/api/admin/authenticate').send({ password: 'admin' });
     const cookie = loginRes.headers['set-cookie'];
+    const token = loginRes.body.token;
 
-    const configRes = await request(app).put('/api/admin/config').set('Cookie', cookie).send({
-      maintenanceMode: false,
-      publicSiteEnabled: true,
-      adminPanelEnabled: true,
-      allowEmailCollection: false,
-      emailNotificationEnabled: true,
-      maxConcurrentSessions: 10,
-      sessionTimeout: 15,
-      emergencyLockdown: false,
-    });
+    const configRes = await request(app)
+      .put('/api/admin/config')
+      .set('Cookie', cookie)
+      .set('X-CSRF-Token', token)
+      .send({
+        maintenanceMode: false,
+        publicSiteEnabled: true,
+        adminPanelEnabled: true,
+        allowEmailCollection: false,
+        emailNotificationEnabled: true,
+        maxConcurrentSessions: 10,
+        sessionTimeout: 15,
+        emergencyLockdown: false,
+      });
 
     (expect as any)(configRes.status).toBe(200);
 

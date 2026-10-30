@@ -87,3 +87,9 @@
 **Vulnerability:** The legacy `.html` redirect middleware in `server.ts` stripped `.html` from `req.path` and issued `res.redirect(301, cleanPath + query)`. When an attacker supplied a request with a leading double slash (e.g. `//evil.com/test.html`), `cleanPath` evaluated to `//evil.com/test`, resulting in an Open Redirect (CWE-601) to a protocol-relative external URL.
 **Learning:** Redirect targets constructed from request paths must be sanitized by stripping leading slashes and backslashes (`/^[/\\]+/`) before prepending a single `/` to ensure the redirect target is strictly interpreted as a relative path on the same host.
 **Prevention:** Always sanitize dynamic redirect target paths to ensure they begin with a single `/` and cannot be abused as protocol-relative URLs (`//`).
+
+## 2026-10-30 - [Security Fix] Anti-CSRF Token Validation for Cookie-Authenticated Admin Routes
+
+**Vulnerability:** Admin API state-changing endpoints (`POST`, `PUT`, `DELETE`, `PATCH`) authenticated via ambient browser cookies (`admin_session`) lacked Anti-CSRF token verification. A malicious cross-origin website could trick an authenticated administrator's browser into submitting unauthorized state-changing requests to the admin API.
+**Learning:** When authenticating Express API endpoints via cookies, state-changing requests must verify that a custom anti-CSRF header (`X-CSRF-Token`, `X-Admin-Session`, or `X-Admin-Token`) matches the active session token unless a custom authorization header was used for primary authentication.
+**Prevention:** Always require and validate a custom anti-CSRF token header on state-changing API endpoints authenticated using session cookies.

@@ -342,6 +342,7 @@ describe('Admin Authentication & Route Security Integration Tests', () => {
       await request(app)
         .post('/api/admin/phases/activate')
         .set('Cookie', ['admin_session=valid-test-token'])
+        .set('X-CSRF-Token', 'valid-test-token')
         .send({
           phaseId: 'phase-1-zine-launch',
           adminUser: 'attacker_admin\r\n[AUDIT TRAIL] Malicious Injected Log',
