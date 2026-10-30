@@ -63,7 +63,7 @@ describe('Emergency Lockdown Toggle Endpoint', () => {
     });
 
     const cookies = authRes.headers['set-cookie'] as unknown as string[];
-    return cookies;
+    return { cookies, token };
   };
 
   it('rejects unauthenticated POST /api/admin/lockdown/toggle', async () => {
@@ -72,11 +72,12 @@ describe('Emergency Lockdown Toggle Endpoint', () => {
   });
 
   it('toggles emergency lockdown state when authenticated', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     const res = await request(app)
       .post('/api/admin/lockdown/toggle')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ enabled: true });
 
     (expect as any)(res.status).toBe(200);
@@ -85,11 +86,12 @@ describe('Emergency Lockdown Toggle Endpoint', () => {
   });
 
   it('rejects non-boolean enabled parameter in POST /api/admin/lockdown/toggle', async () => {
-    const cookies = await loginAdmin();
+    const { cookies, token } = await loginAdmin();
 
     const res = await request(app)
       .post('/api/admin/lockdown/toggle')
       .set('Cookie', cookies)
+      .set('X-CSRF-Token', token)
       .send({ enabled: 'true' });
 
     (expect as any)(res.status).toBe(400);

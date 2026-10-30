@@ -424,6 +424,8 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
 
 /**
  * Express middleware for protecting admin routes using session tokens.
+ * Enforces Cross-Site Request Forgery (CSRF) protection on state-changing requests
+ * authenticated via cookies.
  */
 const adminAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const ip = req.ip || req.socket.remoteAddress || 'unknown';
@@ -439,6 +441,36 @@ const adminAuth = async (req: Request, res: Response, next: NextFunction): Promi
   if (!isValid) {
     res.status(401).json({ error: 'Unauthorized: Invalid or expired admin session' });
     return;
+  }
+
+  // 🛡️ Sentinel: Enforce CSRF protection for cookie-authenticated state-changing requests
+  const reqMethod = (req.method || '').toUpperCase();
+  const isStateChangingMethod = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(reqMethod);
+
+  // Check if request was authenticated via custom header or if anti-CSRF header is present
+  const hasCustomAuthHeader = !!(
+    req.headers['authorization'] ||
+    req.headers['x-admin-session'] ||
+    req.headers['x-admin-token']
+  );
+
+  // If cookie auth was used on a state-changing request, require matching anti-CSRF token
+  if (isStateChangingMethod && !hasCustomAuthHeader) {
+    const rawCsrfHeader =
+      req.headers['x-csrf-token'] ||
+      req.headers['x-admin-session'] ||
+      req.headers['x-admin-token'];
+    const csrfHeader = Array.isArray(rawCsrfHeader)
+      ? rawCsrfHeader[0]
+      : typeof rawCsrfHeader === 'string'
+        ? rawCsrfHeader.split(',')[0]
+        : null;
+
+    if (!csrfHeader || csrfHeader.trim() !== token) {
+      logAuthAttempt('MIDDLEWARE_AUTH', false, ip, 'CSRF verification failed for cookie auth');
+      res.status(403).json({ error: 'Forbidden: CSRF token missing or invalid' });
+      return;
+    }
   }
 
   next();
