@@ -34,9 +34,16 @@ async function checkPhaseModuleGate(pageFilename) {
   }
 }
 
-function renderHeldBackGate(pageFilename, phaseName) {
+function renderHeldBackGate(
+  pageFilename,
+  phaseName,
+  win = typeof window !== 'undefined' ? window : null
+) {
   const gateDiv = document.createElement('div');
   gateDiv.id = 'held-back-gate-overlay';
+  gateDiv.setAttribute('role', 'dialog');
+  gateDiv.setAttribute('aria-modal', 'true');
+  gateDiv.setAttribute('aria-labelledby', 'gate-title');
   gateDiv.style.cssText = `
     position: fixed;
     top: 0;
@@ -56,14 +63,14 @@ function renderHeldBackGate(pageFilename, phaseName) {
 
   gateDiv.innerHTML = `
     <div style="border: 2px solid #ff3366; max-width: 600px; width: 100%; padding: 30px; background: rgba(20, 0, 10, 0.95); text-align: center; box-shadow: 0 0 20px #ff3366;">
-      <h1 style="font-size: 2.2rem; margin-top: 0; text-transform: uppercase;">[ ACCESS DENIED: HELD BACK MODULE ]</h1>
+      <h1 id="gate-title" style="font-size: 2.2rem; margin-top: 0; text-transform: uppercase;">[ ACCESS DENIED: HELD BACK MODULE ]</h1>
       <p style="font-size: 1.3rem; color: #ffcc00; margin: 15px 0;">This module is held back in ${phaseName}.</p>
       <p style="font-size: 1.1rem; color: #aaa;">Enter authorization key or admin bypass code to proceed:</p>
       <div style="margin-top: 20px;">
-        <input type="password" id="gate-bypass-input" placeholder="BYPASS CODE" style="background: #000; color: #00ff00; border: 1px solid #00ff00; padding: 8px 12px; font-family: 'VT323', monospace; font-size: 1.2rem; width: 220px;" />
-        <button id="gate-bypass-btn" style="background: #00ff00; color: #000; border: none; padding: 8px 16px; font-family: 'VT323', monospace; font-size: 1.2rem; cursor: pointer; margin-left: 6px;">BYPASS</button>
+        <input type="password" id="gate-bypass-input" aria-label="Bypass code" placeholder="BYPASS CODE" style="background: #000; color: #00ff00; border: 1px solid #00ff00; padding: 8px 12px; font-family: 'VT323', monospace; font-size: 1.2rem; width: 220px;" />
+        <button id="gate-bypass-btn" aria-label="Submit bypass code" style="background: #00ff00; color: #000; border: none; padding: 8px 16px; font-family: 'VT323', monospace; font-size: 1.2rem; cursor: pointer; margin-left: 6px;">BYPASS</button>
       </div>
-      <div id="gate-error-msg" style="color: #ff3366; margin-top: 10px; display: none; font-weight: bold;">INVALID BYPASS CODE</div>
+      <div id="gate-error-msg" role="alert" aria-live="assertive" style="color: #ff3366; margin-top: 10px; display: none; font-weight: bold;">INVALID BYPASS CODE</div>
       <div style="margin-top: 25px;">
         <a href="mltk-surveillance-dashboard" style="color: #00ff00; text-decoration: underline; font-size: 1.2rem;">&lt;&lt; RETURN TO SURVEILLANCE DASHBOARD</a>
       </div>
@@ -76,10 +83,30 @@ function renderHeldBackGate(pageFilename, phaseName) {
   const btn = document.getElementById('gate-bypass-btn');
   const errorMsg = document.getElementById('gate-error-msg');
 
+  if (input) {
+    input.focus();
+  }
+
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      document.removeEventListener('keydown', handleEscape);
+      const targetWin = win || (typeof window !== 'undefined' ? window : null);
+      if (targetWin && targetWin.location) {
+        if (typeof targetWin.location.assign === 'function') {
+          targetWin.location.assign('mltk-surveillance-dashboard');
+        } else {
+          targetWin.location.href = 'mltk-surveillance-dashboard';
+        }
+      }
+    }
+  };
+  document.addEventListener('keydown', handleEscape);
+
   const attemptBypass = () => {
     const val = input.value.trim();
     if (val === '0408-1998-XXXX' || val === 'OVERRIDE' || val === 'admin') {
       localStorage.setItem('mltk_bypass_' + pageFilename, 'true');
+      document.removeEventListener('keydown', handleEscape);
       gateDiv.remove();
     } else {
       errorMsg.style.display = 'block';
