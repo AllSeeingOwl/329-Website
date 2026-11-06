@@ -125,7 +125,15 @@ jobs:
             const levels = ['critical', 'high', 'moderate', 'low', 'info'];
             const total = levels.reduce((sum, l) => sum + (v[l] || 0), 0);
             status.push(['Dependency audit (pnpm audit)', total ? `❗ ${total} advisories` : '✅ No known vulnerabilities']);
-            sec.push(`Dependencies scanned: ${auditData.metadata.totalDependencies ?? auditData.metadata.dependencies ?? 'unknown'}`, '');
+            // pnpm: metadata.totalDependencies (number); npm: metadata.dependencies ({ total, prod, dev, ... }).
+            const depCount = (m) => {
+              for (const c of [m.totalDependencies, m.dependencies]) {
+                if (typeof c === 'number') return c;
+                if (c && typeof c === 'object' && typeof c.total === 'number') return c.total;
+              }
+              return 'unknown';
+            };
+            sec.push(`Dependencies scanned: ${depCount(auditData.metadata)}`, '');
             sec.push('| Critical | High | Moderate | Low | Info |', '| --- | --- | --- | --- | --- |');
             sec.push(`| ${levels.map((l) => v[l] || 0).join(' | ')} |`, '');
             const rank = Object.fromEntries(levels.map((l, i) => [l, i]));
