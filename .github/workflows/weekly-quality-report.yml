@@ -1,0 +1,270 @@
+name: Weekly Quality Report
+
+# Read-only weekly health check of the published site and its dependencies.
+# It never changes code or applies fixes: it gathers results, writes a
+# Markdown report, uploads raw output as an artifact, and opens an issue.
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Mondays at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: weekly-quality-report
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://allseeingowl.github.io/329-Website/
+  OUT_DIR: quality-report
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 9
+
+      # `pnpm audit` reads pnpm-lock.yaml directly, so no install (and no
+      # lifecycle scripts) is needed. Report-only: never `audit --fix`.
+      - name: Run dependency audit
+        continue-on-error: true
+        run: |
+          mkdir -p "$OUT_DIR"
+          set +e
+          pnpm audit --json > "$OUT_DIR/dependency-audit.json" 2> "$OUT_DIR/dependency-audit.stderr.txt"
+          echo "$?" > "$OUT_DIR/dependency-audit.exitcode"
+          exit 0
+
+      - name: Run Lighthouse against the public site
+        continue-on-error: true
+        run: |
+          mkdir -p "$OUT_DIR"
+          set +e
+          npx --yes lighthouse@12.8.2 "$SITE_URL" \
+            --quiet \
+            --chrome-flags='--headless=new --no-sandbox' \
+            --output=json --output=html \
+            --output-path="$OUT_DIR/lighthouse" \
+            2> "$OUT_DIR/lighthouse.stderr.txt"
+          echo "$?" > "$OUT_DIR/lighthouse.exitcode"
+          exit 0
+
+      - name: Assemble Markdown report
+        if: always()
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          mkdir -p "$OUT_DIR"
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          const dir = process.env.OUT_DIR;
+          const site = process.env.SITE_URL;
+          const runUrl = process.env.RUN_URL;
+          const read = (f) => {
+            try { return fs.readFileSync(path.join(dir, f), 'utf8'); } catch { return ''; }
+          };
+          const readJson = (f) => {
+            const text = read(f).trim();
+            if (!text) return { error: 'no output was produced' };
+            try { return { data: JSON.parse(text) }; } catch (e) { return { error: `output was not valid JSON (${e.message})` }; }
+          };
+          const tail = (text, n = 15) => text.trim().split('\n').slice(-n).join('\n');
+          const oneLine = (s, max = 220) => {
+            const t = String(s || '')
+              .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // keep link text, drop URL
+              .replace(/\s+/g, ' ')
+              .replace(/\|/g, '\\|') // keep Markdown tables intact
+              .trim();
+            return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+          };
+          const pct = (score) => (typeof score === 'number' ? Math.round(score * 100) : null);
+
+          const status = []; // [check, result]
+          const out = [];
+          out.push('# Weekly quality report — 329-Website', '');
+          out.push(`- Generated: ${new Date().toISOString()}`);
+          out.push(`- Site: ${site}`);
+          out.push(`- Workflow run (raw results artifact): ${runUrl}`, '');
+          out.push('> Automated, read-only assessment. No code was changed and no fixes were applied.', '');
+
+          // ---------- Security: dependency audit ----------
+          const sec = [];
+          const audit = readJson('dependency-audit.json');
+          const auditExit = read('dependency-audit.exitcode').trim();
+          const auditData = audit.data;
+          if (!auditData || auditData.error || !auditData.metadata) {
+            const reason = audit.error
+              || (auditData && auditData.error && ([auditData.error.code, auditData.error.message || auditData.error.summary].filter(Boolean).join(': ') || JSON.stringify(auditData.error)))
+              || 'unexpected output format';
+            status.push(['Dependency audit (pnpm audit)', `⚠️ Could not run: ${oneLine(reason, 150)}`]);
+            sec.push(`⚠️ **The dependency audit could not run:** ${oneLine(reason, 300)}`);
+            const err = tail(read('dependency-audit.stderr.txt'));
+            if (err) sec.push('', '```text', err, '```');
+          } else {
+            const v = auditData.metadata.vulnerabilities || {};
+            const levels = ['critical', 'high', 'moderate', 'low', 'info'];
+            const total = levels.reduce((sum, l) => sum + (v[l] || 0), 0);
+            status.push(['Dependency audit (pnpm audit)', total ? `❗ ${total} advisories` : '✅ No known vulnerabilities']);
+            // pnpm: metadata.totalDependencies (number); npm: metadata.dependencies ({ total, prod, dev, ... }).
+            const depCount = (m) => {
+              for (const c of [m.totalDependencies, m.dependencies]) {
+                if (typeof c === 'number') return c;
+                if (c && typeof c === 'object' && typeof c.total === 'number') return c.total;
+              }
+              return 'unknown';
+            };
+            sec.push(`Dependencies scanned: ${depCount(auditData.metadata)}`, '');
+            sec.push('| Critical | High | Moderate | Low | Info |', '| --- | --- | --- | --- | --- |');
+            sec.push(`| ${levels.map((l) => v[l] || 0).join(' | ')} |`, '');
+            const rank = Object.fromEntries(levels.map((l, i) => [l, i]));
+            const advisories = Object.values(auditData.advisories || {})
+              .sort((a, b) => (rank[a.severity] ?? 9) - (rank[b.severity] ?? 9));
+            if (advisories.length) {
+              sec.push('| Severity | Package | Vulnerable | Patched | Advisory | Example path |', '| --- | --- | --- | --- | --- | --- |');
+              for (const a of advisories.slice(0, 25)) {
+                const p = (a.findings && a.findings[0] && a.findings[0].paths && a.findings[0].paths[0]) || '';
+                sec.push(`| ${a.severity} | \`${a.module_name}\` | \`${a.vulnerable_versions}\` | \`${a.patched_versions}\` | [${oneLine(a.title, 80)}](${a.url}) | \`${oneLine(p, 80)}\` |`);
+              }
+              if (advisories.length > 25) sec.push('', `…and ${advisories.length - 25} more (see \`dependency-audit.json\` in the artifact).`);
+            }
+          }
+          if (auditExit && auditExit !== '0' && auditData && auditData.metadata) {
+            sec.push('', `_pnpm audit exited with code ${auditExit} (expected when advisories are found)._`);
+          }
+
+          // ---------- Lighthouse ----------
+          const lh = [];
+          const lhRes = readJson('lighthouse.report.json');
+          const report = lhRes.data;
+          const categoryIds = ['performance', 'accessibility', 'best-practices', 'seo'];
+          if (!report || !report.categories) {
+            const reason = lhRes.error || 'unexpected output format';
+            status.push(['Lighthouse', `⚠️ Could not run: ${oneLine(reason, 150)}`]);
+            lh.push(`⚠️ **Lighthouse could not run:** ${oneLine(reason, 300)}`);
+            const err = tail(read('lighthouse.stderr.txt'));
+            if (err) lh.push('', '```text', err, '```');
+          } else {
+            if (report.runtimeError) {
+              lh.push(`⚠️ Lighthouse reported a runtime error: \`${report.runtimeError.code}\` — ${oneLine(report.runtimeError.message, 300)}`, '');
+            }
+            for (const w of report.runWarnings || []) lh.push(`> ⚠️ ${oneLine(w, 300)}`);
+            if ((report.runWarnings || []).length) lh.push('');
+            lh.push('| Category | Score |', '| --- | --- |');
+            const scoreSummary = [];
+            for (const id of categoryIds) {
+              const c = report.categories[id];
+              const s = c ? pct(c.score) : null;
+              const label = c ? c.title : id;
+              lh.push(`| ${label} | ${s === null ? 'n/a' : `${s}/100`} |`);
+              scoreSummary.push(`${label} ${s === null ? 'n/a' : s}`);
+            }
+            status.push(['Lighthouse', report.runtimeError ? `⚠️ Ran with error: ${report.runtimeError.code}` : `✅ ${scoreSummary.join(', ')}`]);
+            lh.push('');
+
+            // Failed audits / opportunities, grouped by category (accessibility first).
+            const audits = report.audits || {};
+            const seen = new Set();
+            lh.push('### Failed audits and improvement opportunities', '');
+            let any = false;
+            for (const id of ['accessibility', 'best-practices', 'seo', 'performance']) {
+              const c = report.categories[id];
+              if (!c) continue;
+              const failed = (c.auditRefs || [])
+                .map((ref) => ({ ref, a: audits[ref.id] }))
+                .filter(({ a }) => a && typeof a.score === 'number' && a.score < 0.9)
+                .filter(({ a }) => !['notApplicable', 'informative', 'manual', 'error'].includes(a.scoreDisplayMode))
+                .filter(({ a }) => !seen.has(a.id))
+                .sort((x, y) => (y.ref.weight || 0) - (x.ref.weight || 0)
+                  || ((y.a.details && y.a.details.overallSavingsMs) || 0) - ((x.a.details && x.a.details.overallSavingsMs) || 0)
+                  || x.a.score - y.a.score)
+                .slice(0, 6);
+              if (!failed.length) continue;
+              any = true;
+              lh.push(`**${c.title}**`, '');
+              for (const { a } of failed) {
+                seen.add(a.id);
+                const extra = [a.displayValue, `score ${pct(a.score)}`].filter(Boolean).join(', ');
+                lh.push(`- **${oneLine(a.title, 120)}** (\`${a.id}\`; ${oneLine(extra, 80)}) — ${oneLine(a.description)}`);
+              }
+              lh.push('');
+            }
+            if (!any) lh.push('- No failed audits (score below 90) were reported.', '');
+            lh.push('Full HTML and JSON reports are in the workflow artifact (`lighthouse.report.html`, `lighthouse.report.json`).');
+          }
+
+          // ---------- Assemble ----------
+          out.push('## Summary', '', '| Check | Result |', '| --- | --- |');
+          for (const [check, result] of status) out.push(`| ${check} | ${result} |`);
+          out.push('', '## Security — dependency audit', '', ...sec, '');
+          out.push('## Lighthouse — performance, accessibility, best practices, SEO', '', ...lh, '');
+          out.push(
+            '## AI-agent handoff',
+            '',
+            'To the coding agent picking this up:',
+            '',
+            '1. **Verify each finding before acting.** Reproduce it against the current `main` branch and the live site; results above may be stale, flaky (especially performance), or caused by third-party scripts or GitHub Pages hosting.',
+            '2. **Ignore false positives** and anything that is not actionable in this repository. Say briefly why each was dismissed.',
+            '3. **Prioritize security first, then accessibility**, then best practices/SEO, then performance and visual polish. Do not change code based on a score alone.',
+            '4. **Recommend small, high-impact fixes.** For each accepted finding, give:',
+            '   - affected files (paths in this repo)',
+            '   - why it matters and the risk level',
+            '   - the recommended minimal fix',
+            '   - validation steps (e.g. `pnpm audit`, `pnpm run lint`, `pnpm test`, `pnpm run test:e2e:playwright`, re-running Lighthouse)',
+            '5. If a check above **could not run**, investigate the cause in the workflow logs before drawing conclusions from its absence.',
+            '6. Keep each change in its own small pull request; do not bundle unrelated fixes or upgrade major versions without justification.',
+            '',
+          );
+
+          const md = out.join('\n');
+          fs.writeFileSync(path.join(dir, 'report.md'), md);
+          // GitHub issue bodies are limited to 65,536 characters.
+          const LIMIT = 60000;
+          const issue = md.length > LIMIT
+            ? `${md.slice(0, LIMIT)}\n\n…report truncated. The full report is \`report.md\` in the workflow artifact: ${runUrl}\n`
+            : md;
+          fs.writeFileSync('issue-body.md', issue);
+          NODE
+          cat "$OUT_DIR/report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload raw results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: weekly-quality-report-${{ github.run_id }}
+          path: ${{ env.OUT_DIR }}/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Create issue with the report
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ ! -s issue-body.md ]; then
+            printf '# Weekly quality report — 329-Website\n\n⚠️ The report could not be assembled. See the workflow run: %s\n' \
+              "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > issue-body.md
+          fi
+          gh issue create \
+            --title "Weekly quality report — $(date -u +%Y-%m-%d)" \
+            --body-file issue-body.md
