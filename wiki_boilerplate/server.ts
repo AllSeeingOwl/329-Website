@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 // 🛡️ Sentinel: Disable Express framework leakage
 app.disable('x-powered-by');
 
-// 🛡️ Sentinel: Trust proxy to ensure correct IP extraction (e.g. req.ip) when deployed behind Vercel.
+// 🛡️ Sentinel: Trust proxy to ensure correct IP extraction (e.g. req.ip) when deployed behind a reverse proxy.
 app.set('trust proxy', 1);
 
 // 🛡️ Sentinel: Add security headers to protect against common web vulnerabilities

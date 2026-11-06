@@ -9,5 +9,4 @@ module.exports = {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!@vercel/analytics)'],
 };

@@ -2,16 +2,6 @@
  * @jest-environment node
  */
 
-// Mock @vercel/analytics since it's an ES module that might not be easily required in this test environment
-jest.mock('@vercel/analytics', () => ({
-  inject: jest.fn(),
-}));
-
-// Mock @vercel/speed-insights as well
-jest.mock('@vercel/speed-insights', () => ({
-  injectSpeedInsights: jest.fn(),
-}));
-
 describe('app.js service worker registration', () => {
   let consoleErrorSpy;
   let registerMock;
