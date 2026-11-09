@@ -7,3 +7,43 @@
 
 **Learning:** Adding context-aware placeholders (e.g., "e.g. Missing Zine Pages" instead of just "Subject") significantly reduces cognitive load and improves form completion confidence, especially for abstract fields like "Subject".
 **Action:** When adding placeholders, prioritize showing an example of expected input rather than just repeating the field label.
+
+## 2024-05-18 - Missing Disabled States on Form Buttons
+
+**Learning:** Form submit buttons across the project are frequently disabled via JS during submission (`btn.disabled = true`), but lack a corresponding visual CSS `:disabled` state, leading to poor visual feedback for users.
+**Action:** Always check for and add a `:disabled` CSS pseudo-class styling block (e.g. `cursor: not-allowed; background-color: #ccc;`) when a button's `disabled` attribute is toggled dynamically.
+
+## 2026-04-23 - Replace :focus with :focus-visible for modal close button
+
+**Learning:** Some custom UI elements (like modal close buttons) used `:focus` which causes an outline to appear when a mouse user clicks on them, resulting in unnecessary visual noise. Using `:focus-visible` is better because it only shows the focus indicator when navigating via keyboard (e.g., using Tab), preserving accessibility while improving the mouse user experience.
+**Action:** When updating focus styles for interactive elements that are also frequently clicked by a mouse, prefer `:focus-visible` over `:focus`.
+
+## 2024-04-25 - Missing Focus Visible Styles on MLTK Pages
+
+**Learning:** Several static HTML pages featuring the "Glitch Effect" (like `404.html`, `mltk-privacy-policy.html`) had hover states for links and buttons, but lacked a distinct `:focus-visible` state for keyboard navigation. This made it difficult for keyboard users to track their focus.
+**Action:** When creating retro-styled or custom interactive elements, always ensure a `a:focus-visible, button:focus-visible` style is defined (e.g., using a dashed outline matching the theme color) alongside any `:hover` effects to maintain keyboard accessibility.
+
+## 2026-10-15 - Unscaled Numeric Range Sliders Lack ARIA Value Text
+
+**Learning:** Custom UI sliders (like frequency scanners) often use raw integer ranges internally (e.g., `880` to `1080` for `88.0` to `108.0 MHz`). Screen readers announce raw numbers without context or formatting.
+**Action:** Always provide `aria-valuetext` with formatted units (e.g. `104.9 MHz`) on `<input type="range">` elements and update `aria-valuetext` dynamically in JavaScript whenever the slider value changes.
+
+## 2026-10-16 - Dynamically Injected Modals Require Explicit Dialog ARIA Roles and Focus Management
+
+**Learning:** Dynamically created DOM overlays/dialogs in plain JS helper scripts often lack ARIA accessibility semantics (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`) and keyboard escape handling (`Escape` key event listener), making them invisible or unusable for screen reader and keyboard-only users.
+**Action:** Whenever generating dynamic dialog overlays in JS, always set `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, shift initial focus to the primary interactive element (e.g., close button), listen for `Escape` key events to close, and restore focus to the trigger element upon modal dismissal.
+
+## 2026-10-20 - Real-Time Textarea Character Counters Should Not Use Live Regions (aria-live="polite")
+
+**Learning:** Putting `aria-live="polite"` on a live character counter container causes screen readers to announce the character count on every single keypress, creating overwhelming screen reader verbosity chatter during text entry. Using `aria-describedby` links the field to the counter to provide character limit context on focus, while `aria-live="off"` prevents keystroke announcement spam.
+**Action:** When implementing real-time character counters, rely on `aria-describedby` on the `<textarea>` or `<input>` for focus context, and set `aria-live="off"` on the counter element to allow visual updates without flooding screen readers.
+
+## 2026-10-21 - Dynamic Theme Toggle Accessibility & OS Dark Mode Detection
+
+**Learning:** Theme toggle buttons that dynamically update state should automatically fall back to `prefers-color-scheme: dark` when no preference is saved in `localStorage`. Additionally, changing `aria-label` alone does not reliably trigger screen reader announcements on click—an `aria-live="polite"` status announcer element (`role="status"`) is needed to announce state changes ("Dark mode enabled") to screen reader users.
+**Action:** When implementing custom theme toggle buttons, check `window.matchMedia('(prefers-color-scheme: dark)')` for initial fallbacks and include a visually-hidden `aria-live="polite"` element to explicitly announce theme switches.
+
+## 2026-10-24 - Custom `role="button"` Anchor Elements Require Space Key Handlers
+
+**Learning:** When anchor elements (`<a href="#">`) are given `role="button"`, web browsers natively trigger `click` events for `Enter` keypresses but NOT for `Space` keypresses (which default to scrolling the viewport). To adhere to WAI-ARIA `role="button"` standards, an explicit `keydown` listener for `Space` (`e.key === ' '` or `'Spacebar'`) is required to prevent page scrolling and trigger button activation.
+**Action:** Whenever converting anchor tags into interactive buttons using `role="button"`, always attach a `keydown` handler that checks for Space keypresses, calls `e.preventDefault()`, and triggers `element.click()`.
