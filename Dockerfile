@@ -4,14 +4,15 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Enable pnpm and set environment variable
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Pinned to package.json "packageManager" so pnpm can't change major version under us
+RUN npm install -g pnpm@10.28.0
 ENV PNPM_SCRIPT_SHELL=/bin/sh
 
 # Copy dependency definition files
 COPY package.json pnpm-lock.yaml .npmrc* pnpm-workspace.yaml* ./
 
 # Install all dependencies (including devDependencies required for build), ignoring scripts like husky
-RUN pnpm install --no-frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy application source code
 COPY . .

@@ -1,0 +1,18 @@
+# Only install package versions that have been public for at least 24h (minutes).
+# Matches the default in newer pnpm, which the Docker build enforces.
+minimumReleaseAge: 1440
+
+# Security pins (pnpm reads overrides from here; the npm-style "overrides" in
+# package.json only apply to package-lock.json).
+overrides:
+  'browserslist': '>=4.28.7'
+  'baseline-browser-mapping': '>=2.11.0'
+  'brace-expansion@>=2.0.0 <3.0.0': '^2.1.7'
+  'brace-expansion@>=4.0.0': '^5.0.12'
+  'zod': '>=4.6.6'
+  'body-parser': '^2.4.0'
+  'systeminformation': '>=5.33.16'
+  'qs': '^6.17.0'
+  'glob': '^14.0.2'
+  'minimatch@>=7.0.0': '^11.0.1'
+  'deepmerge': '4.1.2'
