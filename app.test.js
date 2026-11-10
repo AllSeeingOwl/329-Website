@@ -61,7 +61,7 @@ describe('app.js service worker registration', () => {
     // Wait for the promise in register().then() to settle
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(registerMock).toHaveBeenCalledWith('/sw.js');
+    expect(registerMock).toHaveBeenCalledWith('sw.js');
     expect(consoleErrorSpy).toHaveBeenCalledWith('ServiceWorker registration failed: ', mockError);
   });
 
@@ -75,7 +75,7 @@ describe('app.js service worker registration', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(registerMock).toHaveBeenCalledWith('/sw.js');
+    expect(registerMock).toHaveBeenCalledWith('sw.js');
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
