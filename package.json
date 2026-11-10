@@ -5,6 +5,7 @@
     "node": ">=22.0.0",
     "pnpm": ">=9.0.0"
   },
+  "packageManager": "pnpm@10.28.0",
   "description": "3minsto9 ARG web assets",
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
@@ -95,20 +96,5 @@
     "zod": ">=4.6.6",
     "glob": "^14.0.2",
     "minimatch": "^11.0.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "browserslist": ">=4.28.7",
-      "baseline-browser-mapping": ">=2.11.0",
-      "brace-expansion@>=2.0.0 <3.0.0": "^2.1.7",
-      "brace-expansion@>=4.0.0": "^5.0.12",
-      "zod": ">=4.6.6",
-      "body-parser": "^2.4.0",
-      "systeminformation": ">=5.33.16",
-      "qs": "^6.17.0",
-      "glob": "^14.0.2",
-      "minimatch@>=7.0.0": "^11.0.1",
-      "deepmerge": "4.1.2"
-    }
   }
 }

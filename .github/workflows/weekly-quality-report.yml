@@ -39,8 +39,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
-        with:
-          version: 9
 
       # `pnpm audit` reads pnpm-lock.yaml directly, so no install (and no
       # lifecycle scripts) is needed. Report-only: never `audit --fix`.
