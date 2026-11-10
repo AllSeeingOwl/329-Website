@@ -4,6 +4,28 @@ _Audit date: 2026-11-09. Scope: everything a player touches in **Phase 1: Zine L
 against the Google Drive "Welcome To Unknown" canon. Later phases and unbuilt lore are listed at the
 end only for context._
 
+## Status update (2026-11-09, second pass)
+
+Owner decisions: ZIP is a Phase 1 reward; radio MP3 is Phase 1.5; MailerLite account connected;
+delivery method left to implementation; 4-digit Uncut Puzzle code still undecided.
+
+| Item                                 | Status                                                                                                                                                                                                                                                                     |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1 QR page dead end                  | **Fixed.** `/system-override` now asks for the serial, then the email, then routes to the data drop.                                                                                                                                                                       |
+| B2 No email sent                     | **Code done, needs config.** Signups are copied to MailerLite once `MAILERLITE_API_KEY` and `MAILERLITE_GROUP_ID` are set on Render; the welcome automation still has to be built and switched on in MailerLite. Downloads no longer depend on email: they unlock on-site. |
+| B3 Placeholder files                 | **Open** — waiting on final art.                                                                                                                                                                                                                                           |
+| B4 Bypass codes in public JS         | **Fixed.** Client gate removed; held-back modules are refused server-side (admins can still preview while logged in).                                                                                                                                                      |
+| B5 Ungated held-back pages           | **Fixed** by server-side enforcement (covers every listed module automatically).                                                                                                                                                                                           |
+| B6 Password in public API            | **Fixed.** `/api/phases` no longer returns descriptions.                                                                                                                                                                                                                   |
+| M1 ZIP phase                         | **Fixed.** Active from Phase 1; dashboard tile defaults to active.                                                                                                                                                                                                         |
+| M2 MP3 phase                         | **Fixed in code** (held back in Phase 1, live from 1.5). The zine back cover still lists the MP3 — update the print copy.                                                                                                                                                  |
+| M3 4-digit code                      | **Open** — needs a design decision.                                                                                                                                                                                                                                        |
+| M4 `/press-twins-collusion`          | Open.                                                                                                                                                                                                                                                                      |
+| M5 Solutions index                   | Open.                                                                                                                                                                                                                                                                      |
+| M7 Velvet rope redirect              | **Fixed** target (now `/secure-data-drop-page`; redirect itself still switched off).                                                                                                                                                                                       |
+| M8 Downloads visible before password | **Fixed.** Hidden until verified; files themselves are also server-gated.                                                                                                                                                                                                  |
+| P1 Missing `/sw.js`                  | **Fixed** with a no-op service worker.                                                                                                                                                                                                                                     |
+
 ## 1. What Phase 1 is supposed to be (per Drive)
 
 Sources: _The Game of Unknown Master Timeline Strategy_, _The Field (MINE) Guide_ (back cover +

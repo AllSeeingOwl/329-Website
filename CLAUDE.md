@@ -32,13 +32,19 @@ dashboard tile's `status` (`active`/`locked`) to match `activeModules` / `heldBa
 - Current focus: **Phase 1 — Zine Launch**. See `docs/PHASE1_GAP_REPORT.md` for its state.
 - The physical zine (_The Unknown Field (MINE) Guide, Vol. 0_) back-cover QR points to
   `https://3minsto9.co.uk/system-override`. The zine password is printed on Beatrix's card.
-- Held-back pages are gated **client-side** by `public/phase_gate_utils.js`
-  (`checkPhaseModuleGate`). The server still serves every file, so this is theatre, not security.
-  Each held-back page must include the script itself — check when adding pages.
+- Phase gating is enforced **server-side** in `src/phaseAccess.ts`: any path listed in the active
+  phase's `heldBackModules` gets `public/held-back.html` (403) unless the request has a valid admin
+  session (admins can preview). Zine downloads (`PROTECTED_DOWNLOADS`) also need the `zine_access`
+  cookie, which `/api/verify` sets when the reader enters the zine serial; otherwise they redirect
+  to `/system-override`.
+- Player journey: `/system-override` (serial → email, `public/system_override_utils.js`) →
+  `/secure-data-drop-page` (downloads). Emails are stored in Redis and copied to MailerLite when
+  `MAILERLITE_API_KEY` / `MAILERLITE_GROUP_ID` are set (`src/mailerlite.ts`).
 
 When adding an ARG module: add it to the right phase lists in `MLTK_PHASES`, add a dashboard tile in
-`DEFAULT_DASHBOARD_CONFIG` if it should appear there, include the phase gate script if it can be
-held back, and add it to the sitemap/maintenance file sets in `server.ts` if relevant.
+`DEFAULT_DASHBOARD_CONFIG` if it should appear there, add new download files to
+`PROTECTED_DOWNLOADS` in `src/phaseAccess.ts`, and add it to the sitemap/maintenance file sets in
+`server.ts` if relevant.
 
 ## Architecture
 
@@ -60,7 +66,7 @@ pnpm test             # Jest unit tests (root *.test.js and __tests__/)
 pnpm run typecheck
 pnpm run lint
 pnpm run dev          # local server on :3000 (AUTH_PASSWORD optional outside production)
-pnpm run test:e2e:playwright
+pnpm run test:e2e:playwright   # in this cloud sandbox, point launchOptions.executablePath at /opt/pw-browsers/chromium
 ```
 
 Run `pnpm test && pnpm run typecheck && pnpm run lint` before committing. A husky pre-commit

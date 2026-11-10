@@ -126,7 +126,7 @@
         gap: 20px;
       }
 
-      input[type='email'] {
+      input.terminal-input {
         background: #000;
         color: #ff3366;
         border: 2px solid #ff3366;
@@ -139,12 +139,12 @@
         text-transform: uppercase;
       }
 
-      input[type='email']::placeholder {
+      input.terminal-input::placeholder {
         color: #7a001d;
       }
 
-      input[type='email']:focus,
-      input[type='email']:focus-visible {
+      input.terminal-input:focus,
+      input.terminal-input:focus-visible {
         box-shadow: 0 0 15px #ff3366;
         border-color: #ff3366;
       }
@@ -245,6 +245,26 @@
       .glitching {
         animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
       }
+      .step-label {
+        color: #ff3366;
+        font-family: 'VT323', monospace;
+        font-size: 1.5rem;
+        margin: 0;
+      }
+
+      .email-step {
+        display: none;
+      }
+
+      .drop-link {
+        color: #00ff00;
+        font-size: 1.5rem;
+      }
+
+      .drop-link:focus-visible {
+        outline: 2px dashed #00ff00;
+        outline-offset: 4px;
+      }
     </style>
     <script type="module" src="/app.js"></script>
   </head>
@@ -267,23 +287,42 @@
       <div class="hacked-container">
         <div class="hacked-text">
           Transmission intercepted by 3minsto9 Operations. That little brochure you’re holding? We
-          hijacked it. We hid the truth in the margins. Drop your secure comms link below to receive
-          the classified data packet.
+          hijacked it. We hid the truth in the margins. Punch in the serial from the card we left
+          you, then drop your secure comms link to receive the classified data packet.
         </div>
 
         <div class="terminal-box">
-          <form id="hackedForm" class="input-group">
+          <form id="keyForm" class="input-group" autocomplete="off">
+            <label for="serialKey" class="step-label">STEP 1 // ENTER THE CARD SERIAL</label>
             <input
-              type="email"
-              id="commsLink"
-              placeholder="[ Enter Comms Link... ]"
+              type="text"
+              id="serialKey"
+              class="terminal-input"
+              placeholder="[ XXXX-XXXX-XXXX ]"
+              maxlength="14"
               required
-              aria-label="Secure Comms Link"
+              autocapitalize="characters"
+              spellcheck="false"
             />
-            <button type="submit" id="submitBtn" class="btn-submit">BREACH THE MAINFRAME</button>
+            <button type="submit" id="keyBtn" class="btn-submit">DECRYPT</button>
           </form>
+          <div id="emailStep" class="email-step">
+            <p class="step-label">SERIAL ACCEPTED. STEP 2 // DROP YOUR COMMS LINK</p>
+            <form id="hackedForm" class="input-group">
+              <input
+                type="email"
+                id="commsLink"
+                class="terminal-input"
+                placeholder="[ Enter Comms Link... ]"
+                required
+                aria-label="Secure Comms Link"
+              />
+              <button type="submit" id="submitBtn" class="btn-submit">BREACH THE MAINFRAME</button>
+            </form>
+          </div>
           <div id="successMessage" class="success-message" role="alert" aria-live="assertive">
-            DATA PACKET DISPATCHED. WELCOME TO THE WAR.
+            DATA PACKET DISPATCHED. WELCOME TO THE WAR.<br />
+            <a href="/secure-data-drop-page" class="drop-link">[ OPEN THE DATA DROP ]</a>
           </div>
           <div id="errorMessage" class="error-message" role="alert" aria-live="assertive">
             [ ERROR ] TRANSMISSION FAILED. PLEASE TRY AGAIN.
@@ -296,10 +335,6 @@
       document.addEventListener('DOMContentLoaded', () => {
         const tourismLayer = document.getElementById('tourismLayer');
         const hackedLayer = document.getElementById('hackedLayer');
-        const form = document.getElementById('hackedForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const successMessage = document.getElementById('successMessage');
-        const emailInput = document.getElementById('commsLink');
 
         // Trigger glitch sequence after 2 seconds
         setTimeout(() => {
@@ -336,51 +371,9 @@
 
           requestAnimationFrame(animateGlitchFlash);
         }, 2000);
-
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Handle form submission
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
-
-          const email = emailInput.value.trim();
-          if (!email) return;
-
-          if (errorMessage) {
-            errorMessage.style.display = 'none';
-          }
-
-          // Disable form to prevent double-submits
-          submitBtn.disabled = true;
-          emailInput.disabled = true;
-          submitBtn.textContent = 'TRANSMITTING...';
-
-          fetch('/api/emails/collect', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, source: 'mltk_access' }),
-          })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-              }
-              form.style.display = 'none';
-              successMessage.style.display = 'block';
-              successMessage.tabIndex = -1;
-              successMessage.focus();
-            })
-            .catch((err) => {
-              console.error('Submission error:', err);
-              submitBtn.disabled = false;
-              emailInput.disabled = false;
-              submitBtn.textContent = 'BREACH THE MAINFRAME';
-              if (errorMessage) {
-                errorMessage.style.display = 'block';
-              }
-            });
-        });
       });
     </script>
+    <script src="system_override_utils.js"></script>
     <script type="module" src="/app.js"></script>
   </body>
 </html>

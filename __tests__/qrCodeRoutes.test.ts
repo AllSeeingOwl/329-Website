@@ -2,10 +2,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import request from 'supertest';
 import app from '../server';
+import { setActivePhase } from '../db';
 import fs from 'fs';
 import path from 'path';
 
 describe('QR Code Route & Entry Point Verification', () => {
+  // Every route is released in phase2; phase gating itself is covered in phase_access.test.js.
+  beforeAll(async () => {
+    await setActivePhase('phase2');
+  });
+  afterAll(async () => {
+    await setActivePhase('phase1');
+  });
+
   const qrRoutes = [
     '/',
     '/surface-home-page',

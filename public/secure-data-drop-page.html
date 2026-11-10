@@ -85,6 +85,7 @@
 
       /* Download Section */
       .download-box {
+        display: none;
         border: 2px dashed #00ff00;
         background: rgba(0, 255, 0, 0.05);
         padding: 30px;
@@ -320,7 +321,6 @@
       <div class="download-box">
         <div class="download-title">DECRYPTED FILES READY FOR EXTRACTION</div>
 
-        <!-- Replace the '#' with actual links to your PDF/ZIP files hosted on Google Drive, Dropbox, etc. -->
         <a href="SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip" class="btn-download" download
           >⬇ SEEDLESS GRAPES MOTEL [BLUEPRINTS.ZIP]</a
         >
@@ -393,6 +393,18 @@
         const authBtn = document.getElementById('auth-submit-btn');
         const termOutput = document.getElementById('terminal-output');
         const downloadBox = document.querySelector('.download-box');
+        const terminalSection = document.getElementById('terminal-section');
+
+        // Readers who already entered the zine serial (e.g. via /system-override) skip the terminal.
+        fetch('/api/access-status', { credentials: 'same-origin' })
+          .then((res) => (res.ok ? res.json() : { verified: false }))
+          .then((data) => {
+            if (data && data.verified) {
+              if (downloadBox) downloadBox.style.display = 'block';
+              if (terminalSection) terminalSection.style.display = 'none';
+            }
+          })
+          .catch(() => {});
 
         if (termForm && authInput && termOutput) {
           termForm.addEventListener('submit', async (e) => {
