@@ -15,6 +15,8 @@ import {
   getActivePhase,
   MLTK_PHASES,
 } from './db';
+import { forwardToMailerLite } from './src/mailerlite';
+import { createPhaseAccessMiddleware, hasZineAccess, setZineAccessCookie } from './src/phaseAccess';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -562,6 +564,8 @@ app.post('/api/emails/collect', async (req: Request, res: Response) => {
     }
 
     await saveEmail(cleanEmail, cleanSource);
+    // Best-effort copy to MailerLite (no-op unless MAILERLITE_API_KEY is set); never blocks the reader.
+    void forwardToMailerLite(cleanEmail);
     res.json({ success: true });
   } catch (error) {
     console.error('Failed to save email:', error);
@@ -573,9 +577,16 @@ app.post('/api/emails/collect', async (req: Request, res: Response) => {
 app.get('/api/phases', async (req: Request, res: Response) => {
   try {
     const activePhaseId = await getActivePhase();
+    // Public payload omits admin-only notes (e.g. phase descriptions that name the zine password).
+    const phases = MLTK_PHASES.map(({ id, name, activeModules, heldBackModules }) => ({
+      id,
+      name,
+      activeModules,
+      heldBackModules,
+    }));
     res.json({
       activePhaseId,
-      phases: MLTK_PHASES,
+      phases,
     });
   } catch {
     res.status(500).json({ error: 'Failed to fetch phases' });
@@ -652,6 +663,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
   next();
 });
+
+// Zine reader access status (cookie set by /api/verify)
+app.get('/api/access-status', (req: Request, res: Response) => {
+  res.json({ verified: hasZineAccess(req) });
+});
+
+// Enforce release phases server-side: held-back modules and zine downloads
+app.use(createPhaseAccessMiddleware(publicDir));
 
 app.get('/104.9-global-directives', (req: Request, res: Response) => {
   res.sendFile(path.join(publicDir, '104.9-global-directives.html'));
@@ -758,6 +777,10 @@ app.post('/api/verify', (req: Request, res: Response) => {
       crypto.timingSafeEqual(authBuffer, authBuffer);
       crypto.timingSafeEqual(PUZZLE_OVERRIDE_BUFFER, PUZZLE_OVERRIDE_BUFFER);
     }
+  }
+
+  if (success) {
+    setZineAccessCookie(res);
   }
 
   res.json({ success });

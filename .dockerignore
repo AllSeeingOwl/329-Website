@@ -4,7 +4,6 @@ dist
 .github
 .husky
 .jules
-.Jules
 __tests__
 e2e
 wiki_boilerplate

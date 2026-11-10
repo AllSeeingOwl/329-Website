@@ -1,6 +1,6 @@
 const CONFIG = {
   SHOULD_REDIRECT: false,
-  REDIRECT_TARGET: 'secure-drop.html',
+  REDIRECT_TARGET: '/secure-data-drop-page',
 };
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

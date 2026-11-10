@@ -69,7 +69,7 @@ The Express server (`server.ts`) relies on the following environment variables:
 ## Testing & CI/CD
 
 - **Jest**: Unit tests are located in the repository root alongside the scripts they test. Tests requiring DOM interaction use `jest-environment-jsdom` and include the `/** @jest-environment jsdom */` pragma.
-- **End-to-End**: Playwright and Cypress are used for robust E2E verification. Playwright E2E tests (`pnpm run test:e2e:playwright`) spin up the local server with the required `AUTH_PASSWORD=test` environment variable.
+- **End-to-End**: Playwright and Cypress are used for robust E2E verification. Playwright E2E tests (`pnpm run test:e2e:playwright`) spin up the local server with the required `AUTH_PASSWORD=TEST-0000-E2E0` environment variable (an uppercase serial in the zine format, since the pages uppercase input).
 - **CI/CD**: The repository exclusively uses standard GitHub-hosted runners (e.g., `ubuntu-latest`) for all CI/CD workflows to ensure low maintenance and secure ephemeral environments. Self-hosted GitHub Actions runners are explicitly considered unnecessary.
 - **Automated Housekeeping**: A suite of automated GitHub Actions handles weekly unused code and dependency checks (`knip`), weekly broken link checking (`lychee-action`), weekly Dependabot updates, weekly repository cleanup for stale branches and issues, and on-push automated formatting and lint fixing (Prettier and ESLint).
 

@@ -27,6 +27,7 @@ export const MLTK_PHASES: ReleasePhase[] = [
     name: 'Phase 1: Zine Launch',
     description: 'Password: 0408-1998-XXXX',
     activeModules: [
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
       'mltk-privacy-policy.html',
@@ -35,13 +36,13 @@ export const MLTK_PHASES: ReleasePhase[] = [
       '104.9-global-directives.html',
     ],
     heldBackModules: [
+      '104_9_PIRATE_INTERCEPT.mp3',
       'ollies-radio-scanner.html',
       'nova-classified-archive.html',
       'nova-parent-directory.html',
       'mltk-five-finger-wheel.html',
       'mltk-virtue-village-index.html',
       'mltk-customer-service.html',
-      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     ],
     narrativeReason:
       'Focuses 100% of reader attention on downloading the lead magnets and joining the mailing list.',
@@ -51,6 +52,8 @@ export const MLTK_PHASES: ReleasePhase[] = [
     name: 'Phase 1.5: Email Drip #1',
     description: 'Sent via automated MailerLite',
     activeModules: [
+      '104_9_PIRATE_INTERCEPT.mp3',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
       'mltk-privacy-policy.html',
@@ -65,7 +68,6 @@ export const MLTK_PHASES: ReleasePhase[] = [
       'mltk-five-finger-wheel.html',
       'mltk-virtue-village-index.html',
       'mltk-customer-service.html',
-      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     ],
     narrativeReason: 'Rewards subscribers with audio clips from Four Corners Radio ("Over-Oops").',
   },
@@ -74,6 +76,8 @@ export const MLTK_PHASES: ReleasePhase[] = [
     name: 'Phase 1.5: Email Drip #2',
     description: 'Classified memo from Avery',
     activeModules: [
+      '104_9_PIRATE_INTERCEPT.mp3',
+      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
       'mltk-privacy-policy.html',
@@ -88,7 +92,6 @@ export const MLTK_PHASES: ReleasePhase[] = [
       'mltk-five-finger-wheel.html',
       'mltk-virtue-village-index.html',
       'mltk-customer-service.html',
-      'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     ],
     narrativeReason:
       'Engages solvers with interactive trivia while introducing the corporate horrors of MLTK.',
@@ -98,6 +101,7 @@ export const MLTK_PHASES: ReleasePhase[] = [
     name: "Phase 2: Usher's Handbook Pre-Launch",
     description: 'Deploys high-stakes disciplinary wheel',
     activeModules: [
+      '104_9_PIRATE_INTERCEPT.mp3',
       'secure-data-drop-page.html',
       'mltk-classified-document.html',
       'mltk-privacy-policy.html',
@@ -217,7 +221,7 @@ const DEFAULT_DASHBOARD_CONFIG: DashboardConfig[] = [
   {
     id: 'DOC: 003-SGM',
     title: 'Seedless Grapes Motel Blueprints',
-    status: 'locked',
+    status: 'active',
     link: 'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
     type: 'DOWNLOAD',
     isDownload: true,

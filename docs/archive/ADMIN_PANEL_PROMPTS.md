@@ -1,3 +1,5 @@
+> **Archived.** These prompts were written for Google Jules when the admin panel was first built. The panel now exists (`public/admin/`, `src/routes/admin.ts`, `src/middleware/adminAuth.ts`); this file is kept for history only and is not a current spec.
+
 # Admin Panel Implementation Prompts for Jules
 
 Use these prompts with Google Jules to implement the back-door admin panel for the 329-Website project.
