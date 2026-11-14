@@ -33,9 +33,11 @@
     ]
   },
   "knip": {
+    "entry": [
+      "public/sw.js"
+    ],
     "ignore": [
       "public/msdos_typing_effect.js",
-      "public/theme_toggle.js",
       "wiki_boilerplate/**"
     ]
   },

@@ -179,7 +179,6 @@ if (typeof module !== 'undefined' && module.exports) {
     formatSerial,
     verifySerial,
     submitCommsLink,
-    hasZineAccess,
     initSystemOverride,
   };
 } else if (typeof document !== 'undefined') {

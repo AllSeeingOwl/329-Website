@@ -13,10 +13,10 @@ import { extractSessionToken, validateAdminSession } from './middleware/adminAut
  *    the serial from the physical zine. Without it the reader is sent to /system-override.
  */
 
-export const ZINE_ACCESS_COOKIE = 'zine_access';
+const ZINE_ACCESS_COOKIE = 'zine_access';
 const ZINE_ACCESS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-export const PROTECTED_DOWNLOADS = new Set([
+const PROTECTED_DOWNLOADS = new Set([
   'UNCUT_PUZZLE.pdf',
   'VIRTUE_VILLAGE_LAYOUTS.pdf',
   'SEEDLESS_GRAPES_MOTEL_BLUEPRINTS.zip',
@@ -30,7 +30,7 @@ const getAccessSecret = (): string =>
   'local-dev-zine-access-secret';
 
 /** Deterministic HMAC token: rotates automatically if the secret (or zine password) changes. */
-export const createZineAccessToken = (): string =>
+const createZineAccessToken = (): string =>
   crypto.createHmac('sha256', getAccessSecret()).update('zine-access:v1').digest('hex');
 
 const readCookie = (req: Request, name: string): string | null => {
