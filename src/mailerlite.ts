@@ -13,7 +13,7 @@
 const MAILERLITE_SUBSCRIBERS_URL = 'https://connect.mailerlite.com/api/subscribers';
 const REQUEST_TIMEOUT_MS = 5000;
 
-export const isMailerLiteConfigured = (): boolean =>
+const isMailerLiteConfigured = (): boolean =>
   Boolean(process.env.MAILERLITE_API_KEY && process.env.MAILERLITE_API_KEY.trim());
 
 export const forwardToMailerLite = async (
