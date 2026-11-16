@@ -33,3 +33,5 @@ services:
         sync: false
       - key: MAILERLITE_GROUP_ID
         sync: false
+      - key: SENTRY_DSN
+        sync: false
