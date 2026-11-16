@@ -394,3 +394,116 @@ describe('Server Tests', () => {
     expect(response3.headers['location']).toBe('/surface-home-page');
   });
 });
+
+describe('Sentry error reporting', () => {
+  const DSN = 'https://publickey@o123.ingest.de.sentry.io/456';
+  const BASE_CSP =
+    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;";
+  const STUDIO_CSP = BASE_CSP.replace(
+    "connect-src 'self';",
+    "connect-src 'self' https://o123.ingest.de.sentry.io;"
+  );
+  let originalEnv;
+  let sentryMock;
+
+  function loadApp(env) {
+    jest.resetModules();
+    // Stand-in for the Sentry SDK so tests never start it or send anything.
+    sentryMock = { init: jest.fn(), setupExpressErrorHandler: jest.fn() };
+    jest.doMock('@sentry/node', () => sentryMock);
+    Object.assign(process.env, env);
+    return require('./server');
+  }
+
+  beforeEach(() => {
+    originalEnv = { ...process.env };
+    delete process.env.SENTRY_DSN;
+  });
+
+  afterEach(() => {
+    jest.dontMock('@sentry/node');
+    Object.keys(process.env).forEach((key) => {
+      if (!(key in originalEnv)) delete process.env[key];
+    });
+    Object.assign(process.env, originalEnv);
+  });
+
+  it('does not start Sentry or change any CSP when SENTRY_DSN is unset', async () => {
+    const app = loadApp({});
+    expect(sentryMock.init).not.toHaveBeenCalled();
+
+    const studio = await request(app).get('/studio-faq').expect(200);
+    expect(studio.headers['content-security-policy']).toBe(BASE_CSP);
+
+    const config = await request(app).get('/vendor/sentry-config.js').expect(200);
+    expect(config.text).toBe('window.SITE_SENTRY = null;\n');
+  });
+
+  it('starts Sentry without personal data when SENTRY_DSN is set', () => {
+    loadApp({ SENTRY_DSN: DSN });
+    expect(sentryMock.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dsn: DSN,
+        dataCollection: {
+          userInfo: false,
+          cookies: false,
+          httpHeaders: false,
+          httpBodies: [],
+          urlQueryParams: false,
+          stackFrameVariables: false,
+        },
+      })
+    );
+    expect(sentryMock.setupExpressErrorHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows the Sentry ingest host in the CSP of studio pages only', async () => {
+    const app = loadApp({ SENTRY_DSN: DSN });
+
+    for (const studioPath of ['/', '/studio-faq', '/business-privacy-policy']) {
+      const res = await request(app).get(studioPath);
+      expect(res.headers['content-security-policy']).toBe(STUDIO_CSP);
+    }
+
+    // ARG pages must never mention Sentry, even in headers.
+    for (const argPath of ['/system-override', '/mltk-login-gate', '/developer-blog']) {
+      const res = await request(app).get(argPath);
+      expect(res.headers['content-security-policy']).toBe(BASE_CSP);
+    }
+  });
+
+  it('serves the browser settings from SENTRY_DSN', async () => {
+    const app = loadApp({ SENTRY_DSN: DSN, NODE_ENV: 'production' });
+    const res = await request(app).get('/vendor/sentry-config.js').expect(200);
+    expect(res.headers['content-type']).toMatch(/javascript/);
+    expect(res.text).toBe(
+      `window.SITE_SENTRY = ${JSON.stringify({ dsn: DSN, environment: 'production' })};\n`
+    );
+  });
+
+  it('loads Sentry on studio pages and never on ARG pages', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const studioPages = [
+      'index',
+      'surface-home-page',
+      'studio-manifesto-page',
+      'releases',
+      'studio-contact-us',
+      'business-privacy-policy',
+      'business-terms-of-service',
+      'studio-faq',
+      'studio-press-kit',
+      'studio-puzzles-explained',
+      'studio-team',
+    ];
+    const htmlFiles = fs
+      .readdirSync(path.join(__dirname, 'public'))
+      .filter((f) => f.endsWith('.html'));
+    for (const file of htmlFiles) {
+      const html = fs.readFileSync(path.join(__dirname, 'public', file), 'utf8');
+      const isStudio = studioPages.includes(file.replace(/\.html$/, ''));
+      expect({ file, loadsSentry: /sentry/i.test(html) }).toEqual({ file, loadsSentry: isStudio });
+    }
+  });
+});

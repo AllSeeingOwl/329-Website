@@ -1,3 +1,5 @@
+// Sentry must load before Express so it can instrument it.
+import { Sentry, browserSentryConfig, sentryIngestOrigin } from './src/instrument';
 import fs from 'fs';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -32,6 +34,25 @@ app.disable('x-powered-by');
 // Without this, the rate limiter would see the proxy's IP for all requests, causing a global DoS block.
 app.set('trust proxy', 1);
 
+const BASE_CSP =
+  "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;";
+
+// Studio pages report browser errors to Sentry, so their CSP also allows Sentry's
+// ingest host. ARG pages never load Sentry or mention it, to stay in character.
+const SENTRY_PAGE_CSP = sentryIngestOrigin
+  ? BASE_CSP.replace("connect-src 'self';", `connect-src 'self' ${sentryIngestOrigin};`)
+  : BASE_CSP;
+
+function isSentryPage(reqPath: string): boolean {
+  return (
+    Boolean(sentryIngestOrigin) &&
+    (reqPath === '/' ||
+      reqPath === '/index' ||
+      reqPath === '/index.html' ||
+      studioFiles.has(reqPath))
+  );
+}
+
 // 🛡️ Sentinel: Add security headers to protect against common web vulnerabilities
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // Enforce HTTPS
@@ -49,10 +70,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   // 🛡️ Sentinel: Restrict powerful browser features to prevent abuse if XSS occurs
   res.setHeader('Permissions-Policy', 'geolocation=(), camera=(), microphone=()');
   // Restrict resource loading to trusted sources
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
-  );
+  res.setHeader('Content-Security-Policy', isSentryPage(req.path) ? SENTRY_PAGE_CSP : BASE_CSP);
   next();
 });
 
@@ -676,6 +694,14 @@ app.get('/104.9-global-directives', (req: Request, res: Response) => {
   res.sendFile(path.join(publicDir, '104.9-global-directives.html'));
 });
 
+// Sentry settings for the studio pages' browser SDK, filled in from SENTRY_DSN.
+// Overrides the null default in public/vendor/sentry-config.js.
+app.get('/vendor/sentry-config.js', (req: Request, res: Response) => {
+  res
+    .type('application/javascript')
+    .send(`window.SITE_SENTRY = ${JSON.stringify(browserSentryConfig)};\n`);
+});
+
 app.use(express.static(publicDir, { extensions: ['html'] }));
 
 interface RateLimitRecord {
@@ -790,6 +816,9 @@ app.post('/api/verify', (req: Request, res: Response) => {
 app.use((req: Request, res: Response) => {
   res.status(404).sendFile(NOT_FOUND_PATH);
 });
+
+// Report errors to Sentry before the handler below hides them from visitors.
+Sentry.setupExpressErrorHandler(app);
 
 // 🛡️ Sentinel: Global error-handling middleware to prevent leaking stack traces
 app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
