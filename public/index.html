@@ -413,10 +413,12 @@
     <!-- Relative paths so the page also works on the GitHub Pages mirror (served under /329-Website/). -->
     <script type="module" src="app.js"></script>
     <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="theme_toggle.css" />
+    <!-- Theme overrides only apply after theme_toggle.js runs, so this need not block first paint. -->
+    <link rel="stylesheet" href="theme_toggle.css" media="print" onload="this.media = 'all'" />
+    <noscript><link rel="stylesheet" href="theme_toggle.css" /></noscript>
     <script src="theme_toggle.js" defer></script>
-    <script src="/vendor/sentry-config.js"></script>
-    <script src="/vendor/sentry.min.js"></script>
+    <script src="vendor/sentry-config.js" defer></script>
+    <script src="vendor/sentry.min.js" defer></script>
   </head>
   <body>
     <main>
