@@ -265,6 +265,22 @@
         outline: 2px dashed #00ff00;
         outline-offset: 4px;
       }
+      .consent-note {
+        color: #c8c8c8;
+        font-family: 'VT323', monospace;
+        font-size: 1.2rem;
+        line-height: 1.35;
+        margin: 16px 0 0;
+      }
+
+      .consent-note a {
+        color: #ff3366;
+      }
+
+      .consent-note a:focus-visible {
+        outline: 2px dashed #ff3366;
+        outline-offset: 3px;
+      }
     </style>
     <script type="module" src="/app.js"></script>
   </head>
@@ -316,9 +332,17 @@
                 placeholder="[ Enter Comms Link... ]"
                 required
                 aria-label="Secure Comms Link"
+                aria-describedby="consentNote"
+                autocomplete="email"
               />
               <button type="submit" id="submitBtn" class="btn-submit">BREACH THE MAINFRAME</button>
             </form>
+            <p id="consentNote" class="consent-note">
+              Transmitting your comms link signs you up for dispatches from 3minsto9 Operations:
+              puzzle drops, story transmissions and news about <em>Unknown: Volume 1</em>. Sever the
+              link any time with the unsubscribe link in every email.
+              <a href="/business-privacy-policy" target="_blank" rel="noopener">Privacy policy</a>
+            </p>
           </div>
           <div id="successMessage" class="success-message" role="alert" aria-live="assertive">
             DATA PACKET DISPATCHED. WELCOME TO THE WAR.<br />
