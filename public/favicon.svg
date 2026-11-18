@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="380 380 1060 1060">
+<style>
+.a{stroke:#3D4144}.l{stroke:#9E1324}
+@media (prefers-color-scheme: dark){.a{stroke:#EDEBE2}.l{stroke:#E0313F}}
+</style>
+<path class="a" d="M491 1323A830 830 0 0 1 1321 491" fill="none" stroke-width="90"/>
+<path class="l" d="M942 1367V942H1367" fill="none" stroke-width="70"/>
+</svg>

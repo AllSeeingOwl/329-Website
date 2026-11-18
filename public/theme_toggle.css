@@ -29,3 +29,8 @@ body {
   outline: 2px solid var(--accent-red, #ff3366);
   outline-offset: 3px;
 }
+
+/* Studio header clock mark: the arc follows the text colour; brighten the red hand on dark backgrounds */
+:root[data-theme='dark'] .brand-mark-hand {
+  stroke: #e0313f;
+}
