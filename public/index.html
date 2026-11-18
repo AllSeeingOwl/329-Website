@@ -8,7 +8,16 @@
       name="description"
       content="3minsto9 Operations, an independent studio in Wendover, UK. Choose the Studio hub for field guides, press and contact, or enter the MLTK corporate intranet."
     />
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon.png" />
+    <link rel="apple-touch-icon" href="brand/apple-touch-icon.png" />
+    <meta property="og:site_name" content="3minsto9 Operations" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://3minsto9.co.uk/brand/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="3minsto9 Operations clock-face logo" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Load web fonts without blocking first paint; system fallbacks render until they arrive. -->
@@ -409,6 +418,19 @@
         cursor: not-allowed !important;
         opacity: 0.6 !important;
       }
+      .studio-logo {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .studio-logo-dark,
+      :root[data-theme='dark'] .studio-logo-light {
+        display: none;
+      }
+
+      :root[data-theme='dark'] .studio-logo-dark {
+        display: inline-block;
+      }
     </style>
     <!-- Relative paths so the page also works on the GitHub Pages mirror (served under /329-Website/). -->
     <script type="module" src="app.js"></script>
@@ -431,7 +453,22 @@
       <!-- Left Split: Studio Operations -->
       <div class="split studio">
         <a href="surface-home-page" class="portal-card studio-card" id="studio-portal">
-          <div class="card-icon">🔲</div>
+          <div class="card-icon">
+            <img
+              class="studio-logo studio-logo-light"
+              src="brand/3minsto9-mark.svg"
+              alt="3minsto9 Operations logo"
+              width="64"
+              height="64"
+            />
+            <img
+              class="studio-logo studio-logo-dark"
+              src="brand/3minsto9-mark-dark.svg"
+              alt=""
+              width="64"
+              height="64"
+            />
+          </div>
           <div class="card-title">STUDIO OPERATIONS</div>
           <div class="card-desc">
             Enter the public-facing hub for 3minsto9. Access the manifesto, secure physical field

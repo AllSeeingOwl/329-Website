@@ -23,6 +23,19 @@ Inside the ARG, two layers coexist (the "Layer A / Layer B" rule from Drive):
 
 Never put out-of-character text (dev notes, "placeholder", TODOs) in visible ARG copy.
 
+### Studio brand (logo & palette)
+
+The studio logo is the minimalist clock face (quarter arc from 9 to 12, red hand) — the "constant
+publisher stamp" from the Drive timeline doc. Source SVGs live in `public/brand/`:
+`3minsto9-logo*.svg` (full mark with numerals; `-dark` for dark backgrounds, `-tile` with background),
+`3minsto9-mark*.svg` (arc + hand only, for small sizes), plus `public/favicon.svg` (adapts to dark mode).
+PNG exports (`favicon.png`, `brand/apple-touch-icon.png`, `brand/icon-*.png`, `brand/og-image.png`,
+`brand/3minsto9-logo*-600.png`) are rendered from those SVGs — re-export them if the SVGs change.
+
+Palette — light: charcoal `#3D4144`, deep red `#9E1324`, paper `#FAFAF8`. Dark: background `#1B1A16`,
+cream `#F8F5E4`, warm grey `#7F7B73`, same red (brightened to `#E0313F` for small marks on dark).
+These are studio-only; ARG pages keep their own MLTK / Team Rabbit styling and `mltk-favicon.svg`.
+
 ## Release phases (the most important system)
 
 `db.ts` → `MLTK_PHASES` defines what is live. The admin panel (`/admin`) sets the active phase
