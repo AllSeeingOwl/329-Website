@@ -10,8 +10,6 @@ import {
   getMaintenanceConfig,
   updateMaintenanceConfig,
   getDashboardConfig,
-  updateDashboardConfig,
-  updateAllDashboardConfig,
   updateAllMaintenanceConfig,
   saveEmail,
   getActivePhase,
@@ -83,7 +81,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
 });
 
-import adminAuth, { handleAdminLogin } from './src/middleware/adminAuth';
+import { handleAdminLogin } from './src/middleware/adminAuth';
 import adminRouter, { getConfigFromStore, getAnnouncementsFromStore } from './src/routes/admin';
 
 // Maintenance Mode Configuration

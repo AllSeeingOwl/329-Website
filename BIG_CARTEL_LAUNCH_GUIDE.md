@@ -24,7 +24,7 @@ To make your Big Cartel shop look like it belongs in the ARG universe (a hacked,
 2. Navigate to **Account** -> **Design** (or the Design / Customization tab).
 3. Look for the **Advanced** section or a place to enter **Custom CSS** / **Edit Theme**.
    _(Note: The exact location varies depending on the specific Big Cartel template you are using. The "Luna" or "Neat" themes are recommended as base templates because they have straightforward DOM structures)._
-4. Open the file `public/Big Cartel CSS.txt` in your local code repository.
+4. Open the file `docs/storefront/big-cartel.css` in your local code repository.
 5. Copy the _entire contents_ of that text file.
 6. Paste the contents into the Custom CSS block in Big Cartel.
 7. Save and publish your theme changes.

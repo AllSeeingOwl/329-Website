@@ -1,8 +1,10 @@
 name: Weekly Quality Report
 
-# Read-only weekly health check of the published site and its dependencies.
+# Read-only weekly health check of the published site, its dependencies and
+# the repository itself (unused code, orphaned/duplicate/large/junk files).
 # It never changes code or applies fixes: it gathers results, writes a
 # Markdown report, uploads raw output as an artifact, and opens an issue.
+# (This replaces the old separate "Unused Code & Dependency Checker" workflow.)
 
 on:
   schedule:
@@ -49,6 +51,45 @@ jobs:
           set +e
           pnpm audit --json > "$OUT_DIR/dependency-audit.json" 2> "$OUT_DIR/dependency-audit.stderr.txt"
           echo "$?" > "$OUT_DIR/dependency-audit.exitcode"
+          exit 0
+
+      # knip needs node_modules to resolve imports. --ignore-scripts keeps the
+      # install inert (no lifecycle/postinstall scripts run).
+      - name: Install dependencies (for knip)
+        continue-on-error: true
+        env:
+          CYPRESS_INSTALL_BINARY: '0'
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Find unused code and dependencies (knip)
+        continue-on-error: true
+        run: |
+          mkdir -p "$OUT_DIR"
+          set +e
+          pnpm exec knip --reporter json --no-exit-code --no-progress \
+            > "$OUT_DIR/knip.json" 2> "$OUT_DIR/knip.stderr.txt"
+          echo "$?" > "$OUT_DIR/knip.exitcode"
+          exit 0
+
+      # knip doesn't see unused imports/variables inside a file; ESLint does.
+      - name: Find unused imports and variables (ESLint)
+        continue-on-error: true
+        run: |
+          mkdir -p "$OUT_DIR"
+          set +e
+          pnpm exec eslint . --format json \
+            > "$OUT_DIR/eslint.json" 2> "$OUT_DIR/eslint.stderr.txt"
+          echo "$?" > "$OUT_DIR/eslint.exitcode"
+          exit 0
+
+      - name: Find redundant files (orphans, duplicates, large, junk, lockfiles)
+        continue-on-error: true
+        run: |
+          mkdir -p "$OUT_DIR"
+          set +e
+          node scripts/repo-hygiene.js --json \
+            > "$OUT_DIR/repo-hygiene.json" 2> "$OUT_DIR/repo-hygiene.stderr.txt"
+          echo "$?" > "$OUT_DIR/repo-hygiene.exitcode"
           exit 0
 
       - name: Run Lighthouse against the public site
@@ -210,11 +251,104 @@ jobs:
             lh.push('Full HTML and JSON reports are in the workflow artifact (`lighthouse.report.html`, `lighthouse.report.json`).');
           }
 
+          // ---------- Redundancy: unused code (knip) + redundant files ----------
+          const red = [];
+          const kb = (n) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
+          const couldNotRun = (label, res, stderrFile) => {
+            status.push([label, `⚠️ Could not run: ${oneLine(res.error, 150)}`]);
+            red.push(`⚠️ **${label} could not run:** ${oneLine(res.error, 300)}`);
+            const err = tail(read(stderrFile));
+            if (err) red.push('', '```text', err, '```');
+            red.push('');
+          };
+
+          red.push('### Unused code and dependencies (knip)', '');
+          const knip = readJson('knip.json');
+          if (!knip.data || !Array.isArray(knip.data.issues)) {
+            couldNotRun('Unused code (knip)', knip.data ? { error: 'unexpected output format' } : knip, 'knip.stderr.txt');
+          } else {
+            // Each entry is one file; every non-empty array on it is an issue type.
+            const rows = [];
+            for (const entry of knip.data.issues) {
+              for (const [type, items] of Object.entries(entry)) {
+                if (!Array.isArray(items)) continue;
+                for (const item of items) {
+                  const list = Array.isArray(item) ? item : [item]; // "duplicates" are nested arrays
+                  const name = list.map((i) => (i && i.name) || String(i)).join(' = ');
+                  const line = !Array.isArray(item) && item && item.line ? `:${item.line}` : '';
+                  rows.push(`| ${type} | \`${oneLine(entry.file, 100)}${line}\` | \`${oneLine(name, 100)}\` |`);
+                }
+              }
+            }
+            status.push(['Unused code (knip)', rows.length ? `❗ ${rows.length} findings` : '✅ Nothing unused']);
+            if (rows.length) {
+              red.push('| Type | File | Item |', '| --- | --- | --- |', ...rows.slice(0, 60));
+              if (rows.length > 60) red.push('', `…and ${rows.length - 60} more (see \`knip.json\` in the artifact).`);
+            } else {
+              red.push('- No unused files, exports, types or dependencies found.');
+            }
+            red.push('');
+          }
+
+          red.push('### Unused imports and variables (ESLint)', '');
+          const esl = readJson('eslint.json');
+          if (!Array.isArray(esl.data)) {
+            couldNotRun('Unused imports (ESLint)', esl.data ? { error: 'unexpected output format' } : esl, 'eslint.stderr.txt');
+          } else {
+            const cwd = process.cwd() + path.sep;
+            const rows = [];
+            for (const f of esl.data) {
+              for (const m of f.messages || []) {
+                if (!/(^|\/)no-unused-vars$/.test(m.ruleId || '')) continue;
+                const file = f.filePath.startsWith(cwd) ? f.filePath.slice(cwd.length) : f.filePath;
+                rows.push(`| \`${oneLine(file, 100)}:${m.line}\` | ${oneLine(m.message, 160)} |`);
+              }
+            }
+            status.push(['Unused imports (ESLint)', rows.length ? `❗ ${rows.length} findings` : '✅ None found']);
+            if (rows.length) {
+              red.push('| Location | Message |', '| --- | --- |', ...rows.slice(0, 60));
+              if (rows.length > 60) red.push('', `…and ${rows.length - 60} more (see \`eslint.json\`).`);
+            } else {
+              red.push('- No unused imports or variables found.');
+            }
+            red.push('');
+          }
+
+          red.push('### Redundant files', '');
+          const hyg = readJson('repo-hygiene.json');
+          const h = hyg.data;
+          if (!h || typeof h.totalFindings !== 'number') {
+            couldNotRun('Redundant files', h ? { error: 'unexpected output format' } : hyg, 'repo-hygiene.stderr.txt');
+          } else {
+            status.push(['Redundant files', h.totalFindings ? `❗ ${h.totalFindings} findings` : '✅ None found']);
+            red.push(`Scanned ${h.scannedFiles} tracked files.`, '');
+            const block = (title, hint, items, header, fmt) => {
+              red.push(`**${title}** — ${items.length ? items.length : 'none'}`, '');
+              if (!items.length) return;
+              red.push(`_${hint}_`, '', header, `| ${header.split('|').filter((c) => c.trim()).map(() => '---').join(' | ')} |`);
+              for (const it of items.slice(0, 40)) red.push(fmt(it));
+              if (items.length > 40) red.push('', `…and ${items.length - 40} more (see \`repo-hygiene.json\`).`);
+              red.push('');
+            };
+            block('Orphaned files in `public/`', 'Nothing in the code, pages or config links to these (mentions in Markdown docs don\'t count). They may still be reached by direct URL — check before removing.',
+              h.orphans, '| File | Size |', (o) => `| \`${oneLine(o.path, 120)}\` | ${kb(o.size)} |`);
+            block('Duplicate files', 'Byte-for-byte identical (the `wiki_boilerplate/` template copy is excluded).',
+              h.duplicates, '| Files | Size each |', (d) => `| ${d.paths.map((p) => `\`${oneLine(p, 80)}\``).join('<br>')} | ${kb(d.size)} |`);
+            block('Large files', 'Tracked files over 500 KB (lockfiles excluded). Consider compressing, or hosting outside git.',
+              h.largeFiles, '| File | Size |', (f) => `| \`${oneLine(f.path, 120)}\` | ${kb(f.size)} |`);
+            block('Junk files', 'Backups, editor/OS leftovers, logs, and "copy"/"(1)" duplicates.',
+              h.junkFiles, '| File | Size |', (f) => `| \`${oneLine(f.path, 120)}\` | ${kb(f.size)} |`);
+            block('Multiple lockfiles', 'This repo uses pnpm (`packageManager` in package.json); other lockfiles in the same folder can drift and mislead tools such as Dependabot.',
+              h.lockfileConflicts, '| Folder | Lockfiles |', (c) => `| \`${c.dir === '.' ? '(repo root)' : `${c.dir}/`}\` | ${c.lockfiles.map((l) => `\`${l}\``).join(', ')} |`);
+          }
+          red.push('Run locally with `pnpm exec knip`, `pnpm run lint` and `pnpm run report:hygiene`. Allowlists live in `package.json` → `knip` and the `CONFIG` block of `scripts/repo-hygiene.js`.');
+
           // ---------- Assemble ----------
           out.push('## Summary', '', '| Check | Result |', '| --- | --- |');
           for (const [check, result] of status) out.push(`| ${check} | ${result} |`);
           out.push('', '## Security — dependency audit', '', ...sec, '');
           out.push('## Lighthouse — performance, accessibility, best practices, SEO', '', ...lh, '');
+          out.push('## Redundancy — unused code and files', '', ...red, '');
           out.push(
             '## AI-agent handoff',
             '',
@@ -222,7 +356,8 @@ jobs:
             '',
             '1. **Verify each finding before acting.** Reproduce it against the current `main` branch and the live site; results above may be stale, flaky (especially performance), or caused by third-party scripts or GitHub Pages hosting.',
             '2. **Ignore false positives** and anything that is not actionable in this repository. Say briefly why each was dismissed.',
-            '3. **Prioritize security first, then accessibility**, then best practices/SEO, then performance and visual polish. Do not change code based on a score alone.',
+            '3. **Prioritize security first, then accessibility**, then best practices/SEO, then performance and visual polish, then redundancy cleanup. Do not change code based on a score alone.',
+            '   - **Before deleting anything flagged as unused or orphaned,** search for dynamic references (built strings, Redis config, `MLTK_PHASES`, `PROTECTED_DOWNLOADS`, the sitemap, the physical zine and printed QR codes, links from outside the site). If a file is intentionally kept, add it to the allowlist instead of deleting it.',
             '4. **Recommend small, high-impact fixes.** For each accepted finding, give:',
             '   - affected files (paths in this repo)',
             '   - why it matters and the risk level',

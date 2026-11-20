@@ -1,4 +1,4 @@
-name: npm Security Audit
+name: Dependency Security Audit
 
 on:
   push:
@@ -19,11 +19,17 @@ jobs:
         with:
           node-version: '22'
 
+      # The project is pnpm-only: pnpm audit reads pnpm-lock.yaml directly
+      # (no install needed) and reflects the pnpm-workspace.yaml overrides
+      # that actually ship.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
       # Gate on what ships: runtime dependencies must be clean.
-      # (`npm audit fix` was removed: its changes were never committed, and it
+      # (`audit --fix` was removed: its changes were never committed, and it
       # failed the job whenever an advisory had no non-breaking fix.)
       - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=moderate
+        run: pnpm audit --prod --audit-level moderate
 
       # Dev tooling (Jest, Vite, ESLint, knip, lint-staged) never runs in
       # production and only matches globs from our own config, so advisories
@@ -31,4 +37,4 @@ jobs:
       # Dependabot picks up fixes once upstream publishes them.
       - name: Audit all dependencies (report only)
         continue-on-error: true
-        run: npm audit --audit-level=high
+        run: pnpm audit --audit-level high

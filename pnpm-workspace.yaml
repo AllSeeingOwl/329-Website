@@ -2,8 +2,11 @@
 # Matches the default in newer pnpm, which the Docker build enforces.
 minimumReleaseAge: 1440
 
-# Security pins (pnpm reads overrides from here; the npm-style "overrides" in
-# package.json only apply to package-lock.json).
+# Security pins. This is the only place pnpm reads overrides from (an npm-style
+# "overrides" block in package.json is ignored by pnpm). Pins are minimum
+# versions within the same major; don't force a major upgrade on a transitive
+# dependency (e.g. js-yaml 4 breaks Jest's nyc config loader, chokidar 4
+# breaks nodemon).
 overrides:
   'browserslist': '>=4.28.7'
   'baseline-browser-mapping': '>=2.11.0'
@@ -16,3 +19,6 @@ overrides:
   'glob': '^14.0.2'
   'minimatch@>=7.0.0': '^11.0.1'
   'deepmerge': '4.1.2'
+  'tmp': '^0.2.6'
+  'form-data@>=4.0.0': '^4.0.6'
+  '@babel/core': '^7.29.1'
