@@ -22,6 +22,7 @@
     "prepare": "husky",
     "verify:prod": "./scripts/verify-production.sh",
     "generate:notebook-sources": "ts-node scripts/generate-notebook-sources.ts",
+    "report:hygiene": "node scripts/repo-hygiene.js",
     "build:sentry": "vite build --config scripts/vite.sentry.config.mjs"
   },
   "lint-staged": {
@@ -40,9 +41,7 @@
     "ignore": [
       "public/msdos_typing_effect.js",
       "wiki_boilerplate/**",
-      "public/vendor/**",
-      "scripts/sentry-browser-entry.js",
-      "scripts/vite.sentry.config.mjs"
+      "public/vendor/**"
     ]
   },
   "devDependencies": {
