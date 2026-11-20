@@ -54,6 +54,8 @@ describe('repo-hygiene', () => {
       file('logo copy.svg', '<svg/>'),
       file('pnpm-lock.yaml', 'a'),
       file('package-lock.json', 'b'),
+      file('wiki_boilerplate/pnpm-lock.yaml', 'a'),
+      file('wiki_boilerplate/package-lock.json', 'b'),
     ]);
     expect(result.largeFiles.map((f) => f.path)).toEqual(['public/huge.mp4']);
     expect(result.junkFiles.map((f) => f.path).sort()).toEqual(

@@ -66,6 +66,8 @@ const CONFIG = {
     /(^|\/)[^/]*\(\d+\)(\.[^/.]+)?$/,
     /\.log$/i,
   ],
+  // The template is a standalone starter for other projects; its lockfiles are its own business.
+  lockfileIgnore: ['wiki_boilerplate/'],
   lockfiles: ['package-lock.json', 'pnpm-lock.yaml', 'yarn.lock', 'bun.lockb', 'bun.lock'],
 };
 
@@ -160,7 +162,7 @@ function analyze(files, config = CONFIG) {
   const locksByDir = new Map();
   for (const f of files) {
     const base = path.posix.basename(f.path);
-    if (!config.lockfiles.includes(base)) continue;
+    if (!config.lockfiles.includes(base) || startsWithAny(f.path, config.lockfileIgnore)) continue;
     const dir = path.posix.dirname(f.path);
     if (!locksByDir.has(dir)) locksByDir.set(dir, []);
     locksByDir.get(dir).push(base);
