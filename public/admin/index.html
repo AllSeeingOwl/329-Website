@@ -303,6 +303,24 @@
       #admin-dashboard {
         display: none;
       }
+
+      .email-delete-btn {
+        padding: 2px 8px;
+        font-size: 0.85em;
+        white-space: nowrap;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
     </style>
   </head>
   <body>
@@ -486,11 +504,12 @@
                 <th>COLLECTED AT</th>
                 <th>SOURCE</th>
                 <th>STATUS</th>
+                <th><span class="sr-only">ACTIONS</span></th>
               </tr>
             </thead>
             <tbody id="emails-table-body">
               <tr>
-                <td colspan="4" style="text-align: center">NO EMAIL DATA LOADED</td>
+                <td colspan="5" style="text-align: center">NO EMAIL DATA LOADED</td>
               </tr>
             </tbody>
           </table>
@@ -784,6 +803,20 @@
         }
 
         // Generic API fetch wrapper with error handling & loading state
+        // Anti-CSRF token for this admin session (sent on every change; the session cookie stays httpOnly)
+        let csrfToken = null;
+
+        async function refreshCsrfToken() {
+          try {
+            const res = await fetch('/api/admin/csrf-token', { method: 'GET' });
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.csrfToken) csrfToken = data.csrfToken;
+          } catch {
+            // Leave the token unset; the next change will report the error.
+          }
+        }
+
         async function apiFetch(url, options = {}, btn = null, loadingText = 'PROCESSING...') {
           let originalBtnText = '';
           if (btn) {
@@ -799,6 +832,9 @@
               ...options,
               headers: {
                 'Content-Type': 'application/json',
+                ...(csrfToken && (options.method || 'GET').toUpperCase() !== 'GET'
+                  ? { 'X-CSRF-Token': csrfToken }
+                  : {}),
                 ...(options.headers || {}),
               },
             });
@@ -858,6 +894,7 @@
           );
 
           if (data && data.success) {
+            csrfToken = data.csrfToken || null;
             loginPanel.style.display = 'none';
             adminDashboard.style.display = 'block';
             adminPasswordInput.value = '';
@@ -873,6 +910,7 @@
         async function handleLogout() {
           if (sessionTimer) clearInterval(sessionTimer);
           await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
+          csrfToken = null;
           adminDashboard.style.display = 'none';
           loginPanel.style.display = 'block';
           clearMessage(globalStatus);
@@ -894,6 +932,7 @@
             );
 
             if (data && data.success) {
+              csrfToken = data.csrfToken || null;
               // Clean secret key from URL bar to prevent history/referer exposure
               const cleanUrl = window.location.pathname + window.location.hash;
               window.history.replaceState({}, document.title, cleanUrl);
@@ -923,6 +962,7 @@
           if (res.ok) {
             const data = await res.json().catch(() => null);
             if (data && data.success) {
+              await refreshCsrfToken();
               loginPanel.style.display = 'none';
               adminDashboard.style.display = 'block';
               clearMessage(loginStatus);
@@ -1346,7 +1386,7 @@
           if (!data.emails || data.emails.length === 0) {
             const emptyTr = document.createElement('tr');
             const emptyTd = document.createElement('td');
-            emptyTd.colSpan = 4;
+            emptyTd.colSpan = 5;
             emptyTd.style.textAlign = 'center';
             emptyTd.textContent = 'NO EMAILS CAPTURED YET';
             emptyTr.appendChild(emptyTd);
@@ -1371,10 +1411,24 @@
             const tdStatus = document.createElement('td');
             tdStatus.textContent = (e.status || 'pending').toUpperCase();
 
+            const tdActions = document.createElement('td');
+            if (e.email) {
+              const delBtn = document.createElement('button');
+              delBtn.type = 'button';
+              delBtn.className = 'danger-btn email-delete-btn';
+              delBtn.textContent = '[ DELETE ]';
+              delBtn.setAttribute('aria-label', 'Delete ' + e.email + ' (data deletion request)');
+              delBtn.addEventListener('click', function () {
+                deleteEmailAddress(e.email, delBtn);
+              });
+              tdActions.appendChild(delBtn);
+            }
+
             tr.appendChild(tdEmail);
             tr.appendChild(tdTime);
             tr.appendChild(tdSource);
             tr.appendChild(tdStatus);
+            tr.appendChild(tdActions);
             fragment.appendChild(tr);
           });
 
@@ -1385,6 +1439,48 @@
           fetchEmailStats();
           fetchEmailsList();
         });
+
+        // Delete one address (data deletion request): removes it here and erases it from MailerLite
+        async function deleteEmailAddress(email, btn) {
+          if (
+            !confirm(
+              'DELETE ' +
+                email +
+                '?\n\nThis permanently removes every sign-up record for this address and asks ' +
+                'MailerLite to erase the subscriber. Use this for data deletion requests.'
+            )
+          ) {
+            return;
+          }
+
+          const res = await apiFetch(
+            '/api/admin/emails/delete',
+            { method: 'POST', body: JSON.stringify({ email: email }) },
+            btn,
+            'DELETING...'
+          );
+          if (!res || !res.success) return;
+
+          const mailerliteNotes = {
+            forgotten: 'ERASED FROM MAILERLITE',
+            not_found: 'NOT FOUND IN MAILERLITE',
+            not_configured: 'MAILERLITE NOT CONNECTED - REMOVE IT THERE MANUALLY',
+            error: 'MAILERLITE ERASE FAILED - REMOVE IT THERE MANUALLY',
+          };
+          const isProblem = res.mailerlite === 'error' || res.mailerlite === 'not_configured';
+          showMessage(
+            'DELETED ' +
+              res.removedCount +
+              ' RECORD(S) FOR ' +
+              email +
+              '. ' +
+              (mailerliteNotes[res.mailerlite] || ''),
+            isProblem
+          );
+          fetchEmailStats();
+          fetchEmailsList();
+          fetchAuditLogs();
+        }
 
         // Export Emails CSV
         document.getElementById('export-emails-btn').addEventListener('click', async function () {

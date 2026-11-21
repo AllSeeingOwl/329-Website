@@ -50,6 +50,23 @@ export const generateSessionToken = (): string => {
   return crypto.randomBytes(32).toString('hex');
 };
 
+const getCsrfSecret = (): string =>
+  process.env.CSRF_SECRET || process.env.ADMIN_PASSWORD || 'local-dev-admin-csrf-secret';
+
+/**
+ * Anti-CSRF token for a session: an HMAC of the session token. The admin page receives it in the
+ * login response (or from GET /api/admin/csrf-token) and sends it back in the X-CSRF-Token header,
+ * so the session cookie itself can stay httpOnly.
+ */
+export const deriveCsrfToken = (sessionToken: string): string =>
+  crypto.createHmac('sha256', getCsrfSecret()).update(sessionToken).digest('hex');
+
+const safeEqual = (a: string, b: string): boolean => {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  return ab.length === bb.length && crypto.timingSafeEqual(ab, bb);
+};
+
 /**
  * Verifies the provided password against ADMIN_PASSWORD.
  * Uses timing-safe equality comparison to prevent timing attacks.
@@ -412,6 +429,7 @@ export const handleAdminLogin = async (req: Request, res: Response): Promise<voi
     success: true,
     message: 'Authenticated',
     expiresAt: session.expiresAt,
+    csrfToken: deriveCsrfToken(session.token),
   };
 
   // Provide token in non-production environments to support automated test suites expecting body.token
@@ -464,7 +482,11 @@ const adminAuth = async (req: Request, res: Response, next: NextFunction): Promi
         ? rawCsrfHeader.split(',')[0]
         : null;
 
-    if (!csrfHeader || csrfHeader.trim() !== token) {
+    const presented = csrfHeader ? csrfHeader.trim() : '';
+    if (
+      !presented ||
+      !(safeEqual(presented, token) || safeEqual(presented, deriveCsrfToken(token)))
+    ) {
       logAuthAttempt('MIDDLEWARE_AUTH', false, ip, 'CSRF verification failed for cookie auth');
       res.status(403).json({ error: 'Forbidden: CSRF token missing or invalid' });
       return;
