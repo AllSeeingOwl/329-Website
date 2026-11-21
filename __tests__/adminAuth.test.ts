@@ -216,6 +216,7 @@ describe('adminAuth Middleware & Security Checks', () => {
         message: 'Authenticated',
         token: (expect as any).any(String),
         expiresAt: (expect as any).any(String),
+        csrfToken: (expect as any).stringMatching(/^[0-9a-f]{64}$/),
       });
     });
 

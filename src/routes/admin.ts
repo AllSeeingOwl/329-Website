@@ -9,11 +9,14 @@ import adminAuth, {
   isRateLimited,
   recordFailedAttempt,
   clearRateLimit,
+  deriveCsrfToken,
 } from '../middleware/adminAuth';
+import { forgetMailerLiteSubscriber } from '../mailerlite';
 import { redis, isRedisAvailable } from '../redis';
 import {
   getAllEmails,
   clearAllEmails,
+  deleteEmail,
   getDashboardConfig,
   updateDashboardConfig,
   updateAllDashboardConfig,
@@ -439,6 +442,7 @@ router.all('/quick-login', async (req: Request, res: Response): Promise<void> =>
     success: true,
     message: 'Authenticated via secret bypass key',
     expiresAt: session.expiresAt,
+    csrfToken: deriveCsrfToken(session.token),
   };
 
   if (!isProduction) {
@@ -453,6 +457,16 @@ router.all('/quick-login', async (req: Request, res: Response): Promise<void> =>
  * Canonical admin authentication endpoint.
  */
 router.post('/authenticate', handleAdminLogin);
+
+/**
+ * GET /api/admin/csrf-token
+ * Returns the anti-CSRF token for the current session, so the admin page can make changes after
+ * a reload (when it only has the httpOnly session cookie).
+ */
+router.get('/csrf-token', adminAuth, (req: Request, res: Response): void => {
+  const token = extractSessionToken(req) as string;
+  res.json({ success: true, csrfToken: deriveCsrfToken(token) });
+});
 
 /**
  * POST /api/admin/phases/set
@@ -1042,6 +1056,45 @@ router.post('/emails/clear', adminAuth, async (req: Request, res: Response): Pro
   } catch (error) {
     console.error('Error in POST /api/admin/emails/clear:', error);
     res.status(500).json({ success: false, message: 'Failed to clear email data' });
+  }
+});
+
+/** Masks an address for the audit log, e.g. "jane@example.com" -> "j***@example.com". */
+const maskEmail = (email: string): string => {
+  const at = email.lastIndexOf('@');
+  if (at <= 0) return '***';
+  return email[0] + '***' + email.slice(at);
+};
+
+/**
+ * POST /api/admin/emails/delete
+ * Erases one address for a data deletion request: removes every captured record of it, and asks
+ * MailerLite to forget the subscriber (GDPR erasure) when MailerLite is configured.
+ * Body: { email: string }
+ */
+router.post('/emails/delete', adminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const raw = req.body && req.body.email;
+    const email = typeof raw === 'string' ? raw.trim() : '';
+    if (!email || email.length > 254 || !email.includes('@')) {
+      res.status(400).json({ success: false, message: 'A valid email address is required' });
+      return;
+    }
+
+    const removedCount = await deleteEmail(email);
+    const mailerlite = await forgetMailerLiteSubscriber(email);
+
+    const adminUser = getAdminUser(req);
+    await logPhaseChange(adminUser, 'DELETE_EMAIL', 'emails', {
+      email: maskEmail(email),
+      removedCount,
+      mailerlite,
+    });
+
+    res.json({ success: true, removedCount, mailerlite });
+  } catch (error) {
+    console.error('Error in POST /api/admin/emails/delete:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete email address' });
   }
 });
 

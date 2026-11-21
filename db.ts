@@ -418,6 +418,44 @@ export async function getAllEmails(): Promise<CapturedEmail[]> {
   return emailsCacheStore.map((e) => ({ ...e }));
 }
 
+/**
+ * Removes every captured record for one address (case-insensitive). Used for data deletion
+ * requests. Returns how many records were removed.
+ */
+export async function deleteEmail(email: string): Promise<number> {
+  const target = email.trim().toLowerCase();
+  emailsCacheStore = null;
+  emailsCacheLastFetched = 0;
+
+  const matches = (value: unknown): boolean => {
+    try {
+      const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+      return (
+        !!parsed &&
+        typeof (parsed as CapturedEmail).email === 'string' &&
+        (parsed as CapturedEmail).email.trim().toLowerCase() === target
+      );
+    } catch {
+      return false;
+    }
+  };
+
+  let removed = 0;
+  if (isKvAvailable()) {
+    const rawEmails = await kv.lrange('emails:captured', 0, -1);
+    for (const raw of rawEmails) {
+      if (matches(raw)) {
+        const value = typeof raw === 'string' ? raw : JSON.stringify(raw);
+        removed += Number(await kv.lrem('emails:captured', 0, value)) || 0;
+      }
+    }
+  }
+  const before = inMemoryEmails.length;
+  inMemoryEmails = inMemoryEmails.filter((e) => !matches(e));
+  removed += before - inMemoryEmails.length;
+  return removed;
+}
+
 export async function clearAllEmails(): Promise<void> {
   // Invalidate cache on clear
   emailsCacheStore = null;
