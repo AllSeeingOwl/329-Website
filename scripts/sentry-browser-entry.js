@@ -1,6 +1,7 @@
-// Source for public/vendor/sentry.min.js, the Sentry browser SDK loaded by the
-// studio pages only (never the ARG pages). Rebuild with `pnpm run build:sentry`
-// after changing this file or updating @sentry/browser.
+// Source for public/vendor/sentry.min.js, the Sentry browser SDK. The server-generated
+// /vendor/sentry-config.js injects it on studio pages only (never the ARG pages), and only
+// when SENTRY_DSN is set. Rebuild with `pnpm run build:sentry` after changing this file or
+// updating @sentry/browser. The output is in .prettierignore so it stays minified.
 import { init } from '@sentry/browser';
 
 // Set by /vendor/sentry-config.js, which the server fills in from SENTRY_DSN.
