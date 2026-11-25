@@ -477,7 +477,8 @@ describe('Sentry error reporting', () => {
     const res = await request(app).get('/vendor/sentry-config.js').expect(200);
     expect(res.headers['content-type']).toMatch(/javascript/);
     expect(res.text).toBe(
-      `window.SITE_SENTRY = ${JSON.stringify({ dsn: DSN, environment: 'production' })};\n`
+      `window.SITE_SENTRY = ${JSON.stringify({ dsn: DSN, environment: 'production' })};\n` +
+        "var s=document.createElement('script');s.src='/vendor/sentry.min.js';document.head.appendChild(s);\n"
     );
   });
 

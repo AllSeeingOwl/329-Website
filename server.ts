@@ -693,11 +693,17 @@ app.get('/104.9-global-directives', (req: Request, res: Response) => {
 });
 
 // Sentry settings for the studio pages' browser SDK, filled in from SENTRY_DSN.
-// Overrides the null default in public/vendor/sentry-config.js.
+// Overrides the null default in public/vendor/sentry-config.js. The SDK itself
+// (~135 KB) is only fetched when Sentry is on, so pages don't download it for nothing.
+const SENTRY_SDK_LOADER =
+  "var s=document.createElement('script');s.src='/vendor/sentry.min.js';document.head.appendChild(s);\n";
 app.get('/vendor/sentry-config.js', (req: Request, res: Response) => {
   res
     .type('application/javascript')
-    .send(`window.SITE_SENTRY = ${JSON.stringify(browserSentryConfig)};\n`);
+    .send(
+      `window.SITE_SENTRY = ${JSON.stringify(browserSentryConfig)};\n` +
+        (browserSentryConfig ? SENTRY_SDK_LOADER : '')
+    );
 });
 
 app.use(express.static(publicDir, { extensions: ['html'] }));
